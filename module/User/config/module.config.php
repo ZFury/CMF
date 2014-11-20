@@ -1,10 +1,6 @@
 <?php
 
 return array(
-    'facebook' => [
-        'appId' => '588814781209829',
-        'appSecret' => '0310884d3da6ddcee66c69022fec63d7'
-    ],
     'doctrine' => array(
         'driver' => array(
             'user_driver' => array(
