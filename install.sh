@@ -12,5 +12,12 @@ echo "Doctrine setup"
 echo "Creating .htaccess"
 cp ./public/.htaccess.sample ./public/.htaccess
 
+echo "Creating directories"
+mkdir -p data/
+mkdir -p data/DoctrineORMModule/Proxy
+mkdir -p data/DoctrineORMModule/Migrations
+
+chmod -R 0777 data/*
+
 echo "Enabling git-flow"
 git flow init -d
