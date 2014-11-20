@@ -1,0 +1,17 @@
+# Mod Rewrite
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /
+
+	# loop stopping
+	RewriteCond %{ENV:REDIRECT_STATUS} 200
+	RewriteRule .* - [L]
+
+	RewriteCond %{REQUEST_FILENAME} -s [OR]
+	RewriteCond %{REQUEST_FILENAME} -l [OR]
+	RewriteCond %{REQUEST_FILENAME} -d [OR]
+	RewriteCond %{REQUEST_URI} ^/(css|font|img|js|uploads) [OR]
+	RewriteCond %{REQUEST_URI} \.(ico|jpe?g|png|svg|gif|swf|flv)$
+	RewriteRule ^.*$ - [NC,L]
+	RewriteRule ^.*$ index.php [NC,L]
+</IfModule>

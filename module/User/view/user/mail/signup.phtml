@@ -1,0 +1,9 @@
+<?php
+/** @var $user \User\Entity\User */
+$user = $this->user;
+?>
+Hello!
+
+Please confirm your email using this link
+
+<a href="<?= $this->url('user/confirm', ['confirm' => $user->getConfirm()], ['force_canonical' => true]); ?>" title="Confirmation Link">confirmation link</a>

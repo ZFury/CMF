@@ -1,0 +1,9 @@
+<div class="container">
+    <div class="row">
+            <div class="col-sm-4">
+                <?php if ($this->identity()) : ?>
+                    <a class="btn btn-success" href="<?php echo $this->url('user/default', ['controller' => 'auth', 'action' => 'twitter']) ?>">Assign Twitter</a>
+                <?php endif; ?>
+            </div>
+    </div>
+</div>

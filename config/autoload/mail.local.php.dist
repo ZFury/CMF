@@ -1,0 +1,21 @@
+<?php
+
+return array(
+        'mail' => array(
+            'transport' => array(
+                'options' => array(
+                    'host'              => '%host%',
+                    'port'              => '%port%',
+                ),
+            ),
+            'message' => array(
+                'headers' => array(
+                    'PROJECT' => '%project%',
+                    'EMAILS'  => '%mail%'
+                ),
+                'from' => array (
+                    'admin@zfstarter.com'
+                )
+            )
+        ),
+);

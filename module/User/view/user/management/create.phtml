@@ -1,0 +1,42 @@
+<?php
+    /**@var $form Zend/Form */
+    $form = $this->form;
+?>
+<div class="container">
+    <h1>Create user</h1>
+    <div class="row">
+        <form action="" method="post" class="form-horizontal">
+        <?php foreach($this->form->getElements() as $element) : ?>
+            <?php
+                switch ($element) {
+                    case $element instanceof Zend\Form\Element\Select :
+                        $formElement = $this->formSelect($element);
+                        break;
+                    case $element instanceof Zend\Form\Element\Email :
+                        $formElement = $this->formEmail($element);
+                        break;
+                    case $element instanceof Zend\Form\Element\Password :
+                        $formElement = $this->formPassword($element);
+                        break;
+                    default :
+                        $formElement = $this->formInput($element);
+                        break;
+                }
+            ?>
+            <div class="form-group">
+                <label for="<?= $element->getName(); ?>" class="col-sm-2 control-label"><?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?></label>
+                <div class="col-sm-4">
+                    <?= $formElement; ?>
+                </div>
+                <?= $this->formElementErrors($element); ?>
+            </div>
+        <?php endforeach; ?>
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-4">
+                    <input type="submit" name="submit" class="btn btn-lg btn-primary btn-block" value="Create">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
