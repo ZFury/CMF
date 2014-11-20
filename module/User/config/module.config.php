@@ -124,6 +124,9 @@ return array(
                 $headers = new \Zend\Mail\Headers();
                 $headers->addHeaders($config['mail']['message']['headers']);
                 $message->setHeaders($headers)->setFrom($config['mail']['message']['from']);
+                //uncomment this if you want send email around
+                //$message->getHeaders()->addHeaderLine('EXTERNAL', 'true');
+
                 return $message;
             }
         ),
