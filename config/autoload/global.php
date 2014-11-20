@@ -12,5 +12,11 @@
  */
 
 return array(
+    'phpSettings' => array(
+        'date.timezone'  => 'Europe/Kiev',
+        'error_reporting' => E_ALL,
+        'display_errors' => true,
+        'display_startup_errors' => true
+    ),
     // ...
 );
