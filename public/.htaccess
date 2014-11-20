@@ -1,4 +1,5 @@
 # Mod Rewrite
+SetEnv APP_ENV testing
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 	RewriteBase /
