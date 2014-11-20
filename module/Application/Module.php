@@ -19,6 +19,30 @@ class Module
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+
+        $config = $e->getApplication()->getServiceManager()->get('Config');
+        $phpSettings = $config['phpSettings'];
+        foreach ($phpSettings as $settingName => $settingValue) {
+            ini_set($settingName, $settingValue);
+        }
+
+        set_error_handler(['Application\Module', 'errorHandler']);
+    }
+
+    /**
+     * @param $type
+     * @param $message
+     * @param $file
+     * @param $line
+     * @throws \Exception
+     */
+    public static function errorHandler($type, $message, $file, $line)
+    {
+        if (!($type & error_reporting())) {
+            return;
+        }
+
+        throw new \Exception('Error ' . $message . ' in file ' . $file . ' at line ' . $line);
     }
 
     public function getConfig()
