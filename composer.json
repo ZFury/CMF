@@ -13,6 +13,7 @@
         "doctrine/common": "2.4.*",
         "doctrine/doctrine-orm-module": "0.8.*",
         "bjyoungblood/bjy-authorize": "1.4.*",
-        "facebook/php-sdk-v4": "4.0.*"
+        "facebook/php-sdk-v4": "4.0.*",
+        "phpunit/phpunit": "4.2"
     }
 }
