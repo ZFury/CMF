@@ -9,6 +9,7 @@ return array(
         'DoctrineORMModule',
         'BjyAuthorize',
         'User',
+        'Options'
     ),
 
     // These are various options for the listeners attached to the ModuleManager

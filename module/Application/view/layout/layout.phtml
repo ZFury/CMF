@@ -41,6 +41,9 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li><a href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Home') ?></a></li>
+                <?php if($this->identity() && \User\Entity\User::ROLE_ADMIN == $this->identity()->getUser()->getRole()): ?>
+                    <li><a href="<?php echo $this->url('options/default') ?>"><?php echo $this->translate('Options') ?></a></li>
+                <?php endif ;?>
                 <li><a href="<?php echo $this->url('user/default', ['controller' => 'signup', 'action' => 'index']) ?>"><?php echo $this->translate('Signup') ?></a></li>
                 <?php if (!$this->identity()) : ?>
                     <li><a href="<?php echo $this->url('user/default', ['controller' => 'auth', 'action' => 'login']) ?>"><?php echo $this->translate('Login') ?></a></li>
