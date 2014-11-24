@@ -1,0 +1,53 @@
+<div class="site-index">
+    <h1>Options</h1>
+    <p>
+        <a href="<?php echo $this->url('option.create') ?>"
+           class="btn btn-success">Create</a>
+    </p>
+
+    <table class="table table-hover grid">
+        <thead>
+        <tr>
+            <th width="160px">Namespace</th>
+            <th>Key</th>
+            <th>Value</th>
+            <th>Description</th>
+            <th width="160px">Created</th>
+            <th width="160px">Updated</th>
+            <th width="200px">Controls</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <?php if(empty($options)): ?>
+            <h3>There are no options yet</h3>
+        <?php endif ;?>
+
+        <?php foreach($options as $option): ?>
+            <tr>
+                <td>
+                    <a href="/options/management/view/<?php echo $option->getNamespace() .'/'. $option->getKey();?>">
+                        <?php echo $option->getNamespace() ;?>
+                    </a>
+                </td>
+                <td><?php echo $option->getKey() ;?></td>
+                <td><?php echo $option->getValue() ;?></td>
+                <td><?php echo $option->getDescription() ;?></td>
+                <td><?php echo $option->getCreated()->format('Y-m-d H:i:s') ;?></td>
+                <td><?php echo $option->getUpdated()->format('Y-m-d H:i:s') ;?></td>
+                <td class="controls">
+                    <a href="/options/management/edit/<?php echo $option->getNamespace() .'/'. $option->getKey();?>"
+                       class="btn btn-primary btn-small">
+                        <i class="fa fa-pencil"></i>Edit
+                    </a>
+                    <a href="/options/management/delete/<?php echo $option->getNamespace() .'/'. $option->getKey();?>"
+                       class="btn btn-danger btn-small">
+                        <i class="fa fa-pencil"></i>Delete
+                    </a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+</div>
