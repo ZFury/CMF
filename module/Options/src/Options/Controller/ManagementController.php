@@ -55,7 +55,7 @@ class ManagementController extends AbstractActionController
 
     public function createAction()
     {
-        $form = new Create($this->getServiceLocator());
+        $form = new Create('create' , ['serviceLocator' => $this->getServiceLocator()]);
 
         if ($this->getRequest()->isPost()) {
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -113,23 +113,28 @@ class ManagementController extends AbstractActionController
             ->getRepository('Options\Entity\Options')
             ->findOneBy(array('namespace' => $namespace, 'key' => $key));
 
-        $form = new Edit($this->getServiceLocator(), $option);
+        $optionData = array(
+            'namespace' => $option->getNamespace(),
+            'key' => $option->getKey(),
+            'value' => $option->getValue(),
+            'description' => $option->getDescription()
+        );
+
+        $form = new Create('edit' , ['serviceLocator' => $this->getServiceLocator()]);
+        $form->setData($optionData);
+        $form->get('submit')->setValue('Save');
+//        $form = new Edit($this->getServiceLocator(), $option);
 
         if ($this->getRequest()->isPost()) {
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
-//                $data = $form->getData();
 
                 $objectManager->getConnection()->beginTransaction();
                 try {
                     $hydrator = new DoctrineHydrator($objectManager);
                     $hydrator->hydrate($form->getData(), $option);
 
-//                    $option->setNamespace($data['namespace']);
-//                    $option->setKey($data['key']);
-//                    $option->setValue($data['value']);
-//                    $option->setDescription($data['description']);
                     $option->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
 
                     $objectManager->persist($option);

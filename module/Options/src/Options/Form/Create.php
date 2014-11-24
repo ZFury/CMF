@@ -19,14 +19,15 @@ class Create extends Form
     protected $serviceLocator;
 
     /**
-     * @param null $serviceLocator
+     * @param int|null|string $name
+     * @param array $options
      */
-    public function __construct($serviceLocator = null)
+    public function __construct($name , array $options)
     {
-        $this->serviceLocator = $serviceLocator;
+        $this->serviceLocator = $options['serviceLocator'];
 
         // we want to ignore the name passed
-        parent::__construct('create');
+        parent::__construct($name);
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'form-horizontal');
         $this->setAttribute('role', 'form');
