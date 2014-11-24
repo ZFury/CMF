@@ -113,6 +113,10 @@ class ManagementController extends AbstractActionController
             ->getRepository('Options\Entity\Options')
             ->findOneBy(array('namespace' => $namespace, 'key' => $key));
 
+        if (!$option) {
+            return $this->notFoundAction();
+        }
+
         $optionData = array(
             'namespace' => $option->getNamespace(),
             'key' => $option->getKey(),
@@ -172,6 +176,10 @@ class ManagementController extends AbstractActionController
         $option = $objectManager
             ->getRepository('Options\Entity\Options')
             ->findOneBy(array('namespace' => $namespace, 'key' => $key));
+
+        if (!$option) {
+            return $this->redirect()->toRoute('options');
+        }
 
         $objectManager->remove($option);
         $objectManager->flush($option);
