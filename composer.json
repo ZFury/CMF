@@ -14,5 +14,10 @@
         "doctrine/doctrine-orm-module": "0.8.*",
         "bjyoungblood/bjy-authorize": "1.4.*",
         "facebook/php-sdk-v4": "4.0.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "": "library/"
+        }
     }
 }
