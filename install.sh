@@ -21,3 +21,7 @@ chmod -R 0777 data/*
 
 echo "Enabling git-flow"
 git flow init -d
+
+echo "Install git hook for PHP_CodeSniffer"
+cp data/git_hooks/pre-commit .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit

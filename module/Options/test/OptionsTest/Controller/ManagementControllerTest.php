@@ -6,12 +6,11 @@
 
 namespace OptionsTest\Controller;
 
-use Options\Controller\ManagementController;
+use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use PHPUnit_Framework_TestCase;
 use Zend\Http\Response;
 use Zend\Stdlib;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 
 /**
  * Class ManagementControllerTest
@@ -61,27 +60,6 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
     public static function tearDownAfterClass()
     {
         exec('vendor/doctrine/doctrine-module/bin/doctrine-module orm:schema-tool:drop --force');
-    }
-
-    /**
-     * @throws \User\Exception\AuthException
-     */
-    protected function setUp()
-    {
-        $this->setApplicationConfig(
-            include 'config/application.config.php'
-        );
-        parent::setUp();
-
-        //remove user
-        $this->removeUser();
-
-        //create user
-        $this->createUser();
-
-        /** @var \User\Service\Auth $userAuth */
-        $userAuth = $this->getApplicationServiceLocator()->get('\User\Service\Auth');
-        $userAuth->authenticateEquals($this->userData['email'], $this->userData['password']);
     }
 
     /**
@@ -180,6 +158,23 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
     }
 
     /**
+     *  create option
+     */
+    public function createOption()
+    {
+        $option = $this->getApplicationServiceLocator()->get('Options\Entity\Options');
+        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $objectManager->getConnection()->beginTransaction();
+        $hydrator = new DoctrineHydrator($objectManager);
+        $hydrator->hydrate($this->optionData, $option);
+        $option->setCreated(new \DateTime(date('Y-m-d H:i:s')));
+        $option->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
+        $objectManager->persist($option);
+        $objectManager->flush();
+        $objectManager->getConnection()->commit();
+    }
+
+    /**
      * test delete action
      *
      * @throws \PHPUnit_Framework_ExpectationFailedException
@@ -204,20 +199,38 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
     }
 
     /**
-     *  create option
+     * @throws \User\Exception\AuthException
      */
-    public function createOption()
+    protected function setUp()
     {
-        $option = $this->getApplicationServiceLocator()->get('Options\Entity\Options');
+        $this->setApplicationConfig(
+            include 'config/application.config.php'
+        );
+        parent::setUp();
+
+        //remove user
+        $this->removeUser();
+
+        //create user
+        $this->createUser();
+
+        /** @var \User\Service\Auth $userAuth */
+        $userAuth = $this->getApplicationServiceLocator()->get('\User\Service\Auth');
+        $userAuth->authenticateEquals($this->userData['email'], $this->userData['password']);
+    }
+
+    /**
+     * remove user
+     */
+    public function removeUser()
+    {
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $objectManager->getConnection()->beginTransaction();
-        $hydrator = new DoctrineHydrator($objectManager);
-        $hydrator->hydrate($this->optionData, $option);
-        $option->setCreated(new \DateTime(date('Y-m-d H:i:s')));
-        $option->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
-        $objectManager->persist($option);
-        $objectManager->flush();
-        $objectManager->getConnection()->commit();
+        $user = $objectManager->getRepository('User\Entity\User')
+            ->findOneBy(array('email' => $this->userData['email']));
+        if ($user) {
+            $objectManager->remove($user);
+            $objectManager->flush();
+        }
     }
 
     /**
@@ -243,18 +256,5 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         $authService->generateEquals($user, $this->userData['password']);
 
         $objectManager->getConnection()->commit();
-    }
-
-    /**
-     * remove user
-     */
-    public function removeUser()
-    {
-        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $user = $objectManager->getRepository('User\Entity\User')->findOneBy(array('email' => $this->userData['email']));
-        if ($user) {
-            $objectManager->remove($user);
-            $objectManager->flush();
-        }
     }
 }

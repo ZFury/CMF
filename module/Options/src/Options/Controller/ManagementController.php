@@ -27,17 +27,19 @@ class ManagementController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $options = $objectManager->getRepository('Options\Entity\Options')->findAll();
 
-        return new ViewModel(array(
-            'options' => $options
-        ));
+        return new ViewModel(
+            array(
+                'options' => $options
+            )
+        );
     }
 
     public function viewAction()
     {
         $namespace = $this->params()->fromRoute('namespace');
         $key = $this->params()->fromRoute('key');
-//        $namespace = $this->params()->fromQuery('namespace');
-//        $key = $this->params()->fromQuery('key');
+        //        $namespace = $this->params()->fromQuery('namespace');
+        //        $key = $this->params()->fromQuery('key');
 
         if (!$namespace || !$key) {
             return $this->notFoundAction();
@@ -55,7 +57,7 @@ class ManagementController extends AbstractActionController
 
     public function createAction()
     {
-        $form = new Create('create' , ['serviceLocator' => $this->getServiceLocator()]);
+        $form = new Create('create', ['serviceLocator' => $this->getServiceLocator()]);
 
         if ($this->getRequest()->isPost()) {
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -90,9 +92,11 @@ class ManagementController extends AbstractActionController
             }
         }
 
-        return new ViewModel( array(
+        return new ViewModel(
+            array(
                 'form' => $form
-            ));
+            )
+        );
     }
 
     /**
@@ -124,10 +128,10 @@ class ManagementController extends AbstractActionController
             'description' => $option->getDescription()
         );
 
-        $form = new Create('edit' , ['serviceLocator' => $this->getServiceLocator()]);
+        $form = new Create('edit', ['serviceLocator' => $this->getServiceLocator()]);
         $form->setData($optionData);
         $form->get('submit')->setValue('Save');
-//        $form = new Edit($this->getServiceLocator(), $option);
+        //        $form = new Edit($this->getServiceLocator(), $option);
 
         if ($this->getRequest()->isPost()) {
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -158,9 +162,11 @@ class ManagementController extends AbstractActionController
             }
         }
 
-        return new ViewModel(array(
-            'form' => $form
-        ));
+        return new ViewModel(
+            array(
+                'form' => $form
+            )
+        );
     }
 
     public function deleteAction()

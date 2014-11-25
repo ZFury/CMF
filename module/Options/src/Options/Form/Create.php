@@ -22,7 +22,7 @@ class Create extends Form
      * @param int|null|string $name
      * @param array $options
      */
-    public function __construct($name , array $options)
+    public function __construct($name, array $options)
     {
         $this->serviceLocator = $options['serviceLocator'];
 
@@ -32,75 +32,85 @@ class Create extends Form
         $this->setAttribute('class', 'form-horizontal');
         $this->setAttribute('role', 'form');
 
-        $this->add(array(
-            'name' => 'namespace',
-            'attributes' => array(
-                'type'  => 'text',
-                'id' => 'namespace',
-                'class' => 'form-control'
-            ),
-            'options' => array(
-                'label' => 'Namespace',
-                'label_attributes' => array(
-                    'class'  => 'col-sm-2 control-label'
+        $this->add(
+            array(
+                'name' => 'namespace',
+                'attributes' => array(
+                    'type'  => 'text',
+                    'id' => 'namespace',
+                    'class' => 'form-control'
                 ),
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'key',
-            'attributes' => array(
-                'type'  => 'text',
-                'id' => 'key',
-                'class' => 'form-control'
-            ),
-            'options' => array(
-                'label' => 'Key',
-                'label_attributes' => array(
-                    'class'  => 'col-sm-2 control-label'
+                'options' => array(
+                    'label' => 'Namespace',
+                    'label_attributes' => array(
+                        'class'  => 'col-sm-2 control-label'
+                    ),
                 ),
-            ),
-        ));
+            )
+        );
 
-        $this->add(array(
-            'name' => 'value',
-            'attributes' => array(
-                'type'  => 'text',
-                'id' => 'value',
-                'class' => 'form-control'
-            ),
-            'options' => array(
-                'label' => 'Value',
-                'label_attributes' => array(
-                    'class'  => 'col-sm-2 control-label'
+        $this->add(
+            array(
+                'name' => 'key',
+                'attributes' => array(
+                    'type' => 'text',
+                    'id' => 'key',
+                    'class' => 'form-control'
                 ),
-            ),
-        ));
-
-        $this->add(array(
-            'name' => 'description',
-            'attributes' => array(
-                'type'  => 'text',
-                'id' => 'description',
-                'class' => 'form-control'
-            ),
-            'options' => array(
-                'label' => 'Description',
-                'label_attributes' => array(
-                    'class'  => 'col-sm-2 control-label'
+                'options' => array(
+                    'label' => 'Key',
+                    'label_attributes' => array(
+                        'class' => 'col-sm-2 control-label'
+                    ),
                 ),
-            ),
-        ));
+            )
+        );
 
-        $this->add(array(
-            'name' => 'submit',
-            'attributes' => array(
-                'type'  => 'submit',
-                'value' => 'Create',
-                'id' => 'submit',
-                'class' => 'form-control col-sm-6 btn btn-success'
-            ),
-        ));
+        $this->add(
+            array(
+                'name' => 'value',
+                'attributes' => array(
+                    'type'  => 'text',
+                    'id' => 'value',
+                    'class' => 'form-control'
+                ),
+                'options' => array(
+                    'label' => 'Value',
+                    'label_attributes' => array(
+                        'class'  => 'col-sm-2 control-label'
+                    ),
+                ),
+            )
+        );
+
+        $this->add(
+            array(
+                'name' => 'description',
+                'attributes' => array(
+                    'type'  => 'text',
+                    'id' => 'description',
+                    'class' => 'form-control'
+                ),
+                'options' => array(
+                    'label' => 'Description',
+                    'label_attributes' => array(
+                        'class'  => 'col-sm-2 control-label'
+                    ),
+                ),
+            )
+        );
+
+        $this->add(
+            array(
+                'name' => 'submit',
+                'attributes' => array(
+                    'type'  => 'submit',
+                    'value' => 'Create',
+                    'id' => 'submit',
+                    'class' => 'form-control col-sm-6 btn btn-success'
+                ),
+            )
+        );
     }
 
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -113,81 +123,87 @@ class Create extends Form
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
 
-            $inputFilter->add(array(
-                'name'     => 'namespace',
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => 'StringLength',
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 64,
+            $inputFilter->add(
+                array(
+                    'name'     => 'namespace',
+                    'required' => true,
+                    'filters'  => array(
+                        array('name' => 'StripTags'),
+                        array('name' => 'StringTrim'),
+                    ),
+                    'validators' => array(
+                        array(
+                            'name'    => 'StringLength',
+                            'options' => array(
+                                'encoding' => 'UTF-8',
+                                'min'      => 1,
+                                'max'      => 64,
+                            ),
+                        ),
+                    )
+                )
+            );
+
+            $inputFilter->add(
+                array(
+                    'name'     => 'key',
+                    'required' => true,
+                    'filters'  => array(
+                        array('name' => 'StripTags'),
+                        array('name' => 'StringTrim'),
+                    ),
+                    'validators' => array(
+                        array(
+                            'name'    => 'StringLength',
+                            'options' => array(
+                                'encoding' => 'UTF-8',
+                                'min'      => 1,
+                                'max'      => 255,
+                            ),
                         ),
                     ),
                 )
-            ));
+            );
 
-            $inputFilter->add(array(
-                'name'     => 'key',
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => 'StringLength',
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 255,
+            $inputFilter->add(
+                array(
+                    'name'     => 'value',
+                    'required' => true,
+                    'filters'  => array(
+                        array('name' => 'StripTags'),
+                        array('name' => 'StringTrim'),
+                    ),
+                    'validators' => array(
+                        array(
+                            'name'    => 'StringLength',
+                            'options' => array(
+                                'encoding' => 'UTF-8',
+                                'min'      => 1
+                            ),
                         ),
                     ),
-                ),
-            ));
+                )
+            );
 
-            $inputFilter->add(array(
-                'name'     => 'value',
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => 'StringLength',
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-//                            'max'      => 255,
+            $inputFilter->add(
+                array(
+                    'name'     => 'description',
+                    'required' => true,
+                    'filters'  => array(
+                        array('name' => 'StripTags'),
+                        array('name' => 'StringTrim'),
+                    ),
+                    'validators' => array(
+                        array(
+                            'name'    => 'StringLength',
+                            'options' => array(
+                                'encoding' => 'UTF-8',
+                                'min'      => 1
+                            ),
                         ),
                     ),
-                ),
-            ));
-
-            $inputFilter->add(array(
-                'name'     => 'description',
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => 'StringLength',
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-//                            'max'      => 255,
-                        ),
-                    ),
-                ),
-            ));
+                )
+            );
 
             $this->inputFilter = $inputFilter;
         }

@@ -124,11 +124,11 @@ return array(
         ),
         'factories' => array(
             'Db\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
-            'Zend\Authentication\AuthenticationService' => function($serviceManager) {
+            'Zend\Authentication\AuthenticationService' => function ($serviceManager) {
                 // If you are using DoctrineORMModule:
                 return $serviceManager->get('doctrine.authenticationservice.orm_default');
             },
-            'Options\Entity\Options' => function($sm) {
+            'Options\Entity\Options' => function ($sm) {
                 return new Options\Entity\Options();
             },
         )
