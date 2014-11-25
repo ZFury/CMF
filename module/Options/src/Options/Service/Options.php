@@ -3,6 +3,7 @@
 namespace Options\Service;
 
 use Zend\ServiceManager\ServiceManager;
+use Zend\Mvc\Controller\Plugin\Url;
 
 class Options
 {
@@ -34,5 +35,4 @@ class Options
     {
         return $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
     }
-
 }
