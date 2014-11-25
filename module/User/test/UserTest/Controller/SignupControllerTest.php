@@ -11,7 +11,7 @@ namespace ImageTest\Controller;
 use SebastianBergmann\Exporter\Exception;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
-class IndexControllerTest extends AbstractHttpControllerTestCase
+class SignupControllerTest extends AbstractHttpControllerTestCase
 {
     public function setUp()
     {
@@ -25,28 +25,14 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
 
     /**
      */
-    public function testIndexActionCanBeAccessed()
+    public function testIndex()
     {
-//        $imageTableMock = $this->getMockBuilder('Image\Model\AlbumTable')
-//            ->disableOriginalConstructor()
-//            ->getMock();
-//
-//        $imageTableMock->expects($this->once())
-//            ->method('select')
-//            ->will($this->returnValue(array()));
-//
-//        $serviceManager = $this->getApplicationServiceLocator();
-//        $serviceManager->setAllowOverride(true);
-//        $serviceManager->setService('Image\Model\AlbumTable', $imageTableMock);
-//        $query = $this->getRequest()->getQuery();
-//        $query['token'] = 'asdasdasd';
-//        $this->setExpectedException('\User\Exception\AuthException');
         $this->dispatch('/user/signup/index');
         $this->assertResponseStatusCode(200);
         $this->assertModuleName('User');
-        $this->assertControllerName('User\Controller\User');
+        $this->assertControllerName('User\Controller\Signup');
         $this->assertControllerClass('SignupController');
-        $this->assertMatchedRouteName('user');
+        $this->assertMatchedRouteName('user/default');
     }
 
 //    public function testPortraitActionCanBeAccessed()
