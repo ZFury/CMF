@@ -15,5 +15,10 @@
         "bjyoungblood/bjy-authorize": "1.4.*",
         "facebook/php-sdk-v4": "4.0.*",
         "phpunit/phpunit": "4.2"
+    },
+    "autoload": {
+        "psr-0": {
+            "": "library/"
+        }
     }
 }
