@@ -1,7 +1,6 @@
 <?php
-namespace User;
+namespace Dashboard;
 
-use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\MvcEvent;
 
 class Module
@@ -28,11 +27,7 @@ class Module
 
         $em->attach(MvcEvent::EVENT_DISPATCH, function($e) {
             $controller = $e->getTarget();
-            if ($controller instanceof Controller\ManagementController) {
-                $controller->layout('layout/dashboard');
-            } else {
-                $controller->layout('layout/layout');
-            }
+            $controller->layout('layout/dashboard');
         });
     }
 }

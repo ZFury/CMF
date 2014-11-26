@@ -109,6 +109,10 @@ return array(
                     'controller' => 'Application\Controller\Index',
                     'roles' => array(),
                 ),
+                array(
+                    'controller' => 'ZFTool\Controller\Create',
+                    'roles' => array('guest'),
+                ),
             ),
         ),
     )
