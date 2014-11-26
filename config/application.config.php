@@ -11,6 +11,7 @@ return array(
         'User',
         'Test',
         'Options',
+        'Comment'
     ),
 
     // These are various options for the listeners attached to the ModuleManager
