@@ -7,4 +7,4 @@ use Doctrine\ORM\EntityRepository;
 class Options extends EntityRepository
 {
 
-} 
+}

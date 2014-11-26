@@ -27,17 +27,19 @@ class ManagementController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $options = $objectManager->getRepository('Options\Entity\Options')->findAll();
 
-        return new ViewModel(array(
-            'options' => $options
-        ));
+        return new ViewModel(
+            array(
+                'options' => $options
+            )
+        );
     }
 
     public function viewAction()
     {
         $namespace = $this->params()->fromRoute('namespace');
         $key = $this->params()->fromRoute('key');
-//        $namespace = $this->params()->fromQuery('namespace');
-//        $key = $this->params()->fromQuery('key');
+        //        $namespace = $this->params()->fromQuery('namespace');
+        //        $key = $this->params()->fromQuery('key');
 
         if (!$namespace || !$key) {
             return $this->notFoundAction();
@@ -55,7 +57,7 @@ class ManagementController extends AbstractActionController
 
     public function createAction()
     {
-        $form = new Create($this->getServiceLocator());
+        $form = new Create('create', ['serviceLocator' => $this->getServiceLocator()]);
 
         if ($this->getRequest()->isPost()) {
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -90,9 +92,11 @@ class ManagementController extends AbstractActionController
             }
         }
 
-        return new ViewModel( array(
+        return new ViewModel(
+            array(
                 'form' => $form
-            ));
+            )
+        );
     }
 
     /**
@@ -113,23 +117,32 @@ class ManagementController extends AbstractActionController
             ->getRepository('Options\Entity\Options')
             ->findOneBy(array('namespace' => $namespace, 'key' => $key));
 
-        $form = new Edit($this->getServiceLocator(), $option);
+        if (!$option) {
+            return $this->notFoundAction();
+        }
+
+        $optionData = array(
+            'namespace' => $option->getNamespace(),
+            'key' => $option->getKey(),
+            'value' => $option->getValue(),
+            'description' => $option->getDescription()
+        );
+
+        $form = new Create('edit', ['serviceLocator' => $this->getServiceLocator()]);
+        $form->setData($optionData);
+        $form->get('submit')->setValue('Save');
+        //        $form = new Edit($this->getServiceLocator(), $option);
 
         if ($this->getRequest()->isPost()) {
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
-//                $data = $form->getData();
 
                 $objectManager->getConnection()->beginTransaction();
                 try {
                     $hydrator = new DoctrineHydrator($objectManager);
                     $hydrator->hydrate($form->getData(), $option);
 
-//                    $option->setNamespace($data['namespace']);
-//                    $option->setKey($data['key']);
-//                    $option->setValue($data['value']);
-//                    $option->setDescription($data['description']);
                     $option->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
 
                     $objectManager->persist($option);
@@ -149,9 +162,11 @@ class ManagementController extends AbstractActionController
             }
         }
 
-        return new ViewModel(array(
-            'form' => $form
-        ));
+        return new ViewModel(
+            array(
+                'form' => $form
+            )
+        );
     }
 
     public function deleteAction()
@@ -167,6 +182,10 @@ class ManagementController extends AbstractActionController
         $option = $objectManager
             ->getRepository('Options\Entity\Options')
             ->findOneBy(array('namespace' => $namespace, 'key' => $key));
+
+        if (!$option) {
+            return $this->redirect()->toRoute('options');
+        }
 
         $objectManager->remove($option);
         $objectManager->flush($option);
