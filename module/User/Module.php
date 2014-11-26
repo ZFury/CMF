@@ -2,6 +2,7 @@
 namespace User;
 
 use Zend\Authentication\AuthenticationService;
+use Zend\Mvc\MvcEvent;
 
 class Module
 {
@@ -19,5 +20,19 @@ class Module
                 ),
             ),
         );
+    }
+
+    public function onBootstrap(MvcEvent $e)
+    {
+        $em = $e->getApplication()->getEventManager();
+
+        $em->attach(MvcEvent::EVENT_DISPATCH, function($e) {
+            $controller = $e->getTarget();
+            if ($controller instanceof Controller\ManagementController) {
+                $controller->layout('layout/dashboard.phtml');
+            } else {
+                $controller->layout('layout/layout.phtml');
+            }
+        });
     }
 }

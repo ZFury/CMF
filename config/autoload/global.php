@@ -17,5 +17,13 @@ return array(
         'error_reporting' => E_ALL,
         'display_errors' => true,
         'display_startup_errors' => true
+    ),
+    'navigation' => array(
+        'default' => array(
+             array(
+                 'label' => 'Users',
+                 'route' => 'user/default',
+             )
+         )
     )
 );

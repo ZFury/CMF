@@ -55,11 +55,14 @@ return array(
     'service_manager' => array(
         'abstract_factories' => array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
-            'Zend\Log\LoggerAbstractServiceFactory',
+            'Zend\Log\LoggerAbstractServiceFactory'
+        ),
+        'factories' => array(
+            'Navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory'
         ),
         'aliases' => array(
             'translator' => 'MvcTranslator',
-        ),
+        )
     ),
     'translator' => array(
         'locale' => 'en_US',

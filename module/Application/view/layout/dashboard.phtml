@@ -1,0 +1,24 @@
+<html lang="en">
+    <?php require 'partial/header.phtml'; ?>
+    <body>
+    <?= $this->partial('layout/partial/flashmessenger.phtml') ?>
+    <?php require 'partial/nav-bar.phtml'; ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="nav-dashboard" data-spy="affix" data-offset-top="60">
+                    <?= $this->navigation('Navigation')->menu() ?>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="breadcrumb">
+                    <?= $this->navigation('Navigation')->breadcrumbs() ?>
+                </div>
+                <?= $this->content ?>
+            </div>
+        </div>
+        <?php require 'partial/footer.phtml'; ?>
+    </div>
+    <?php echo $this->inlineScript() ?>
+    </body>
+</html>
