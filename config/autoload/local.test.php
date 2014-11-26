@@ -12,14 +12,9 @@ return array(
                 'params' => array(
                     'host'     => 'alpha-team.php.nixsolutions.com',
                     'port'     => '3306',
-                    'dbname'   => 'p_zfs_test',
-                    'username' => 'p_zfs_tests',
+                    'dbname'   => 'p_zfs_tests',
+                    'user' => 'p_zfs_test',
                     'password' => 'p_zfs_test',
-//                    'host'     => 'alexfloppy-ubnt.php.nixsolutions.com',
-//                    'port'     => '3306',
-//                    'dbname'   => 'zf2_starter_alpha_test',
-//                    'username' => 'developer',
-//                    'password' => '123456',
                 ),
                 'doctrine_type_mappings' => array(
                     'enum' => 'string'

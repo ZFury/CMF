@@ -63,6 +63,27 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
     }
 
     /**
+     * @throws \User\Exception\AuthException
+     */
+    protected function setUp()
+    {
+        $this->setApplicationConfig(
+            include 'config/application.config.php'
+        );
+        parent::setUp();
+
+        //remove user
+        $this->removeUser();
+
+        //create user
+        $this->createUser();
+
+        /** @var \User\Service\Auth $userAuth */
+        $userAuth = $this->getApplicationServiceLocator()->get('\User\Service\Auth');
+        $userAuth->authenticateEquals($this->userData['email'], $this->userData['password']);
+    }
+
+    /**
      *  remove option
      */
     public function tearDown()
@@ -196,27 +217,6 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
 
         $this->assertEquals(302, $this->getResponse()->getStatusCode());
         $this->assertRedirectTo('/options');
-    }
-
-    /**
-     * @throws \User\Exception\AuthException
-     */
-    protected function setUp()
-    {
-        $this->setApplicationConfig(
-            include 'config/application.config.php'
-        );
-        parent::setUp();
-
-        //remove user
-        $this->removeUser();
-
-        //create user
-        $this->createUser();
-
-        /** @var \User\Service\Auth $userAuth */
-        $userAuth = $this->getApplicationServiceLocator()->get('\User\Service\Auth');
-        $userAuth->authenticateEquals($this->userData['email'], $this->userData['password']);
     }
 
     /**
