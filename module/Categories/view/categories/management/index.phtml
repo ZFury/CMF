@@ -1,0 +1,82 @@
+<?php
+$title = 'Categories';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div class="container">
+    <div class="row">
+        <p>
+            <a class="btn btn-primary"
+               href="<?php echo $this->url('categories/create') ?>">
+                <?php echo $this->translate('Create category') ?></a>
+        </p>
+
+        <div class="col-lg-12">
+            <table class="table table-responsive table-hover">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Alias</th>
+<!--                    <th>Parent id</th>-->
+                    <th colspan="3">Actions</th>
+                </tr>
+                </thead>
+                <?php if (isset($categories) && $categories): ?>
+                    <?php foreach ($categories as $index => $category): ?>
+                        <?php //var_dump($category->getCreated()); ?>
+                        <tr>
+                            <td>
+                                <?php echo $this->escapeHtml($category->getId()); ?>
+                            </td>
+                            <td>
+                                <?php echo str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', $categories->getDepth()) . $this->escapeHtml($category->getName()); ?>
+                            </td>
+                            <td>
+                                <?php echo $this->escapeHtml($category->getAlias()); ?>
+                            </td>
+                            <!--                            <td>-->
+                            <!--                                --><?php //echo $this->escapeHtml($category->getRoot()); ?>
+                            <!--                            </td>-->
+<!--                            <td>-->
+                                <!--                                --><?php //echo $category->getRoot(); ?>
+<!--                            </td>-->
+                            <td>
+                                <a class="btn btn-sm btn-primary"
+                                   href="<?php echo $this->url('categories/create', array('parentId' => $category->getId())) ?>">
+                                    <?php echo $this->translate('Add') ?></a>
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-primary"
+                                   href="<?php echo $this->url('categories/edit', array('id' => $category->getId())) ?>">
+                                    <?php echo $this->translate('Edit') ?></a>
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-primary delete"
+                                   href="<?php echo $this->url('categories/delete', array('id' => $category->getId())) ?>">
+                                    <?php echo $this->translate('Delete') ?></a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Create category</h4>
+            </div>
+            <div class="modal-body" id="popupBody">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="close-form-button" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="submit-form-button">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
