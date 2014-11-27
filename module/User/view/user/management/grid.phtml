@@ -1,0 +1,46 @@
+<script>
+    require(['jquery', 'bootstrap', 'modules/user/userApp']);
+</script>
+
+<div ng-controller="userGridController" class="ng-scope">
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="users">
+            <div class="row tab-wrapper row tab-wrapper-noscroll">
+                <div class="col-sm-10">
+                    <div class="table-scroll">
+                        <div>
+                            <table class="table table-fixed  table-striped table-hover">
+                                <thead ng-show="filteredUsers.length">
+                                <tr>
+                                    <th class="col-md-1">№</th>
+                                    <th class="col-md-3">Email</th>
+                                    <th class="action-col col-md-1"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="user in filteredUsers  = usersGrid | limitTo:params.pageSize">
+                                    <td>
+                                        <span ng-bind="user.id"></span>
+                                    </td>
+                                    <td>
+                                        <span ng-bind="user.email"></span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="btn-group" ng-show="filteredUsers.length">
+                                <ul>
+                                    <button class="btn btn-default" type="button" ng-disabled="currentGridPage == 0"
+                                            ng-click="getPage('prev')">PREV</button>
+                                    {{currentGridPage+1}} / {{gridPages}}
+                                    <button type="button" class="btn btn-default" ng-click="getPage('next')"
+                                            ng-disabled="currentGridPage == gridPages-1">NEXT </button>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

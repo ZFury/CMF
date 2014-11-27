@@ -155,6 +155,16 @@ return array(
                     'roles' => array('user'),
                 ),
                 array(
+                    'controller' => 'User\Controller\Management',
+                    'action' => array('grid'),
+                    'roles' => array('guest','user','admin'),
+                ),
+                array(
+                    'controller' => 'User\Controller\Management',
+                    'action' => array('get-users'),
+                    'roles' => array('guest','user','admin'),
+                ),
+                array(
                     'controller' => 'User\Controller\Profile',
 //                    'action' => array('index'),
                     'roles' => array('user'),

@@ -14,6 +14,8 @@ use User\Entity;
 use User\Form;
 use Zend\Form\Annotation\AnnotationBuilder;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
+use Zend\View\Model\JsonModel;
+use Starter\Mvc\Grid\Grid;
 
 class ManagementController extends AbstractActionController
 {
@@ -43,5 +45,53 @@ class ManagementController extends AbstractActionController
 //        return new ViewModel([
 //            'form' => $form
 //        ]);
+    }
+
+    /**
+     * Grid action
+     *
+     * @return \Zend\View\Model\ViewModel
+     *
+     * Created by Maxim Mandryka maxim.mandryka@nixsolutions.com
+     */
+    public function gridAction()
+    {
+        return new ViewModel();
+    }
+
+    /**
+     * Get users action
+     *
+     * @return \Zend\View\Model\JsonModel
+     *
+     * Created by Maxim Mandryka maxim.mandryka@nixsolutions.com
+     */
+    public function getUsersAction()
+    {
+        /* @var \Zend\Http\Request $request */
+        $request = $this->getRequest();
+        $data = array();
+
+        if ($request->isPost()) {
+            $params = $request->getPost('data');
+            $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+            $source = $em->createQueryBuilder()->select(array("u.id, u.email"))
+                ->from('\User\Entity\User', 'u');
+            $grid = new \Starter\Mvc\Controller\AaaController();
+
+            if (isset($params['page'])) {
+                $grid->setPage($params['page']);
+            }
+            if (isset($params['limit'])) {
+                $grid->setPage($params['limit']);
+            }
+            if (isset($params['order'])) {
+                $grid->setPage($params['order']);
+            }
+            $data = $grid->getData();
+        }
+        return new JsonModel(array(
+            'data' => $data
+        ));
     }
 }

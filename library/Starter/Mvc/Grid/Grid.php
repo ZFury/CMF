@@ -1,11 +1,10 @@
 <?php
 
-namespace Starter\Mvc\Controller;
+namespace Starter\Mvc\Grid;
 
-use Zend\Mvc\Controller\AbstractController;
 use Doctrine\ORM\QueryBuilder;
 
-abstract class AbstractGridController extends AbstractController
+class Grid
 {
     const ORDER_ASC = 'ASC';
     const ORDER_DESC = 'DESC';
@@ -49,7 +48,7 @@ abstract class AbstractGridController extends AbstractController
      * __construct
      *
      * @param QueryBuilder $source
-     * @return AbstractGridController
+     * @return Grid
      */
     public function __construct($source)
     {
@@ -68,15 +67,9 @@ abstract class AbstractGridController extends AbstractController
         $limit = $this->getLimit();
         $order = $this->getOrder();
 
-        if (!empty($offset)) {
-            $source->setFirstResult($offset);
-        }
-        if (!empty($limit)) {
-            $source->setMaxResults($limit);
-        }
-        if (!empty($order)) {
-            $source->orderBy($order['field'], $order['order']);
-        }
+        $source->setFirstResult($offset);
+        $source->setMaxResults($limit);
+        $source->orderBy($order['field'], $order['order']);
 
         return $source->getQuery()->getArrayResult();
     }
@@ -109,7 +102,7 @@ abstract class AbstractGridController extends AbstractController
      * Set settings
      *
      * @param array $params
-     * @return AbstractGridController
+     * @return Grid
      */
     public function setSettings(array $params)
     {
@@ -121,7 +114,7 @@ abstract class AbstractGridController extends AbstractController
      * Set page
      *
      * @param int $page
-     * @return AbstractGridController
+     * @return Grid
      */
     public function setPage($page)
     {
@@ -143,7 +136,7 @@ abstract class AbstractGridController extends AbstractController
      * Set limit
      *
      * @param int $limit
-     * @return AbstractGridController
+     * @return Grid
      */
     public function setLimit($limit)
     {
@@ -165,7 +158,7 @@ abstract class AbstractGridController extends AbstractController
      * Set order
      *
      * @param array $order
-     * @return AbstractGridController
+     * @return Grid
      */
     public function setOrder($order)
     {
@@ -188,7 +181,7 @@ abstract class AbstractGridController extends AbstractController
      *
      * @param string $column
      * @param string $order
-     * @return AbstractGridController
+     * @return Grid
      */
     public function addOrder($column, $order = self::ORDER_ASC)
     {
@@ -202,7 +195,7 @@ abstract class AbstractGridController extends AbstractController
      *
      * @param string $column
      * @param array $orders
-     * @return AbstractGridController
+     * @return Grid
      */
     public function addOrders(array $orders)
     {

@@ -8,14 +8,32 @@ require.config({
     // if you need disable JS cache
     urlArgs: "bust=" + (new Date()).getTime(),
     paths: {
-        bootstrap: './bootstrap',
-        jquery: './jquery.min',
-        respond: './respond.min',
-        html5shiv: './html5shiv',
+        angular: './libs/angular',
+        'jquery': './libs/jquery.min',
+        'bootstrap': './libs/bootstrap.min',
+        'angularSanitize': './libs/angular-sanitize',
+        'angularRoute': './libs/angular-route',
+        respond: './libs/respond.min',
+        html5shiv: './libs/html5shiv',
         underscore: '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min',
-        backbone: '//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min',
+        backbone: '//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min'
     },
     shim: {
+        angular: {
+            deps: [],
+            exports: 'angular'
+        },
+        'angularSanitize': {
+            deps: ['angular'],
+            exports: 'angular'
+        },
+        'angularRoute': {
+            deps: ['angular'],
+            exports: 'angular'
+        },
+        'jquery': {
+            exports: '$'
+        },
         bootstrap: {
             deps: ['jquery'],
             exports: '$.fn.popover'
@@ -30,5 +48,3 @@ require.config({
     },
     enforceDefine: true
 });
-
-require(['bootstrap']);
