@@ -27,10 +27,10 @@ class Module
 
         $em->attach(MvcEvent::EVENT_DISPATCH, function($e) {
             $controller = $e->getTarget();
-            if ($controller instanceof Controller\IndexController) {
+            $controllerFullName = $e->getRouteMatch()->getParam('controller');
+            $controllerName = explode('\\', $controllerFullName);
+            if ($controller instanceof Controller\IndexController || array_pop($controllerName) == 'Management') {
                 $controller->layout('layout/dashboard');
-            } else {
-                $controller->layout('layout/layout');
             }
         });
     }

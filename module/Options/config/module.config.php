@@ -172,4 +172,28 @@ return array(
             ),
         ),
     ),
+    'navigation' => array(
+        'default' => array(
+            array(
+                'label' => 'Option',
+                'controller' => 'option',
+                'pages' => array(
+                    array(
+                        'label' => 'All options',
+                        'controller' => 'management',
+                        'action' => 'index',
+                        'route' => 'options'
+
+                    ),
+                    array(
+                        'label' => 'Create option',
+                        'controller' => 'management',
+                        'action' => 'create',
+                        'route' => 'option.create'
+
+                    )
+                )
+            )
+        )
+    )
 );

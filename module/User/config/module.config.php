@@ -158,7 +158,12 @@ return array(
                     'controller' => 'User\Controller\Profile',
 //                    'action' => array('index'),
                     'roles' => array('user'),
-                )
+                ),
+                array(
+                    'controller' => 'User\Controller\Management',
+                    'action' => array('index'),
+                    'roles' => array('user'),
+                ),
             ),
         ),
     ),
@@ -169,23 +174,16 @@ return array(
                 'controller' => 'user',
                 'pages' => array(
                     array(
-                        'label' => 'Add user',
+                        'label' => 'All users',
+                        'controller' => 'management',
+                        'action' => 'index',
+                        'route' => 'user/default'
+
+                    ),
+                    array(
+                        'label' => 'Create user',
                         'controller' => 'management',
                         'action' => 'create',
-                        'route' => 'user/default'
-
-                    ),
-                    array(
-                        'label' => 'Edit user',
-                        'controller' => 'management',
-                        'action' => 'edit',
-                        'route' => 'user/default'
-
-                    ),
-                    array(
-                        'label' => 'Delete user',
-                        'controller' => 'management',
-                        'action' => 'delete',
                         'route' => 'user/default'
                     )
                 )

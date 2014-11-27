@@ -21,18 +21,4 @@ class Module
             ),
         );
     }
-
-    public function onBootstrap(MvcEvent $e)
-    {
-        $em = $e->getApplication()->getEventManager();
-
-        $em->attach(MvcEvent::EVENT_DISPATCH, function($e) {
-            $controller = $e->getTarget();
-            if ($controller instanceof Controller\ManagementController) {
-                $controller->layout('layout/dashboard');
-            } else {
-                $controller->layout('layout/layout');
-            }
-        });
-    }
 }

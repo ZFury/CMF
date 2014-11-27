@@ -8,6 +8,7 @@ $config =  array(
         'DoctrineModule',
         'DoctrineORMModule',
         'BjyAuthorize',
+        'Options',
         'User',
         'Dashboard',
     ),

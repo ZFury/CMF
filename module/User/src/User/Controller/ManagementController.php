@@ -18,8 +18,13 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 class ManagementController extends AbstractActionController
 {
 
-//    public function createAction()
-//    {
+    public function indexAction()
+    {
+
+    }
+
+    public function createAction()
+    {
 //        not implemented yet
 //        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 //        $user = new Entity\User();
@@ -43,5 +48,5 @@ class ManagementController extends AbstractActionController
 //        return new ViewModel([
 //            'form' => $form
 //        ]);
-//    }
+    }
 }
