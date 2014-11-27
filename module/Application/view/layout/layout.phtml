@@ -1,15 +1,15 @@
 <?php echo $this->doctype(); ?>
 <html lang="en">
     <head>
-        <?php require 'partial/header.phtml'; ?>
+        <?= $this->partial('layout/partial/header.phtml') ?>
     </head>
     <body>
-    <?php echo $this->partial('layout/partial/flashmessenger.phtml'); ?>
-    <?php require 'partial/nav-bar.phtml'; ?>
+    <?= $this->partial('layout/partial/flashmessenger.phtml'); ?>
+    <?= $this->partial('layout/partial/nav-bar.phtml') ?>
     <div class="container">
         <?php echo $this->content; ?>
         <hr>
-        <?php require 'partial/footer.phtml'; ?>
+        <?= $this->partial('layout/partial/footer.phtml') ?>
     </div> <!-- /container -->
     <?php echo $this->inlineScript() ?>
     </body>
