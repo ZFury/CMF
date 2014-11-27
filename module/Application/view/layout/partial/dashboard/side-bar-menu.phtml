@@ -1,5 +1,15 @@
-<?php foreach ($this->container as $page) { ?>
-    <div class="panel panel-default">
-        <div class="panel-heading"><?= $this->navigation()->menu()->htmlify($page) . PHP_EOL ?></div>
-    </div>
-<?php }
+<ul class="nav navbar-nav side-nav">
+<?php foreach ($this->container as $pages) { ?>
+    <li>
+        <a href="javascript:;" data-toggle="collapse" data-target="#<?=$pages->label?>">
+            <i class="fa fa-fw fa-arrows-v"></i>
+                <?=$pages->label?>
+            <i class="fa fa-fw fa-caret-down"></i></a>
+        <ul id="<?=$pages->label?>" class="collapse">
+            <?php foreach ($pages as $page) { ?>
+                <li><?= $this->navigation()->menu()->htmlify($page) . PHP_EOL ?></li>
+            <?php } ?>
+        </ul>
+    </li>
+<?php } ?>
+</ul>

@@ -13,7 +13,7 @@ require.config({
         respond: './respond.min',
         html5shiv: './html5shiv',
         underscore: '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min',
-        backbone: '//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min',
+        backbone: '//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min'
     },
     shim: {
         bootstrap: {

@@ -1,5 +1,7 @@
-<?php
-$this->navigation('Navigation')->menu()
-    ->setUlClass('panel-group')
-    ->setPartial('layout/partial/dashboard/side-bar-menu.phtml');
-echo $this->navigation()->menu()->render();
+<div class="collapse navbar-collapse navbar-ex1-collapse">
+    <?php
+    $this->navigation('Navigation')->menu()
+        ->setPartial('layout/partial/dashboard/side-bar-menu.phtml');
+    echo $this->navigation()->menu()->render();
+    ?>
+</div>
