@@ -115,7 +115,7 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
      */
     public function testCreateActionCanBeAccessed()
     {
-        $this->dispatch('/option/create');
+        $this->dispatch('/options/management/create');
         $this->assertEquals(200, $this->getResponse()->getStatusCode());
     }
 
@@ -139,7 +139,7 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         $this->getRequest()->setMethod('POST')
             ->setPost($parameters);
 
-        $this->dispatch('/option/create');
+        $this->dispatch('/options/management/create');
         $this->assertEquals(302, $this->getResponse()->getStatusCode());
         $this->assertRedirectTo('/options');
     }
