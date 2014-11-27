@@ -1,10 +1,10 @@
 <?php
 
-namespace Options\Form;
+namespace Options\Form\Filter;
 
 use Zend\InputFilter\InputFilter;
 
-class CreateInputFilter extends InputFilter
+class Create extends InputFilter
 {
     public function __construct()
     {

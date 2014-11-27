@@ -33,7 +33,7 @@ class Create extends Form
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'form-horizontal');
         $this->setAttribute('role', 'form');
-        $this->setInputFilter(new CreateInputFilter());
+        $this->setInputFilter(new Filter\Create());
 
         $this->add(
             array(
