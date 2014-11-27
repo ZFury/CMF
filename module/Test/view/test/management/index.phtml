@@ -1,0 +1,30 @@
+<a class="btn btn-primary" href="<?= $this->url('test/default', ['controller' => 'management', 'action' => 'create']) ?>">Create</a>
+<div id="grid">
+    <div class="head row">
+        <div class="col-md-1">id</div>
+        <div class="col-md-4">email</div>
+        <div class="col-md-4">name</div>
+        <hr/>
+    </div>
+        <?php foreach($this->data as $row) :?>
+            <div class="row">
+                <div class="col-md-1">
+                    <?=$row->getId()?>
+                </div>
+                <div class="col-md-4">
+                    <?=$row->getEmail()?>
+                </div>
+                <div class="col-md-4">
+                    <?=$row->getName()?>
+                </div>
+                <div class="col-md-3">
+                    <a class="btn btn-default" href="<?=
+                    $this->url('test/default', ['controller' => 'management', 'action' => 'edit', 'id' => $row->getId()])
+                    ?>">Edit</a>
+                    <a class="btn btn-danger" href="<?=
+                    $this->url('test/default', ['controller' => 'management', 'action' => 'delete', 'id' => $row->getId()])
+                    ?>">Delete</a>
+                </div>
+            </div>
+        <?php endforeach;?>
+</div>
