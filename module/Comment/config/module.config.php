@@ -23,7 +23,7 @@ return array(
                 array(
                     'controller' => 'Comment\Controller\Index',
 //                    'action' => array('add'),
-                    'roles' => array('guest', 'user'),
+                    'roles' => array('user'),
                 )
             ),
         ),
@@ -63,10 +63,13 @@ return array(
             'Example'
         ),
         'factories' => array(
-            /* 'Comment\Service\Comment' => function($sm) {
-               return new Comment\Service\Comment($sm);
+            'Comment\Service\EntityType' => function($sm) {
+               return new Comment\Service\EntityType($sm);
            },
-           /er\Entity\User' => function($sm) {
+            'Comment\Service\Comment' => function($sm) {
+                return new Comment\Service\Comment($sm);
+            },
+            /*/er\Entity\User' => function($sm) {
                return new User\Entity\User();
            },
 

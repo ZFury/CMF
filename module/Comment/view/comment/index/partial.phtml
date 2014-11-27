@@ -1,0 +1,20 @@
+<?php // partial.phtml ?>
+<ul>
+    <li>
+        <ul class="list-inline">
+            <li ><span class="text-info">iD:</span> <?php echo $this->comment_info->getId() ?></li>
+            <li ><span class="text-info">Comment:</span> <?php echo $this->comment_info->getComment() ?></li>
+            <li ><span class="text-info">Entity type:</span> <?php echo $this->comment_info->getComment() ?></li>
+            <li ><span class="text-info">Entity id:</span> <?php echo $this->comment_info->getComment() ?></li>
+            <li><span class="text-info">UserId:</span> <?php echo $this->comment_info->getUserId() ?></li>
+        </ul>
+    </li>
+    <?php
+    if(count($this->comments)>0)
+    {
+    ?>
+        <li class="list-unstyled"><span class="text-info">Comments:</span> <?php echo $this->partialLoop('comment/index/partial.phtml', $this->comments)?></li>
+    <?php
+    }
+    ?>
+</ul>

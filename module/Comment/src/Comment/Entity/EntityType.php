@@ -9,8 +9,8 @@ use Zend\ServiceManager\ServiceManager;
 /**
  *
  * @ORM\Entity(repositoryClass="Comment\Repository\EntityType")
- * @ORM\Table(name="entityType")
- * @Annotation\Name("comment")
+ * @ORM\Table(name="entity_type")
+ * @Annotation\Name("entity_type")
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @author Sergey Lopay
  */
@@ -31,30 +31,18 @@ class EntityType
      * @Annotation\Type("Zend\Form\Element\Textarea")
      * @Annotation\Required(true)
      * @Annotation\Attributes({"class":"form-control"})
-     * @ORM\Column(type="text", nullable=false)
-     */
-    protected $comment;
-
-    /**
-     * @var int
-     * @Annotation\Exclude
-     * @ORM\Column(type="integer", options={"unsigned"=true})
-     * @ORM\ManyToOne(targetEntity="User\Entity\User")
-     */
-    protected $userId;
-
-    /**
-     * @var string
-     * @Annotation\Exclude
      * @ORM\Column(type="string", nullable=false)
      */
     protected $entityType;
 
     /**
-     * @Annotation\Exclude
-     * @ORM\Column(type="integer", nullable=false)
+     * @var string
+     * @Annotation\Type("Zend\Form\Element\Textarea")
+     * @Annotation\Required(true)
+     * @Annotation\Attributes({"class":"form-control"})
+     * @ORM\Column(type="text", nullable=false)
      */
-    protected $entityId;
+    protected $desc;
 
     /**
      * @var created
@@ -108,6 +96,28 @@ class EntityType
     }
 
     /**
+     * Set description
+     *
+     * @param string $desc
+     *
+     * @return void
+     */
+    public function setDesc($desc)
+    {
+        $this->desc=$desc;
+    }
+
+    /**
+     * Get description.
+     *
+     * @return string
+     */
+    public function getDesc()
+    {
+        return $this->desc;
+    }
+
+    /**
      * Set entityType.
      *
      * @param int $entityType
@@ -127,5 +137,49 @@ class EntityType
     public function getEntityType()
     {
         return $this->entityType;
+    }
+
+    /**
+     * Set created.
+     *
+     * @param string $created
+     *
+     * @return void
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * Get created.
+     *
+     * @return string
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Get updated.
+     *
+     * @return string
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Set updated.
+     *
+     * @param string $updated
+     *
+     * @return void
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
     }
 }

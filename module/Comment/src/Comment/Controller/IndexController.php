@@ -11,10 +11,30 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 class IndexController extends AbstractActionController
 {
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     * @throws \Exception
+     */
     public function indexAction()
     {
-
-        return new ViewModel();
+        if(isset($this->getRequest()->getQuery()->entity_type) && isset($this->getRequest()->getQuery()->entity_id))
+        {
+            $comments = $this->getServiceLocator()
+                ->get('Comment\Service\Comment')
+                ->getCommentsByEntityId($this->getRequest()->getQuery()->entity_type,$this->getRequest()->getQuery()->entity_id);
+//            var_dump($comments);
+//            die();
+            return new ViewModel(array('comments' => $comments));
+        }
+        if(isset($this->getRequest()->getQuery()->user_id))
+        {
+            $comments = $this->getServiceLocator()
+                ->get('Comment\Service\Comment')
+                ->getCommentsByUserId($this->identity()->getUser()->getId());
+//            var_dump($comments);
+//            die();
+            return new ViewModel(array('comments' => $comments));
+        }
     }
 
     /**
@@ -23,46 +43,61 @@ class IndexController extends AbstractActionController
      */
     public function addAction()
     {
-        $form = new Form\AddForm(null, $this->getServiceLocator());
-        $form->setEntityType($this->getRequest()->getQuery()->entityType);
-        $form->setEntityId($this->getRequest()->getQuery()->entityId);
+            if(isset($this->getRequest()->getQuery()->entityType) && isset($this->getRequest()->getQuery()->entityId))
+            {
+                $et = $this->getServiceLocator()->get('Comment\Service\EntityType');
+                $entityType = $et->getEntityType($this->getRequest()->getQuery()->entityType);
+                if ($entityType)
+                {
+                    $form = new Form\AddForm(null, $this->getServiceLocator());
+                    $form->setEntityType($entityType->getEntityType());
+                    $form->setEntityId($this->getRequest()->getQuery()->entityId);
 
-        //$type = $this->getRequest()->getPost('type');
-        //$form->getElement('type')->setValue($type);
-        if ($this->getRequest()->isPost()) {
-            $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-            $form->setData($this->getRequest()->getPost());
-            if ($form->isValid()) {
-                $data = $form->getData();
-                $data['userId'] = $this->identity()->getUser()->getId();
-                $comment = new \Comment\Entity\Comment();
+                    if ($this->getRequest()->isPost()) {
+                        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+                        $form->setData($this->getRequest()->getPost());
+                        if ($form->isValid()) {
+                            $data = $form->getData();
+                            $data['userId'] = $this->identity()->getUser()->getId();
+                            $comment = new \Comment\Entity\Comment();
 
-                $objectManager->getConnection()->beginTransaction();
+                            $objectManager->getConnection()->beginTransaction();
 
-                try {
-                    $hydrator = new DoctrineHydrator($objectManager);
-                    $hydrator->hydrate($data, $comment);
-                    $comment->updatedTimestamps();
-//                    var_dump($comment);
-//                    die();
-                    $objectManager->persist($comment);
-                    $objectManager->flush();
+                            try {
+                                $hydrator = new DoctrineHydrator($objectManager);
+                                $hydrator->hydrate($data, $comment);
+                                $comment->updatedTimestamps();
 
-                    $objectManager->getConnection()->commit();
+                                $objectManager->persist($comment);
+                                $objectManager->flush();
 
-                    $this->flashMessenger()->addSuccessMessage('Comment added');
+                                $objectManager->getConnection()->commit();
 
-                    return $this->redirect()->toRoute('home');
+                                $this->flashMessenger()->addSuccessMessage('Comment added');
 
-                } catch (\Exception $e) {
-                    $objectManager->getConnection()->rollback();
-                    throw $e;
+                                return $this->redirect()->toRoute('home');
+
+                            } catch (\Exception $e) {
+                                $objectManager->getConnection()->rollback();
+                                throw $e;
+                            }
+                        }
+                    }
+
+                    return new ViewModel(['form' => $form]);
                 }
-
+                else
+                {
+                    $this->flashMessenger()->addErrorMessage('Еhis entity can not comment');
+                    return $this->redirect()->toRoute('home');
+                }
             }
-        }
-
-        return new ViewModel(['form' => $form]);
+            else
+            {
+                $this->flashMessenger()->addErrorMessage('Wrong query string');
+                return $this->redirect()->toRoute('home');
+            }
     }
+
 
 }
