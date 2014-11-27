@@ -27,7 +27,11 @@ class Module
 
         $em->attach(MvcEvent::EVENT_DISPATCH, function($e) {
             $controller = $e->getTarget();
-            $controller->layout('layout/dashboard');
+            if ($controller instanceof Controller\IndexController) {
+                $controller->layout('layout/dashboard');
+            } else {
+                $controller->layout('layout/layout');
+            }
         });
     }
 }

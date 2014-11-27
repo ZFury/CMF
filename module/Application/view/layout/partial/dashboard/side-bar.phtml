@@ -1,0 +1,5 @@
+<?php
+$this->navigation('Navigation')->menu()
+    ->setUlClass('panel-group')
+    ->setPartial('layout/partial/dashboard/side-bar-menu.phtml');
+echo $this->navigation()->menu()->render();

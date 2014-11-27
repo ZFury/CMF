@@ -1,0 +1,5 @@
+<?php foreach ($this->container as $page) { ?>
+    <div class="panel panel-default">
+        <div class="panel-heading"><?= $this->navigation()->menu()->htmlify($page) . PHP_EOL ?></div>
+    </div>
+<?php }

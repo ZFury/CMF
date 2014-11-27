@@ -6,14 +6,10 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-3">
-                <div class="nav-dashboard" data-spy="affix" data-offset-top="60">
-                    <?= $this->navigation('Navigation')->menu() ?>
-                </div>
+                <?php require 'partial/dashboard/side-bar.phtml' ?>
             </div>
             <div class="col-lg-9">
-                <div class="breadcrumb">
-                    <?= $this->navigation('Navigation')->breadcrumbs() ?>
-                </div>
+                <?php require 'partial/dashboard/breadcrumbs.phtml' ?>
                 <?= $this->content ?>
             </div>
         </div>
