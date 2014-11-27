@@ -16,18 +16,18 @@
         <div id="wrapper">
             <?= $this->partial('layout/partial/flashmessenger.phtml') ?>
             <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-                <?= $this->partial('partial/dashboard/nav-bar.phtml') ?>
+                <?= $this->partial('layout/partial/dashboard/nav-bar.phtml') ?>
             </nav>
-            <div id="page-wrapper" style="height: 100%">
+            <div id="page-wrapper">
                 <h1 class="page-header">
                     Dashboard <small>Statistics Overview</small>
                 </h1>
                 <div class="container-fluid">
-                    <?php // echo $this->partial('partial/dashboard/breadcrumbs.phtml)' ?>
+                    <?php // echo $this->partial('layout/partial/dashboard/breadcrumbs.phtml)' ?>
                     <?= $this->content ?>
                 </div>
             </div>
-            <?php require 'partial/footer.phtml'; ?>
+            <?= $this->partial('layout/partial/footer.phtml') ?>
             <?php echo $this->inlineScript() ?>
         </div>
     </body>
