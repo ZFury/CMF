@@ -6,13 +6,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
 use Zend\ServiceManager\ServiceManager;
+use Zend\InputFilter\InputFilter;
+use Zend\I18n\Validator;
+use Zend\Validator\Db;
+use Zend\Validator\Exception;
+
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="options")
  *
  */
-
 class Options
 {
     /**
@@ -54,7 +58,12 @@ class Options
     protected $updated;
 
     /**
-     *
+     * @var string
+     */
+    protected $inputFilter;
+
+    /**
+     * constructor
      */
     public function __construct()
     {

@@ -15,8 +15,10 @@ use Zend\View\Model\ViewModel;
 use Options\Form\Create;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 
-use Doctrine\ORM\EntityManager;
-
+/**
+ * Class ManagementController
+ * @package Options\Controller
+ */
 class ManagementController extends AbstractActionController
 {
     /**
@@ -27,17 +29,22 @@ class ManagementController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $options = $objectManager->getRepository('Options\Entity\Options')->findAll();
 
-        return new ViewModel(array(
-            'options' => $options
-        ));
+        return new ViewModel(
+            array(
+                'options' => $options
+            )
+        );
     }
 
+    /**
+     * @return array|ViewModel
+     */
     public function viewAction()
     {
         $namespace = $this->params()->fromRoute('namespace');
         $key = $this->params()->fromRoute('key');
-//        $namespace = $this->params()->fromQuery('namespace');
-//        $key = $this->params()->fromQuery('key');
+        //        $namespace = $this->params()->fromQuery('namespace');
+        //        $key = $this->params()->fromQuery('key');
 
         if (!$namespace || !$key) {
             return $this->notFoundAction();
@@ -46,18 +53,23 @@ class ManagementController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $option = $objectManager
             ->getRepository('Options\Entity\Options')
-            ->findOneBy(array('namespace' => $namespace, 'key' => $key));
+            ->find(array('namespace' => $namespace, 'key' => $key));
 
         return new ViewModel(
             array('option' => $option)
         );
     }
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     * @throws \Exception
+     */
     public function createAction()
     {
-        $form = new Create($this->getServiceLocator());
+        $form = new Create('create', ['serviceLocator' => $this->getServiceLocator()]);
 
         if ($this->getRequest()->isPost()) {
+
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
@@ -72,6 +84,8 @@ class ManagementController extends AbstractActionController
 
                     $option->setCreated(new \DateTime(date('Y-m-d H:i:s')));
                     $option->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
+
+                    $form->bind($option);
 
                     $objectManager->persist($option);
                     $objectManager->flush();
@@ -90,9 +104,11 @@ class ManagementController extends AbstractActionController
             }
         }
 
-        return new ViewModel( array(
+        return new ViewModel(
+            array(
                 'form' => $form
-            ));
+            )
+        );
     }
 
     /**
@@ -111,28 +127,26 @@ class ManagementController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $option = $objectManager
             ->getRepository('Options\Entity\Options')
-            ->findOneBy(array('namespace' => $namespace, 'key' => $key));
+            ->find(array('namespace' => $namespace, 'key' => $key));
 
-        $form = new Edit($this->getServiceLocator(), $option);
+        if (!$option) {
+            return $this->notFoundAction();
+        }
+
+        $form = new Create('edit', ['serviceLocator' => $this->getServiceLocator()]);
+        $form->bind($option);
+        $form->get('submit')->setValue('Save');
 
         if ($this->getRequest()->isPost()) {
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
-//                $data = $form->getData();
 
                 $objectManager->getConnection()->beginTransaction();
                 try {
-                    $hydrator = new DoctrineHydrator($objectManager);
-                    $hydrator->hydrate($form->getData(), $option);
-
-//                    $option->setNamespace($data['namespace']);
-//                    $option->setKey($data['key']);
-//                    $option->setValue($data['value']);
-//                    $option->setDescription($data['description']);
                     $option->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
 
-                    $objectManager->persist($option);
+                    $objectManager->persist($form->getData());
                     $objectManager->flush();
 
                     $objectManager->getConnection()->commit();
@@ -149,11 +163,16 @@ class ManagementController extends AbstractActionController
             }
         }
 
-        return new ViewModel(array(
-            'form' => $form
-        ));
+        return new ViewModel(
+            array(
+                'form' => $form
+            )
+        );
     }
 
+    /**
+     * @return \Zend\Http\Response
+     */
     public function deleteAction()
     {
         $namespace = $this->params()->fromRoute('namespace');
@@ -166,7 +185,11 @@ class ManagementController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $option = $objectManager
             ->getRepository('Options\Entity\Options')
-            ->findOneBy(array('namespace' => $namespace, 'key' => $key));
+            ->find(array('namespace' => $namespace, 'key' => $key));
+
+        if (!$option) {
+            return $this->redirect()->toRoute('options');
+        }
 
         $objectManager->remove($option);
         $objectManager->flush($option);
