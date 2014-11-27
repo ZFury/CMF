@@ -17,8 +17,12 @@ chdir(__DIR__);
  */
 class Bootstrap
 {
+
     protected static $serviceManager;
 
+    /**
+     *  init
+     */
     public static function init()
     {
         putenv('APP_ENV=test');
@@ -53,6 +57,10 @@ class Bootstrap
         static::$serviceManager = $serviceManager;
     }
 
+    /**
+     * @param $path
+     * @return bool|string
+     */
     protected static function findParentPath($path)
     {
         $dir = __DIR__;
@@ -67,6 +75,9 @@ class Bootstrap
         return $dir . '/' . $path;
     }
 
+    /**
+     *
+     */
     protected static function initAutoloader()
     {
         $vendorPath = static::findParentPath('vendor');
@@ -106,12 +117,18 @@ class Bootstrap
         );
     }
 
+    /**
+     *
+     */
     public static function chroot()
     {
         $rootPath = dirname(static::findParentPath('module'));
         chdir($rootPath);
     }
 
+    /**
+     * @return mixed
+     */
     public static function getServiceManager()
     {
         return static::$serviceManager;

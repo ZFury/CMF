@@ -8,6 +8,7 @@ use Zend\InputFilter\InputFilterInterface;
 use Zend\I18n\Validator;
 use Zend\Validator\Db;
 use Zend\Validator\Exception;
+use Zend\Stdlib\Hydrator\ClassMethods;
 
 /**
  * Class Create
@@ -26,11 +27,14 @@ class Create extends Form
     {
         $this->serviceLocator = $options['serviceLocator'];
 
+        $this->setHydrator(new ClassMethods);
+
         // we want to ignore the name passed
         parent::__construct($name);
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'form-horizontal');
         $this->setAttribute('role', 'form');
+        $this->setInputFilter(new CreateInputFilter());
 
         $this->add(
             array(
@@ -111,102 +115,5 @@ class Create extends Form
                 ),
             )
         );
-    }
-
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception("Not used");
-    }
-
-    public function getInputFilter()
-    {
-        if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
-
-            $inputFilter->add(
-                array(
-                    'name'     => 'namespace',
-                    'required' => true,
-                    'filters'  => array(
-                        array('name' => 'StripTags'),
-                        array('name' => 'StringTrim'),
-                    ),
-                    'validators' => array(
-                        array(
-                            'name'    => 'StringLength',
-                            'options' => array(
-                                'encoding' => 'UTF-8',
-                                'min'      => 1,
-                                'max'      => 64,
-                            ),
-                        ),
-                    )
-                )
-            );
-
-            $inputFilter->add(
-                array(
-                    'name'     => 'key',
-                    'required' => true,
-                    'filters'  => array(
-                        array('name' => 'StripTags'),
-                        array('name' => 'StringTrim'),
-                    ),
-                    'validators' => array(
-                        array(
-                            'name'    => 'StringLength',
-                            'options' => array(
-                                'encoding' => 'UTF-8',
-                                'min'      => 1,
-                                'max'      => 255,
-                            ),
-                        ),
-                    ),
-                )
-            );
-
-            $inputFilter->add(
-                array(
-                    'name'     => 'value',
-                    'required' => true,
-                    'filters'  => array(
-                        array('name' => 'StripTags'),
-                        array('name' => 'StringTrim'),
-                    ),
-                    'validators' => array(
-                        array(
-                            'name'    => 'StringLength',
-                            'options' => array(
-                                'encoding' => 'UTF-8',
-                                'min'      => 1
-                            ),
-                        ),
-                    ),
-                )
-            );
-
-            $inputFilter->add(
-                array(
-                    'name'     => 'description',
-                    'required' => true,
-                    'filters'  => array(
-                        array('name' => 'StripTags'),
-                        array('name' => 'StringTrim'),
-                    ),
-                    'validators' => array(
-                        array(
-                            'name'    => 'StringLength',
-                            'options' => array(
-                                'encoding' => 'UTF-8',
-                                'min'      => 1
-                            ),
-                        ),
-                    ),
-                )
-            );
-
-            $this->inputFilter = $inputFilter;
-        }
-        return $this->inputFilter;
     }
 }

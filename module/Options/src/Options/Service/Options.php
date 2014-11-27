@@ -5,6 +5,10 @@ namespace Options\Service;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Mvc\Controller\Plugin\Url;
 
+/**
+ * Class Options
+ * @package Options\Service
+ */
 class Options
 {
     /**

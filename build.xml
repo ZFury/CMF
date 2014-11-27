@@ -17,7 +17,7 @@
     <target name="configs">
         <property name="forceConfig" value="true" />
         <copy overwrite="${forceConfig}" file="${appDir}/config/autoload/local.php.dist" tofile="${basedir}/config/autoload/local.php"></copy>
-        <copy overwrite="${forceConfig}" file="./public/.htaccess.sample" tofile="./public/.htaccess"></copy>
+        <copy overwrite="${forceConfig}" file="${appDir}/public/.htaccess.sample" tofile="${appDir}/public/.htaccess"></copy>
         <exec dir="${appDir}" failonerror="true" osfamily="unix">
             <env key="APP_ENV" value="test"/>
             <arg line="./install.sh"/>

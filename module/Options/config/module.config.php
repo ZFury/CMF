@@ -54,36 +54,6 @@ return array(
                     ),
                 ),
             ),
-            'option.edit' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route'    => '/option/edit',
-                    'defaults' => array(
-                        'controller' => 'Options\Controller\Management',
-                        'action'     => 'edit',
-                    ),
-                ),
-            ),
-            'option.view' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route'    => '/option/view',
-                    'defaults' => array(
-                        'controller' => 'Options\Controller\Management',
-                        'action'     => 'view',
-                    ),
-                ),
-            ),
-            'option.delete' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route'    => '/option/delete',
-                    'defaults' => array(
-                        'controller' => 'Options\Controller\Management',
-                        'action'     => 'delete',
-                    ),
-                ),
-            ),
             'options' => array(
                 'type'    => 'Literal',
                 'options' => array(
