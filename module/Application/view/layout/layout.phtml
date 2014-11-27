@@ -18,9 +18,9 @@
         ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') ?>
 
     <!-- Scripts -->
+    <script src="<?=$this->basePath . 'js/require.js'?>"></script>
+    <script src="<?=$this->basePath . 'js/config.js'?>"></script>
     <?php echo $this->headScript()
-        ->prependFile($this->basePath() . '/js/bootstrap.min.js')
-        ->prependFile($this->basePath() . '/js/jquery.min.js')
         ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
         ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',))
     ; ?>
@@ -41,14 +41,10 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li><a href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Home') ?></a></li>
-                <?php if($this->identity() && \User\Entity\User::ROLE_ADMIN == $this->identity()->getUser()->getRole()): ?>
-                    <li><a href="<?php echo $this->url('options/default') ?>"><?php echo $this->translate('Options') ?></a></li>
-                <?php endif ;?>
                 <li><a href="<?php echo $this->url('user/default', ['controller' => 'signup', 'action' => 'index']) ?>"><?php echo $this->translate('Signup') ?></a></li>
                 <?php if (!$this->identity()) : ?>
                     <li><a href="<?php echo $this->url('user/default', ['controller' => 'auth', 'action' => 'login']) ?>"><?php echo $this->translate('Login') ?></a></li>
                 <?php endif; ?>
-                <li><a href="<?php echo $this->url('test/default', ['controller' => 'management', 'action' => 'index']) ?>"><?php echo $this->translate('Test') ?></a></li>
             </ul>
             <?php if ($this->identity()) : ?>
                 <p class="navbar-text navbar-right">
@@ -59,6 +55,7 @@
         </div><!--/.nav-collapse -->
     </div>
 </nav>
+
 <div class="container">
     <?php echo $this->content; ?>
     <hr>
