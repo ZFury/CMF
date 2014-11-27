@@ -17,6 +17,9 @@
         "phpunit/phpunit": "4.2",
         "squizlabs/php_codesniffer": "2.0.0RC1"
     },
+    "require-dev": {
+        "mayflower/php-codebrowser": "1.1.1"
+    },
     "autoload": {
         "psr-0": {
             "": "library/"

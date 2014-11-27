@@ -58,6 +58,17 @@
         <antcall target="publish" />
     </target>
 
+    <target name="phpcb" description="PHP_CodeBrowser">
+        <exec dir="${moduleDir}" executable="${vendorDir}/phpcb" failonerror="false" osfamily="unix">
+            <arg line="--log ${logsDir}" />
+            <arg line="--source ${moduleDir}" />
+            <arg line="--output ${logsDir}/phpcb" />
+        </exec>
+        <zip destfile="${logsDir}/phpcb.zip" basedir="${logsDir}/phpcb" />
+        <delete dir="${logsDir}/phpcb"/>
+        <antcall target="publish" />
+    </target>
+
     <target name="phpunit" description="PHPUnit">
         <mkdir dir="${logsDir}/coverage"/>
         <property name="junit" value="${logsDir}/tests-report.xml" />
@@ -78,7 +89,7 @@
         <echo message="##teamcity[publishArtifacts '${appDir}/logs/']" />
     </target>
 
-    <target name="build" depends="phpunit, phpcs">
+    <target name="build" depends="phpunit, phpcs, phpcb">
     </target>
 
 </project>
