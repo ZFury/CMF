@@ -70,20 +70,7 @@ return array(
         ),
     ),
     'service_manager' => array(
-        'abstract_factories' => array(
-            'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
-            'Zend\Log\LoggerAbstractServiceFactory',
-        ),
-        'factories' => array(
-            'Db\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
-            'Zend\Authentication\AuthenticationService' => function ($serviceManager) {
-                // If you are using DoctrineORMModule:
-                return $serviceManager->get('doctrine.authenticationservice.orm_default');
-            },
-            'Options\Entity\Options' => function ($sm) {
-                return new Options\Entity\Options();
-            },
-        )
+
     ),
     'controllers' => array(
         'invokables' => array(
@@ -92,10 +79,6 @@ return array(
         ),
     ),
     'view_manager' => array(
-        'display_not_found_reason' => true,
-        'display_exceptions'       => true,
-        'doctype'                  => 'HTML5',
-        'not_found_template'       => 'error/404',
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),

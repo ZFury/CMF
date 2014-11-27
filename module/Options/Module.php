@@ -49,4 +49,16 @@ class Module
             ),
         );
     }
+
+    public function getServiceConfig()
+    {
+        return array(
+            'factories' => array(
+                'Options\Entity\Options' => function ($sm) {
+                    return new Entity\Options();
+                },
+            )
+        );
+    }
+
 }
