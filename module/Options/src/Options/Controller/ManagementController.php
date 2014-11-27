@@ -132,12 +132,6 @@ class ManagementController extends AbstractActionController
         if (!$option) {
             return $this->notFoundAction();
         }
-//        $optionData = array(
-//            'namespace' => $option->getNamespace(),
-//            'key' => $option->getKey(),
-//            'value' => $option->getValue(),
-//            'description' => $option->getDescription()
-//        );
 
         $form = new Create('edit', ['serviceLocator' => $this->getServiceLocator()]);
         $form->bind($option);

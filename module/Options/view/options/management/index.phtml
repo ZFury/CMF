@@ -1,9 +1,11 @@
-<?php $escaper = new Zend\Escaper\Escaper('utf-8'); ?>
-
 <div class="site-index">
     <h1>Options</h1>
     <p>
-        <a href="<?php echo $this->url('option.create') ?>"
+        <a href="<?php echo $this->url('options/default',
+            array(
+                'controller' => 'management',
+                'action' => 'create')
+        );?>"
            class="btn btn-success">Create</a>
     </p>
 
@@ -35,14 +37,14 @@
                             'namespace' => $option->getNamespace(),
                             'key' => $option->getKey())
                     ); ?>">
-                        <?php echo $escaper->escapeHtml($option->getNamespace()) ;?>
+                        <?php echo $this->escapeHtml($option->getNamespace()) ;?>
                     </a>
                 </td>
-                <td><?php echo $escaper->escapeHtml($option->getKey()) ;?></td>
-                <td><?php echo $escaper->escapeHtml($option->getValue()) ;?></td>
-                <td><?php echo $escaper->escapeHtml($option->getDescription()) ;?></td>
-                <td><?php echo $escaper->escapeHtml($option->getCreated()->format('Y-m-d H:i:s')) ;?></td>
-                <td><?php echo $escaper->escapeHtml($option->getUpdated()->format('Y-m-d H:i:s')) ;?></td>
+                <td><?php echo $this->escapeHtml($option->getKey()) ;?></td>
+                <td><?php echo $this->escapeHtml($option->getValue()) ;?></td>
+                <td><?php echo $this->escapeHtml($option->getDescription()) ;?></td>
+                <td><?php echo $this->escapeHtml($option->getCreated()->format('Y-m-d H:i:s')) ;?></td>
+                <td><?php echo $this->escapeHtml($option->getUpdated()->format('Y-m-d H:i:s')) ;?></td>
                 <td class="controls">
                     <a href="<?php echo $this->url('options/default',
                         array(

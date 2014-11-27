@@ -29,7 +29,6 @@ class Create extends Form
 
         $this->setHydrator(new ClassMethods);
 
-        // we want to ignore the name passed
         parent::__construct($name);
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'form-horizontal');
