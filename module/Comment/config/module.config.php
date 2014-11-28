@@ -5,7 +5,7 @@ return array(
         'driver' => array(
             'comment_entity' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                 'paths' => array(
+                'paths' => array(
                     __DIR__ . '/../src/Comment/Entity',
                 ),
             ),
@@ -29,12 +29,12 @@ return array(
     'router' => array(
         'routes' => array(
             'comment' => array(
-                'type'    => 'Segment',
+                'type' => 'Segment',
                 'options' => array(
-                    'route'    => '/comment[/:action[/:id]]',
+                    'route' => '/comment[/:action[/:id]]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id'     => '[0-9]+',
+                        'id' => '[0-9]+',
                     ),
                     'defaults' => array(
                         'controller' => 'Comment\Controller\Index',
@@ -59,10 +59,10 @@ return array(
             'Example'
         ),
         'factories' => array(
-            'Comment\Service\EntityType' => function($sm) {
-               return new Comment\Service\EntityType($sm);
-           },
-            'Comment\Service\Comment' => function($sm) {
+            'Comment\Service\EntityType' => function ($sm) {
+                return new Comment\Service\EntityType($sm);
+            },
+            'Comment\Service\Comment' => function ($sm) {
                 return new Comment\Service\Comment($sm);
             }
         ),

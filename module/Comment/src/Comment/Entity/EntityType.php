@@ -82,7 +82,7 @@ class EntityType
      */
     public function setId($id)
     {
-        $this->id=$id;
+        $this->id = $id;
     }
 
     /**
@@ -104,7 +104,7 @@ class EntityType
      */
     public function setDesc($desc)
     {
-        $this->desc=$desc;
+        $this->desc = $desc;
     }
 
     /**
@@ -126,7 +126,7 @@ class EntityType
      */
     public function setEntityType($entityType)
     {
-        $this->entityType=$entityType;
+        $this->entityType = $entityType;
     }
 
     /**

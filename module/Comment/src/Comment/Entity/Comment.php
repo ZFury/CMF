@@ -94,7 +94,7 @@ class Comment
      */
     public function setId($id)
     {
-        $this->id=$id;
+        $this->id = $id;
     }
 
     /**
@@ -116,7 +116,7 @@ class Comment
      */
     public function setComment($comment)
     {
-        $this->comment=$comment;
+        $this->comment = $comment;
     }
 
     /**
@@ -138,7 +138,7 @@ class Comment
      */
     public function setUserId($userId)
     {
-        $this->userId=$userId;
+        $this->userId = $userId;
     }
 
     /**
@@ -160,7 +160,7 @@ class Comment
      */
     public function setEntityType($entityType)
     {
-        $this->entityType=$entityType;
+        $this->entityType = $entityType;
     }
 
     /**
@@ -182,7 +182,7 @@ class Comment
      */
     public function setEntityId($entityId)
     {
-        $this->entityId=$entityId;
+        $this->entityId = $entityId;
     }
 
     /**

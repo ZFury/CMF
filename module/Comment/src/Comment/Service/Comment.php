@@ -34,11 +34,11 @@ class Comment
      * @param null $userId
      * @return array
      */
-    public function getCommentsByEntityId($entityType,$entityId,$userId = null)
+    public function getCommentsByEntityId($entityType, $entityId, $userId = null)
     {
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
 
-        if(isset($userId)) {
+        if (isset($userId)) {
             $masObj = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => $entityType, 'entityId' => $entityId, 'userId' => $userId));
         } else {
             $masObj = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => $entityType, 'entityId' => $entityId));
@@ -46,9 +46,9 @@ class Comment
 
 
         $masResult = array();
-        foreach($masObj as $obj) {
+        foreach ($masObj as $obj) {
             $masResult[$obj->getId()]['comment_info'] = $obj;
-            $masResult[$obj->getId()]['comments'] = self::getCommentsByEntityId('comment',$obj->getId());
+            $masResult[$obj->getId()]['comments'] = self::getCommentsByEntityId('comment', $obj->getId());
         }
         return $masResult;
     }
@@ -64,10 +64,10 @@ class Comment
         $masObj = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('userId' => $userId));
 
         $masResult = array();
-        foreach($masObj as $obj) {
-            if(strcmp($obj->getEntityType(),'comment')) {
+        foreach ($masObj as $obj) {
+            if (strcmp($obj->getEntityType(), 'comment')) {
                 $masResult[$obj->getId()]['comment_info'] = $obj;
-                $masResult[$obj->getId()]['comments'] = self::getCommentsByEntityId('comment',$obj->getId(),$userId);
+                $masResult[$obj->getId()]['comments'] = self::getCommentsByEntityId('comment', $obj->getId(), $userId);
             }
         }
         return $masResult;
@@ -79,7 +79,7 @@ class Comment
      */
     public function deleteCommentById($id)
     {
-        if(!isset($id)) {
+        if (!isset($id)) {
             return false;
         } else {
             $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');

@@ -18,18 +18,22 @@ $form->prepare();
         <?php echo $this->formHidden($form->get('entityType')); ?>
         <?php echo $this->formHidden($form->get('entityId')); ?>
 
-        <?php  $this->formRow($form->get('comment')); ?>
+        <?php $this->formRow($form->get('comment')); ?>
 
         <div class="form-group">
             <label for="inputComment" class="col-sm-2 control-label"><?= $form->get('comment')->getLabel(); ?></label>
+
             <div class="col-sm-4">
-                <textarea class="form-control" name="<?= $form->get('comment')->getName(); ?>" value="<?= $form->get('comment')->getValue(); ?>" placeholder="<?= $form->get('comment')->getLabel(); ?>"></textarea>
+                <textarea class="form-control" name="<?= $form->get('comment')->getName(); ?>"
+                          value="<?= $form->get('comment')->getValue(); ?>"
+                          placeholder="<?= $form->get('comment')->getLabel(); ?>"></textarea>
             </div>
         </div>
         <div class="form-group">
             <div class="col-sm-2"></div>
             <div class="col-sm-4">
-                <input type="submit" name="submit" id="submitbutton" class="btn btn-lg btn-primary btn-block" value="<?= $form->get('submit')->getValue(); ?>">
+                <input type="submit" name="submit" id="submitbutton" class="btn btn-lg btn-primary btn-block"
+                       value="<?= $form->get('submit')->getValue(); ?>">
             </div>
         </div>
         <?php echo $this->form()->closeTag(); ?>
