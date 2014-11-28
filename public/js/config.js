@@ -14,6 +14,10 @@ require.config({
         html5shiv: './html5shiv',
         underscore: '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min',
         backbone: '//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min',
+        "jquery-ui": './jquery-ui',
+        "jquery-nestedSortable": './jquery.mjs.nestedSortable',
+        categories: './categories',
+        "delete-confirmation": './delete_confirmation'
     },
     shim: {
         bootstrap: {
@@ -26,6 +30,14 @@ require.config({
         },
         underscore: {
             exports: '_'
+        },
+        "jquery-ui": {
+            deps: ['jquery'],
+            exports: '$.ui'
+        },
+        "jquery-nestedSortable": {
+            deps: ['jquery', 'jquery-ui'],
+            exports: '$.fn.nestedSortable'
         }
     },
     enforceDefine: true
