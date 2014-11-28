@@ -8,6 +8,7 @@
 
 namespace Application\Utility;
 
+use Zend\Session\Container;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\ResponseInterface as Response;
@@ -26,6 +27,8 @@ class UnauthorizedStrategy extends \BjyAuthorize\View\UnauthorizedStrategy
 //        $match  = $e->getRouteMatch();
 
         if (!$e->getApplication()->getServiceManager()->get('Zend\Authentication\AuthenticationService')->hasIdentity()) {
+            $session = new Container('location');
+            $session->location = $e->getRequest()->getUri();
             // get url to the login route
             $options['name'] = 'login';
             $url = $router->assemble(array(), $options);
