@@ -8,35 +8,12 @@
 
 namespace Application\Utility;
 
-use BjyAuthorize\Service\Authorize;
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\MvcEvent;
 use Zend\Stdlib\ResponseInterface as Response;
 
-class UnauthorizedStrategy extends \BjyAuthorize\View\UnauthorizedStrategy //ListenerAggregateInterface
+class UnauthorizedStrategy extends \BjyAuthorize\View\UnauthorizedStrategy
 {
-//    /**
-//     * @var \Zend\Stdlib\CallbackHandler[]
-//     */
-//    protected $listeners = array();
-//
-//    public function attach(EventManagerInterface $events)
-//    {
-//        $this->listeners[] = $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onDispatchError'), -5000);
-//    }
-//
-//    public function detach(EventManagerInterface $events)
-//    {
-//        foreach ($this->listeners as $index => $listener) {
-//            if ($events->detach($listener)) {
-//                unset($this->listeners[$index]);
-//            }
-//        }
-//    }
-
-
     public function onDispatchError(MvcEvent $e)
     {
         // Do nothing if the result is a response object
