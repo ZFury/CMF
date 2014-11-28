@@ -29,10 +29,11 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array(
                     'controller' => 'Options\Controller\Index',
-                    'roles' => array(),
+                    'roles' => array('user'),
                 ),
                 array(
                     'controller' => 'Options\Controller\Management',
+                    'action' => ['create', 'index'],
                     'roles' => array('admin'),
                 ),
             ),
@@ -179,18 +180,12 @@ return array(
                 'controller' => 'option',
                 'pages' => array(
                     array(
-                        'label' => 'All options',
-                        'controller' => 'management',
-                        'action' => 'index',
-                        'route' => 'options'
-
-                    ),
-                    array(
                         'label' => 'Create option',
                         'controller' => 'management',
                         'action' => 'create',
-                        'route' => 'option.create'
-
+                        'route' => 'option.create',
+                        'controller_namespace' => 'Options\Controller\Management',
+                        'module' => 'Options'
                     )
                 )
             )

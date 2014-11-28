@@ -6,9 +6,12 @@
                 <?=$pages->label?>
             <i class="fa fa-fw fa-caret-down"></i></a>
         <ul id="<?=$pages->label?>" class="collapse">
-            <?php foreach ($pages as $page) { ?>
+            <?php foreach ($pages as $page) {
+                $controller = $page->controller_namespace;
+                $action = $page->action;
+                if ($this->isAllowed("controller/$controller:$action")) {?>
                 <li><?= $this->navigation()->menu()->htmlify($page) . PHP_EOL ?></li>
-            <?php } ?>
+            <?php }} ?>
         </ul>
     </li>
 <?php } ?>

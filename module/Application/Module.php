@@ -60,4 +60,17 @@ class Module
             ),
         );
     }
+
+    public function getServiceConfig()
+    {
+        return array(
+            'factories' => array(
+                'Application\Utility\UnauthorizedStrategy' => function ($sm) {
+                    $unauthorizedStrategy = new Utility\UnauthorizedStrategy('layout/layout');
+                    return $unauthorizedStrategy;
+                }
+            ),
+        );
+    }
+
 }

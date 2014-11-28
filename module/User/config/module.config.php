@@ -28,6 +28,18 @@ return array(
     ),
     'router' => array(
         'routes' => array(
+            'login' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/login',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'User\Controller',
+                        'controller'    => 'Auth',
+                        'action'        => 'login',
+                    ),
+                ),
+                'may_terminate' => true
+            ),
             'user' => array(
                 'type'    => 'Literal',
                 'options' => array(
@@ -177,14 +189,17 @@ return array(
                         'label' => 'All users',
                         'controller' => 'management',
                         'action' => 'index',
-                        'route' => 'user/default'
-
+                        'route' => 'user/default',
+                        'controller_namespace' => 'User\Controller\Management',
+                        'module' => 'User'
                     ),
                     array(
                         'label' => 'Create user',
                         'controller' => 'management',
                         'action' => 'create',
-                        'route' => 'user/default'
+                        'route' => 'user/default',
+                        'controller_namespace' => 'User\Controller\Management',
+                        'module' => 'User'
                     )
                 )
             )

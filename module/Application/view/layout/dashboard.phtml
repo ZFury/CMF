@@ -26,8 +26,9 @@
                     <?php // echo $this->partial('layout/partial/dashboard/breadcrumbs.phtml)' ?>
                     <?= $this->content ?>
                 </div>
+                <?= $this->partial('layout/partial/footer.phtml') ?>
             </div>
-            <?= $this->partial('layout/partial/footer.phtml') ?>
+
             <?php echo $this->inlineScript() ?>
         </div>
     </body>

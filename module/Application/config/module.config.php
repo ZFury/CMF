@@ -63,6 +63,9 @@ return array(
         'aliases' => array(
             'translator' => 'MvcTranslator',
         )
+//        'invokables' => array(
+//            'Application\Utility\UnauthorizedStrategy' => 'Application\Utility\UnauthorizedStrategy'
+//        )
     ),
     'translator' => array(
         'locale' => 'en_US',
@@ -112,7 +115,7 @@ return array(
                 array(
                     'controller' => 'ZFTool\Controller\Create',
                     'roles' => array('guest'),
-                ),
+                )
             ),
         ),
     )
