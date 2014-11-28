@@ -70,6 +70,7 @@ return array(
         ),
     ),
     'service_manager' => array(
+
     ),
     'controllers' => array(
         'invokables' => array(

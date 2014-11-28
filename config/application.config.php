@@ -1,6 +1,7 @@
 <?php
 
 $env = getenv('APP_ENV') ?: 'production';
+
 return array(
     // This should be an array of module namespaces used in the application.
     'modules' => array(
