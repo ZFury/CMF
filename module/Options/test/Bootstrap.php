@@ -1,6 +1,5 @@
 <?php
 
-
 namespace OptionsTest;
 
 use Zend\Loader\AutoloaderFactory;
@@ -25,7 +24,7 @@ class Bootstrap
      */
     public static function init()
     {
-        putenv('APP_ENV=test');
+        putenv('APP_ENV=testing');
 
         $zf2ModulePaths = array(dirname(dirname(__DIR__)));
         if (($path = static::findParentPath('vendor'))) {
@@ -43,7 +42,7 @@ class Bootstrap
             'module_listener_options' => array(
                 'module_paths' => $zf2ModulePaths,
                 'config_glob_paths' => array(
-                    '../../../config/autoload/local.test.php',
+                    '../../../config/autoload/{,*.}{testing}.php',
                 ),
             ),
             'modules' => array(
