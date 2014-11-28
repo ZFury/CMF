@@ -1,7 +1,11 @@
 <div class="site-index">
     <h1>Options</h1>
     <p>
-        <a href="<?php echo $this->url('option.create') ?>"
+        <a href="<?php echo $this->url('options/default',
+            array(
+                'controller' => 'management',
+                'action' => 'create')
+        );?>"
            class="btn btn-success">Create</a>
     </p>
 
@@ -26,21 +30,39 @@
         <?php foreach($options as $option): ?>
             <tr>
                 <td>
-                    <a href="/options/management/view/<?php echo $option->getNamespace() .'/'. $option->getKey();?>">
-                        <?php echo $option->getNamespace() ;?>
+                    <a href="<?php echo $this->url('options/default',
+                        array(
+                            'controller' => 'management',
+                            'action' => 'view',
+                            'namespace' => $option->getNamespace(),
+                            'key' => $option->getKey())
+                    ); ?>">
+                        <?php echo $this->escapeHtml($option->getNamespace()) ;?>
                     </a>
                 </td>
-                <td><?php echo $option->getKey() ;?></td>
-                <td><?php echo $option->getValue() ;?></td>
-                <td><?php echo $option->getDescription() ;?></td>
-                <td><?php echo $option->getCreated()->format('Y-m-d H:i:s') ;?></td>
-                <td><?php echo $option->getUpdated()->format('Y-m-d H:i:s') ;?></td>
+                <td><?php echo $this->escapeHtml($option->getKey()) ;?></td>
+                <td><?php echo $this->escapeHtml($option->getValue()) ;?></td>
+                <td><?php echo $this->escapeHtml($option->getDescription()) ;?></td>
+                <td><?php echo $this->escapeHtml($option->getCreated()->format('Y-m-d H:i:s')) ;?></td>
+                <td><?php echo $this->escapeHtml($option->getUpdated()->format('Y-m-d H:i:s')) ;?></td>
                 <td class="controls">
-                    <a href="/options/management/edit/<?php echo $option->getNamespace() .'/'. $option->getKey();?>"
+                    <a href="<?php echo $this->url('options/default',
+                        array(
+                            'controller' => 'management',
+                            'action' => 'edit',
+                            'namespace' => $option->getNamespace(),
+                            'key' => $option->getKey())
+                    ); ?>"
                        class="btn btn-primary btn-small">
                         <i class="fa fa-pencil"></i>Edit
                     </a>
-                    <a href="/options/management/delete/<?php echo $option->getNamespace() .'/'. $option->getKey();?>"
+                    <a href="<?php echo $this->url('options/default',
+                        array(
+                            'controller' => 'management',
+                            'action' => 'delete',
+                            'namespace' => $option->getNamespace(),
+                            'key' => $option->getKey())
+                    ); ?>"
                        class="btn btn-danger btn-small">
                         <i class="fa fa-pencil"></i>Delete
                     </a>

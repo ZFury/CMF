@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="./Bootstrap.php" colors="true" convertErrorsToExceptions="true">
+    <testsuites>
+        <testsuite name="zf2">
+            <directory>./UserTest</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
