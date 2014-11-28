@@ -1,4 +1,3 @@
-<?php // partial.phtml ?>
 <ul>
     <li>
         <ul class="list-inline">
@@ -7,14 +6,15 @@
             <li ><span class="text-info">Entity type:</span> <?php echo $this->comment_info->getComment() ?></li>
             <li ><span class="text-info">Entity id:</span> <?php echo $this->comment_info->getComment() ?></li>
             <li><span class="text-info">UserId:</span> <?php echo $this->comment_info->getUserId() ?></li>
+            <li>
+                <a class="btn btn-info btn-xs" href="<?php echo $this->url('comment',array('action'=>'edit', 'id' => $this->comment_info->getId()));?>">Edit</a>
+                <a class="btn btn-danger btn-xs" href="<?php echo $this->url('comment',array('action'=>'delete', 'id' => $this->comment_info->getId()));?>">Delete</a>
+            </li>
         </ul>
     </li>
     <?php
-    if(count($this->comments)>0)
-    {
+    if(count($this->comments)>0) {
     ?>
         <li class="list-unstyled"><span class="text-info">Comments:</span> <?php echo $this->partialLoop('comment/index/partial.phtml', $this->comments)?></li>
-    <?php
-    }
-    ?>
+    <?php }?>
 </ul>

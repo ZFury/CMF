@@ -28,10 +28,6 @@ class AddForm extends Form
             ),
             'attributes' => ['class' => 'form-control']
         ));
-        /*$this->add(array(
-            'type' => 'Zend\Form\Element\Hidden',
-            'name' => 'userId',
-         ));*/
         $this->add(array(
             'name' => 'submit',
             'type' => 'Submit',

@@ -10,31 +10,58 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 
 class IndexController extends AbstractActionController
 {
-
     /**
-     * @return \Zend\Http\Response|ViewModel
-     * @throws \Exception
+     * @return array|ViewModel
      */
     public function indexAction()
     {
-        if(isset($this->getRequest()->getQuery()->entity_type) && isset($this->getRequest()->getQuery()->entity_id))
-        {
+        if(isset($this->getRequest()->getQuery()->entity_type) && isset($this->getRequest()->getQuery()->entity_id)) {
             $comments = $this->getServiceLocator()
                 ->get('Comment\Service\Comment')
                 ->getCommentsByEntityId($this->getRequest()->getQuery()->entity_type,$this->getRequest()->getQuery()->entity_id);
-//            var_dump($comments);
-//            die();
+
             return new ViewModel(array('comments' => $comments));
         }
-        if(isset($this->getRequest()->getQuery()->user_id))
-        {
+        if(isset($this->getRequest()->getQuery()->user_id)) {
             $comments = $this->getServiceLocator()
                 ->get('Comment\Service\Comment')
                 ->getCommentsByUserId($this->identity()->getUser()->getId());
-//            var_dump($comments);
-//            die();
+
             return new ViewModel(array('comments' => $comments));
         }
+        return new ViewModel();
+    }
+
+    /**
+     * @return \Zend\Http\Response
+     */
+    public function deleteAction()
+    {
+        if (!(int) $this->params()->fromRoute('id')) {
+            return $this->redirect()->toRoute('home');
+        }
+
+        $result = $this->getServiceLocator()
+            ->get('Comment\Service\Comment')
+            ->deleteCommentById((int)$this->params()->fromRoute('id'));
+
+        if ($result) {
+            $this->flashMessenger()->addSuccessMessage('Comment deleted');
+            $url = $this->getRequest()->getHeader('Referer')->getUri();
+            return $this->redirect()->toUrl($url);
+
+        } else {
+            $this->flashMessenger()->addErrorMessage('Comment has been deleted');
+            return $this->redirect()->toRoute('home');
+        }
+    }
+
+    /**
+     * @return ViewModel
+     */
+    public function editAction()
+    {
+        return new ViewModel();
     }
 
     /**
@@ -43,12 +70,10 @@ class IndexController extends AbstractActionController
      */
     public function addAction()
     {
-            if(isset($this->getRequest()->getQuery()->entityType) && isset($this->getRequest()->getQuery()->entityId))
-            {
+            if(isset($this->getRequest()->getQuery()->entityType) && isset($this->getRequest()->getQuery()->entityId)) {
                 $et = $this->getServiceLocator()->get('Comment\Service\EntityType');
                 $entityType = $et->getEntityType($this->getRequest()->getQuery()->entityType);
-                if ($entityType)
-                {
+                if ($entityType) {
                     $form = new Form\AddForm(null, $this->getServiceLocator());
                     $form->setEntityType($entityType->getEntityType());
                     $form->setEntityId($this->getRequest()->getQuery()->entityId);
@@ -85,19 +110,13 @@ class IndexController extends AbstractActionController
                     }
 
                     return new ViewModel(['form' => $form]);
-                }
-                else
-                {
+                } else {
                     $this->flashMessenger()->addErrorMessage('Еhis entity can not comment');
                     return $this->redirect()->toRoute('home');
                 }
-            }
-            else
-            {
+            } else {
                 $this->flashMessenger()->addErrorMessage('Wrong query string');
                 return $this->redirect()->toRoute('home');
             }
     }
-
-
 }

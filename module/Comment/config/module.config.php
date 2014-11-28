@@ -5,8 +5,7 @@ return array(
         'driver' => array(
             'comment_entity' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                //'cache' => 'array',
-                'paths' => array(
+                 'paths' => array(
                     __DIR__ . '/../src/Comment/Entity',
                 ),
             ),
@@ -22,7 +21,6 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array(
                     'controller' => 'Comment\Controller\Index',
-//                    'action' => array('add'),
                     'roles' => array('user'),
                 )
             ),
@@ -33,15 +31,13 @@ return array(
             'comment' => array(
                 'type'    => 'Segment',
                 'options' => array(
-                    'route'    => '/comment[/:action[:id]]',
+                    'route'    => '/comment[/:action[/:id]]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id'     => '[0-9]+',
                     ),
                     'defaults' => array(
-//                        '__NAMESPACE__' => 'Comment\Controller',
                         'controller' => 'Comment\Controller\Index',
-                 //       'action' => 'add',
                     )
                 ),
             ),
@@ -68,24 +64,7 @@ return array(
            },
             'Comment\Service\Comment' => function($sm) {
                 return new Comment\Service\Comment($sm);
-            },
-            /*/er\Entity\User' => function($sm) {
-               return new User\Entity\User();
-           },
-
-           'User\Service\Auth' => function($sm) {
-               return new User\Service\Auth($sm);
-           },
-           'User\Provider\Identity\DoctrineProvider' => function($sm) {
-               $entityManager = $sm->get('Doctrine\ORM\EntityManager');
-               $authService = $sm->get('Zend\Authentication\AuthenticationService');
-               $doctrineProvider = new User\Provider\Identity\DoctrineProvider($entityManager, $authService);
-               $doctrineProvider->setServiceLocator($sm);
-               $config = $sm->get('BjyAuthorize\Config');
-               $doctrineProvider->setDefaultRole($config['default_role']);
-
-               return $doctrineProvider;
-           }*/
+            }
         ),
     )
 

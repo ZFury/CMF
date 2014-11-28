@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dev
- * Date: 26.11.14
- * Time: 17:27
- */
 
 namespace Comment\Service;
 
@@ -44,19 +38,15 @@ class Comment
     {
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
 
-        if(isset($userId))
-        {
+        if(isset($userId)) {
             $masObj = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => $entityType, 'entityId' => $entityId, 'userId' => $userId));
-        }
-        else
-        {
+        } else {
             $masObj = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => $entityType, 'entityId' => $entityId));
         }
 
 
         $masResult = array();
-        foreach($masObj as $obj)
-        {
+        foreach($masObj as $obj) {
             $masResult[$obj->getId()]['comment_info'] = $obj;
             $masResult[$obj->getId()]['comments'] = self::getCommentsByEntityId('comment',$obj->getId());
         }
@@ -74,14 +64,36 @@ class Comment
         $masObj = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('userId' => $userId));
 
         $masResult = array();
-        foreach($masObj as $obj)
-        {
-            if(strcmp($obj->getEntityType(),'comment'))
-            {
+        foreach($masObj as $obj) {
+            if(strcmp($obj->getEntityType(),'comment')) {
                 $masResult[$obj->getId()]['comment_info'] = $obj;
                 $masResult[$obj->getId()]['comments'] = self::getCommentsByEntityId('comment',$obj->getId(),$userId);
             }
         }
         return $masResult;
+    }
+
+    /**
+     * @param $id
+     * @throws \Exception
+     */
+    public function deleteCommentById($id)
+    {
+        if(!isset($id)) {
+            return false;
+        } else {
+            $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
+            try {
+                $objectManager->getConnection()->beginTransaction();
+                $comment = $objectManager->find('Comment\Entity\Comment', $id);
+                $objectManager->remove($comment);
+                $objectManager->flush();
+                $objectManager->getConnection()->commit();
+                return true;
+            } catch (\Exception $e) {
+                $objectManager->getConnection()->rollback();
+                throw $e;
+            }
+        }
     }
 }
