@@ -1,8 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alexfloppy
- */
 
 return array(
     'doctrine' => array(
@@ -15,11 +11,6 @@ return array(
                     'user'     => '{USERNAME}',
                     'password' => '{PASSWORD}',
                     'port'     => '{PORT}',
-//                    'host'     => 'alpha-team.php.nixsolutions.com',
-//                    'port'     => '3306',
-//                    'dbname'   => 'p_zfs_tests',
-//                    'user' => 'p_zfs_test',
-//                    'password' => 'p_zfs_test',
                 ),
                 'doctrine_type_mappings' => array(
                     'enum' => 'string'
