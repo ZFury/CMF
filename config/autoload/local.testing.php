@@ -10,11 +10,11 @@ return array(
             'orm_default' => array(
                 'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
                 'params' => array(
-                    'host'     => 'alpha-team.php.nixsolutions.com',
+                    'host'     => 'localhost',
                     'port'     => '3306',
-                    'dbname'   => 'p_zfs_tests',
-                    'user' => 'p_zfs_test',
-                    'password' => 'p_zfs_test',
+                    'dbname'   => 'zf2_starter_alpha_test',
+                    'user' => 'root',
+                    'password' => '',
                 ),
                 'doctrine_type_mappings' => array(
                     'enum' => 'string'

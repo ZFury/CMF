@@ -5,6 +5,13 @@
     <property name="buildDir" value="${basedir}/.build" />
     <property name="logsDir" value="${basedir}/logs" />
     <property name="vendorDir" value="${basedir}/vendor/bin" />
+
+    <property name="hostname" value=""/>
+    <property name="database" value=""/>
+    <property name="username" value=""/>
+    <property name="password" value=""/>
+    <property name="port" value=""/>
+
     <property environment="env"/>
 
     <target name="prepare" depends="configs">
@@ -16,15 +23,22 @@
 
     <target name="configs">
         <property name="forceConfig" value="true" />
-        <copy overwrite="${forceConfig}" file="${appDir}/config/autoload/local.php.dist" tofile="${basedir}/config/autoload/local.php"></copy>
-        <!--<copy overwrite="${forceConfig}" file="${appDir}/public/.htaccess.sample" tofile="${appDir}/public/.htaccess"></copy>-->
-        <!--<antcall target="config-update">-->
-        <!--<param name="file" value="${appDir}/config/autoload/local.php"/>-->
-        <!--</antcall>-->
-        <!--<exec dir="${appDir}" failonerror="true" osfamily="unix">-->
-            <!--<env key="APP_ENV" value="test"/>-->
-            <!--<arg line="./install.sh"/>-->
-        <!--</exec>-->
+        <copy overwrite="${forceConfig}" file="${appDir}/config/autoload/local.php.dist" tofile="${appDir}/config/autoload/local.php"></copy>
+        <copy overwrite="${forceConfig}" file="${appDir}/config/autoload/testing.php.dist" tofile="${appDir}/config/autoload/testing.php"></copy>
+        <copy overwrite="${forceConfig}" file="${appDir}/public/.htaccess.sample" tofile="${appDir}/public/.htaccess"></copy>
+        <antcall target="config-update">
+            <param name="file" value="${appDir}/config/autoload/testing.php"/>
+        </antcall>
+    </target>
+
+    <target name="config-update">
+        <replace file="${file}">
+            <replacefilter token="{HOSTNAME}" value="${hostname}"/>
+            <replacefilter token="{DATABASE}" value="${database}"/>
+            <replacefilter token="{USERNAME}" value="${username}"/>
+            <replacefilter token="{PASSWORD}" value="${password}"/>
+            <replacefilter token="{PORT}" value="${port}"/>
+        </replace>
     </target>
 
     <target name="composer" description="Install dependencies with composer" depends="prepare">
