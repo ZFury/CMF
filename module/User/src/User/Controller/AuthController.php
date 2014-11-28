@@ -36,7 +36,7 @@ class AuthController extends AbstractActionController
                     $session->getManager()->getStorage()->clear('location');
                     return $this->redirect()->toUrl($location);
                 }
-                
+
                 $flashMessenger->addSuccessMessage('You\'re successfully logged in');
                 return $this->redirect()->toRoute('home');
             } catch (AuthException $exception) {
