@@ -2,7 +2,7 @@
 
 <phpunit bootstrap="Bootstrap.php">
     <testsuites>
-        <testsuite name="zf2tutorial">
+        <testsuite name="zf2starter/options">
             <directory>./OptionsTest</directory>
         </testsuite>
     </testsuites>
