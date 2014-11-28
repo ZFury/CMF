@@ -11,7 +11,6 @@ use Zend\I18n\Validator;
 use Zend\Validator\Db;
 use Zend\Validator\Exception;
 
-
 /**
  * @ORM\Entity
  * @ORM\Table(name="options")
@@ -41,7 +40,7 @@ class Options
 
     /**
      * @var string
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $description;
 
