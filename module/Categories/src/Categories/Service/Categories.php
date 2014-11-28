@@ -2,10 +2,7 @@
 
 namespace Categories\Service;
 
-use Zend\Crypt\Password\Bcrypt;
 use Zend\ServiceManager\ServiceManager;
-use Zend\Mime\Message as MimeMessage;
-use Zend\Mime\Part as MimePart;
 
 /**
  * Class Categories
@@ -34,30 +31,36 @@ class Categories
         $this->serviceManager = $sm;
     }
 
-//    /**
-//     * @param \User\Entity\User $user
-//     * @param $content
-//     */
-//    public function signupMail(\User\Entity\User $user, $content)
-//    {
-//        $transport = $this->getServiceLocator()->get('mail.transport');
-//
-//        $text = new MimePart($content);
-//        $text->type = \Zend\Mime\Mime::TYPE_TEXT;
-//
-////        $html = new MimePart($content);
-////        $html->type = \Zend\Mime\Mime::TYPE_HTML;
-//
-//        $body = new MimeMessage();
-//        $body->setParts([$text]);
-//
-//        /** @var \Zend\Mail\Message $message */
-//        $message = $this->getServiceLocator()->get('mail.message');
-//        $message
-//            ->addTo($user->getEmail())
-//            ->setSubject("Sign up")
-//            ->setBody($body);
-//
-//        return $transport->send($message);
-//    }
+    /**
+     * Updates a `path` field of each child of parent category.
+     *
+     * @param \Categories\Entity\Categories $category Parent category
+     */
+    public function updateChildrenPath(\Categories\Entity\Categories $category)
+    {
+        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $children = $category->getChildren();
+        $this->recursiveUpdatePath($children->toArray(), $category->getPath(), $entityManager);
+        $entityManager->flush();
+    }
+
+    /**
+     * Recursively search category tree and sets path for each node.
+     *
+     * @param $tree array Category tree
+     * @param $path string Path of each parent
+     * @param $entityManager
+     * @return bool
+     */
+    private function recursiveUpdatePath($tree, $path, $entityManager)
+    {
+        foreach ($tree as $node) {
+            $node->setPath($path . '/' . $node->getAlias());
+            $entityManager->persist($node);
+            if (count($node->getChildren()) != 0) {
+                $this->recursiveUpdatePath($node->getChildren()->toArray(), $node->getPath(), $entityManager);
+            }
+        }
+        return true;
+    }
 }

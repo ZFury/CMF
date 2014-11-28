@@ -8,11 +8,9 @@
 
 namespace Categories\Validators;
 
-use Zend\Validator\AbstractValidator;
 use Zend\Validator\Exception;
-use Doctrine\Common\Persistence\ObjectRepository;
 
-class NoObjectExists //extends \DoctrineModule\Validator\NoObjectExists
+class NoObjectExists
 {
     private $objectRepository;
 
@@ -22,7 +20,11 @@ class NoObjectExists //extends \DoctrineModule\Validator\NoObjectExists
     }
 
     /**
-     * {@inheritDoc}
+     * Checkes if value is valid.
+     *
+     * @param $value
+     * @param $id
+     * @return bool
      */
     public function isValid($value, $id)
     {

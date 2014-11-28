@@ -5,7 +5,6 @@ namespace Categories\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
-use Zend\ServiceManager\ServiceManager;
 
 /**
  * Categories\Entity\Categories
@@ -55,7 +54,7 @@ class Categories
      * @ORM\JoinColumn(name="parentId", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $parentId;
-//, onDelete="CASCADE"
+
     /**
      * @Annotation\Exclude
      * @ORM\OneToMany(targetEntity="Categories", mappedBy="parentId")
@@ -83,7 +82,12 @@ class Categories
      */
     protected $updated;
 
-    private $pathString = array();
+    /**
+     * @var integer
+     * @Annotation\Type("Zend\Form\Element\Hidden")
+     * @ORM\Column(name="`order`", type="integer")
+     */
+    protected $order;
 
     /**
      *
@@ -93,60 +97,38 @@ class Categories
         $this->children = new ArrayCollection();
     }
 
-//    /**
-//     * @return ArrayCollection
-//     */
-//    public function getAuths()
-//    {
-//        return $this->auths;
-//    }
-
     /**
      * Now we tell doctrine that before we persist or update we call the updatedTimestamps() function.
      *
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function updatedTimestamps()
+    public function updatedTimestampsAndPath()
     {
         $this->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
 
         if ($this->getCreated() == null) {
             $this->setCreated(new \DateTime(date('Y-m-d H:i:s')));
         }
-    }
 
-    /**
-     *
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
-    public function buildPath()
-    {
-//        array_push($this->pathString, $this->getAlias());
-//        if ($this->getParentId() == null) {
-//            $string = implode('/', $this->pathString);
-//            $this->setPath($string);
-////            return $this->getPath();
-//        } else {
-//            return $this->getParentId()->buildPath();
-//        }
         $pathArray = array();
-        $pathString = implode('/', array_reverse($this->recursivePath($pathArray)));
+        $pathString = implode('/', array_reverse($this->recursiveBuildPath($pathArray)));
         $this->setPath($pathString);
     }
 
-    public function recursivePath($pathArray)
+    /**
+     * Recursively generates path for category.
+     *
+     * @param $pathArray array
+     * @return mixed
+     */
+    public function recursiveBuildPath($pathArray)
     {
-//        $path .= $this->getAlias();
         array_push($pathArray, $this->getAlias());
         if ($this->getParentId() == null) {
-
-//            $string = implode('/', $this->pathString);
-//            $this->setPath($string);
             return $pathArray;
         } else {
-            return $this->getParentId()->recursivePath($pathArray);
+            return $this->getParentId()->recursiveBuildPath($pathArray);
         }
     }
 
@@ -214,6 +196,28 @@ class Categories
     public function setAlias($alias)
     {
         $this->alias = $alias;
+    }
+
+    /**
+     * Get order.
+     *
+     * @return string
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * Set order.
+     *
+     * @param string $order
+     *
+     * @return void
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
     }
 
     /**
@@ -312,36 +316,4 @@ class Categories
     {
         $this->path = $path;
     }
-
-//    /**
-//     * Get root id.
-//     *
-//     * @return int
-//     */
-//    public function getRootId()
-//    {
-//        return $this->rootId;
-//    }
-
-//    /**
-//     * Set root id.
-//     *
-//     * @param int $rootId
-//     *
-//     * @return void
-//     */
-//    public function setRootId($rootId)
-//    {
-//        $this->rootId = (int)$rootId;
-//    }
-//
-//    public function getRootId()
-//    {
-//        if ($this->getParentId() == null) {
-//            return $this->getId();
-//        } else {
-//            return $this->getParentId()->getRootId();
-//        }
-//
-//    }
 }

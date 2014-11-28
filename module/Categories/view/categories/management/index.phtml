@@ -1,82 +1,66 @@
-<?php
-$title = 'Categories';
-$this->headTitle($title);
-?>
-<h1><?php echo $this->escapeHtml($title); ?></h1>
-<div class="container">
-    <div class="row">
-        <p>
-            <a class="btn btn-primary"
-               href="<?php echo $this->url('categories/create') ?>">
-                <?php echo $this->translate('Create category') ?></a>
-        </p>
+<?php echo $this->headLink()->prependStylesheet($this->basePath() . '/module/categories/css/management.css'); ?>
+<div class="category-page-wrapper">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="form-group">
+            <div class="col-lg-1">
+                <a href="<?= $this->url('categories/create') ?>"
+                   class="btn btn-primary navbar-btn dialog"
+                   data-ajax-method="get"><?php echo $this->translate('Create category') ?></a>
+            </div>
+            <div class="col-lg-5">
+                <a href="<?php echo $this->url('categories/default'); ?>"
+                   class="btn btn-primary navbar-btn hidden create-child">
+                    <?php echo $this->translate('Add child'); ?></a>
+            </div>
+            <div class="col-lg-6 select-tree">
+                <form action="<?php echo $this->url('categories/default'); ?>" class="form-horizontal">
+                    <select class="form-control root-category-list">
+                        <?php if (isset($this->rootTree) && $this->rootTree): ?>
+                            <?php foreach ($this->rootTree as $tree): ?>
+                                <option <?php if ($tree->getId() == $currentRoot->getId()) echo 'selected'; ?>
+                                    value="<?php echo $tree->getId() ?>"><?php echo $tree->getName() ?></option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
+                </form>
+            </div>
+        </div>
+    </nav>
 
-        <div class="col-lg-12">
-            <table class="table table-responsive table-hover">
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Alias</th>
-<!--                    <th>Parent id</th>-->
-                    <th colspan="3">Actions</th>
-                </tr>
-                </thead>
-                <?php if (isset($categories) && $categories): ?>
-                    <?php foreach ($categories as $index => $category): ?>
-                        <?php //var_dump($category->getCreated()); ?>
-                        <tr>
-                            <td>
-                                <?php echo $this->escapeHtml($category->getId()); ?>
-                            </td>
-                            <td>
-                                <?php echo str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', $categories->getDepth()) . $this->escapeHtml($category->getName()); ?>
-                            </td>
-                            <td>
-                                <?php echo $this->escapeHtml($category->getAlias()); ?>
-                            </td>
-                            <!--                            <td>-->
-                            <!--                                --><?php //echo $this->escapeHtml($category->getRoot()); ?>
-                            <!--                            </td>-->
-<!--                            <td>-->
-                                <!--                                --><?php //echo $category->getRoot(); ?>
-<!--                            </td>-->
-                            <td>
-                                <a class="btn btn-sm btn-primary"
-                                   href="<?php echo $this->url('categories/create', array('parentId' => $category->getId())) ?>">
-                                    <?php echo $this->translate('Add') ?></a>
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-primary"
-                                   href="<?php echo $this->url('categories/edit', array('id' => $category->getId())) ?>">
-                                    <?php echo $this->translate('Edit') ?></a>
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-primary delete"
-                                   href="<?php echo $this->url('categories/delete', array('id' => $category->getId())) ?>">
-                                    <?php echo $this->translate('Delete') ?></a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </table>
+    <div class="tree-container">
+        <div class="tree-wrapper">
+            <?php if (isset($currentRoot) && $currentRoot): ?>
+                <div class="tree-header well well-sm"
+                     data-parent-id="<?= $currentRoot->getId(); ?>"><?= $currentRoot->getName(); ?>
+                    <div class="pull-right">
+                        <a href="<?= $this->url('categories/create', array('parentId' => $currentRoot->getId())) ?>"
+                           class="btn btn-xs btn-success">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </a>
+                        <a href="<?= $this->url('categories/edit', array('id' => $currentRoot->getId())) ?>"
+                           class="btn btn-primary btn-xs">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                        </a>
+                        <a href="<?= $this->url('categories/delete', array('id' => $currentRoot->getId())) ?>"
+                           class="btn btn-xs btn-danger delete">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?php if (isset($categories) && $categories): ?>
+                <div class="sortable-wrapper">
+                    <ol class="sortable">
+                        <?php echo $this->treeBuild($categories); ?>
+                    </ol>
+                </div>
+                <hr/>
+                <button id="save" class="btn btn-primary"><?= $this->translate('Save') ?></button>
+            <?php endif; ?>
         </div>
     </div>
 </div>
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">Create category</h4>
-            </div>
-            <div class="modal-body" id="popupBody">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" id="close-form-button" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="submit-form-button">Save</button>
-            </div>
-        </div>
-    </div>
-</div>
+<script>
+    require(['categories', 'delete-confirmation']);
+</script>

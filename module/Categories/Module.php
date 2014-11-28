@@ -1,8 +1,6 @@
 <?php
 namespace Categories;
 
-use Zend\Authentication\AuthenticationService;
-
 class Module
 {
     public function getConfig()
@@ -18,6 +16,18 @@ class Module
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
                 ),
             ),
+        );
+    }
+
+    public function getViewHelperConfig()
+    {
+        return array(
+            'factories' => array(
+                'treeBuild' => function ($sm) {
+                    $helper = new Helper\TreeBuild;
+                    return $helper;
+                }
+            )
         );
     }
 }

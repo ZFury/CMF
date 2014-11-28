@@ -10,21 +10,6 @@ $form = $this->form;
             <?php foreach ($this->form->getElements() as $element) : ?>
                 <?php
                 $formElement = $this->formInput($element);
-//            var_dump($element->getAttributes()['type']);die();
-//                switch ($element) {
-//                    case $element instanceof Zend\Form\Element\Select :
-//                        $formElement = $this->formSelect($element);
-//                        break;
-//                    case $element instanceof Zend\Form\Element\Email :
-//                        $formElement = $this->formEmail($element);
-//                        break;
-//                    case $element instanceof Zend\Form\Element\Password :
-//                        $formElement = $this->formPassword($element);
-//                        break;
-//                    default :
-//                        $formElement = $this->formInput($element);
-//                        break;
-//                }
                 ?>
                 <div class="form-group">
                     <?php if ($element->getAttributes()['type'] !== 'hidden'): ?>

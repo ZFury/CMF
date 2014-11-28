@@ -72,6 +72,16 @@ return array(
                             ),
                         ),
                     ),
+                    'index' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/management/index[/:id]',
+                            'defaults' => array(
+                                'controller' => 'management',
+                                'action' => 'index',
+                            ),
+                        ),
+                    ),
                 ),
             ),
         )
@@ -89,6 +99,11 @@ return array(
             'error/403' => __DIR__ . '/../view/error/403.phtml',
         ),
     ),
+    'view_helpers' => array(
+        'invokables' => array(
+            'treeBuild' => 'Categories\Helper\TreeBuild'
+        )
+    ),
     'service_manager' => array(
         'factories' => array(
             'Db\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
@@ -99,9 +114,9 @@ return array(
             'Categories\Entity\Categories' => function ($sm) {
                 return new Categories\Entity\Categories();
             },
-//            'Categories\Service\Categories' => function ($sm) {
-//                return new Categories\Service\Categories($sm);
-//            },
+            'Categories\Service\Categories' => function ($sm) {
+                return new Categories\Service\Categories($sm);
+            },
             'Categories\Provider\Identity\DoctrineProvider' => function ($sm) {
                 $entityManager = $sm->get('Doctrine\ORM\EntityManager');
                 $authService = $sm->get('Zend\Authentication\AuthenticationService');
