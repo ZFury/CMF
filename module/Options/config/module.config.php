@@ -98,7 +98,7 @@ return array(
                 'controller' => 'option',
                 'pages' => array(
                     array(
-                        'label' => 'Create option',
+                        'label' => 'Create',
                         'controller' => 'management',
                         'action' => 'create',
                         'route' => 'options/default',
@@ -106,7 +106,7 @@ return array(
                         'module' => 'Options'
                     ),
                     array(
-                        'label' => 'Index',
+                        'label' => 'All',
                         'controller' => 'management',
                         'action' => 'index',
                         'route' => 'options/default',
