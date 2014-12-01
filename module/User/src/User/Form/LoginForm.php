@@ -9,6 +9,7 @@
 namespace User\Form;
 
 use Zend\Form\Form;
+use User\Form\Filter\LoginInputFilter;
 
 class LoginForm extends Form
 {
