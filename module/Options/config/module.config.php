@@ -32,7 +32,7 @@ return array(
                 ),
                 array(
                     'controller' => 'Options\Controller\Management',
-                    'action' => ['create',  'view', 'edit', 'delete'],
+                    'action' => ['index', 'create',  'view', 'edit', 'delete'],
                     'roles' => array('admin'),
                 ),
             ),
