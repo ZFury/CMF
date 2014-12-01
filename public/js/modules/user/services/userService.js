@@ -3,6 +3,7 @@
         var userService = function($http) {
             var usersFactory = {};
             usersFactory.apiUrl = '/user/';
+            usersFactory.templatesUrl = '/templates/';
 
             /**
              * Get searched users

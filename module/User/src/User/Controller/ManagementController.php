@@ -16,6 +16,8 @@ use Zend\Form\Annotation\AnnotationBuilder;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Zend\View\Model\JsonModel;
 use Starter\Mvc\Grid\Grid;
+use Starter\Mvc\Controller\AaaController;
+
 
 class ManagementController extends AbstractActionController
 {
@@ -71,13 +73,14 @@ class ManagementController extends AbstractActionController
         /* @var \Zend\Http\Request $request */
         $request = $this->getRequest();
         $data = array();
+        $count = null;
 
         if ($request->isPost()) {
             $params = $request->getPost('data');
             $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
             $source = $em->createQueryBuilder()->select(array("u.id, u.email"))
                 ->from('\User\Entity\User', 'u');
-            $grid = new \Starter\Mvc\Controller\AaaController();
+            $grid = new Grid($source);
 
             if (isset($params['page'])) {
                 $grid->setPage($params['page']);
@@ -85,13 +88,17 @@ class ManagementController extends AbstractActionController
             if (isset($params['limit'])) {
                 $grid->setPage($params['limit']);
             }
-            if (isset($params['order'])) {
-                $grid->setPage($params['order']);
-            }
+//            if (isset($params['order'])) {
+//                $grid->setPage($params['order']);
+//            }
             $data = $grid->getData();
+            /* @var \User\Repository\User $usersManager */
+            $usersManager = $em->getRepository('User\Entity\User');
+            $count = $usersManager->countUsers();
         }
         return new JsonModel(array(
-            'data' => $data
+            'data' => $data,
+            'count' => $count
         ));
     }
 }

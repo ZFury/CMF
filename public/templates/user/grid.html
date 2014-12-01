@@ -1,8 +1,5 @@
-<script>
-    require(['jquery', 'bootstrap', 'modules/user/userApp']);
-</script>
-
-<div ng-controller="userGridController" class="ng-scope">
+<h1>GRID</h1>
+<div class="ng-scope">
     <div class="tab-content">
         <div class="tab-pane fade in active" id="users">
             <div class="row tab-wrapper row tab-wrapper-noscroll">
@@ -18,7 +15,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="user in filteredUsers  = usersGrid ">
+                                <tr ng-repeat="user in filteredUsers  = usersGrid | limitTo:params.pageSize">
                                     <td>
                                         <span ng-bind="user.id"></span>
                                     </td>
@@ -30,11 +27,9 @@
                             </table>
                             <div class="btn-group" ng-show="filteredUsers.length">
                                 <ul>
-                                    <button class="btn btn-default" type="button" ng-disabled="page == 0"
-                                            ng-click="getPage('prev')">PREV</button>
-                                    {{page+1}} / {{gridPages}}
-                                    <button type="button" class="btn btn-default" ng-click="getPage('next')"
-                                            ng-disabled="page == gridPages-1">NEXT </button>
+                                    <a ng-disabled="page == 1" class="btn btn-default" ng-click="getPage('prev')">PREV</a>
+                                    {{page}} / {{gridPages}}
+                                    <a ng-disabled="page == gridPages" class="btn btn-default" ng-click="getPage('next')">NEXT</a>
                                 </ul>
                             </div>
                         </div>

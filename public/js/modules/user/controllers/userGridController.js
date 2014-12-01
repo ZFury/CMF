@@ -7,23 +7,26 @@
             $scope.params.predicate = 'id';
             $scope.params.reverse = true;
             $scope.params.search = '';
+            $scope.page = 0;
             /**
              * Get searched users function
              * */
             $scope.getUsers = function () {
-                if (typeof ($routeParams.page) === 'undefined') {
-                    $scope.page = 1;
-                    $location.path(this.apiUrl + 'management/users-grid/' + $scope.page);
-                } else {
-                    $scope.page = $routeParams.page;
-                }
-                $scope.params.page = $scope.page - 1;
+//                console.log($routeParams);
+//                if (typeof ($routeParams.page) === 'undefined') {
+//                  $scope.page = 1;
+//                    $location.path($scope.page);
+//                } else {
+//                    $scope.page = $routeParams.page;
+//                }
+                $scope.params.page = $scope.page;
                 userService.getUsers($scope.params, function(response) {
                     $scope.usersGrid = [];
-                    angular.forEach(response.users,function(item) {
+                    angular.forEach(response.data,function(item) {
                         $scope.usersGrid.push(item);
                     });
-                    $scope.gridPages = Math.ceil(response.count/$scope.params.pageSize);
+                    $scope.gridPages = Math.ceil(response.count/$scope.params.limit);
+                    console.log(response.count/$scope.params.limit);
                 });
             };
 
@@ -41,13 +44,14 @@
              */
             $scope.getPage = function(flag) {
                 if (flag == 'next') {
-                    $scope.page = parseInt($scope.page) + 1;
+                    $scope.page++;
 //                    $location.path('/users/' + $scope.page);
                 }
                 if (flag == 'prev') {
-                    $scope.page = parseInt($scope.page) - 1;
+                    $scope.page--;
 //                    $location.path('/users/' + $scope.page);
                 }
+                $scope.getUsers();
             };
 
             init();

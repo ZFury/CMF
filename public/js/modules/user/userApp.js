@@ -16,40 +16,31 @@
         userGridController
         ) {
 
-        var app = angular.module('myzf', ['ngRoute']);
+        var app = angular.module('zfstarter', ['ngRoute']);
         app
             .factory('userService', userService)
             .controller('userGridController', userGridController);
-        app.filter('startFrom', function () {
-            return function (input, start) {
-                if (input === undefined || input === null || input.length === 0) {
-                    return [];
-                }
-                start = +start;
-                return input.slice(start);
-            };
-        });
 //        app.config(['$routeProvider', function($routeProvider, $locationProvider) {
-//                $routeProvider
-//                    .when('/users/:page', {
-//                        templateUrl: 'users.html',
-//                        controller: userGridController
-//                    })
-//                    .when('/home', {
-//                        templateUrl: 'home.html',
-//                        controller: 'Home'
-//                    })
-//                    .otherwise({ redirectTo: '/home' });
+//            $routeProvider
+//                .when('/users/:page', {
+//                    templateUrl: 'templates/user/grid.html',
+//                    controller: userGridController
+//                })
+//                .when('/home', {
+//                    templateUrl: 'home.html',
+//                    controller: 'Home'
+//                })
+//                .otherwise({ redirectTo: '/home' });
 ////                $locationProvider.html5Mode(true);
-//            }]);
-//
-//        app.controller('Home', ['$scope', function($scope){
-//            $scope.message = 'Welcome to my project';
 //        }]);
+
+        app.controller('Home', ['$scope', function($scope){
+            $scope.message = 'Welcome to my project';
+        }]);
 
         angular.element(document).ready(function () {
             var promise = new Promise(function(resolve, reject) {
-                var ngObject = angular.bootstrap(document, ['myzf']);
+                var ngObject = angular.bootstrap(document, ['zfstarter']);
 
                 if (ngObject) {
                     resolve("Stuff worked!");

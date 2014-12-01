@@ -3,6 +3,7 @@
 namespace Starter\Mvc\Grid;
 
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\EntityRepository;
 
 class Grid
 {
@@ -36,7 +37,7 @@ class Grid
      * Limit per page
      * @var int
      */
-    protected $limit = 25;
+    protected $limit = 2;
 
     /**
      * Default orders - ASC
@@ -50,7 +51,7 @@ class Grid
      * @param QueryBuilder $source
      * @return Grid
      */
-    public function __construct($source)
+    public function __construct(QueryBuilder $source)
     {
         $this->source = $source;
     }
@@ -63,15 +64,17 @@ class Grid
     public function getData()
     {
         $source = $this->getSource();
-        $offset = $this->getLimit() * $this->getPage();
         $limit = $this->getLimit();
-        $order = $this->getOrder();
+        $offset = $limit * ($this->getPage());
+//        $order = $this->getOrder();
+        $data = $source
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getArrayResult();
+//        $source->orderBy($order['field'], $order['order']);
 
-        $source->setFirstResult($offset);
-        $source->setMaxResults($limit);
-        $source->orderBy($order['field'], $order['order']);
-
-        return $source->getQuery()->getArrayResult();
+        return $data;
     }
 
     /**
