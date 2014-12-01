@@ -192,10 +192,10 @@ class Auth
     }
 
     /**
- * Get tokenSecret.
- *
- * @return string
- */
+     * Get tokenSecret.
+     *
+     * @return string
+     */
     public function getTokenSecret()
     {
         return $this->tokenSecret;

@@ -23,4 +23,4 @@ class Auth extends EntityRepository
     {
         return $this->findOneBy(['provider' => $provider, 'foreignKey' => $foreignKey]);
     }
-} 
+}

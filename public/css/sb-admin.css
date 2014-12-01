@@ -100,6 +100,10 @@ ul.message-dropdown {
     overflow-y: auto;
 }
 
+.alert{
+    margin-top: 30px;
+}
+
 li.message-preview {
     width: 275px;
     border-bottom: 1px solid rgba(0,0,0,.15);
@@ -231,3 +235,6 @@ ul.alert-dropdown {
     color: #df8a13;
 }
 
+.navbar-text.navbar-right:last-child {
+     margin-right: 20px;
+}
