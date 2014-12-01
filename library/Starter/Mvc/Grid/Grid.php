@@ -46,6 +46,12 @@ class Grid
     protected $orders = array('field' => 'id', 'order' => self::ORDER_ASC);
 
     /**
+     * Filters
+     * @var array
+     */
+    protected $filters = array();
+
+    /**
      * __construct
      *
      * @param QueryBuilder $source
@@ -66,15 +72,12 @@ class Grid
         $source = $this->getSource();
         $limit = $this->getLimit();
         $offset = $limit * ($this->getPage());
-//        var_dump($limit);var_dump($offset);
-//        $order = $this->getOrder();
-//        $a = $source->;
+        $order = $this->getOrder();
         $data = $source
-            ->orderBy('u.id', 'ASC')
             ->setFirstResult($offset)
             ->setMaxResults($limit)
+            ->orderBy($order['field'], $order['order'])
             ->getQuery();
-//        $source->orderBy($order['field'], $order['order']);
 
         return $data->getArrayResult();
     }
@@ -182,32 +185,25 @@ class Grid
     }
 
     /**
-     * Add order
+     * Set filter
      *
-     * @param string $column
-     * @param string $order
+     * @param array $filters
      * @return Grid
      */
-    public function addOrder($column, $order = self::ORDER_ASC)
+    public function setFilter($filters)
     {
-        $this->orders[$column] = $order;
+        $this->filters = $filters;
 
         return $this;
     }
 
     /**
-     * Add orders
+     * Get filter
      *
-     * @param string $column
-     * @param array $orders
-     * @return Grid
+     * @return array
      */
-    public function addOrders(array $orders)
+    public function getFilter()
     {
-        foreach ($orders as $key => $value) {
-            $this->orders[$key] = $value;
-        }
-
-        return $this;
+        return $this->filters;
     }
 }

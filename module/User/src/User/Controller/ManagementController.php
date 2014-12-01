@@ -84,16 +84,21 @@ class ManagementController extends AbstractActionController
             $source = $em->createQueryBuilder()->select(array("u.id, u.email"))
                 ->from('\User\Entity\User', 'u');
             $grid = new Grid($source);
-
             if (isset($params['page'])) {
                 $grid->setPage($params['page']);
             }
             if (isset($params['limit'])) {
                 $grid->setLimit($params['limit']);
             }
-//            if (isset($params['order'])) {
-//                $grid->setPage($params['order']);
-//            }
+            if (isset($params['field']) && isset($params['reverse'])) {
+                $field = 'u.' . $params['field'];
+                $order = $params['reverse'];
+            } else {
+                $field = 'u.id';
+                $order = $grid::ORDER_ASC;
+            }
+            $grid->setOrder(['field' => $field, 'order' => $order]);
+
             $data = $grid->getData();
             /* @var \User\Repository\User $usersManager */
             $usersManager = $em->getRepository('User\Entity\User');

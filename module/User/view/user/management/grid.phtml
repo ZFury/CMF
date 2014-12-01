@@ -6,15 +6,17 @@
     <div class="tab-content">
         <div class="tab-pane fade in active" id="users">
             <div class="row tab-wrapper row tab-wrapper-noscroll">
-                <div class="col-sm-10">
+                <div class="input-group col-sm-8">
+                    <input type="text" class="form-control col-md-12" placeholder="Поиск" ng-model="params.search" ng-keyup="search()">
+                </div>
+                <div class="col-sm-8">
                     <div class="table-scroll">
                         <div>
-                            <table class="table table-fixed  table-striped table-hover">
+                            <table class="users-grid table table-fixed  table-striped table-hover">
                                 <thead ng-show="filteredUsers.length">
                                 <tr>
-                                    <th class="col-md-1">№</th>
-                                    <th class="col-md-3">Email</th>
-                                    <th class="action-col col-md-1"></th>
+                                    <th class="col-md-1"><a ng-click="setOrder('id')">№</a></th>
+                                    <th class="col-md-3"><a ng-click="setOrder('email')">Email</a></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -40,6 +42,8 @@
                         </div>
                     </div>
                 </div>
+                <div class="spinner" style="display: none"></div>
+                <div ng-view=""></div>
             </div>
         </div>
     </div>

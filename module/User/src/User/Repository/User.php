@@ -29,4 +29,28 @@ class User extends EntityRepository
 
         return $count;
     }
+
+    /**
+     * Return count searched users
+     *
+     * @return int
+     *
+     * Created by Maxim Mandryka maxim.mandryka@nixsolutions.com
+     */
+    public function countSearchUsers($searchString)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $select = $qb->select('count(u.id)')
+            ->from('\User\Entity\User', 'u');
+        if (!empty($searchString)) {
+            $select->where(
+                $qb->expr()->orX()
+                    ->add($qb->expr()->like('u.email', $qb->expr()->literal('%' . $searchString . '%')))
+            );
+        }
+
+        $count = $select->getQuery()->getSingleScalarResult();
+
+        return $count;
+    }
 }
