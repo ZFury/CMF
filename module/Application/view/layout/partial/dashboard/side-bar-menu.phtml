@@ -9,7 +9,8 @@
             <?php foreach ($pages as $page) {
                 $controller = $page->controller_namespace;
                 $action = $page->action;
-                if ($this->isAllowed("controller/$controller:$action")) {?>
+                if ($this->isAllowed("controller/$controller:$action") ||
+                    $this->isAllowed("controller/$controller")) {?>
                 <li><?= $this->navigation()->menu()->htmlify($page) . PHP_EOL ?></li>
             <?php }} ?>
         </ul>
