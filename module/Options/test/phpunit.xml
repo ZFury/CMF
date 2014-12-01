@@ -6,4 +6,10 @@
             <directory>./OptionsTest</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <blacklist>
+            <directory suffix=".php">../../../vendor</directory>
+        </blacklist>
+    </filter>
 </phpunit>
+
