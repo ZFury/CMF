@@ -31,7 +31,7 @@ class EntityType
      * @param $entityType
      * @return mixed
      */
-    public function getEntityType($entityType)
+    public function get($entityType)
     {
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
 

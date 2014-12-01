@@ -3,6 +3,7 @@
 namespace Comment\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use User\Entity\User;
 use Zend\Form\Annotation;
 use Zend\ServiceManager\ServiceManager;
 
@@ -12,6 +13,7 @@ use Zend\ServiceManager\ServiceManager;
  * @ORM\Table(name="comment")
  * @Annotation\Name("comment")
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @ORM\HasLifecycleCallbacks
  * @author Sergey Lopay
  */
 class Comment
@@ -36,10 +38,16 @@ class Comment
     protected $comment;
 
     /**
+     * @ORM\ManyToOne(targetEntity="User\Entity\User")
+     * @ORM\JoinColumn(name="userId", referencedColumnName="id", onDelete="cascade")
+     */
+    private $user;
+
+    /**
      * @var int
+     * @Annotation\Type("Zend\Form\Element\Text")
      * @Annotation\Exclude
      * @ORM\Column(type="integer", options={"unsigned"=true})
-     * @ORM\ManyToOne(targetEntity="User\Entity\User")
      */
     protected $userId;
 
@@ -108,6 +116,38 @@ class Comment
     }
 
     /**
+     * @param $userId
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUserId()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
      * Set comment
      *
      * @param string $comment
@@ -127,28 +167,6 @@ class Comment
     public function getComment()
     {
         return $this->comment;
-    }
-
-    /**
-     * Set userId.
-     *
-     * @param int $userId
-     *
-     * @return void
-     */
-    public function setUserId($userId)
-    {
-        $this->userId = $userId;
-    }
-
-    /**
-     * Get userId.
-     *
-     * @return int
-     */
-    public function getUserId()
-    {
-        return $this->userId;
     }
 
     /**

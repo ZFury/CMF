@@ -4,6 +4,8 @@ namespace Comment\Service;
 
 use Zend\ServiceManager\ServiceManager;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Comment\Form;
+use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 
 class Comment
 {
@@ -26,6 +28,42 @@ class Comment
     public function __construct(ServiceManager $sm)
     {
         $this->serviceManager = $sm;
+    }
+
+    /**
+     * @param Form\Add $form
+     * @param $data
+     * @param $entityType
+     * @param $entityId
+     * @param $user
+     * @throws \Exception
+     */
+    public function addComment(Form\Add $form, $data, $entityType, $entityId, $user)
+    {
+
+        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $form->setData($data);
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $comment = new \Comment\Entity\Comment();
+
+            $objectManager->getConnection()->beginTransaction();
+            try {
+                $hydrator = new DoctrineHydrator($objectManager);
+                $hydrator->hydrate($data, $comment);
+                $comment->setUser($user);
+                $comment->setEntityType($entityType->getEntityType());
+                $comment->setEntityId($entityId);
+                $objectManager->persist($comment);
+                $objectManager->flush();
+                $objectManager->getConnection()->commit();
+
+                return $comment;
+            } catch (\Exception $e) {
+                $objectManager->getConnection()->rollback();
+                throw $e;
+            }
+        }
     }
 
     /**
@@ -95,5 +133,24 @@ class Comment
                 throw $e;
             }
         }
+    }
+
+    /**
+* @param $form
+* @param $id
+     */
+    public function editCommentById($form,$id)
+    {
+     /*   $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
+        $comment = $objectManager->find('Comment\Entity\Comment', $id);
+        $form
+        try {
+            $album = $this->getAlbumTable()->getAlbum($id);
+        }
+        catch (\Exception $ex) {
+            return $this->redirect()->toRoute('album', array(
+                'action' => 'index'
+            ));
+        }*/
     }
 }

@@ -66,6 +66,11 @@ return array(
                 return new Comment\Service\Comment($sm);
             }
         ),
-    )
+    ),
+    'view_helpers' => array(
+        'invokables' => array(
+            'comment' => 'Comment\View\Helper\Comment'
+        ),
+    ),
 
 );

@@ -15,10 +15,9 @@
         </ul>
     </li>
     <?php
-    if (count($this->comments) > 0) {
-        ?>
+    if (count($this->comments) > 0) : ?>
         <li class="list-unstyled"><span
                 class="text-info">Comments:</span> <?php echo $this->partialLoop('comment/index/partial.phtml', $this->comments) ?>
         </li>
-    <?php } ?>
+    <?php endif; ?>
 </ul>

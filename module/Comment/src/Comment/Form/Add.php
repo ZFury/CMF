@@ -5,7 +5,7 @@ use Zend\Form\Form;
 use Zend\ServiceManager\ServiceManager;
 use Comment;
 
-class AddForm extends Form
+class Add extends Form
 {
     public function __construct($name = null, ServiceManager $sl = null)
     {
@@ -22,8 +22,8 @@ class AddForm extends Form
             'name' => 'comment',
             'type' => 'textArea',
             'options' => array(
-                'rows' => 5,
-                'cols' => 5,
+                'rows' => 4,
+                'cols' => 8,
                 'label' => 'Comment',
             ),
             'attributes' => ['class' => 'form-control']
@@ -36,34 +36,6 @@ class AddForm extends Form
                 'id' => 'submitbutton',
                 'class' => 'btn btn-lg btn-primary btn-block'
             ),
-        ));
-    }
-
-    /**
-     * @param $entityType
-     */
-    public function setEntityType($entityType)
-    {
-        $this->add(array(
-            'type' => 'Zend\Form\Element\Hidden',
-            'name' => 'entityType',
-            'attributes' => array(
-                'value' => $entityType
-            )
-        ));
-    }
-
-    /**
-     * @param $entityId
-     */
-    public function setEntityId($entityId)
-    {
-        $this->add(array(
-            'type' => 'Zend\Form\Element\Hidden',
-            'name' => 'entityId',
-            'attributes' => array(
-                'value' => $entityId
-            )
         ));
     }
 }
