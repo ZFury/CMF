@@ -3,17 +3,22 @@ namespace User\Form;
 
 use Zend\Form\Form;
 use Zend\ServiceManager\ServiceManager;
-use User;
+use User\Form\Filter\SignupInputFilter;
 
 class SignupForm extends Form
 {
-    public function __construct($name = null, ServiceManager $sl = null)
+    public function __construct($name = null, array $options = array())
     {
         parent::__construct('form-signup');
         $this->setAttribute('method', 'post')
             ->setAttribute('role', 'form')
             ->setAttribute('class', 'form-signup form-horizontal');
-        $this->setInputFilter(new SignupInputFilter($sl));
+
+        if (!isset($options['serviceLocator']) || !($options['serviceLocator'] instanceof ServiceManager)) {
+            throw new \Exception('No service locator is provided');
+        }
+
+        $this->setInputFilter(new SignupInputFilter($options['serviceLocator']));
         $this->add(array(
             'name' => 'security',
             'type' => 'Zend\Form\Element\Csrf',

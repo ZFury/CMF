@@ -19,6 +19,11 @@ use Zend\Validator\Exception;
 class Options
 {
     /**
+     *  default namespace
+     */
+    const NAMESPACE_DEFAULT = 'default';
+
+    /**
      * @var string
      * @ORM\Id
      * @ORM\Column(type="string", length=64, options={"default" = "default"})

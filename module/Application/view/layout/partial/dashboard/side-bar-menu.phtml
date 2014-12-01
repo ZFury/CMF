@@ -1,0 +1,19 @@
+<ul class="nav navbar-nav side-nav">
+<?php foreach ($this->container as $pages) { ?>
+    <li>
+        <a href="javascript:;" data-toggle="collapse" data-target="#<?=$pages->label?>">
+            <i class="fa fa-fw fa-arrows-v"></i>
+                <?=$pages->label?>
+            <i class="fa fa-fw fa-caret-down"></i></a>
+        <ul id="<?=$pages->label?>" class="collapse">
+            <?php foreach ($pages as $page) {
+                $controller = $page->controller_namespace;
+                $action = $page->action;
+                if ($this->isAllowed("controller/$controller:$action") ||
+                    $this->isAllowed("controller/$controller")) {?>
+                <li><?= $this->navigation()->menu()->htmlify($page) . PHP_EOL ?></li>
+            <?php }} ?>
+        </ul>
+    </li>
+<?php } ?>
+</ul>

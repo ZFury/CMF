@@ -22,7 +22,7 @@ class Bootstrap
     public static function init()
     {
         putenv('APP_ENV=testing');
-
+        
         $zf2ModulePaths = array(dirname(dirname(__DIR__)));
         if (($path = static::findParentPath('vendor'))) {
             $zf2ModulePaths[] = $path;

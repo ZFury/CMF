@@ -23,9 +23,20 @@ class SignupControllerTest extends AbstractHttpControllerTestCase
         parent::setUp();
     }
 
+    /**
+     * Set up database
+     */
     public static function setUpBeforeClass()
     {
+        exec('./vendor/bin/doctrine-module orm:schema-tool:update --force');
+    }
 
+    /**
+     * Tear down database
+     */
+    public static function tearDownAfterClass()
+    {
+        exec('./vendor/bin/doctrine-module orm:schema-tool:drop --force');
     }
 
     /**
@@ -43,18 +54,16 @@ class SignupControllerTest extends AbstractHttpControllerTestCase
 
     public function testFormIndex()
     {
-//        $this->getRequest()->setMethod('POST');
-//
 //        $objectManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getRepository', 'getConnection', 'getClassMetadata', 'persist', 'flush'), array(), '', false)
 //            ->disableOriginalConstructor()
 //            ->getMock();
-//
 //        $this->getApplication()->getServiceManager()->setAllowOverride(true)
 //            ->setService('\Doctrine\ORM\EntityManager', $objectManager);
-//        $this->dispatch('/user/signup/index');
-//        die();
 
-
+        $this->getRequest()->setMethod('POST');
+        $this->dispatch('/user/signup/index');
+        $this->assertNotRedirect();
+        $this->assertResponseStatusCode(200);
 
 //        $mockEM = $this->getMock('\Doctrine\ORM\EntityManager',
 //            array('getRepository', 'getConnection', 'getClassMetadata', 'persist', 'flush'), array(), '', false);
@@ -62,18 +71,12 @@ class SignupControllerTest extends AbstractHttpControllerTestCase
 //        $this->getApplication()->getServiceManager()->set('Doctrine\ORM\EntityManager', $objectManager);
 //        $objectManager->expects($this->once())
 //            ->method('getConnection');
-//
-//
-////        die();
-//
 //        $objectManager = $this->getMockBuilder($this->getServiceLocator()->get('Doctrine\ORM\EntityManager'))
 //            ->disableOriginalConstructor()
 //            ->getMock();
-//        $this->getRequest()->setMethod('POST');
 //        $objectManager->expects($this->once())
 //            ->method('getConnection');
 //
-//        $this->dispatch('/user/signup/index');
 //        $this->assertResponseStatusCode(200);
     }
 }

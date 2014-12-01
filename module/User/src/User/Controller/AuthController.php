@@ -30,6 +30,13 @@ class AuthController extends AbstractActionController
             $userAuth = $this->getServiceLocator()->get('\User\Service\Auth');
             try {
                 $userAuth->authenticateEquals($data['email'], $data['password']);
+                $session = new Container('location');
+                $location = $session->location;
+                if ($location) {
+                    $session->getManager()->getStorage()->clear('location');
+                    return $this->redirect()->toUrl($location);
+                }
+
                 $flashMessenger->addSuccessMessage('You\'re successfully logged in');
                 return $this->redirect()->toRoute('home');
             } catch (AuthException $exception) {
@@ -193,7 +200,6 @@ class AuthController extends AbstractActionController
             } else {
                 if (!$this->identity()) {
                     //create new user
-                    /** @var \User\Entity\User $user */
                     $user = new \User\Entity\User();
                     $user->setDisplayName($graphObject->getProperty('id'));
                     $user->setRole($user::ROLE_USER);

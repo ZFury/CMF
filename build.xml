@@ -5,6 +5,7 @@
     <property name="buildDir" value="${basedir}/.build" />
     <property name="logsDir" value="${basedir}/logs" />
     <property name="vendorDir" value="${basedir}/vendor/bin" />
+    <property name="configDir" value="${basedir}/config" />
 
     <property name="hostname" value=""/>
     <property name="database" value=""/>
@@ -13,6 +14,7 @@
     <property name="port" value=""/>
 
     <property environment="env"/>
+    <property environment="APP_ENV"/>
 
     <target name="prepare" depends="configs">
         <delete dir="${buildDir}"/>
@@ -23,12 +25,18 @@
 
     <target name="configs">
         <property name="forceConfig" value="true" />
-        <copy overwrite="${forceConfig}" file="${appDir}/config/autoload/local.php.dist" tofile="${appDir}/config/autoload/local.php"></copy>
-        <copy overwrite="${forceConfig}" file="${appDir}/config/autoload/testing.php.dist" tofile="${appDir}/config/autoload/testing.php"></copy>
-        <copy overwrite="${forceConfig}" file="${appDir}/public/.htaccess.sample" tofile="${appDir}/public/.htaccess"></copy>
+        <copy overwrite="true" file="${basedir}/config/autoload/local.php.dist" tofile="${basedir}/config/autoload/local.php"></copy>
+        <copy overwrite="true" file="${basedir}/config/autoload/testing.php.dist" tofile="${basedir}/config/autoload/testing.php"></copy>
+        <copy overwrite="true" file="${basedir}/public/.htaccess.sample" tofile="${basedir}/public/.htaccess"></copy>
+
         <antcall target="config-update">
             <param name="file" value="${appDir}/config/autoload/testing.php"/>
         </antcall>
+
+        <!--<exec dir="${appDir}" executable="sh"  failonerror="true" output="${logsDir}/install.log">-->
+            <!--<env key="APP_ENV" value="testing"/>            -->
+            <!--<arg value="./install.sh"/>-->
+        <!--</exec>-->
     </target>
 
     <target name="config-update">
@@ -66,14 +74,14 @@
             <arg line="--extensions=php"/>
             <arg line="--ignore=js"/>
             <arg line="--report-file=${logsDir}/phpcs.xml" />
-            <arg line="${appDir}" />
+            <arg line="${moduleDir}" />
         </exec>
         <echo message="##teamcity[importData type='checkstyle' path='${logsDir}/phpcs.xml']" />
         <antcall target="publish" />
     </target>
 
-    <target name="phpcb" description="PHP_CodeBrowser" depends="composer">
-        <exec dir="${moduleDir}" executable="${vendorDir}/phpcb" failonerror="false" osfamily="unix">
+    <target name="phpcb" description="PHP_CodeBrowser">
+        <exec dir="${basedir}" executable="${vendorDir}/phpcb" failonerror="false" osfamily="unix">
             <arg line="--log ${logsDir}" />
             <arg line="--source ${moduleDir}" />
             <arg line="--output ${logsDir}/phpcb" />
@@ -93,7 +101,7 @@
             <arg line="--log-junit '${logsDir}/tests-report.xml'"/>
             <arg line="--coverage-clover '${logsDir}/phpunit.clover.xml'"/>
             <arg line="--coverage-html '${logsDir}/coverage'"/>
-        </exec>
+        </exec> 
         <zip destfile="${logsDir}/coverage.zip" basedir="${logsDir}/coverage"/>
         <antcall target="publish" />
     </target>
@@ -103,7 +111,7 @@
         <echo message="##teamcity[publishArtifacts '${appDir}/logs/']" />
     </target>
 
-    <target name="build" depends="phpunit, phpcs, phpcb">
+    <target name="build" depends="prepare, composer, phpunit, phpcs, phpcb">
     </target>
 
 </project>

@@ -28,10 +28,11 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array(
                     'controller' => 'Options\Controller\Index',
-                    'roles' => array(),
+                    'roles' => array('user'),
                 ),
                 array(
                     'controller' => 'Options\Controller\Management',
+                    'action' => ['index', 'create',  'view', 'edit', 'delete'],
                     'roles' => array('admin'),
                 ),
             ),
@@ -83,4 +84,37 @@ return array(
             __DIR__ . '/../view',
         ),
     ),
+    // Placeholder for console routes
+    'console' => array(
+        'router' => array(
+            'routes' => array(
+            ),
+        ),
+    ),
+    'navigation' => array(
+        'default' => array(
+            array(
+                'label' => 'Option',
+                'controller' => 'option',
+                'pages' => array(
+                    array(
+                        'label' => 'Create',
+                        'controller' => 'management',
+                        'action' => 'create',
+                        'route' => 'options/default',
+                        'controller_namespace' => 'Options\Controller\Management',
+                        'module' => 'Options'
+                    ),
+                    array(
+                        'label' => 'All',
+                        'controller' => 'management',
+                        'action' => 'index',
+                        'route' => 'options/default',
+                        'controller_namespace' => 'Options\Controller\Management',
+                        'module' => 'Options'
+                    )
+                )
+            )
+        )
+    )
 );
