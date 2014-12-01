@@ -1,11 +1,16 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: babich
+ * Date: 28.11.14
+ * Time: 12:01
+ */
 
-namespace OptionsTest;
+namespace Categories;
 
 use Zend\Loader\AutoloaderFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\ServiceManager\ServiceManager;
-
 use RuntimeException;
 
 error_reporting(E_ALL | E_STRICT);
@@ -16,11 +21,10 @@ chdir(__DIR__);
  */
 class Bootstrap
 {
-
     protected static $serviceManager;
 
     /**
-     *  init
+     * init
      */
     public static function init()
     {
@@ -36,18 +40,17 @@ class Bootstrap
 
         static::initAutoloader();
 
-
         // use ModuleManager to load this module and it's dependencies
         $config = array(
             'module_listener_options' => array(
                 'module_paths' => $zf2ModulePaths,
                 'config_glob_paths' => array(
-                    '../../../config/autoload/{,*.}{testing}.php',
+                    '../../../config/autoload/local.testing.php',
                 ),
             ),
             'modules' => array(
-                'Options'
-            ),
+                'Categories'
+            )
         );
 
         $serviceManager = new ServiceManager(new ServiceManagerConfig());
@@ -56,27 +59,17 @@ class Bootstrap
         static::$serviceManager = $serviceManager;
     }
 
-    /**
-     * @param $path
-     * @return bool|string
-     */
-    protected static function findParentPath($path)
+    public static function chroot()
     {
-        $dir = __DIR__;
-        $previousDir = '.';
-        while (!is_dir($dir . '/' . $path)) {
-            $dir = dirname($dir);
-            if ($previousDir === $dir) {
-                return false;
-            }
-            $previousDir = $dir;
-        }
-        return $dir . '/' . $path;
+        $rootPath = dirname(static::findParentPath('module'));
+        chdir($rootPath);
     }
 
-    /**
-     *
-     */
+    public static function getServiceManager()
+    {
+        return static::$serviceManager;
+    }
+
     protected static function initAutoloader()
     {
         $vendorPath = static::findParentPath('vendor');
@@ -104,33 +97,28 @@ class Bootstrap
         }
 
         include $zf2Path . '/Zend/Loader/AutoloaderFactory.php';
-        AutoloaderFactory::factory(
-            array(
-                'Zend\Loader\StandardAutoloader' => array(
-                    'autoregister_zf' => true,
-                    'namespaces' => array(
-                        __NAMESPACE__ => __DIR__ . '/' . __NAMESPACE__,
-                    ),
+        AutoloaderFactory::factory(array(
+            'Zend\Loader\StandardAutoloader' => array(
+                'autoregister_zf' => true,
+                'namespaces' => array(
+                    __NAMESPACE__ => __DIR__ . '/' . __NAMESPACE__,
                 ),
-            )
-        );
+            ),
+        ));
     }
 
-    /**
-     *
-     */
-    public static function chroot()
+    protected static function findParentPath($path)
     {
-        $rootPath = dirname(static::findParentPath('module'));
-        chdir($rootPath);
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function getServiceManager()
-    {
-        return static::$serviceManager;
+        $dir = __DIR__;
+        $previousDir = '.';
+        while (!is_dir($dir . '/' . $path)) {
+            $dir = dirname($dir);
+            if ($previousDir === $dir) {
+                return false;
+            }
+            $previousDir = $dir;
+        }
+        return $dir . '/' . $path;
     }
 }
 

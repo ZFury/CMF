@@ -67,9 +67,9 @@ class ManagementController extends AbstractActionController
     public function createAction()
     {
         $form = new Create('create', ['serviceLocator' => $this->getServiceLocator()]);
+        $form->get('namespace')->setValue(\Options\Entity\Options::NAMESPACE_DEFAULT);
 
         if ($this->getRequest()->isPost()) {
-
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
@@ -141,7 +141,6 @@ class ManagementController extends AbstractActionController
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
-
                 $objectManager->getConnection()->beginTransaction();
                 try {
                     $option->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
