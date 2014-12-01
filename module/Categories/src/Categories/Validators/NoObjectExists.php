@@ -36,4 +36,4 @@ class NoObjectExists
 
         return false;
     }
-} 
+}

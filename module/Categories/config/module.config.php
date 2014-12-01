@@ -34,7 +34,7 @@ return array(
                     'default' => array(
                         'type' => 'Segment',
                         'options' => array(
-                            'route' => '/[:controller[/:action]]',
+                            'route' => '/[:controller[/:action/:id]]',
                             'constraints' => array(
                                 'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
@@ -52,36 +52,6 @@ return array(
                             ),
                         ),
                     ),
-                    'edit' => array(
-                        'type' => 'Segment',
-                        'options' => array(
-                            'route' => '/management/edit/:id',
-                            'defaults' => array(
-                                'controller' => 'management',
-                                'action' => 'edit',
-                            ),
-                        ),
-                    ),
-                    'delete' => array(
-                        'type' => 'Segment',
-                        'options' => array(
-                            'route' => '/management/delete/:id',
-                            'defaults' => array(
-                                'controller' => 'management',
-                                'action' => 'delete',
-                            ),
-                        ),
-                    ),
-                    'index' => array(
-                        'type' => 'Segment',
-                        'options' => array(
-                            'route' => '/management/index[/:id]',
-                            'defaults' => array(
-                                'controller' => 'management',
-                                'action' => 'index',
-                            ),
-                        ),
-                    ),
                 ),
             ),
         )
@@ -95,8 +65,8 @@ return array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),
-        'template_map' => array(
-            'error/403' => __DIR__ . '/../view/error/403.phtml',
+        'strategies' => array(
+            'ViewJsonStrategy',
         ),
     ),
     'view_helpers' => array(
@@ -106,26 +76,11 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
-            'Db\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
-            'Zend\Authentication\AuthenticationService' => function ($serviceManager) {
-                // If you are using DoctrineORMModule:
-                return $serviceManager->get('doctrine.authenticationservice.orm_default');
-            },
             'Categories\Entity\Categories' => function ($sm) {
                 return new Categories\Entity\Categories();
             },
             'Categories\Service\Categories' => function ($sm) {
                 return new Categories\Service\Categories($sm);
-            },
-            'Categories\Provider\Identity\DoctrineProvider' => function ($sm) {
-                $entityManager = $sm->get('Doctrine\ORM\EntityManager');
-                $authService = $sm->get('Zend\Authentication\AuthenticationService');
-                $doctrineProvider = new Categories\Provider\Identity\DoctrineProvider($entityManager, $authService);
-                $doctrineProvider->setServiceLocator($sm);
-                $config = $sm->get('BjyAuthorize\Config');
-                $doctrineProvider->setDefaultRole($config['default_role']);
-
-                return $doctrineProvider;
             },
         ),
     ),

@@ -4,6 +4,7 @@ namespace Categories\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Categories\Form\Filter;
 use Zend\Form\Annotation\AnnotationBuilder;
@@ -20,9 +21,8 @@ class ManagementController extends AbstractActionController
             ->get('Doctrine\ORM\EntityManager');
         $repository = $entityManager->getRepository('Categories\Entity\Categories');
 
-        $escapeHtml = $this->getServiceLocator()->get('ViewHelperManager')->get('escapeHtml');
         $currentRootCategory = null;
-        if ($id = $escapeHtml($this->params('id'))) {
+        if ($id = $this->params('id')) {
             $currentRootCategory = $entityManager->getRepository('Categories\Entity\Categories')->findOneBy(['parentId' => null, 'id' => $id]);
         }
         $rootCategories = $entityManager->getRepository('Categories\Entity\Categories')->findBy(['parentId' => null]);
@@ -45,19 +45,21 @@ class ManagementController extends AbstractActionController
         $category = new \Categories\Entity\Categories();
         $repository = $entityManager->getRepository('Categories\Entity\Categories');
 
-        $viewHelperManager = $this->getServiceLocator()->get('ViewHelperManager');
-        $escapeHtml = $viewHelperManager->get('escapeHtml');
-        $parentId = $escapeHtml($this->params('parentId'));
+        $parentId = $this->params('parentId');
 
-        $values = array();
-        if (!$parent = $repository->findBy(['parentId' => $parentId])) {
-            $parent = $repository->findBy(['parentId' => null]);
+        $orders = array();
+        if (!$siblings = $repository->findBy(['parentId' => $parentId])) {
+            $siblings = $repository->findBy(['parentId' => null]);
         }
-        foreach ($parent as $value) {
-            $values[] = $value->getOrder();
+        foreach ($siblings as $sibling) {
+            $orders[] = $sibling->getOrder();
         }
 
-        $order = max($values) + 1;
+        if (count($orders) > 0) {
+            $order = max($orders) + 1;
+        } else {
+            $order = 1;
+        }
 
         $category->setParentId($parentId);
         $category->setOrder($order);
@@ -68,7 +70,6 @@ class ManagementController extends AbstractActionController
         $form->bind($category);
 
         if ($this->getRequest()->isPost()) {
-
             $form->setInputFilter(new Filter\CreateInputFilter($this->getServiceLocator()));
             $form->setData($this->getRequest()->getPost());
             $aliasValid = new Validator\NoObjectExists(['object_repository' => $repository, 'fields' => ['alias', 'parentId']]);
@@ -104,10 +105,11 @@ class ManagementController extends AbstractActionController
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $repository = $entityManager->getRepository('Categories\Entity\Categories');
 
-        $viewHelperManager = $this->getServiceLocator()->get('ViewHelperManager');
-        $escapeHtml = $viewHelperManager->get('escapeHtml');
-        $id = $escapeHtml($this->params('id'));
-        $category = $repository->find($id);
+        $id = $this->params('id');
+        if (!$category = $repository->find($id)) {
+            $this->flashMessenger()->addErrorMessage('Invalid category id!');
+            return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
+        }
 
         if ($category->getParentId()) {
             $parentId = $category->getParentId()->getId();
@@ -121,7 +123,6 @@ class ManagementController extends AbstractActionController
         $form->bind($category);
 
         if ($this->getRequest()->isPost()) {
-
             $form->setInputFilter(new Filter\CreateInputFilter($this->getServiceLocator()));
             $form->setData($this->getRequest()->getPost());
             $aliasValid = new Validators\NoObjectExists($repository);
@@ -155,10 +156,11 @@ class ManagementController extends AbstractActionController
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
-        $viewHelperManager = $this->getServiceLocator()->get('ViewHelperManager');
-        $escapeHtml = $viewHelperManager->get('escapeHtml');
-        $id = $escapeHtml($this->params('id'));
-        $category = $entityManager->find('Categories\Entity\Categories', $id);
+        $id = $this->params('id');
+        if (!$category = $entityManager->find('Categories\Entity\Categories', $id)) {
+            $this->flashMessenger()->addErrorMessage('Invalid category id!');
+            return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
+        }
 
         $entityManager->remove($category);
         $entityManager->flush();
@@ -197,7 +199,6 @@ class ManagementController extends AbstractActionController
 
                         $parentId = $dbNode->getParentId()->getId();
                         if ($parentId != $node->parent_id && $node->parent_id) {
-
                             $dbNode->setParentId($repository->findOneBy(['id' => $node->parent_id]));
                         }
 
@@ -220,17 +221,18 @@ class ManagementController extends AbstractActionController
                 $entityManager->getConnection()->commit();
 
                 $this->flashMessenger()->addSuccessMessage('Order has been successfully saved!');
-                $returnJson = json_encode(['result' => 'success']);
+                $returnJson = new JsonModel(['success' => true]);
+//                $returnJson = json_encode(['result' => 'success']);
             } catch (\Exception $e) {
                 $entityManager->getConnection()->rollback();
 
                 $this->flashMessenger()->addErrorMessage('Order has been failed!');
-                $returnJson = json_encode(['result' => 'fail']);
+                $returnJson = new JsonModel(['success' => false]);
+//                $returnJson = json_encode(['result' => 'fail']);
 
             }
-            echo $returnJson;
-            return $this->response;
+//            echo $returnJson;
+            return $returnJson;
         }
     }
-
 }
