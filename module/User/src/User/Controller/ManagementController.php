@@ -16,15 +16,18 @@ use Zend\Form\Annotation\AnnotationBuilder;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Zend\View\Model\JsonModel;
 use Starter\Mvc\Grid\Grid;
-use Starter\Mvc\Controller\AaaController;
-
 
 class ManagementController extends AbstractActionController
 {
 
-    public function createAction()
-    {
-        //not implemented yet
+//    public function indexAction()
+//    {
+//
+//    }
+
+//    public function createAction()
+//    {
+//        not implemented yet
 //        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 //        $user = new Entity\User();
 //        $builder = new AnnotationBuilder($entityManager);
@@ -47,7 +50,6 @@ class ManagementController extends AbstractActionController
 //        return new ViewModel([
 //            'form' => $form
 //        ]);
-    }
 
     /**
      * Grid action
@@ -101,4 +103,5 @@ class ManagementController extends AbstractActionController
             'count' => $count
         ));
     }
+
 }

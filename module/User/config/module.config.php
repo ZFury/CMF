@@ -28,6 +28,18 @@ return array(
     ),
     'router' => array(
         'routes' => array(
+            'login' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/login',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'User\Controller',
+                        'controller'    => 'Auth',
+                        'action'        => 'login',
+                    ),
+                ),
+                'may_terminate' => true
+            ),
             'user' => array(
                 'type'    => 'Literal',
                 'options' => array(
@@ -171,8 +183,39 @@ return array(
                     'controller' => 'User\Controller\Profile',
 //                    'action' => array('index'),
                     'roles' => array('user'),
-                )
+                ),
+                array(
+                    'controller' => 'User\Controller\Management',
+                    'action' => array('index'),
+                    'roles' => array('user'),
+                ),
             ),
         ),
     ),
+    'navigation' => array(
+        'default' => array(
+            array(
+                'label' => 'User',
+                'controller' => 'user',
+                'pages' => array(
+                    array(
+                        'label' => 'All users',
+                        'controller' => 'management',
+                        'action' => 'index',
+                        'route' => 'user/default',
+                        'controller_namespace' => 'User\Controller\Management',
+                        'module' => 'User'
+                    ),
+                    array(
+                        'label' => 'Create user',
+                        'controller' => 'management',
+                        'action' => 'create',
+                        'route' => 'user/default',
+                        'controller_namespace' => 'User\Controller\Management',
+                        'module' => 'User'
+                    )
+                )
+            )
+        )
+    )
 );
