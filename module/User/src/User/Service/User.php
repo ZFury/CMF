@@ -44,15 +44,17 @@ class User
     {
         $transport = $this->getServiceLocator()->get('mail.transport');
 
-//        $text = new MimePart($content);
-//        $text->type = \Zend\Mime\Mime::TYPE_TEXT;
+        $text = new MimePart($content);
+        $text->type = \Zend\Mime\Mime::TYPE_TEXT;
+        $text->charset = "UTF-8";
 
         $html = new MimePart($content);
         $html->type = \Zend\Mime\Mime::TYPE_HTML;
-        $html->charset = 'UTF-8';
+        $html->encoding = \Zend\Mime\Mime::ENCODING_BASE64;
+        $html->charset  = "UTF-8";
 
         $body = new MimeMessage();
-        $body->setParts([$html]);
+        $body->setParts([$text, $html]);
 
         /** @var \Zend\Mail\Message $message */
         $message = $this->getServiceLocator()->get('mail.message');
@@ -60,6 +62,7 @@ class User
             ->addTo($user->getEmail())
             ->setSubject("Sign up")
             ->setBody($body);
+
         return $transport->send($message);
     }
 }
