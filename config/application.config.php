@@ -11,6 +11,7 @@ $config =  array(
         'BjyAuthorize',
         'Options',
         'User',
+        'Test',
         'Dashboard',
         'Categories',
     ),

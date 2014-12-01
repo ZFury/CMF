@@ -101,7 +101,15 @@ return array(
                         'label' => 'Create option',
                         'controller' => 'management',
                         'action' => 'create',
-                        'route' => 'option.create',
+                        'route' => 'options/default',
+                        'controller_namespace' => 'Options\Controller\Management',
+                        'module' => 'Options'
+                    ),
+                    array(
+                        'label' => 'Index',
+                        'controller' => 'management',
+                        'action' => 'index',
+                        'route' => 'options/default',
                         'controller_namespace' => 'Options\Controller\Management',
                         'module' => 'Options'
                     )
