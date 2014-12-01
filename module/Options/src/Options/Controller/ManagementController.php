@@ -15,8 +15,10 @@ use Zend\View\Model\ViewModel;
 use Options\Form\Create;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 
-use Doctrine\ORM\EntityManager;
-
+/**
+ * Class ManagementController
+ * @package Options\Controller
+ */
 class ManagementController extends AbstractActionController
 {
     /**
@@ -34,6 +36,9 @@ class ManagementController extends AbstractActionController
         );
     }
 
+    /**
+     * @return array|ViewModel
+     */
     public function viewAction()
     {
         $namespace = $this->params()->fromRoute('namespace');
@@ -48,16 +53,21 @@ class ManagementController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $option = $objectManager
             ->getRepository('Options\Entity\Options')
-            ->findOneBy(array('namespace' => $namespace, 'key' => $key));
+            ->find(array('namespace' => $namespace, 'key' => $key));
 
         return new ViewModel(
             array('option' => $option)
         );
     }
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     * @throws \Exception
+     */
     public function createAction()
     {
         $form = new Create('create', ['serviceLocator' => $this->getServiceLocator()]);
+        $form->get('namespace')->setValue(\Options\Entity\Options::NAMESPACE_DEFAULT);
 
         if ($this->getRequest()->isPost()) {
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -74,6 +84,8 @@ class ManagementController extends AbstractActionController
 
                     $option->setCreated(new \DateTime(date('Y-m-d H:i:s')));
                     $option->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
+
+                    $form->bind($option);
 
                     $objectManager->persist($option);
                     $objectManager->flush();
@@ -115,37 +127,25 @@ class ManagementController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $option = $objectManager
             ->getRepository('Options\Entity\Options')
-            ->findOneBy(array('namespace' => $namespace, 'key' => $key));
+            ->find(array('namespace' => $namespace, 'key' => $key));
 
         if (!$option) {
             return $this->notFoundAction();
         }
 
-        $optionData = array(
-            'namespace' => $option->getNamespace(),
-            'key' => $option->getKey(),
-            'value' => $option->getValue(),
-            'description' => $option->getDescription()
-        );
-
         $form = new Create('edit', ['serviceLocator' => $this->getServiceLocator()]);
-        $form->setData($optionData);
+        $form->bind($option);
         $form->get('submit')->setValue('Save');
-        //        $form = new Edit($this->getServiceLocator(), $option);
 
         if ($this->getRequest()->isPost()) {
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
-
                 $objectManager->getConnection()->beginTransaction();
                 try {
-                    $hydrator = new DoctrineHydrator($objectManager);
-                    $hydrator->hydrate($form->getData(), $option);
-
                     $option->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
 
-                    $objectManager->persist($option);
+                    $objectManager->persist($form->getData());
                     $objectManager->flush();
 
                     $objectManager->getConnection()->commit();
@@ -169,6 +169,9 @@ class ManagementController extends AbstractActionController
         );
     }
 
+    /**
+     * @return \Zend\Http\Response
+     */
     public function deleteAction()
     {
         $namespace = $this->params()->fromRoute('namespace');
@@ -181,7 +184,7 @@ class ManagementController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $option = $objectManager
             ->getRepository('Options\Entity\Options')
-            ->findOneBy(array('namespace' => $namespace, 'key' => $key));
+            ->find(array('namespace' => $namespace, 'key' => $key));
 
         if (!$option) {
             return $this->redirect()->toRoute('options');

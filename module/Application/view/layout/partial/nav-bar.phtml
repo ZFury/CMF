@@ -15,9 +15,12 @@
                 <?php if (!$this->identity()) : ?>
                     <li><a href="<?php echo $this->url('user/default', ['controller' => 'auth', 'action' => 'login']) ?>"><?php echo $this->translate('Login') ?></a></li>
                 <?php endif; ?>
-                <?php if ($this->identity() && $this->identity()->getUser()->getRole() == 'admin') : ?>
+                <?php if ($this->identity() && \User\Entity\User::ROLE_ADMIN == $this->identity()->getUser()->getRole()) : ?>
                     <li><a href="<?php echo $this->url('dashboard', ['controller' => 'index', 'action' => 'index']) ?>"><?php echo $this->translate('Dashboard') ?></a></li>
+                    <li><a href="<?php echo $this->url('options/default') ?>"><?php echo $this->translate('Options') ?></a></li>
+                    <li><a href="<?php echo $this->url('categories/default', array('controller' => 'management', 'action' => 'index')) ?>"><?php echo $this->translate('Categories') ?></a></li>
                 <?php endif; ?>
+                <li><a href="<?php echo $this->url('test/default', ['controller' => 'management', 'action' => 'index']) ?>"><?php echo $this->translate('Test') ?></a></li>
             </ul>
             <?php if ($this->identity()) : ?>
                 <p class="navbar-text navbar-right">

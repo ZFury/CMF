@@ -1,6 +1,5 @@
 <?php
 
-
 namespace OptionsTest;
 
 use Zend\Loader\AutoloaderFactory;
@@ -17,11 +16,15 @@ chdir(__DIR__);
  */
 class Bootstrap
 {
+
     protected static $serviceManager;
 
+    /**
+     *  init
+     */
     public static function init()
     {
-        putenv('APP_ENV=test');
+        putenv('APP_ENV=testing');
 
         $zf2ModulePaths = array(dirname(dirname(__DIR__)));
         if (($path = static::findParentPath('vendor'))) {
@@ -39,7 +42,7 @@ class Bootstrap
             'module_listener_options' => array(
                 'module_paths' => $zf2ModulePaths,
                 'config_glob_paths' => array(
-                    '../../../config/autoload/local.test.php',
+                    '../../../config/autoload/{,*.}{testing}.php',
                 ),
             ),
             'modules' => array(
@@ -53,6 +56,10 @@ class Bootstrap
         static::$serviceManager = $serviceManager;
     }
 
+    /**
+     * @param $path
+     * @return bool|string
+     */
     protected static function findParentPath($path)
     {
         $dir = __DIR__;
@@ -67,6 +74,9 @@ class Bootstrap
         return $dir . '/' . $path;
     }
 
+    /**
+     *
+     */
     protected static function initAutoloader()
     {
         $vendorPath = static::findParentPath('vendor');
@@ -106,12 +116,18 @@ class Bootstrap
         );
     }
 
+    /**
+     *
+     */
     public static function chroot()
     {
         $rootPath = dirname(static::findParentPath('module'));
         chdir($rootPath);
     }
 
+    /**
+     * @return mixed
+     */
     public static function getServiceManager()
     {
         return static::$serviceManager;

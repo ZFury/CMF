@@ -1,6 +1,7 @@
 <?php
 
 $env = getenv('APP_ENV') ?: 'production';
+
 $config =  array(
     // This should be an array of module namespaces used in the application.
     'modules' => array(
@@ -11,6 +12,7 @@ $config =  array(
         'Options',
         'User',
         'Dashboard',
+        'Categories',
     ),
 
     // These are various options for the listeners attached to the ModuleManager
