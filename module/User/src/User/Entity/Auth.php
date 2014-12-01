@@ -198,7 +198,7 @@ class Auth
      */
     public function getTokenSecret()
     {
-        return $this->tokenSecret;
+                    return $this->tokenSecret;
     }
 
     /**
