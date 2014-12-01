@@ -34,7 +34,6 @@ class TreeBuild extends AbstractHelper
     {
         $str = '';
         foreach ($tree as $node) {
-
             if (count($node->getChildren()) == 0) {
                 $str .= '<li class="mjs-nestedSortable-leaf" data-order="'
                     . $node->getOrder() . '" id="list_' . $node->getId() . '">'
@@ -53,5 +52,4 @@ class TreeBuild extends AbstractHelper
 
         return $str;
     }
-
-} 
+}

@@ -117,5 +117,4 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
 
         $objectManager->getConnection()->commit();
     }
-
-} 
+}
