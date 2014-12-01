@@ -7,6 +7,13 @@
         </testsuite>
     </testsuites>
     <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../</directory>
+            <exclude>
+                <directory suffix=".phtml">../view</directory>
+                <directory suffix=".php">../config/</directory>
+            </exclude>
+        </whitelist>
         <blacklist>
             <directory suffix=".php">../../../vendor</directory>
         </blacklist>
