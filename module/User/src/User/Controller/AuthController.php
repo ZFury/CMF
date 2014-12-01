@@ -200,7 +200,6 @@ class AuthController extends AbstractActionController
             } else {
                 if (!$this->identity()) {
                     //create new user
-                    /** @var \User\Entity\User $user */
                     $user = new \User\Entity\User();
                     $user->setDisplayName($graphObject->getProperty('id'));
                     $user->setRole($user::ROLE_USER);
