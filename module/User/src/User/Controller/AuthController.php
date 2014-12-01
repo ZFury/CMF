@@ -21,8 +21,6 @@ class AuthController extends AbstractActionController
 
     public function loginAction()
     {
-        $session = new Container('location');
-        $location = $session->location;
         $data = $this->getRequest()->getPost();
         $form = new Form\LoginForm(null, $this->getServiceLocator());
         $flashMessenger = new FlashMessenger();
@@ -32,6 +30,8 @@ class AuthController extends AbstractActionController
             $userAuth = $this->getServiceLocator()->get('\User\Service\Auth');
             try {
                 $userAuth->authenticateEquals($data['email'], $data['password']);
+                $session = new Container('location');
+                $location = $session->location;
                 if ($location) {
                     $session->getManager()->getStorage()->clear('location');
                     return $this->redirect()->toUrl($location);
