@@ -5,7 +5,7 @@
  * Date: 05.09.14
  * Time: 11:25
  */
-namespace User\Form;
+namespace User\Form\Filter;
 
 use Zend\InputFilter\InputFilter;
 use Zend\ServiceManager\ServiceManager;
