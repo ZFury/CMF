@@ -231,3 +231,6 @@ ul.alert-dropdown {
     color: #df8a13;
 }
 
+.navbar-text.navbar-right:last-child {
+     margin-right: 20px;
+}
