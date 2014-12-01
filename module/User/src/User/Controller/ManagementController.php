@@ -7,6 +7,7 @@
  */
 namespace User\Controller;
 
+use SebastianBergmann\Exporter\Exception;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use User\Service;
@@ -88,7 +89,7 @@ class ManagementController extends AbstractActionController
                 $grid->setPage($params['page']);
             }
             if (isset($params['limit'])) {
-                $grid->setPage($params['limit']);
+                $grid->setLimit($params['limit']);
             }
 //            if (isset($params['order'])) {
 //                $grid->setPage($params['order']);

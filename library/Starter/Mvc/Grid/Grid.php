@@ -66,15 +66,17 @@ class Grid
         $source = $this->getSource();
         $limit = $this->getLimit();
         $offset = $limit * ($this->getPage());
+//        var_dump($limit);var_dump($offset);
 //        $order = $this->getOrder();
 //        $a = $source->;
         $data = $source
-            ->setFirstResult((string)$offset)
-            ->setMaxResults((string)$limit)
-            ->getQuery()
-            ->getArrayResult();
+            ->orderBy('u.id', 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery();
 //        $source->orderBy($order['field'], $order['order']);
-        return $data;
+
+        return $data->getArrayResult();
     }
 
     /**
