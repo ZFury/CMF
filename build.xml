@@ -5,6 +5,13 @@
     <property name="buildDir" value="${basedir}/.build" />
     <property name="logsDir" value="${basedir}/logs" />
     <property name="vendorDir" value="${basedir}/vendor/bin" />
+
+    <property name="hostname" value=""/>
+    <property name="database" value=""/>
+    <property name="username" value=""/>
+    <property name="password" value=""/>
+    <property name="port" value=""/>
+
     <property environment="env"/>
 
     <target name="prepare" depends="configs">
@@ -16,15 +23,27 @@
 
     <target name="configs">
         <property name="forceConfig" value="true" />
-        <copy overwrite="${forceConfig}" file="${appDir}/config/autoload/local.php.dist" tofile="${basedir}/config/autoload/local.php"></copy>
-        <!--<copy overwrite="${forceConfig}" file="${appDir}/public/.htaccess.sample" tofile="${appDir}/public/.htaccess"></copy>-->
-        <!--<antcall target="config-update">-->
-        <!--<param name="file" value="${appDir}/config/autoload/local.php"/>-->
-        <!--</antcall>-->
-        <!--<exec dir="${appDir}" failonerror="true" osfamily="unix">-->
-            <!--<env key="APP_ENV" value="test"/>-->
-            <!--<arg line="./install.sh"/>-->
-        <!--</exec>-->
+        <copy overwrite="true" file="${basedir}/config/autoload/local.php.dist" tofile="${basedir}/config/autoload/local.php"></copy>
+        <copy overwrite="true" file="${basedir}/config/autoload/testing.php.dist" tofile="${basedir}/config/autoload/testing.php"></copy>
+        <copy overwrite="true" file="${basedir}/public/.htaccess.sample" tofile="${basedir}/public/.htaccess"></copy>
+
+        <exec dir="${basedir}" executable="php"  failonerror="true" output="${logsDir}/composer.log">
+            <arg line="install.sh" />
+        </exec>
+
+        <antcall target="config-update">
+            <param name="file" value="${appDir}/config/autoload/testing.php"/>
+        </antcall>
+    </target>
+
+    <target name="config-update">
+        <replace file="${file}">
+            <replacefilter token="{HOSTNAME}" value="${hostname}"/>
+            <replacefilter token="{DATABASE}" value="${database}"/>
+            <replacefilter token="{USERNAME}" value="${username}"/>
+            <replacefilter token="{PASSWORD}" value="${password}"/>
+            <replacefilter token="{PORT}" value="${port}"/>
+        </replace>
     </target>
 
     <target name="composer" description="Install dependencies with composer" depends="prepare">
@@ -58,7 +77,7 @@
         <antcall target="publish" />
     </target>
 
-    <target name="phpcb" description="PHP_CodeBrowser" depends="composer">
+    <target name="phpcb" description="PHP_CodeBrowser">
         <exec dir="${moduleDir}" executable="${vendorDir}/phpcb" failonerror="false" osfamily="unix">
             <arg line="--log ${logsDir}" />
             <arg line="--source ${moduleDir}" />
@@ -89,7 +108,7 @@
         <echo message="##teamcity[publishArtifacts '${appDir}/logs/']" />
     </target>
 
-    <target name="build" depends="phpunit, phpcs, phpcb">
+    <target name="build" depends="prepare, phpunit, phpcs, phpcb">
     </target>
 
 </project>

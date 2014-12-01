@@ -57,8 +57,10 @@ class Module
                 'Options\Entity\Options' => function ($sm) {
                     return new Entity\Options();
                 },
+                'Options\Service\Options' => function($sm) {
+                    return new Service\Options($sm);
+                },
             )
         );
     }
-
 }

@@ -2,16 +2,18 @@
 
 $env = getenv('APP_ENV') ?: 'production';
 
-return array(
+$config =  array(
     // This should be an array of module namespaces used in the application.
     'modules' => array(
         'Application',
         'DoctrineModule',
         'DoctrineORMModule',
         'BjyAuthorize',
+        'Options',
         'User',
         'Test',
-        'Options',
+        'Dashboard',
+        'Categories',
     ),
 
     // These are various options for the listeners attached to the ModuleManager
@@ -69,3 +71,9 @@ return array(
    // Should be compatible with Zend\ServiceManager\Config.
    // 'service_manager' => array(),
 );
+
+//if (\Zend\Console\Console::isConsole()) {
+//    $config['modules'] = array_values(array_diff($config['modules'], ['BjyAuthorize']));
+//}
+
+return $config;

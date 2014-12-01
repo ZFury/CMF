@@ -11,7 +11,6 @@ use Zend\I18n\Validator;
 use Zend\Validator\Db;
 use Zend\Validator\Exception;
 
-
 /**
  * @ORM\Entity
  * @ORM\Table(name="options")
@@ -19,6 +18,11 @@ use Zend\Validator\Exception;
  */
 class Options
 {
+    /**
+     *  default namespace
+     */
+    const NAMESPACE_DEFAULT = 'default';
+
     /**
      * @var string
      * @ORM\Id
@@ -41,7 +45,7 @@ class Options
 
     /**
      * @var string
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $description;
 

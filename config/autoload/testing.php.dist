@@ -1,8 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alexfloppy
- */
 
 return array(
     'doctrine' => array(
@@ -10,11 +6,11 @@ return array(
             'orm_default' => array(
                 'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
                 'params' => array(
-                    'host'     => 'alpha-team.php.nixsolutions.com',
-                    'port'     => '3306',
-                    'dbname'   => 'p_zfs_tests',
-                    'user' => 'p_zfs_test',
-                    'password' => 'p_zfs_test',
+                    'host'     => '{HOSTNAME}',
+                    'dbname'   => '{DATABASE}',
+                    'user'     => '{USERNAME}',
+                    'password' => '{PASSWORD}',
+                    'port'     => '{PORT}',
                 ),
                 'doctrine_type_mappings' => array(
                     'enum' => 'string'
