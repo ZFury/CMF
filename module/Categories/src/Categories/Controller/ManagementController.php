@@ -2,7 +2,6 @@
 
 namespace Categories\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
 use Starter\Mvc\Controller\AbstractCrudController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
@@ -12,7 +11,7 @@ use Zend\Form\Annotation\AnnotationBuilder;
 use DoctrineModule\Validator;
 use Categories\Validators;
 
-class ManagementController extends AbstractCrudController//AbstractActionController
+class ManagementController extends AbstractCrudController
 {
 
     public function indexAction()
@@ -46,59 +45,41 @@ class ManagementController extends AbstractCrudController//AbstractActionControl
     public function createAction()
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $category = new \Categories\Entity\Categories();
         $repository = $entityManager->getRepository('Categories\Entity\Categories');
 
-        $parentId = $this->params('parentId');
-
-//        $orders = array();
-//        if (!$siblings = $repository->findBy(['parentId' => $parentId])) {
-//            $siblings = $repository->findBy(['parentId' => null]);
-//        }
-//        foreach ($siblings as $sibling) {
-//            $orders[] = $sibling->getOrder();
-//        }
-//
-//        if (count($orders) > 0) {
-//            $order = max($orders) + 1;
-//        } else {
-//            $order = 1;
-//        }
-
-//        $category->setParentId($parentId);
-//        $category->setOrder($this->getMaxOrder($parentId));
-        $builder = new AnnotationBuilder($entityManager);
-
-        $form = $builder->createForm($category);
-        $form->setHydrator(new DoctrineHydrator($entityManager));
-//        $form->bind($category);
+        $form = $this->getCreateForm();
 
         if ($this->getRequest()->isPost()) {
             $form->setInputFilter(new Filter\CreateInputFilter($this->getServiceLocator()));
             $form->setData($this->getRequest()->getPost());
 
             if ($form->isValid()) {
-                $parentId = !$this->getRequest()->getPost('parentId')
+                $parentId = !$this->params()->fromRoute('parentId')
                     ? null
-                    : $this->getRequest()->getPost('parentId');
+                    : $this->params()->fromRoute('parentId');
                 $aliasValid = new Validator\NoObjectExists(['object_repository' => $repository, 'fields' => ['alias', 'parentId']]);
-                if ($aliasValid->isValid(['alias' => $this->getRequest()->getPost('alias'),
+                if ($aliasValid->isValid(['alias' => $form->get('alias')->getValue(),
                     'parentId' => $parentId])
                 ) {
-                    $category->setParentId($parentId);
+                    $category = $this->getEntity();
+                    $category->setParentId($repository->find($parentId));
                     $category->setOrder($this->getMaxOrder($parentId));
+
+                    $hydrator = new DoctrineHydrator($entityManager);
+                    $hydrator->hydrate($form->getData(), $category);
                     $entityManager->persist($category);
                     $entityManager->flush();
-
                     $this->flashMessenger()->addSuccessMessage('Category has been successfully added!');
+
                     return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
                 }
                 $form->get('alias')->setMessages(array(
-                    'errorMessageKey' => 'Alias must be unique in his category!'
+                    'errorMessageKey' => 'Alias must be unique in it\'s category!'
                 ));
             }
         }
         $viewModel = new ViewModel(['form' => $form, 'title' => 'Create category']);
+
         return $viewModel;
     }
 
@@ -197,18 +178,12 @@ class ManagementController extends AbstractCrudController//AbstractActionControl
     /**
      * {@inheritDoc}
      */
-    protected function getCreateForm($parentId = null)
+    protected function getCreateForm()
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $builder = new AnnotationBuilder($entityManager);
 
-        $category = $this->getEntity();
-
-        $form = $builder->createForm($this->getEntity());
-        $form->setHydrator(new DoctrineHydrator($entityManager));
-        $form->bind($category);
-
-        return $form;
+        return $builder->createForm($this->getEntity());
     }
 
     /**
@@ -261,22 +236,4 @@ class ManagementController extends AbstractCrudController//AbstractActionControl
 
         return $order;
     }
-
-//    /**
-//     * {@inheritDoc}
-//     */
-//    protected function loadParentEntity()
-//    {
-//        if (!$id = $this->params()->fromRoute('parentId')) {
-//            //TODO: fix exception
-//            throw new EntityNotFoundException('Bad Request');
-//        }
-//
-//        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-//
-//        if (!$model = $objectManager->getRepository(get_class($this->getEntity()))->findOneBy(['parentId' => $id])) {
-//            throw new EntityNotFoundException('Entity not found');
-//        }
-//        return $model;
-//    }
 }
