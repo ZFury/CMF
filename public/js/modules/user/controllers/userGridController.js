@@ -4,7 +4,7 @@
             var ORDER_ASC = "ASC";
             var ORDER_DESC = "DESC";
             $scope.params = {};
-            $scope.params.limit = 2;
+            $scope.params.limit = 3;
             $scope.params.page = 0;
             $scope.reverse = true;
             $scope.params.searchString = '';
@@ -16,6 +16,7 @@
             $scope.getUsers = function () {
 //                if (typeof ($routeParams.page) === 'undefined') {
 //                  $scope.page = 1;
+                console.log($location);
 //                    $location.path($scope.page);
 //                } else {
 //                    $scope.page = $routeParams.page;
@@ -61,10 +62,19 @@
             };
 
             /**
-             * First search
+             * Search users
              * */
             $scope.search = function () {
                 $scope.page = 0;
+                $scope.getUsers();
+            };
+
+            /**
+             * Change limit
+             * */
+            $scope.changeLimit = function (limit) {
+                $scope.page = 0;
+                $scope.params.limit = limit;
                 $scope.getUsers();
             };
 

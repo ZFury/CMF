@@ -39,6 +39,13 @@
                                             ng-disabled="page == gridPages-1">NEXT </button>
                                 </ul>
                             </div>
+                            <div class="btn-group" ng-show="filteredUsers.length">
+                                <ul>
+                                    <button type="button" class="btn btn-default" ng-click="changeLimit(3)">3</button>
+                                    <button type="button" class="btn btn-default" ng-click="changeLimit(5)">5</button>
+                                    <button type="button" class="btn btn-default" ng-click="changeLimit(10)">10</button>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -77,6 +77,7 @@ class ManagementController extends AbstractActionController
         $request = $this->getRequest();
         $data = array();
         $count = null;
+        $searchString = '';
 
         if ($request->isPost()) {
             $params = $request->getPost('data');
