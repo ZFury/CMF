@@ -9,7 +9,7 @@ use Zend\Stdlib\Hydrator\ClassMethods;
 
 class EditForm extends Form
 {
-    public function __construct($name = null, ServiceManager $sm = null)
+    public function __construct($name = null, array $options = [])
     {
         parent::__construct('form-create');
         $this->setAttribute('method', 'post')->setAttribute('role', 'form')
