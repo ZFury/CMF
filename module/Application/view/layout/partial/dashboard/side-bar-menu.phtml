@@ -4,7 +4,7 @@
         <a href="javascript:;" data-toggle="collapse" data-target="#<?=$pages->label?>">
                 <?=$pages->label?>
             <i class="fa fa-fw fa-caret-down"></i></a>
-        <ul id="<?=$pages->label?>" class="collapse">
+        <ul id="<?=$pages->label?>" class="collapse dashboard-menu">
             <?php foreach ($pages as $page) {
                 $controller = $page->controller_namespace;
                 $action = $page->action;
