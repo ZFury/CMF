@@ -44,7 +44,9 @@ class ManagementController extends AbstractCrudController
      */
     protected function getEditForm()
     {
-        return new \Options\Form\Create(null, ['serviceLocator' =>$this->getServiceLocator()]);
+        $form = new \Options\Form\Create(null, ['serviceLocator' =>$this->getServiceLocator()]);
+        $form->get('submit')->setValue('Save');
+        return $form;
     }
 
     /**
