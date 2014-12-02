@@ -16,12 +16,12 @@ class ManagementController extends AbstractCrudController
 
     protected function getCreateForm()
     {
-        return new Form\CreateForm(null, $this->getServiceLocator());
+        return new Form\CreateForm(null, ['sm' => $this->getServiceLocator()]);
     }
 
     protected function getEditForm()
     {
-        return new Form\EditForm(null, $this->getServiceLocator());
+        return new Form\EditForm(null, ['sm' => $this->getServiceLocator()]);
     }
 
     public function indexAction()
