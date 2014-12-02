@@ -130,6 +130,14 @@ class Auth
         return $authRow;
     }
 
+    /**
+     * Checks if user's password is true or false
+     *
+     * @param $email
+     * @param $password
+     * @return bool
+     * @throws AuthException
+     */
     public function checkCredentials($email, $password)
     {
         $authService = $this->createAuthService($email, $password);
@@ -140,7 +148,13 @@ class Auth
         return true;
     }
 
-
+    /**
+     * Creates authentication service and sets IdentityValue, Credential Value to its adapter
+     *
+     * @param $email
+     * @param $password
+     * @return array|object
+     */
     public function createAuthService($email, $password)
     {
         $authService = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
