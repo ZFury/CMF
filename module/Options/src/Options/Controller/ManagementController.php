@@ -9,7 +9,6 @@
 
 namespace Options\Controller;
 
-use Options\Form\Edit;
 use Starter\Mvc\Controller\AbstractCrudController;
 use Zend\View\Model\ViewModel;
 use Options\Form\Create;
