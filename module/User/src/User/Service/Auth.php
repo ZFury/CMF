@@ -70,6 +70,14 @@ class Auth
      */
     public function generateEquals(\User\Entity\User $user, $password)
     {
+        //delete row
+        $auth = $this->getObjectManager()
+            ->getRepository('User\Entity\Auth')
+            ->findOneByUserId($user->getId());
+        if ($auth) {
+            $this->getObjectManager()->remove($auth);
+            $this->getObjectManager()->flush();
+        }
         // new auth row
         $row = new \User\Entity\Auth();
         $row->setUserId($user->getId());
