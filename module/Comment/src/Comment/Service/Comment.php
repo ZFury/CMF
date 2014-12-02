@@ -3,7 +3,6 @@
 namespace Comment\Service;
 
 use Zend\ServiceManager\ServiceManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Comment\Form;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 
@@ -77,25 +76,24 @@ class Comment
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
 
         if (isset($userId)) {
-            $masObj = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => $entityType, 'entityId' => $entityId, 'userId' => $userId));
+            $comments = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => $entityType, 'entityId' => $entityId, 'userId' => $userId));
         } else {
-            $masObj = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => $entityType, 'entityId' => $entityId));
+            $comments = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => $entityType, 'entityId' => $entityId));
         }
 
-
-        $masResult = array();
-        foreach ($masObj as $obj) {
-            $masResult[$obj->getId()]['comment_info'] = $obj;
-            $masResult[$obj->getId()]['comments'] = self::getCommentsByEntityId('comment', $obj->getId());
+        $arrayComments = array();
+        foreach ($comments as $comment) {
+            $arrayComments[$comment->getId()]['comment'] = $comment;
+            $arrayComments[$comment->getId()]['childs'] = self::getCommentsByEntityId('comment', $comment->getId());
         }
-        return $masResult;
+        return $arrayComments;
     }
 
     /**
      * @param $userId
      * @return array
      */
-    public function getCommentsByUserId($userId)
+    /*public function getCommentsByUserId($userId)
     {
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
 
@@ -109,48 +107,40 @@ class Comment
             }
         }
         return $masResult;
-    }
+    }*/
 
     /**
      * @param $id
+     * @return bool
      * @throws \Exception
      */
     public function deleteCommentById($id)
     {
-        if (!isset($id)) {
-            return false;
-        } else {
-            $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
-            try {
-                $objectManager->getConnection()->beginTransaction();
-                $comment = $objectManager->find('Comment\Entity\Comment', $id);
-                $objectManager->remove($comment);
-                $objectManager->flush();
-                $objectManager->getConnection()->commit();
-                return true;
-            } catch (\Exception $e) {
-                $objectManager->getConnection()->rollback();
-                throw $e;
-            }
+        $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
+        $objectManager->getConnection()->beginTransaction();
+        $comment = $objectManager->find('Comment\Entity\Comment', $id);
+
+        if (!$comment) {
+            throw new \Exception("Attempt to remove comments that do not exist");
         }
+        try {
+            $objectManager->remove($comment);
+            $objectManager->flush();
+            $objectManager->getConnection()->commit();
+        } catch (\Exception $e) {
+            $objectManager->getConnection()->rollback();
+            throw $e;
+        }
+
+        return true;
     }
 
     /**
-* @param $form
-* @param $id
+    * @param $form
+    * @param $id
      */
-    public function editCommentById($form,$id)
+    public function editCommentById($form, $id)
     {
-     /*   $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
-        $comment = $objectManager->find('Comment\Entity\Comment', $id);
-        $form
-        try {
-            $album = $this->getAlbumTable()->getAlbum($id);
-        }
-        catch (\Exception $ex) {
-            return $this->redirect()->toRoute('album', array(
-                'action' => 'index'
-            ));
-        }*/
+
     }
 }

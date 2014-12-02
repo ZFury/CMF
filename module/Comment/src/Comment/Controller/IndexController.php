@@ -21,37 +21,35 @@ class IndexController extends AbstractActionController
 
             return new ViewModel(array('comments' => $comments));
         }
-        if (isset($this->getRequest()->getQuery()->user_id)) {
+        /*if (isset($this->getRequest()->getQuery()->user_id)) {
             $comments = $this->getServiceLocator()
                 ->get('Comment\Service\Comment')
                 ->getCommentsByUserId($this->identity()->getUser()->getId());
 
             return new ViewModel(array('comments' => $comments));
-        }
+        }*/
         return new ViewModel();
     }
 
     /**
      * @return \Zend\Http\Response
+     * @throws \Exception
      */
     public function deleteAction()
     {
-        if (!(int)$this->params()->fromRoute('id')) {
-            return $this->redirect()->toRoute('home');
+        if (!($id = $this->params()->fromRoute('id'))) {
+            throw new \Exception("No number comments that removed");
         }
 
         $result = $this->getServiceLocator()
             ->get('Comment\Service\Comment')
-            ->deleteCommentById((int)$this->params()->fromRoute('id'));
+            ->deleteCommentById($id);
 
         if ($result) {
             $this->flashMessenger()->addSuccessMessage('Comment deleted');
             $url = $this->getRequest()->getHeader('Referer')->getUri();
             return $this->redirect()->toUrl($url);
 
-        } else {
-            $this->flashMessenger()->addErrorMessage('Comment has been deleted');
-            return $this->redirect()->toRoute('home');
         }
     }
 
@@ -74,13 +72,13 @@ class IndexController extends AbstractActionController
     public function addAction()
     {
         if (!($this->getRequest()->getQuery()->entity) || !($entityId = intval($this->getRequest()->getQuery()->id))) {
-            $this->flashMessenger()->addErrorMessage('Wrong query string');
+            throw new \Exception('Wrong query string');
         }
 
         $et = $this->getServiceLocator()->get('Comment\Service\EntityType');
         $entityType = $et->get($this->getRequest()->getQuery()->entity);
         if (!$entityType) {
-            $this->flashMessenger()->addErrorMessage('This entity can not comment');
+            throw new \Exception('Unknown entity');
         }
 
         $form = new Form\Add(null, $this->getServiceLocator());
@@ -91,8 +89,6 @@ class IndexController extends AbstractActionController
             $comment = $this->getServiceLocator()
                 ->get('Comment\Service\Comment')
                 ->addComment($form, $data, $entityType, $entityId, $user);
-
-            $this->flashMessenger()->addSuccessMessage('Comment added');
         }
 
         return new ViewModel(['form' => $form]);

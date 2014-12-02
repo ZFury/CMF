@@ -4,7 +4,6 @@ namespace Comment\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
-use Zend\ServiceManager\ServiceManager;
 
 /**
  *
@@ -42,7 +41,7 @@ class EntityType
      * @Annotation\Attributes({"class":"form-control"})
      * @ORM\Column(type="text", nullable=false)
      */
-    protected $desc;
+    protected $description;
 
     /**
      * @var created
@@ -98,13 +97,13 @@ class EntityType
     /**
      * Set description
      *
-     * @param string $desc
+     * @param string $description
      *
      * @return void
      */
-    public function setDesc($desc)
+    public function setDescription($description)
     {
-        $this->desc = $desc;
+        $this->$description = $description;
     }
 
     /**
@@ -112,7 +111,7 @@ class EntityType
      *
      * @return string
      */
-    public function getDesc()
+    public function getDescription()
     {
         return $this->desc;
     }

@@ -1,23 +1,23 @@
-<ul>
-    <li>
-        <ul class="list-inline">
-            <li><span class="text-info">iD:</span> <?php echo $this->comment_info->getId() ?></li>
-            <li><span class="text-info">Comment:</span> <?php echo $this->comment_info->getComment() ?></li>
-            <li><span class="text-info">Entity type:</span> <?php echo $this->comment_info->getComment() ?></li>
-            <li><span class="text-info">Entity id:</span> <?php echo $this->comment_info->getComment() ?></li>
-            <li><span class="text-info">UserId:</span> <?php echo $this->comment_info->getUserId() ?></li>
-            <li>
-                <a class="btn btn-info btn-xs"
-                   href="<?php echo $this->url('comment', array('action' => 'edit', 'id' => $this->comment_info->getId())); ?>">Edit</a>
-                <a class="btn btn-danger btn-xs"
-                   href="<?php echo $this->url('comment', array('action' => 'delete', 'id' => $this->comment_info->getId())); ?>">Delete</a>
-            </li>
-        </ul>
+<ul class="media">
+    <li class="media">
+        <div class="media-body">
+            <h4 class="media-heading">
+                <?php echo $this->escapeHtml($this->comment->getUser()->getDisplayName()); ?>
+                <?php
+                if ($this->comment->getUserId()===$this->identity()->getUserId()) : ?>
+                    <a href="<?php echo $this->url('comment', array('action' => 'edit', 'id' => $this->comment->getId())); ?>">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                    </a>
+                    <a href="<?php echo $this->url('comment', array('action' => 'delete', 'id' => $this->comment->getId())); ?>">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </a>
+                <?php endif; ?>
+            </h4>
+            <textarea class="form-control span6" disabled><?php echo $this->escapeHtml($this->comment->getComment()) ?></textarea>
+            <?php
+            if (count($this->childs) > 0) : ?>
+                <?php echo $this->comment('comment/index/partial.phtml', $this->childs); ?>
+            <?php endif; ?>
+        </div>
     </li>
-    <?php
-    if (count($this->comments) > 0) : ?>
-        <li class="list-unstyled"><span
-                class="text-info">Comments:</span> <?php echo $this->partialLoop('comment/index/partial.phtml', $this->comments) ?>
-        </li>
-    <?php endif; ?>
 </ul>

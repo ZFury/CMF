@@ -5,7 +5,7 @@ namespace Comment\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use User\Entity\User;
 use Zend\Form\Annotation;
-use Zend\ServiceManager\ServiceManager;
+use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 
 /**
  *
@@ -77,6 +77,20 @@ class Comment
      * @ORM\Column(type="datetime")
      */
     protected $updated;
+
+    /**
+     * @ORM\PreRemove
+     * @param LifecycleEventArgs $args
+     * @throws \Exception
+     */
+    public function deleteChild(LifecycleEventArgs $args)
+    {
+        $objectManager = $args->getObjectManager();
+        $comments = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => 'comment', 'entityId' => $this->getId()));
+        foreach ($comments as $comment) {
+            $objectManager->remove($comment);
+        }
+    }
 
     /**
      * Now we tell doctrine that before we persist or update we call the updatedTimestamps() function.
