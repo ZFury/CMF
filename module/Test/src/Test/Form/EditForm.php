@@ -3,19 +3,20 @@
 namespace Test\Form;
 
 use DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity;
+use Test\Form\Filter\Create;
 use Zend\Form\Form;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\Hydrator\ClassMethods;
 
 class EditForm extends Form
 {
-    public function __construct($name = null, ServiceManager $sm = null)
+    public function __construct($name = null, array $options = [])
     {
         parent::__construct('form-create');
         $this->setAttribute('method', 'post')->setAttribute('role', 'form')
             ->setAttribute('class', 'form-create form-horizontal')
             ->setHydrator(new ClassMethods());
-        $this->setInputFilter(new CreateInputFilter($sm));
+        $this->setInputFilter(new Create($options['sm']));
 
         $this->add([
             'name' => 'id',
