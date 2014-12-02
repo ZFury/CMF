@@ -100,6 +100,10 @@ ul.message-dropdown {
     overflow-y: auto;
 }
 
+.side-nav>li>a{
+    padding-left:25px;
+}
+
 .alert{
     margin-top: 30px;
 }
@@ -237,4 +241,9 @@ ul.alert-dropdown {
 
 .navbar-text.navbar-right:last-child {
      margin-right: 20px;
+}
+
+.active>a {
+    background-image: linear-gradient(to right, #222 0, #707070 100%);
+    background-repeat: repeat-x;
 }

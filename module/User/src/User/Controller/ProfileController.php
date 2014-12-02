@@ -8,8 +8,12 @@
 
 namespace User\Controller;
 
+use User\Exception\AuthException;
+use User\Form\ChangePasswordForm;
+use User\Form\Filter\ChangePasswordInputFilter;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
 class ProfileController extends AbstractActionController
 {
@@ -45,4 +49,37 @@ class ProfileController extends AbstractActionController
         }
         $twitter->usersSearch('twitter')->toValue()[0]->following;
     }
-} 
+
+    public function changePasswordAction()
+    {
+        $form = new ChangePasswordForm();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setInputFilter(new ChangePasswordInputFilter($this->getServiceLocator()));
+            $form->setData($request->getPost());
+            if ($form->isValid()) {
+                $flashMessenger = new FlashMessenger();
+                $userAuth = $this->getServiceLocator()->get('\User\Service\Auth');
+                try {
+                    $userAuth->checkCredentials(
+                        $this->identity()->getUser()->getEmail(),
+                        $form->getData()['currentPassword']
+                    );
+                    $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+                    $user = $objectManager
+                        ->getRepository('User\Entity\User')
+                        ->findOneBy(['email' => $this->identity()->getUser()->getEmail()]);
+
+                    $userAuth->generateEquals($user, $form->getData()['password']);
+                    $flashMessenger->addSuccessMessage("You have successfully changed your password!");
+
+                    return $this->redirect()->toRoute('home');
+                } catch (AuthException $exception) {
+                    $flashMessenger->addErrorMessage($exception->getMessage());
+                }
+            }
+        }
+
+        return new ViewModel(['form' => $form]);
+    }
+}
