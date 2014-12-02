@@ -9,13 +9,12 @@
 
 namespace Options\Controller;
 
-use Options\Form\Edit;
 use Starter\Mvc\Controller\AbstractCrudController;
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Options\Form\Create;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Doctrine\ORM\EntityNotFoundException;
+use Zend\Mvc\Controller\AbstractActionController;
+use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 
 /**
  * Class ManagementController
@@ -44,7 +43,9 @@ class ManagementController extends AbstractCrudController
      */
     protected function getEditForm()
     {
-        return new \Options\Form\Create(null, ['serviceLocator' =>$this->getServiceLocator()]);
+        $form = new \Options\Form\Create(null, ['serviceLocator' =>$this->getServiceLocator()]);
+        $form->get('submit')->setValue('Save');
+        return $form;
     }
 
     /**
@@ -105,57 +106,6 @@ class ManagementController extends AbstractCrudController
 
         return new ViewModel(
             array('option' => $option)
-        );
-    }
-
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     * @throws \Exception
-     */
-    public function createAction()
-    {
-        $form = new Create('create', ['serviceLocator' => $this->getServiceLocator()]);
-        $form->get('namespace')->setValue(\Options\Entity\Options::NAMESPACE_DEFAULT);
-
-        if ($this->getRequest()->isPost()) {
-            $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-            $form->setData($this->getRequest()->getPost());
-            if ($form->isValid()) {
-                $data = $form->getData();
-                /** @var \Options\Entity\Options $option */
-                $option = $this->getServiceLocator()->get('Options\Entity\Options');
-                $objectManager->getConnection()->beginTransaction();
-                try {
-                    $hydrator = new DoctrineHydrator($objectManager);
-
-                    $hydrator->hydrate($form->getData(), $option);
-
-                    $option->setCreated(new \DateTime(date('Y-m-d H:i:s')));
-                    $option->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
-
-                    $form->bind($option);
-
-                    $objectManager->persist($option);
-                    $objectManager->flush();
-
-                    $objectManager->getConnection()->commit();
-
-                    $this->flashMessenger()->addSuccessMessage('Option was successfully created');
-
-                    return $this->redirect()->toRoute('options');
-
-                } catch (\Exception $e) {
-                    $objectManager->getConnection()->rollback();
-                    throw $e;
-                }
-
-            }
-        }
-
-        return new ViewModel(
-            array(
-                'form' => $form
-            )
         );
     }
 }
