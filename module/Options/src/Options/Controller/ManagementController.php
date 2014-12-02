@@ -67,6 +67,7 @@ class ManagementController extends AbstractActionController
     public function createAction()
     {
         $form = new Create('create', ['serviceLocator' => $this->getServiceLocator()]);
+        $form->get('namespace')->setValue(\Options\Entity\Options::NAMESPACE_DEFAULT);
 
         if ($this->getRequest()->isPost()) {
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');

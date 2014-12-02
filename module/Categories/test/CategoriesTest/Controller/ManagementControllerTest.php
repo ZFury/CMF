@@ -22,17 +22,36 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
 {
 
     /**
+     * @var bool
+     */
+    protected $traceError = true;
+
+    /**
      * @var array
      */
     protected $userData = [
         'name' => 'adminTest1',
         'email' => 'aaa@gmail.com',
-        'password' => '111',
-        'repeat-password' => '111',
+        'password' => '123456',
+        'repeat-password' => '123456',
         'security' => 'e801af97d7724909d619fa44b43ea61f-ecda9ef74bf39983d75c4020e3b560de',
         'submit' => 'Sign Up'
     ];
 
+    /**
+     * @var array
+     */
+    protected $categoryData = [
+        'name' => 'default',
+        'alias' => 'default',
+        'order' => '1',
+        'parentId' => '',
+        'submit' => 'Create'
+    ];
+
+    /**
+     * @throws \User\Exception\AuthException
+     */
     public function setUp()
     {
         $this->setApplicationConfig(
@@ -40,42 +59,167 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         );
         parent::setUp();
 
-//        //remove user
-//        $this->removeUser();
+        $this->removeUser();
 
-        //create user
-//        $this->createUser();
+        $this->createUser();
 
         /** @var \User\Service\Auth $userAuth */
         $userAuth = $this->getApplicationServiceLocator()->get('\User\Service\Auth');
         $userAuth->authenticateEquals($this->userData['email'], $this->userData['password']);
     }
 
-//    /**
-//     *  migration up
-//     */
-//    public static function setUpBeforeClass()
-//    {
-//        exec('vendor/doctrine/doctrine-module/bin/doctrine-module orm:schema-tool:update --force');
-//    }
-//
-//    /**
-//     * migration down
-//     */
-//    public static function tearDownAfterClass()
-//    {
-//        exec('vendor/doctrine/doctrine-module/bin/doctrine-module orm:schema-tool:drop --force');
-//    }
+    /**
+     *  migration up
+     */
+    public static function setUpBeforeClass()
+    {
+        exec('vendor/doctrine/doctrine-module/bin/doctrine-module orm:schema-tool:update --force');
+    }
 
+    /**
+     * migration down
+     */
+    public static function tearDownAfterClass()
+    {
+        exec('vendor/doctrine/doctrine-module/bin/doctrine-module orm:schema-tool:drop --force');
+    }
+
+    /**
+     *
+     */
     public function testIndexActionCanBeAccessed()
     {
         $this->dispatch('/categories/management');
         $this->assertResponseStatusCode(200);
 
         $this->assertModuleName('Categories');
-        $this->assertControllerName('Categories\Controller\ManagementController');
+        $this->assertControllerName('Categories\Controller\Management');
         $this->assertControllerClass('ManagementController');
         $this->assertMatchedRouteName('categories/default');
+    }
+
+    /**
+     *
+     */
+    public function testCreateActionCanBeAccessed()
+    {
+        $this->dispatch('/categories/management/create');
+        $this->assertResponseStatusCode(200);
+
+        $this->assertModuleName('Categories');
+        $this->assertControllerName('Categories\Controller\Management');
+        $this->assertControllerClass('ManagementController');
+        $this->assertMatchedRouteName('categories/create');
+    }
+
+    /**
+     *
+     */
+    public function testOrderActionCanBeAccessed()
+    {
+        $this->dispatch('/categories/management/order');
+        $this->assertResponseStatusCode(302);
+        $this->assertRedirectTo('/categories/management/index');
+    }
+
+    /**
+     *
+     */
+    public function testCreateActionRedirectsAfterValidPost()
+    {
+        $postData = array(
+            'name' => 'rrr',
+            'alias' => 'rrr',
+            'parentId' => '',
+            'order' => '1',
+        );
+        $this->dispatch('/categories/management/create', 'POST', $postData);
+        $this->assertResponseStatusCode(302);
+
+        $this->assertRedirectTo('/categories/management/index');
+    }
+
+    /**
+     *
+     */
+    public function testEditActionCanBeAccessed()
+    {
+        $this->dispatch('/categories/management/edit/1');
+        $this->assertResponseStatusCode(200);
+
+        $this->assertModuleName('Categories');
+        $this->assertControllerName('Categories\Controller\Management');
+        $this->assertControllerClass('ManagementController');
+        $this->assertMatchedRouteName('categories/default');
+    }
+
+    /**
+     *
+     */
+    public function testEditActionRedirectsAfterValidPost()
+    {
+        $this->createCategory($this->categoryData);
+
+        $postData = array(
+            'name' => 'edited',
+            'alias' => $this->categoryData['alias'],
+            'parentId' => $this->categoryData['parentId'],
+            'order' => $this->categoryData['order'],
+        );
+        $this->dispatch('/categories/management/edit/2', 'POST', $postData);
+        $this->assertResponseStatusCode(302);
+
+        $this->assertRedirectTo('/categories/management/index');
+    }
+
+    /**
+     *
+     */
+    public function testDeleteAction()
+    {
+        $this->createCategory($this->categoryData);
+
+        $deletePath = '/categories/management/delete/3';
+        $this->dispatch($deletePath);
+
+        $this->assertEquals(302, $this->getResponse()->getStatusCode());
+        $this->assertRedirectTo('/categories/management/index');
+    }
+
+    /**
+     *
+     */
+    public function testOrderAction()
+    {
+        $subCategoryData1 = [
+            'name' => 'default1',
+            'alias' => 'default1',
+            'order' => '3',
+            'parentId' => '1',
+            'submit' => 'Create'
+        ];
+//        $subCategoryData2 = [
+//            'name' => 'default2',
+//            'alias' => 'default2',
+//            'order' => '4',
+//            'parentId' => '1',
+//            'submit' => 'Create'
+//        ];
+//
+        $this->createCategory($subCategoryData1);
+//        $this->createCategory($subCategoryData2);
+
+        $json = json_encode([['item_id' => null, "parent_id" => 'none', "depth" => 0, "left" => 1, "right" => 6],
+            ['item_id' => 4, "parent_id" => null, "depth" => 1, "left" => 2, "right" => 3, "order" => 1],
+//            ['item_id' => 5, "parent_id" => null, "depth" => 1, "left" => 4, "right" => 5, "order" => 2],
+        ]);
+        $postData = [
+            'tree' => $json,
+            'treeParent' => 1,
+        ];
+
+        $this->dispatch('/categories/management/order', 'POST', $postData);
+        $this->assertResponseStatusCode(200);
     }
 
 
@@ -115,6 +259,55 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         $authService = $this->getApplicationServiceLocator()->get('User\Service\Auth');
         $authService->generateEquals($user, $this->userData['password']);
 
+        $objectManager->getConnection()->commit();
+    }
+
+    /**
+     *
+     */
+    public function createCategory($categoryData)
+    {
+        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $category = $this->getApplicationServiceLocator()->get('Categories\Entity\Categories');
+        $objectManager->getConnection()->beginTransaction();
+        $hydrator = new DoctrineHydrator($objectManager);
+        $hydrator->hydrate($categoryData, $category);
+        $objectManager->persist($category);
+        $objectManager->flush();
+        $objectManager->getConnection()->commit();
+    }
+
+    /**
+     *
+     */
+    public function createSubcategories()
+    {
+        $subCategoryData1 = [
+            'name' => 'default1',
+            'alias' => 'default1',
+            'order' => '3',
+            'parentId' => '1',
+            'submit' => 'Create'
+        ];
+        $subCategoryData2 = [
+            'name' => 'default2',
+            'alias' => 'default2',
+            'order' => '4',
+            'parentId' => '1',
+            'submit' => 'Create'
+        ];
+
+        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $category = $this->getApplicationServiceLocator()->get('Categories\Entity\Categories');
+        $objectManager->getConnection()->beginTransaction();
+        $hydrator = new DoctrineHydrator($objectManager);
+        $hydrator->hydrate($subCategoryData1, $category);
+        $objectManager->persist($category);
+
+        $hydrator->hydrate($subCategoryData2, $category);
+        $objectManager->persist($category);
+
+        $objectManager->flush();
         $objectManager->getConnection()->commit();
     }
 }

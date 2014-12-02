@@ -2,6 +2,7 @@
 namespace User;
 
 use Zend\Authentication\AuthenticationService;
+use Zend\Mvc\MvcEvent;
 
 class Module
 {

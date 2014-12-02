@@ -4,6 +4,7 @@ namespace Options\Service;
 
 use Zend\ServiceManager\ServiceManager;
 use Zend\Mvc\Controller\Plugin\Url;
+use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 
 /**
  * Class Options
@@ -11,12 +12,6 @@ use Zend\Mvc\Controller\Plugin\Url;
  */
 class Options
 {
-
-    /**
-     *  default namespace
-     */
-    const NAMESPACE_DEFAULT = 'default';
-
     /**
      * @var null|\Zend\ServiceManager\ServiceManager
      */
@@ -53,7 +48,7 @@ class Options
      * @param string $namespace
      * @return mixed
      */
-    public function getOption($key, $namespace = self::NAMESPACE_DEFAULT)
+    public function getOption($key, $namespace = \Options\Entity\Options::NAMESPACE_DEFAULT)
     {
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $option = $objectManager
@@ -68,7 +63,7 @@ class Options
      * @param string $namespace
      * @return mixed
      */
-    public function getNamespace($namespace = self::NAMESPACE_DEFAULT)
+    public function getNamespace($namespace = \Options\Entity\Options::NAMESPACE_DEFAULT)
     {
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $option = $objectManager
@@ -78,31 +73,43 @@ class Options
     }
 
     /**
+     * set option
+     *
      * @param $key
      * @param $value
      * @param string $namespace
      * @param null $description
+     * @throws \Exception
      */
-    public function setOption($key, $value, $namespace = 'default', $description = null)
+    public function setOption($key, $value, $namespace = \Options\Entity\Options::NAMESPACE_DEFAULT, $description = null)
     {
+        $data = array(
+            'key' => $key,
+            'namespace' => $namespace,
+            'value' => $value,
+            'description' => $description
+        );
+
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         /** @var \Options\Entity\Options $option */
         $option = $this->getServiceLocator()->get('Options\Entity\Options');
-
         $objectManager->getConnection()->beginTransaction();
 
+        try {
+            $hydrator = new DoctrineHydrator($objectManager);
 
+            $hydrator->hydrate($data, $option);
 
-        $option->setNamespace($namespace);
-        $option->setKey($key);
-        $option->setValue($value);
-        $option->setDescription($description);
-        $option->setCreated(new \DateTime(date('Y-m-d H:i:s')));
-        $option->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
+            $option->setCreated(new \DateTime(date('Y-m-d H:i:s')));
+            $option->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
 
-        $objectManager->persist($option);
-        $objectManager->flush();
+            $objectManager->persist($option);
+            $objectManager->flush();
 
-        $objectManager->getConnection()->commit();
+            $objectManager->getConnection()->commit();
+        } catch (\Exception $e) {
+            $objectManager->getConnection()->rollback();
+            throw $e;
+        }
     }
 }

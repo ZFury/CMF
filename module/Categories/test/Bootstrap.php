@@ -45,7 +45,7 @@ class Bootstrap
             'module_listener_options' => array(
                 'module_paths' => $zf2ModulePaths,
                 'config_glob_paths' => array(
-                    '../../../config/autoload/local.testing.php',
+                    '../../../config/autoload/{,*.}{testing}.php',
                 ),
             ),
             'modules' => array(

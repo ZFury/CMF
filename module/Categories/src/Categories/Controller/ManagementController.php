@@ -22,15 +22,18 @@ class ManagementController extends AbstractActionController
         $repository = $entityManager->getRepository('Categories\Entity\Categories');
 
         $currentRootCategory = null;
+        $categories = null;
         if ($id = $this->params('id')) {
             $currentRootCategory = $entityManager->getRepository('Categories\Entity\Categories')->findOneBy(['parentId' => null, 'id' => $id]);
         }
         $rootCategories = $entityManager->getRepository('Categories\Entity\Categories')->findBy(['parentId' => null]);
 
-        if (!$currentRootCategory) {
+        if (!$currentRootCategory && !empty($rootCategories)) {
             $currentRootCategory = $rootCategories[0];
         }
-        $categories = $repository->findBy(['parentId' => $currentRootCategory->getId()], ['order' => 'ASC']);
+        if ($currentRootCategory) {
+            $categories = $repository->findBy(['parentId' => $currentRootCategory->getId()], ['order' => 'ASC']);
+        }
 
         return new ViewModel(['categories' => $categories, 'rootTree' => $rootCategories, 'currentRoot' => $currentRootCategory]);
 
@@ -170,9 +173,7 @@ class ManagementController extends AbstractActionController
     }
 
     /**
-     *
-     *
-     * @return \Zend\Stdlib\ResponseInterface
+     * @return JsonModel
      */
     public function orderAction()
     {
@@ -217,22 +218,14 @@ class ManagementController extends AbstractActionController
 
                     }
                 }
-
                 $entityManager->getConnection()->commit();
-
-                $this->flashMessenger()->addSuccessMessage('Order has been successfully saved!');
                 $returnJson = new JsonModel(['success' => true]);
-//                $returnJson = json_encode(['result' => 'success']);
             } catch (\Exception $e) {
                 $entityManager->getConnection()->rollback();
-
-                $this->flashMessenger()->addErrorMessage('Order has been failed!');
                 $returnJson = new JsonModel(['success' => false]);
-//                $returnJson = json_encode(['result' => 'fail']);
-
             }
-//            echo $returnJson;
             return $returnJson;
         }
+        return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
     }
 }

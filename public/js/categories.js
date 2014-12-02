@@ -24,7 +24,13 @@ define(['jquery', 'jquery-ui', 'jquery-nestedSortable'], function ($) {
             url: '/categories/management/order',
             type: 'post',
             success: function (data) {
-                window.location = '/categories/management/index';
+                if (data.success == true) {
+                    var html = '<div class="alert alert-success fade in"><a href="#" class="close" data-dismiss="alert">&times;</a>Order has been successfully saved!</div>';
+                    $('#dialog').html(html);
+                } else {
+                    var html = '<div class="alert alert-danger fade in"><a href="#" class="close" data-dismiss="alert">&times;</a>Order has been failed!</div>';
+                    $('#dialog').html(html);
+                }
             },
             dataType: 'json',
             data: {
