@@ -141,7 +141,7 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
 
         $this->dispatch('/options/management/create');
         $this->assertEquals(302, $this->getResponse()->getStatusCode());
-        $this->assertRedirectTo('/options');
+        $this->assertRedirectTo('/options/management');
     }
 
     /**
@@ -175,7 +175,7 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         $this->dispatch($editPath);
 
         $this->assertEquals(302, $this->getResponse()->getStatusCode());
-        $this->assertRedirectTo('/options');
+        $this->assertRedirectTo('/options/management');
     }
 
     /**
@@ -216,7 +216,7 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
 
 
         $this->assertEquals(302, $this->getResponse()->getStatusCode());
-        $this->assertRedirectTo('/options');
+        $this->assertRedirectTo('/options/management');
     }
 
     /**
