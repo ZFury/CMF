@@ -3,6 +3,7 @@
 namespace Test\Form;
 
 use DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity;
+use Test\Form\Filter\Create;
 use Zend\Form\Form;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\Hydrator\ClassMethods;
@@ -15,7 +16,7 @@ class EditForm extends Form
         $this->setAttribute('method', 'post')->setAttribute('role', 'form')
             ->setAttribute('class', 'form-create form-horizontal')
             ->setHydrator(new ClassMethods());
-        $this->setInputFilter(new CreateInputFilter($sm));
+        $this->setInputFilter(new Create($options['sm']));
 
         $this->add([
             'name' => 'id',
