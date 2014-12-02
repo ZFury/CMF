@@ -13,6 +13,7 @@ use User\Form\ChangePasswordForm;
 use User\Form\Filter\ChangePasswordInputFilter;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
 class ProfileController extends AbstractActionController
 {
@@ -57,25 +58,25 @@ class ProfileController extends AbstractActionController
             $form->setInputFilter(new ChangePasswordInputFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
             if ($form->isValid()) {
+                $flashMessenger = new FlashMessenger();
                 $userAuth = $this->getServiceLocator()->get('\User\Service\Auth');
                 try {
                     $userAuth->authenticateEquals(
                         $this->identity()->getUser()->getEmail(),
                         $form->getData()['currentPassword']
                     );
+                    $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+                    $user = $objectManager
+                        ->getRepository('User\Entity\User')
+                        ->findOneBy(['email' => $this->identity()->getUser()->getEmail()]);
+
+                    $userAuth->generateEquals($user, $form->getData()['newPassword']);
+                    $flashMessenger->addSuccessMessage("You have successfully changed your password!");
+
+                    return $this->redirect()->toRoute('home');
                 } catch (AuthException $exception) {
-                    $this->flashMessenger()->addErrorMessage($exception->getMessage());
+                    $flashMessenger->addErrorMessage($exception->getMessage());
                 }
-
-                $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-                $user = $objectManager
-                    ->getRepository('User\Entity\User')
-                    ->findOneBy(['email' => $this->identity()->getUser()->getEmail()]);
-
-                $userAuth->generateEquals($user, $form->getData()['newPassword']);
-                $this->flashMessenger()->addSuccessMessage("You have successfully changed your password!");
-
-                return $this->redirect()->toRoute('home');
             }
         }
 
