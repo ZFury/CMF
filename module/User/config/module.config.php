@@ -95,6 +95,9 @@ return array(
         'template_map' => array(
             'error/403' => __DIR__ . '/../view/error/403.phtml',
         ),
+        'strategies' => array(
+            'ViewJsonStrategy',
+        )
     ),
     'service_manager' => array(
         'factories' => array(
@@ -161,6 +164,16 @@ return array(
                     'controller' => 'User\Controller\Management',
                     'action' => array('create'),
                     'roles' => array('user'),
+                ),
+                array(
+                    'controller' => 'User\Controller\Management',
+                    'action' => array('grid'),
+                    'roles' => array('guest','user','admin'),
+                ),
+                array(
+                    'controller' => 'User\Controller\Management',
+                    'action' => array('get-users'),
+                    'roles' => array('guest','user','admin'),
                 ),
                 array(
                     'controller' => 'User\Controller\Profile',

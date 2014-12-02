@@ -1,11 +1,11 @@
 <?php
 
-namespace Starter\Mvc\Controller;
+namespace Starter\Mvc\Grid;
 
-use Zend\Mvc\Controller\AbstractController;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\EntityRepository;
 
-abstract class AbstractGridController extends AbstractController
+class Grid
 {
     const ORDER_ASC = 'ASC';
     const ORDER_DESC = 'DESC';
@@ -37,7 +37,7 @@ abstract class AbstractGridController extends AbstractController
      * Limit per page
      * @var int
      */
-    protected $limit = 25;
+    protected $limit = 2;
 
     /**
      * Default orders - ASC
@@ -46,12 +46,18 @@ abstract class AbstractGridController extends AbstractController
     protected $orders = array('field' => 'id', 'order' => self::ORDER_ASC);
 
     /**
+     * Filters
+     * @var array
+     */
+    protected $filters = array();
+
+    /**
      * __construct
      *
      * @param QueryBuilder $source
-     * @return AbstractGridController
+     * @return Grid
      */
-    public function __construct($source)
+    public function __construct(QueryBuilder $source)
     {
         $this->source = $source;
     }
@@ -64,21 +70,21 @@ abstract class AbstractGridController extends AbstractController
     public function getData()
     {
         $source = $this->getSource();
-        $offset = $this->getLimit() * $this->getPage();
         $limit = $this->getLimit();
+        $offset = $limit * ($this->getPage());
         $order = $this->getOrder();
+        $filter = $this->getFilter();
+        $data = $source
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->orderBy($order['field'], $order['order'])
+            ->where(
+                $source->expr()->orX()
+                ->add($source->expr()->like($filter['filterField'], $source->expr()->literal('%' . $filter['searchString'] . '%')))
+            )
+            ->getQuery();
 
-        if (!empty($offset)) {
-            $source->setFirstResult($offset);
-        }
-        if (!empty($limit)) {
-            $source->setMaxResults($limit);
-        }
-        if (!empty($order)) {
-            $source->orderBy($order['field'], $order['order']);
-        }
-
-        return $source->getQuery()->getArrayResult();
+        return $data->getArrayResult();
     }
 
     /**
@@ -109,7 +115,7 @@ abstract class AbstractGridController extends AbstractController
      * Set settings
      *
      * @param array $params
-     * @return AbstractGridController
+     * @return Grid
      */
     public function setSettings(array $params)
     {
@@ -121,7 +127,7 @@ abstract class AbstractGridController extends AbstractController
      * Set page
      *
      * @param int $page
-     * @return AbstractGridController
+     * @return Grid
      */
     public function setPage($page)
     {
@@ -143,7 +149,7 @@ abstract class AbstractGridController extends AbstractController
      * Set limit
      *
      * @param int $limit
-     * @return AbstractGridController
+     * @return Grid
      */
     public function setLimit($limit)
     {
@@ -165,7 +171,7 @@ abstract class AbstractGridController extends AbstractController
      * Set order
      *
      * @param array $order
-     * @return AbstractGridController
+     * @return Grid
      */
     public function setOrder($order)
     {
@@ -184,32 +190,25 @@ abstract class AbstractGridController extends AbstractController
     }
 
     /**
-     * Add order
+     * Set filter
      *
-     * @param string $column
-     * @param string $order
-     * @return AbstractGridController
+     * @param array $filters
+     * @return Grid
      */
-    public function addOrder($column, $order = self::ORDER_ASC)
+    public function setFilter($filters)
     {
-        $this->orders[$column] = $order;
+        $this->filters = $filters;
 
         return $this;
     }
 
     /**
-     * Add orders
+     * Get filter
      *
-     * @param string $column
-     * @param array $orders
-     * @return AbstractGridController
+     * @return array
      */
-    public function addOrders(array $orders)
+    public function getFilter()
     {
-        foreach ($orders as $key => $value) {
-            $this->orders[$key] = $value;
-        }
-
-        return $this;
+        return $this->filters;
     }
 }

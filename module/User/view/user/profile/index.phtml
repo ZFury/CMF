@@ -3,6 +3,7 @@
             <div class="col-sm-4">
                 <?php if ($this->identity()) : ?>
                     <a class="btn btn-success" href="<?php echo $this->url('user/default', ['controller' => 'auth', 'action' => 'twitter']) ?>">Assign Twitter</a>
+                    <a class="btn btn-success" href="<?php echo $this->url('user/default', ['controller' => 'profile', 'action' => 'change-password']) ?>">Change password</a>
                 <?php endif; ?>
             </div>
     </div>
