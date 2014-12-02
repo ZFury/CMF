@@ -16,6 +16,13 @@ return array(
                 )
             )
         ),
+        'configuration' => array(
+            'orm_default' => array(
+                'types' => array(
+                    'enumstatus' => 'User\DBAL\Types\EnumStatusType'
+                )
+            )
+        ),
         'authentication' => array(
             'orm_default' => array(
                 'object_manager' => 'Doctrine\ORM\EntityManager',
