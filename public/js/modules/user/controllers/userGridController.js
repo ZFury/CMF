@@ -7,7 +7,8 @@
             $scope.params.limit = 2;
             $scope.params.page = 0;
             $scope.reverse = true;
-            $scope.params.search = '';
+            $scope.params.searchString = '';
+            $scope.params.searchField = 'email';
             $scope.page = 0;
             /**
              * Get searched users function

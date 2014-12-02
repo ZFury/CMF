@@ -73,10 +73,15 @@ class Grid
         $limit = $this->getLimit();
         $offset = $limit * ($this->getPage());
         $order = $this->getOrder();
+        $filter = $this->getFilter();
         $data = $source
             ->setFirstResult($offset)
             ->setMaxResults($limit)
             ->orderBy($order['field'], $order['order'])
+            ->where(
+                $source->expr()->orX()
+                ->add($source->expr()->like($filter['filterField'], $source->expr()->literal('%' . $filter['searchString'] . '%')))
+            )
             ->getQuery();
 
         return $data->getArrayResult();

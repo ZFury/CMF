@@ -80,16 +80,15 @@ class ManagementController extends AbstractActionController
 
         if ($request->isPost()) {
             $params = $request->getPost('data');
+            if (!isset($params['page']) && !isset($params['limit'])) {
+                throw new Exception('Bad request');
+            }
             $em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
             $source = $em->createQueryBuilder()->select(array("u.id, u.email"))
                 ->from('\User\Entity\User', 'u');
             $grid = new Grid($source);
-            if (isset($params['page'])) {
-                $grid->setPage($params['page']);
-            }
-            if (isset($params['limit'])) {
-                $grid->setLimit($params['limit']);
-            }
+            $grid->setPage($params['page']);
+            $grid->setLimit($params['limit']);
             if (isset($params['field']) && isset($params['reverse'])) {
                 $field = 'u.' . $params['field'];
                 $order = $params['reverse'];
@@ -98,11 +97,15 @@ class ManagementController extends AbstractActionController
                 $order = $grid::ORDER_ASC;
             }
             $grid->setOrder(['field' => $field, 'order' => $order]);
-
+            if (isset($params['searchString']) && isset($params['searchField'])) {
+                $searchField = 'u.' . $params['searchField'];
+                $searchString = $params['searchString'];
+                $grid->setFilter(['filterField' => $searchField, 'searchString' => $searchString]);
+            }
             $data = $grid->getData();
             /* @var \User\Repository\User $usersManager */
             $usersManager = $em->getRepository('User\Entity\User');
-            $count = $usersManager->countUsers();
+            $count = $usersManager->countSearchUsers($searchString);
         }
         return new JsonModel(array(
             'data' => $data,

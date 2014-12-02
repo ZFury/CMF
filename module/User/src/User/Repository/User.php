@@ -31,7 +31,7 @@ class User extends EntityRepository
     }
 
     /**
-     * Return count searched users
+     * Return count search users
      *
      * @return int
      *
