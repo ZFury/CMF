@@ -10,7 +10,8 @@
         <div class="form-group">
             <?php echo $this->formLabel($form->get('namespace')); ?>
             <div class="col-sm-10">
-                <?php echo $this->formInput($form->get('namespace')); ?>
+                <?php echo $this->formInput($form->get('namespace')
+                    ->setValue(\Options\Entity\Options::NAMESPACE_DEFAULT)); ?>
                 <?php echo $this->formElementErrors($form->get('namespace')); ?>
             </div>
         </div>
