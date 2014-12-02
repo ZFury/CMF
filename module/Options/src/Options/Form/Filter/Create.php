@@ -25,6 +25,14 @@ class Create extends InputFilter
                             'max'      => 64,
                         ),
                     ),
+                    array(
+                        'name' => 'Regex',
+                        'options' => array(
+                            'pattern' => '/^[a-zA-Z\d]+$/',
+                            'message' => 'Allow letters and numbers only'
+
+                        ),
+                    ),
                 )
             )
         );
@@ -44,6 +52,14 @@ class Create extends InputFilter
                             'encoding' => 'UTF-8',
                             'min'      => 1,
                             'max'      => 255,
+                        ),
+                    ),
+                    array(
+                        'name' => 'Regex',
+                        'options' => array(
+                            'pattern' => '/^[a-zA-Z\d]+$/',
+                            'message' => 'Allow letters and numbers only'
+
                         ),
                     ),
                 ),
@@ -66,6 +82,14 @@ class Create extends InputFilter
                             'min'      => 1
                         ),
                     ),
+                    array(
+                        'name' => 'Regex',
+                        'options' => array(
+                            'pattern' => '/^[a-zA-Z\d]+$/',
+                            'message' => 'Allow letters and numbers only'
+
+                        ),
+                    ),
                 ),
             )
         );
@@ -84,6 +108,14 @@ class Create extends InputFilter
                         'options' => array(
                             'encoding' => 'UTF-8',
                             'min'      => 1
+                        ),
+                    ),
+                    array(
+                        'name' => 'Regex',
+                        'options' => array(
+                            'pattern' => '/^[a-zA-Z\d]+$/',
+                            'message' => 'Allow letters and numbers only'
+
                         ),
                     ),
                 ),

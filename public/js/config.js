@@ -20,7 +20,8 @@ require.config({
         "jquery-ui": './jquery-ui',
         "jquery-nestedSortable": './jquery.mjs.nestedSortable',
         categories: './categories',
-        "delete-confirmation": './delete_confirmation'
+        "delete-confirmation": './delete_confirmation',
+        dashboard:'./dashboard'
     },
     shim: {
         angular: {

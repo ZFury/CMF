@@ -109,5 +109,4 @@ class ManagementController extends AbstractActionController
             'count' => $count
         ));
     }
-
 }

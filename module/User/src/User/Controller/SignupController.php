@@ -25,7 +25,9 @@ class SignupController extends AbstractActionController
                 $userService = new Service\User($this->getServiceLocator());
                 try {
                     $user = $userService->create($form);
-                    $this->flashMessenger()->addSuccessMessage('You must confirm your email address to complete registration');
+                    $this->flashMessenger()->addSuccessMessage(
+                        'You must confirm your email address to complete registration'
+                    );
 
                     return $this->redirect()->toRoute('home');
                 } catch (\Exception $exception) {

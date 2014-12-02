@@ -1,8 +1,7 @@
-<ul class="nav navbar-nav side-nav">
+<ul id="side-nav" class="nav navbar-nav side-nav">
 <?php foreach ($this->container as $pages) { ?>
     <li>
         <a href="javascript:;" data-toggle="collapse" data-target="#<?=$pages->label?>">
-            <i class="fa fa-fw fa-arrows-v"></i>
                 <?=$pages->label?>
             <i class="fa fa-fw fa-caret-down"></i></a>
         <ul id="<?=$pages->label?>" class="collapse">
@@ -17,3 +16,4 @@
     </li>
 <?php } ?>
 </ul>
+<script>require(['dashboard']);</script>
