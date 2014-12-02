@@ -64,7 +64,9 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
 
         /** @var \User\Service\Auth $userAuth */
         $userAuth = $this->getApplicationServiceLocator()->get('\User\Service\Auth');
-        $userAuth->authenticateEquals($this->userData['email'], $this->userData['password']);
+//        $userAuth->authenticateEquals($this->userData['email'], $this->userData['password']);
+
+        $userAuth->login($this->getServiceLocator());
     }
 
     /**
