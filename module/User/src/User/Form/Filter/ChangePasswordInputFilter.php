@@ -10,72 +10,30 @@ namespace User\Form\Filter;
 
 use Zend\InputFilter\InputFilter;
 
-class ChangePasswordInputFilter extends InputFilter
+class ChangePasswordInputFilter extends CreateInputFilter
 {
     public function __construct($sm)
     {
-
+        $this->sm = $sm;
         $this->add(array(
             'name'     => 'currentPassword',
             'required' => true,
-            'filters'  => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
-            ),
             'validators' => array(
                 array(
-                    'name'    => 'StringLength',
+                    'name' => 'StringLength',
                     'options' => array(
-                        'encoding' => 'UTF-8',
-                        'min'      => 3,
-                        'max'      => 255,
+                        'min' => 3,
+                        'max' => 25,
                     ),
                 ),
+            ),
+            'filters' => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
             ),
         ));
 
-        $this->add(array(
-            'name'     => 'newPassword',
-            'required' => true,
-            'filters'  => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
-            ),
-            'validators' => array(
-                array(
-                    'name'    => 'StringLength',
-                    'options' => array(
-                        'encoding' => 'UTF-8',
-                        'min'      => 3,
-                        'max'      => 255,
-                    ),
-                ),
-            ),
-        ));
-
-        $this->add(array(
-            'name'     => 'newPasswordConfirm',
-            'required' => true,
-            'filters'  => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
-            ),
-            'validators' => array(
-                array(
-                    'name'    => 'StringLength',
-                    'options' => array(
-                        'encoding' => 'UTF-8',
-                        'min'      => 3,
-                        'max'      => 255,
-                    ),
-                ),
-                array(
-                    'name'    => 'Identical',
-                    'options' => array(
-                        'token' => 'newPassword',
-                    ),
-                ),
-            ),
-        ));
+        $this->password();
+        $this->repeatPassword();
     }
 }

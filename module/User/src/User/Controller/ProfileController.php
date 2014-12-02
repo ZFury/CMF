@@ -61,7 +61,7 @@ class ProfileController extends AbstractActionController
                 $flashMessenger = new FlashMessenger();
                 $userAuth = $this->getServiceLocator()->get('\User\Service\Auth');
                 try {
-                    $userAuth->authenticateEquals(
+                    $userAuth->checkCredentials(
                         $this->identity()->getUser()->getEmail(),
                         $form->getData()['currentPassword']
                     );
@@ -70,7 +70,7 @@ class ProfileController extends AbstractActionController
                         ->getRepository('User\Entity\User')
                         ->findOneBy(['email' => $this->identity()->getUser()->getEmail()]);
 
-                    $userAuth->generateEquals($user, $form->getData()['newPassword']);
+                    $userAuth->generateEquals($user, $form->getData()['password']);
                     $flashMessenger->addSuccessMessage("You have successfully changed your password!");
 
                     return $this->redirect()->toRoute('home');

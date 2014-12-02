@@ -110,10 +110,7 @@ class Auth
      */
     public function authenticateEquals($email, $password)
     {
-        $authService = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
-        $adapter = $authService->getAdapter();
-        $adapter->setIdentityValue($email);
-        $adapter->setCredentialValue($password);
+        $authService = $this->createAuthService($email, $password);
         $authResult = $authService->authenticate();
 
         if (!$authResult->isValid()) {
@@ -131,5 +128,26 @@ class Auth
         }
 
         return $authRow;
+    }
+
+    public function checkCredentials($email, $password)
+    {
+        $authService = $this->createAuthService($email, $password);
+        $authResult = $authService->getAdapter()->authenticate();
+        if (true !== $authResult) {
+            throw new AuthException('Wrong login or password');
+        }
+        return true;
+    }
+
+
+    public function createAuthService($email, $password)
+    {
+        $authService = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
+        $adapter = $authService->getAdapter();
+        $adapter->setIdentityValue($email);
+        $adapter->setCredentialValue($password);
+
+        return $authService;
     }
 }

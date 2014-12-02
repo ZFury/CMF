@@ -28,7 +28,7 @@ class ChangePasswordForm extends Form
         ));
 
         $this->add(array(
-            'name' => 'newPassword',
+            'name' => 'password',
             'attributes' => array(
                 'type'  => 'password',
             ),
@@ -38,7 +38,7 @@ class ChangePasswordForm extends Form
         ));
 
         $this->add(array(
-            'name' => 'newPasswordConfirm',
+            'name' => 'repeat-password',
             'attributes' => array(
                 'type'  => 'password',
             ),
