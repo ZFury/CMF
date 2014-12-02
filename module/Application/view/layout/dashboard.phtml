@@ -1,7 +1,7 @@
 <?php echo $this->doctype(); ?>
 <html lang="en">
     <head>
-        <?php require 'partial/header.phtml'; ?>
+        <?= $this->partial('layout/partial/header.phtml'); ?>
         <!-- CSS -->
         <link href="css/sb-admin.css" rel="stylesheet">
         <link href="font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -14,13 +14,13 @@
     </head>
     <body class="dashboard-body">
         <div id="wrapper">
-            <?= $this->partial('layout/partial/flashmessenger.phtml') ?>
             <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
                 <?= $this->partial('layout/partial/dashboard/nav-bar.phtml') ?>
             </nav>
             <div id="page-wrapper">
+                <?= $this->partial('layout/partial/flashmessenger.phtml') ?>
                 <h1 class="page-header">
-                    Dashboard <small>Statistics Overview</small>
+                    Dashboard
                 </h1>
                 <div class="container-fluid">
                     <?php // echo $this->partial('layout/partial/dashboard/breadcrumbs.phtml)' ?>

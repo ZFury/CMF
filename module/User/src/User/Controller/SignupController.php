@@ -6,60 +6,44 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use User\Form;
 use User\Service;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 
 class SignupController extends AbstractActionController
 {
+    /**
+     * Sign Up action
+     *
+     * @return array|\Zend\Http\Response|ViewModel
+     * @throws \Exception
+     */
     public function indexAction()
     {
-        $form = new Form\SignupForm(null, $this->getServiceLocator());
+        $form = new Form\SignupForm('create-user', ['serviceLocator' => $this->getServiceLocator()]);
 
         if ($this->getRequest()->isPost()) {
-            $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
-                $data = $form->getData();
-                /** @var \User\Entity\User $user */
-                $user = $this->getServiceLocator()->get('User\Entity\User');
-                $objectManager->getConnection()->beginTransaction();
+                $userService = new Service\User($this->getServiceLocator());
                 try {
-                    $hydrator = new DoctrineHydrator($objectManager);
-                    $hydrator->hydrate($form->getData(), $user);
-                    $user->setDisplayName($user->getEmail());
-                    $user->setRole($user::ROLE_USER);
-                    $user->setConfirm($user->generateConfirm());
-                    $user->setStatus($user::STATUS_UNCONFIRMED);
-
-                    $objectManager->persist($user);
-                    $objectManager->flush();
-
-                    $html = $this->forward()->dispatch('User\Controller\Mail', array('action' => 'signup', 'user' => $user));
-
-                    /** @var $authService Service\Auth */
-                    $authService = $this->getServiceLocator()->get('User\Service\Auth');
-                    $authService->generateEquals($user, $data['password']);
-
-                    /** @var $userService Service\User */
-                    $userService = $this->getServiceLocator()->get('User\Service\User');
-                    $userService->signupMail($user, $html);
-
-                    $objectManager->getConnection()->commit();
-
-                    $this->flashMessenger()->addSuccessMessage('You must confirm your email address to complete registration');
+                    $user = $userService->create($form);
+                    $this->flashMessenger()->addSuccessMessage(
+                        'You must confirm your email address to complete registration'
+                    );
 
                     return $this->redirect()->toRoute('home');
-
-                } catch (\Exception $e) {
-                    $objectManager->getConnection()->rollback();
-                    throw $e;
+                } catch (\Exception $exception) {
+                    throw $exception;
                 }
-
             }
         }
 
         return new ViewModel(['form' => $form]);
     }
 
+    /**
+     * Confirm email
+     *
+     * @return \Zend\Http\Response
+     */
     public function confirmAction()
     {
         $confirm = $this->params('confirm');

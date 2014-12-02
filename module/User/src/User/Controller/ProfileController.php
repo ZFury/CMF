@@ -45,4 +45,4 @@ class ProfileController extends AbstractActionController
         }
         $twitter->usersSearch('twitter')->toValue()[0]->following;
     }
-} 
+}

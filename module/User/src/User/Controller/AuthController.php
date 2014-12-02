@@ -21,8 +21,6 @@ class AuthController extends AbstractActionController
 
     public function loginAction()
     {
-        $session = new Container('location');
-        $location = $session->location;
         $data = $this->getRequest()->getPost();
         $form = new Form\LoginForm(null, $this->getServiceLocator());
         $flashMessenger = new FlashMessenger();
@@ -32,6 +30,8 @@ class AuthController extends AbstractActionController
             $userAuth = $this->getServiceLocator()->get('\User\Service\Auth');
             try {
                 $userAuth->authenticateEquals($data['email'], $data['password']);
+                $session = new Container('location');
+                $location = $session->location;
                 if ($location) {
                     $session->getManager()->getStorage()->clear('location');
                     return $this->redirect()->toUrl($location);
@@ -60,7 +60,11 @@ class AuthController extends AbstractActionController
     public function twitterAction()
     {
         $config = $this->getServiceLocator()->get('config')['twitter'];
-        $config['callbackUrl'] = $this->url()->fromRoute('user/default', ['controller' => 'auth', 'action' => 'twitter-callback'], ['force_canonical' => true]);
+        $config['callbackUrl'] = $this->url()->fromRoute(
+            'user/default',
+            ['controller' => 'auth', 'action' => 'twitter-callback'],
+            ['force_canonical' => true]
+        );
         OAuth::setHttpClient(new Client(null, $config['httpClientOptions']));
         $consumer = new Consumer($config);
         $token = $consumer->getRequestToken();
@@ -74,7 +78,11 @@ class AuthController extends AbstractActionController
     public function twitterCallbackAction()
     {
         $config = $this->getServiceLocator()->get('config')['twitter'];
-        $config['callbackUrl'] = $this->url()->fromRoute('user/default', ['controller' => 'auth', 'action' => 'twitter-callback'], ['force_canonical' => true]);
+        $config['callbackUrl'] = $this->url()->fromRoute(
+            'user/default',
+            ['controller' => 'auth', 'action' => 'twitter-callback'],
+            ['force_canonical' => true]
+        );
         OAuth::setHttpClient(new Client(null, $config['httpClientOptions']));
         $consumer = new Consumer($config);
         $container = new Container('twitter');
@@ -155,7 +163,11 @@ class AuthController extends AbstractActionController
     public function facebookAction()
     {
         $config = $this->getServiceLocator()->get('config')['facebook'];
-        $config['callbackUrl'] = $this->url()->fromRoute('user/default', ['controller' => 'auth', 'action' => 'facebook-callback'], ['force_canonical' => true]);
+        $config['callbackUrl'] = $this->url()->fromRoute(
+            'user/default',
+            ['controller' => 'auth', 'action' => 'facebook-callback'],
+            ['force_canonical' => true]
+        );
         FacebookSession::setDefaultApplication($config['appId'], $config['appSecret']);
         $helper = new FacebookRedirectLoginHelper($config['callbackUrl']);
         $this->redirect()->toUrl($helper->getLoginUrl());
@@ -165,7 +177,11 @@ class AuthController extends AbstractActionController
     public function facebookCallbackAction()
     {
         $config = $this->getServiceLocator()->get('config')['facebook'];
-        $config['callbackUrl'] = $this->url()->fromRoute('user/default', ['controller' => 'auth', 'action' => 'facebook-callback'], ['force_canonical' => true]);
+        $config['callbackUrl'] = $this->url()->fromRoute(
+            'user/default',
+            ['controller' => 'auth', 'action' => 'facebook-callback'],
+            ['force_canonical' => true]
+        );
         FacebookSession::setDefaultApplication($config['appId'], $config['appSecret']);
         $helper = new FacebookRedirectLoginHelper($config['callbackUrl']);
 
@@ -200,7 +216,6 @@ class AuthController extends AbstractActionController
             } else {
                 if (!$this->identity()) {
                     //create new user
-                    /** @var \User\Entity\User $user */
                     $user = new \User\Entity\User();
                     $user->setDisplayName($graphObject->getProperty('id'));
                     $user->setRole($user::ROLE_USER);

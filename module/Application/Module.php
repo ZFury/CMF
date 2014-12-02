@@ -75,7 +75,7 @@ class Module
         return array(
             'factories' => array(
                 'Application\Utility\UnauthorizedStrategy' => function ($sm) {
-                    $unauthorizedStrategy = new Utility\UnauthorizedStrategy('layout/layout');
+                    $unauthorizedStrategy = new Utility\UnauthorizedStrategy('error/403');
                     return $unauthorizedStrategy;
                 }
             ),
