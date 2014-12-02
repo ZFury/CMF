@@ -1,13 +1,13 @@
 <?php
 
-namespace Test\Form;
+namespace Test\Form\Filter;
 
 use DoctrineModule\Validator\NoObjectExists;
 use DoctrineModule\Validator\UniqueObject;
 use Zend\InputFilter\InputFilter;
 use Zend\ServiceManager\ServiceManager;
 
-class CreateInputFilter extends InputFilter
+class Create extends InputFilter
 {
     /** @var  ServiceManager */
     protected $sm;
