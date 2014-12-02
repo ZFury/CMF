@@ -60,7 +60,11 @@ class AuthController extends AbstractActionController
     public function twitterAction()
     {
         $config = $this->getServiceLocator()->get('config')['twitter'];
-        $config['callbackUrl'] = $this->url()->fromRoute('user/default', ['controller' => 'auth', 'action' => 'twitter-callback'], ['force_canonical' => true]);
+        $config['callbackUrl'] = $this->url()->fromRoute(
+            'user/default',
+            ['controller' => 'auth', 'action' => 'twitter-callback'],
+            ['force_canonical' => true]
+        );
         OAuth::setHttpClient(new Client(null, $config['httpClientOptions']));
         $consumer = new Consumer($config);
         $token = $consumer->getRequestToken();
@@ -74,7 +78,11 @@ class AuthController extends AbstractActionController
     public function twitterCallbackAction()
     {
         $config = $this->getServiceLocator()->get('config')['twitter'];
-        $config['callbackUrl'] = $this->url()->fromRoute('user/default', ['controller' => 'auth', 'action' => 'twitter-callback'], ['force_canonical' => true]);
+        $config['callbackUrl'] = $this->url()->fromRoute(
+            'user/default',
+            ['controller' => 'auth', 'action' => 'twitter-callback'],
+            ['force_canonical' => true]
+        );
         OAuth::setHttpClient(new Client(null, $config['httpClientOptions']));
         $consumer = new Consumer($config);
         $container = new Container('twitter');
@@ -155,7 +163,11 @@ class AuthController extends AbstractActionController
     public function facebookAction()
     {
         $config = $this->getServiceLocator()->get('config')['facebook'];
-        $config['callbackUrl'] = $this->url()->fromRoute('user/default', ['controller' => 'auth', 'action' => 'facebook-callback'], ['force_canonical' => true]);
+        $config['callbackUrl'] = $this->url()->fromRoute(
+            'user/default',
+            ['controller' => 'auth', 'action' => 'facebook-callback'],
+            ['force_canonical' => true]
+        );
         FacebookSession::setDefaultApplication($config['appId'], $config['appSecret']);
         $helper = new FacebookRedirectLoginHelper($config['callbackUrl']);
         $this->redirect()->toUrl($helper->getLoginUrl());
@@ -165,13 +177,17 @@ class AuthController extends AbstractActionController
     public function facebookCallbackAction()
     {
         $config = $this->getServiceLocator()->get('config')['facebook'];
-        $config['callbackUrl'] = $this->url()->fromRoute('user/default', ['controller' => 'auth', 'action' => 'facebook-callback'], ['force_canonical' => true]);
+        $config['callbackUrl'] = $this->url()->fromRoute(
+            'user/default',
+            ['controller' => 'auth', 'action' => 'facebook-callback'],
+            ['force_canonical' => true]
+        );
         FacebookSession::setDefaultApplication($config['appId'], $config['appSecret']);
         $helper = new FacebookRedirectLoginHelper($config['callbackUrl']);
 
         try {
             $session = $helper->getSessionFromRedirect();
-        } catch(\Exception $ex) {
+        } catch (\Exception $ex) {
             $this->flashMessenger()->addErrorMessage("Invalid callback request. Oops. Sorry.");
             return $this->redirect()->toRoute('home');
         }
