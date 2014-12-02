@@ -10,17 +10,65 @@
 namespace Options\Controller;
 
 use Options\Form\Edit;
+use Starter\Mvc\Controller\AbstractCrudController;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Options\Form\Create;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
+use Doctrine\ORM\EntityNotFoundException;
 
 /**
  * Class ManagementController
  * @package Options\Controller
  */
-class ManagementController extends AbstractActionController
+class ManagementController extends AbstractCrudController
 {
+    /**
+     * @return mixed|\Options\Entity\Options
+     */
+    protected function getEntity()
+    {
+        return new \Options\Entity\Options();
+    }
+
+    /**
+     * @return mixed|Create
+     */
+    protected function getCreateForm()
+    {
+        return new \Options\Form\Create(null, ['serviceLocator' =>$this->getServiceLocator()]);
+    }
+
+    /**
+     * @return mixed|Create
+     */
+    protected function getEditForm()
+    {
+        return new \Options\Form\Create(null, ['serviceLocator' =>$this->getServiceLocator()]);
+    }
+
+    /**
+     * @return mixed
+     * @throws EntityNotFoundException
+     */
+    protected function loadEntity()
+    {
+        $namespace = $this->params()->fromRoute('namespace');
+        $key = $this->params()->fromRoute('key');
+
+        if (!$namespace || !$key) {
+            throw new EntityNotFoundException('Bad Request');
+        }
+
+        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+
+        if (!$model = $objectManager->getRepository(get_class($this->getEntity()))
+            ->find(['namespace' => $namespace, 'key' => $key])) {
+            throw new EntityNotFoundException('Entity not found');
+        }
+        return $model;
+    }
+
     /**
      * @return array|ViewModel
      */
@@ -109,92 +157,5 @@ class ManagementController extends AbstractActionController
                 'form' => $form
             )
         );
-    }
-
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     * @throws \Exception
-     */
-    public function editAction()
-    {
-        $namespace = $this->params()->fromRoute('namespace');
-        $key = $this->params()->fromRoute('key');
-
-        if (!$namespace || !$key) {
-            return $this->notFoundAction();
-        }
-
-        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $option = $objectManager
-            ->getRepository('Options\Entity\Options')
-            ->find(array('namespace' => $namespace, 'key' => $key));
-
-        if (!$option) {
-            return $this->notFoundAction();
-        }
-
-        $form = new Create('edit', ['serviceLocator' => $this->getServiceLocator()]);
-        $form->bind($option);
-        $form->get('submit')->setValue('Save');
-
-        if ($this->getRequest()->isPost()) {
-            $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-            $form->setData($this->getRequest()->getPost());
-            if ($form->isValid()) {
-                $objectManager->getConnection()->beginTransaction();
-                try {
-                    $option->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
-
-                    $objectManager->persist($form->getData());
-                    $objectManager->flush();
-
-                    $objectManager->getConnection()->commit();
-
-                    $this->flashMessenger()->addSuccessMessage('Option was successfully updated');
-
-                    return $this->redirect()->toRoute('options');
-
-                } catch (\Exception $e) {
-                    $objectManager->getConnection()->rollback();
-                    throw $e;
-                }
-
-            }
-        }
-
-        return new ViewModel(
-            array(
-                'form' => $form
-            )
-        );
-    }
-
-    /**
-     * @return \Zend\Http\Response
-     */
-    public function deleteAction()
-    {
-        $namespace = $this->params()->fromRoute('namespace');
-        $key = $this->params()->fromRoute('key');
-
-        if (!$namespace || !$key) {
-            return $this->redirect()->toRoute('options');
-        }
-
-        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $option = $objectManager
-            ->getRepository('Options\Entity\Options')
-            ->find(array('namespace' => $namespace, 'key' => $key));
-
-        if (!$option) {
-            return $this->redirect()->toRoute('options');
-        }
-
-        $objectManager->remove($option);
-        $objectManager->flush($option);
-
-        $this->flashMessenger()->addSuccessMessage('Option was successfully deleted');
-
-        return $this->redirect()->toRoute('options');
     }
 }
