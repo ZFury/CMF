@@ -6,7 +6,7 @@ define(['jquery', 'jquery-ui', 'jquery-nestedSortable'], function ($) {
         $.each($('#side-nav li ul li a'),function(){
             if (this.href==url) {
                 $(this).parent().addClass('active');
-                $(this).closest('.dashboard-menu').slideToggle('slow');
+                $(this).closest('.dashboard-menu').collapse('show');
             }
         });
 });
