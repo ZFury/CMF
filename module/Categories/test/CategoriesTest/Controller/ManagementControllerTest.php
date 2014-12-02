@@ -34,7 +34,6 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         'email' => 'aaa@gmail.com',
         'password' => '123456',
         'repeat-password' => '123456',
-        'security' => 'e801af97d7724909d619fa44b43ea61f-ecda9ef74bf39983d75c4020e3b560de',
         'submit' => 'Sign Up'
     ];
 
@@ -128,8 +127,8 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
     public function testCreateActionRedirectsAfterValidPost()
     {
         $postData = array(
-            'name' => 'rrr',
-            'alias' => 'rrr',
+            'name' => 'another',
+            'alias' => 'another',
             'parentId' => '',
             'order' => '1',
         );
@@ -255,7 +254,7 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         $objectManager->persist($user);
         $objectManager->flush();
 
-        /** @var $authService Service\Auth */
+        /** @var $authService \User\Service\Auth */
         $authService = $this->getApplicationServiceLocator()->get('User\Service\Auth');
         $authService->generateEquals($user, $this->userData['password']);
 
@@ -273,40 +272,6 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         $hydrator = new DoctrineHydrator($objectManager);
         $hydrator->hydrate($categoryData, $category);
         $objectManager->persist($category);
-        $objectManager->flush();
-        $objectManager->getConnection()->commit();
-    }
-
-    /**
-     *
-     */
-    public function createSubcategories()
-    {
-        $subCategoryData1 = [
-            'name' => 'default1',
-            'alias' => 'default1',
-            'order' => '3',
-            'parentId' => '1',
-            'submit' => 'Create'
-        ];
-        $subCategoryData2 = [
-            'name' => 'default2',
-            'alias' => 'default2',
-            'order' => '4',
-            'parentId' => '1',
-            'submit' => 'Create'
-        ];
-
-        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $category = $this->getApplicationServiceLocator()->get('Categories\Entity\Categories');
-        $objectManager->getConnection()->beginTransaction();
-        $hydrator = new DoctrineHydrator($objectManager);
-        $hydrator->hydrate($subCategoryData1, $category);
-        $objectManager->persist($category);
-
-        $hydrator->hydrate($subCategoryData2, $category);
-        $objectManager->persist($category);
-
         $objectManager->flush();
         $objectManager->getConnection()->commit();
     }
