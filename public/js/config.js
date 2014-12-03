@@ -19,8 +19,8 @@ require.config({
         backbone: '//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min',
         "jquery-ui": './jquery-ui',
         "jquery-nestedSortable": './jquery.mjs.nestedSortable',
-        categories: './categories',
-        "delete-confirmation": './delete_confirmation',
+        categories: '../module/categories/js/management',
+        "delete-confirmation": '../module/categories/js/delete_confirmation',
         dashboard:'./dashboard'
     },
     shim: {

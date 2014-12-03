@@ -89,6 +89,7 @@ class ManagementController extends AbstractCrudController
     public function editAction()
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $repository = $entityManager->getRepository('Categories\Entity\Categories');
 
         $form = $this->getEditForm();
 
@@ -98,9 +99,13 @@ class ManagementController extends AbstractCrudController
             $aliasValid = new Validators\NoObjectExists($entityManager->getRepository('Categories\Entity\Categories'));
 
             if ($form->isValid()) {
+                $entity = $this->loadEntity();
                 if ($aliasValid->isValid(['alias' => $form->get('alias')->getValue(),
-                    'parentId' => $form->get('parentId')->getValue()], $this->params()->fromRoute('id'))
+                    'parentId' => $entity->getParentId()], $this->params()->fromRoute('id'))
                 ) {
+                    $category = $form->getData();
+                    $category->setParentId($repository->find($entity->getParentId()));
+                    $category->setOrder($entity->getOrder());
                     $entityManager->persist($form->getData());
                     $entityManager->flush();
                     $this->getServiceLocator()->get('Categories\Service\Categories')->updateChildrenPath($form->getData());
