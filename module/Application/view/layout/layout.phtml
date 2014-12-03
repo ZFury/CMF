@@ -1,18 +1,18 @@
 <?php echo $this->doctype(); ?>
 <html lang="en">
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <head>
         <?= $this->partial('layout/partial/header.phtml') ?>
     </head>
-</nav>
-<body>
-    <?= $this->partial('layout/partial/nav-bar.phtml') ?>
-    <?= $this->partial('layout/partial/flashmessenger.phtml'); ?>
-    <div class="container">
-        <?php echo $this->content; ?>
-        <hr>
-        <?= $this->partial('layout/partial/footer.phtml') ?>
-    </div>
-    <?php echo $this->inlineScript() ?>
-</body>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <?= $this->partial('layout/partial/nav-bar.phtml') ?>
+        </nav>
+        <?= $this->partial('layout/partial/flashmessenger.phtml'); ?>
+        <div class="container">
+            <?php echo $this->content; ?>
+            <hr>
+            <?= $this->partial('layout/partial/footer.phtml') ?>
+        </div>
+        <?php echo $this->inlineScript() ?>
+    </body>
 </html>
