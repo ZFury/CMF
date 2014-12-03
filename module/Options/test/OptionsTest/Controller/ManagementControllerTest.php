@@ -239,7 +239,8 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
     public function createUser()
     {
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $user = $this->getApplicationServiceLocator()->get('User\Entity\User');
+//        $user = $this->getApplicationServiceLocator()->get('User\Entity\User');
+        $user = new \User\Entity\User();
         $objectManager->getConnection()->beginTransaction();
         $hydrator = new DoctrineHydrator($objectManager);
         $hydrator->hydrate($this->userData, $user);
