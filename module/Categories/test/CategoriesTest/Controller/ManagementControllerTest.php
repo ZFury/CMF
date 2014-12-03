@@ -34,6 +34,7 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         'email' => 'aaa@gmail.com',
         'password' => '123456',
         'repeat-password' => '123456',
+//        'security' => 'e801af97d7724909d619fa44b43ea61f-ecda9ef74bf39983d75c4020e3b560de',
         'submit' => 'Sign Up'
     ];
 
@@ -62,8 +63,8 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
 
         $this->createUser();
 
-        /** @var \User\Service\Auth $userAuth */
-        $userAuth = $this->getApplicationServiceLocator()->get('\User\Service\Auth');
+        /** @var \User\Entity\Auth $userAuth */
+        $userAuth = $this->getApplicationServiceLocator()->get('User\Entity\Auth');
 //        $userAuth->authenticateEquals($this->userData['email'], $this->userData['password']);
 
         $userAuth->login($this->getServiceLocator());
