@@ -3,8 +3,7 @@
 namespace Starter\Mvc\Controller;
 
 use Doctrine\ORM\EntityNotFoundException;
-use Zend\Mvc\Controller\AbstractController;
-use Zend\Mvc\MvcEvent;
+use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Mvc\Exception;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
@@ -13,38 +12,8 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
  * Class AbstractCrudController
  * @package Starter\Mvc\Controller
  */
-abstract class AbstractCrudController extends AbstractController
+abstract class AbstractCrudController extends AbstractActionController
 {
-    /**
-     * @param MvcEvent $e
-     * @return mixed
-     * @throws \Zend\Mvc\Exception\DomainException
-     */
-    public function onDispatch(MvcEvent $e)
-    {
-        $routeMatch = $e->getRouteMatch();
-        if (!$routeMatch) {
-            /**
-             * @todo Determine requirements for when route match is missing.
-             *       Potentially allow pulling directly from request metadata?
-             */
-            throw new Exception\DomainException('Missing route matches; unsure how to retrieve action');
-        }
-
-        $action = $routeMatch->getParam('action', 'not-found');
-        $method = static::getMethodFromAction($action);
-
-        if (!method_exists($this, $method)) {
-            $method = 'notFoundAction';
-        }
-
-        $actionResponse = $this->$method();
-
-        $e->setResult($actionResponse);
-
-        return $actionResponse;
-    }
-
     /**
      * Create entity
      * @return ViewModel
@@ -78,13 +47,11 @@ abstract class AbstractCrudController extends AbstractController
     {
         $form = $this->getEditForm();
         $entity = $this->loadEntity();
-
+        $form->bind($entity);
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-                $hydrator = new DoctrineHydrator($objectManager);
-                $hydrator->hydrate($form->getData(), $entity);
                 $objectManager->persist($entity);
                 $objectManager->flush();
 
@@ -92,7 +59,7 @@ abstract class AbstractCrudController extends AbstractController
                 $this->redirect()->toRoute(null, ['controller' => 'management']);
             }
         }
-        $form->bind($entity);
+
         return new ViewModel(['form' => $form]);
     }
 
@@ -127,7 +94,7 @@ abstract class AbstractCrudController extends AbstractController
 
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
-        if (!$model = $objectManager->getRepository(get_class($this->getEntity()))->findOneBy(['id' => $id])) {
+        if (!$model = $objectManager->getRepository(get_class($this->getEntity()))->find($id)) {
             throw new EntityNotFoundException('Entity not found');
         }
         return $model;

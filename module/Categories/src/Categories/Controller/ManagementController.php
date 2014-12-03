@@ -2,15 +2,16 @@
 
 namespace Categories\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
+use Starter\Mvc\Controller\AbstractCrudController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Categories\Form\Filter;
 use Zend\Form\Annotation\AnnotationBuilder;
 use DoctrineModule\Validator;
 use Categories\Validators;
 
-class ManagementController extends AbstractActionController
+class ManagementController extends AbstractCrudController
 {
 
     public function indexAction()
@@ -20,17 +21,19 @@ class ManagementController extends AbstractActionController
             ->get('Doctrine\ORM\EntityManager');
         $repository = $entityManager->getRepository('Categories\Entity\Categories');
 
-        $escapeHtml = $this->getServiceLocator()->get('ViewHelperManager')->get('escapeHtml');
         $currentRootCategory = null;
-        if ($id = $escapeHtml($this->params('id'))) {
+        $categories = null;
+        if ($id = $this->params('id')) {
             $currentRootCategory = $entityManager->getRepository('Categories\Entity\Categories')->findOneBy(['parentId' => null, 'id' => $id]);
         }
         $rootCategories = $entityManager->getRepository('Categories\Entity\Categories')->findBy(['parentId' => null]);
 
-        if (!$currentRootCategory) {
+        if (!$currentRootCategory && !empty($rootCategories)) {
             $currentRootCategory = $rootCategories[0];
         }
-        $categories = $repository->findBy(['parentId' => $currentRootCategory->getId()], ['order' => 'ASC']);
+        if ($currentRootCategory) {
+            $categories = $repository->findBy(['parentId' => $currentRootCategory->getId()], ['order' => 'ASC']);
+        }
 
         return new ViewModel(['categories' => $categories, 'rootTree' => $rootCategories, 'currentRoot' => $currentRootCategory]);
 
@@ -42,57 +45,41 @@ class ManagementController extends AbstractActionController
     public function createAction()
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $category = new \Categories\Entity\Categories();
         $repository = $entityManager->getRepository('Categories\Entity\Categories');
 
-        $viewHelperManager = $this->getServiceLocator()->get('ViewHelperManager');
-        $escapeHtml = $viewHelperManager->get('escapeHtml');
-        $parentId = $escapeHtml($this->params('parentId'));
-
-        $values = array();
-        if (!$parent = $repository->findBy(['parentId' => $parentId])) {
-            $parent = $repository->findBy(['parentId' => null]);
-        }
-        foreach ($parent as $value) {
-            $values[] = $value->getOrder();
-        }
-
-        $order = max($values) + 1;
-
-        $category->setParentId($parentId);
-        $category->setOrder($order);
-        $builder = new AnnotationBuilder($entityManager);
-
-        $form = $builder->createForm($category);
-        $form->setHydrator(new DoctrineHydrator($entityManager));
-        $form->bind($category);
+        $form = $this->getCreateForm();
 
         if ($this->getRequest()->isPost()) {
-
             $form->setInputFilter(new Filter\CreateInputFilter($this->getServiceLocator()));
             $form->setData($this->getRequest()->getPost());
-            $aliasValid = new Validator\NoObjectExists(['object_repository' => $repository, 'fields' => ['alias', 'parentId']]);
 
             if ($form->isValid()) {
-                $parentId = $this->getRequest()->getPost('parentId');
-                if (empty($parentId)) {
-                    $parentId = null;
-                }
-                if ($aliasValid->isValid(['alias' => $this->getRequest()->getPost('alias'),
+                $parentId = !$this->params()->fromRoute('parentId')
+                    ? null
+                    : $this->params()->fromRoute('parentId');
+                $aliasValid = new Validator\NoObjectExists(['object_repository' => $repository, 'fields' => ['alias', 'parentId']]);
+                if ($aliasValid->isValid(['alias' => $form->get('alias')->getValue(),
                     'parentId' => $parentId])
                 ) {
+                    $category = $this->getEntity();
+                    $category->setParentId($repository->find($parentId));
+                    $category->setOrder($this->getMaxOrder($parentId));
+
+                    $hydrator = new DoctrineHydrator($entityManager);
+                    $hydrator->hydrate($form->getData(), $category);
                     $entityManager->persist($category);
                     $entityManager->flush();
-
                     $this->flashMessenger()->addSuccessMessage('Category has been successfully added!');
+
                     return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
                 }
                 $form->get('alias')->setMessages(array(
-                    'errorMessageKey' => 'Alias must be unique in his category!'
+                    'errorMessageKey' => 'Alias must be unique in it\'s category!'
                 ));
             }
         }
         $viewModel = new ViewModel(['form' => $form, 'title' => 'Create category']);
+
         return $viewModel;
     }
 
@@ -102,41 +89,23 @@ class ManagementController extends AbstractActionController
     public function editAction()
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $repository = $entityManager->getRepository('Categories\Entity\Categories');
 
-        $viewHelperManager = $this->getServiceLocator()->get('ViewHelperManager');
-        $escapeHtml = $viewHelperManager->get('escapeHtml');
-        $id = $escapeHtml($this->params('id'));
-        $category = $repository->find($id);
-
-        if ($category->getParentId()) {
-            $parentId = $category->getParentId()->getId();
-            $category->setParentId($parentId);
-        }
-
-        $builder = new AnnotationBuilder($entityManager);
-
-        $form = $builder->createForm($category);
-        $form->setHydrator(new DoctrineHydrator($entityManager));
-        $form->bind($category);
+        $form = $this->getEditForm();
 
         if ($this->getRequest()->isPost()) {
-
             $form->setInputFilter(new Filter\CreateInputFilter($this->getServiceLocator()));
             $form->setData($this->getRequest()->getPost());
-            $aliasValid = new Validators\NoObjectExists($repository);
+            $aliasValid = new Validators\NoObjectExists($entityManager->getRepository('Categories\Entity\Categories'));
 
             if ($form->isValid()) {
-                if ($aliasValid->isValid(['alias' => $this->getRequest()->getPost('alias'),
-                    'parentId' => $this->getRequest()->getPost('parentId')], $id)
+                if ($aliasValid->isValid(['alias' => $form->get('alias')->getValue(),
+                    'parentId' => $form->get('parentId')->getValue()], $this->params()->fromRoute('id'))
                 ) {
-                    $entityManager->persist($category);
+                    $entityManager->persist($form->getData());
                     $entityManager->flush();
-
-                    $categoryService = $this->getServiceLocator()->get('Categories\Service\Categories');
-                    $categoryService->updateChildrenPath($category);
-
+                    $this->getServiceLocator()->get('Categories\Service\Categories')->updateChildrenPath($form->getData());
                     $this->flashMessenger()->addSuccessMessage('Category has been successfully edited!');
+
                     return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
                 }
                 $form->get('alias')->setMessages(array(
@@ -145,32 +114,12 @@ class ManagementController extends AbstractActionController
             }
         }
         $viewModel = new ViewModel(['form' => $form, 'title' => 'Edit category']);
+
         return $viewModel;
     }
 
     /**
-     * @return \Zend\Http\Response
-     */
-    public function deleteAction()
-    {
-        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-
-        $viewHelperManager = $this->getServiceLocator()->get('ViewHelperManager');
-        $escapeHtml = $viewHelperManager->get('escapeHtml');
-        $id = $escapeHtml($this->params('id'));
-        $category = $entityManager->find('Categories\Entity\Categories', $id);
-
-        $entityManager->remove($category);
-        $entityManager->flush();
-
-        $this->flashMessenger()->addSuccessMessage('Category has been successfully deleted!');
-        return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
-    }
-
-    /**
-     *
-     *
-     * @return \Zend\Stdlib\ResponseInterface
+     * @return JsonModel
      */
     public function orderAction()
     {
@@ -197,7 +146,6 @@ class ManagementController extends AbstractActionController
 
                         $parentId = $dbNode->getParentId()->getId();
                         if ($parentId != $node->parent_id && $node->parent_id) {
-
                             $dbNode->setParentId($repository->findOneBy(['id' => $node->parent_id]));
                         }
 
@@ -216,21 +164,76 @@ class ManagementController extends AbstractActionController
 
                     }
                 }
-
                 $entityManager->getConnection()->commit();
-
-                $this->flashMessenger()->addSuccessMessage('Order has been successfully saved!');
-                $returnJson = json_encode(['result' => 'success']);
+                $returnJson = new JsonModel(['success' => true]);
             } catch (\Exception $e) {
                 $entityManager->getConnection()->rollback();
-
-                $this->flashMessenger()->addErrorMessage('Order has been failed!');
-                $returnJson = json_encode(['result' => 'fail']);
-
+                $returnJson = new JsonModel(['success' => false]);
             }
-            echo $returnJson;
-            return $this->response;
+            return $returnJson;
         }
+        return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected function getCreateForm()
+    {
+        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $builder = new AnnotationBuilder($entityManager);
+
+        return $builder->createForm($this->getEntity());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getEditForm()
+    {
+        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $builder = new AnnotationBuilder($entityManager);
+        $category = $this->loadEntity();
+
+        if ($category->getParentId()) {
+            $parentId = $category->getParentId()->getId();
+            $category->setParentId($parentId);
+        }
+
+        $form = $builder->createForm($this->getEntity());
+        $form->setHydrator(new DoctrineHydrator($entityManager));
+        $form->bind($category);
+
+        return $form;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function getEntity()
+    {
+        return new \Categories\Entity\Categories();
+    }
+
+    private function getMaxOrder($parentId)
+    {
+        $repository = $this->getServiceLocator()
+            ->get('Doctrine\ORM\EntityManager')
+            ->getRepository('Categories\Entity\Categories');
+        $orders = array();
+        if (!$siblings = $repository->findBy(['parentId' => $parentId])) {
+            $siblings = $repository->findBy(['parentId' => null]);
+        }
+        foreach ($siblings as $sibling) {
+            $orders[] = $sibling->getOrder();
+        }
+
+        if (count($orders) > 0) {
+            $order = max($orders) + 1;
+        } else {
+            $order = 1;
+        }
+
+        return $order;
+    }
 }
