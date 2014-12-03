@@ -15,7 +15,6 @@ require.config({
         'angularRoute': './libs/angular-route',
         respond: './libs/respond.min',
         html5shiv: './libs/html5shiv',
-        underscore: '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min',
         "jquery-ui": './jquery-ui',
         "jquery-nestedSortable": './jquery.mjs.nestedSortable',
         categories: './categories',
@@ -41,9 +40,6 @@ require.config({
         bootstrap: {
             deps: ['jquery'],
             exports: '$.fn.popover'
-        },
-        underscore: {
-            exports: '_'
         },
         "jquery-ui": {
             deps: ['jquery'],
