@@ -15,13 +15,10 @@ require.config({
         'angularRoute': './libs/angular-route',
         respond: './libs/respond.min',
         html5shiv: './libs/html5shiv',
-        underscore: '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min',
-        backbone: '//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min',
         "jquery-ui": './jquery-ui',
         "jquery-nestedSortable": './jquery.mjs.nestedSortable',
         categories: '../module/categories/js/management',
-        "delete-confirmation": '../module/categories/js/delete_confirmation',
-        dashboard:'./dashboard'
+        dashboard: './../module/dashboard/js/dashboard'
     },
     shim: {
         angular: {
@@ -43,13 +40,6 @@ require.config({
             deps: ['jquery'],
             exports: '$.fn.popover'
         },
-        backbone: {
-            deps: ['underscore', 'jquery'],
-            exports: 'Backbone'
-        },
-        underscore: {
-            exports: '_'
-        },
         "jquery-ui": {
             deps: ['jquery'],
             exports: '$.ui'
@@ -61,3 +51,5 @@ require.config({
     },
     enforceDefine: true
 });
+
+require(['bootstrap']);

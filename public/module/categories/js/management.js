@@ -39,6 +39,11 @@ define(['jquery', 'jquery-ui', 'jquery-nestedSortable'], function ($) {
             }
         });
     });
-
-
+    $('.tree-container').on('click', '.btn.delete-category', function (e) {
+        var path = $(this).attr("href");
+        if (confirm('Are you sure you want to delete?')) {
+            window.location = path;
+        }
+        return false;
+    });
 });
