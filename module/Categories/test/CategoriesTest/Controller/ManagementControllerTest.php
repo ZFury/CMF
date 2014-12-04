@@ -9,18 +9,18 @@
 namespace CategoriesTest\Controller;
 
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use PHPUnit_Framework_TestCase;
+use User\Service\Auth;
 use Zend\Http\Response;
 use Zend\Stdlib;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
+use Starter\Test\PHPUnit\Controller\AbstractAuthControllerTestCase;
 
 /**
  * Class ManagementControllerTest
  * @package CategoriesTest\Controller
  */
-class ManagementControllerTest extends AbstractHttpControllerTestCase
+class ManagementControllerTest extends AbstractAuthControllerTestCase//AbstractHttpControllerTestCase
 {
-
     /**
      * @var bool
      */
@@ -33,9 +33,6 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         'name' => 'adminTest1',
         'email' => 'aaa@gmail.com',
         'password' => '123456',
-        'repeat-password' => '123456',
-//        'security' => 'e801af97d7724909d619fa44b43ea61f-ecda9ef74bf39983d75c4020e3b560de',
-        'submit' => 'Sign Up'
     ];
 
     /**
@@ -46,32 +43,10 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         'alias' => 'default',
         'order' => '1',
         'parentId' => '',
-        'submit' => 'Create'
     ];
 
     /**
-     * @throws \User\Exception\AuthException
-     */
-    public function setUp()
-    {
-        $this->setApplicationConfig(
-            include 'config/application.config.php'
-        );
-        parent::setUp();
-
-        $this->removeUser();
-
-        $this->createUser();
-
-        /** @var \User\Entity\Auth $userAuth */
-        $userAuth = $this->getApplicationServiceLocator()->get('User\Entity\Auth');
-//        $userAuth->authenticateEquals($this->userData['email'], $this->userData['password']);
-
-        $userAuth->login($this->getServiceLocator());
-    }
-
-    /**
-     *  migration up
+     *  Migration up
      */
     public static function setUpBeforeClass()
     {
@@ -79,7 +54,7 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
     }
 
     /**
-     * migration down
+     * Migration down
      */
     public static function tearDownAfterClass()
     {
@@ -87,8 +62,19 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
     }
 
     /**
-     *
+     * Set up
      */
+    public function setUp()
+    {
+        $this->setApplicationConfig(
+            include 'config/application.config.php'
+        );
+        $this->setTraceError(true);
+        parent::setUp();
+
+        $this->setupAdmin();
+    }
+
     public function testIndexActionCanBeAccessed()
     {
         $this->dispatch('/categories/management');
@@ -100,9 +86,6 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         $this->assertMatchedRouteName('categories/default');
     }
 
-    /**
-     *
-     */
     public function testCreateActionCanBeAccessed()
     {
         $this->dispatch('/categories/management/create');
@@ -114,9 +97,6 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         $this->assertMatchedRouteName('categories/create');
     }
 
-    /**
-     *
-     */
     public function testOrderActionCanBeAccessed()
     {
         $this->dispatch('/categories/management/order');
@@ -124,16 +104,12 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         $this->assertRedirectTo('/categories/management/index');
     }
 
-    /**
-     *
-     */
     public function testCreateActionRedirectsAfterValidPost()
     {
         $postData = array(
             'name' => 'another',
             'alias' => 'another',
-            'parentId' => '',
-            'order' => '1',
+            'submit' => 'Save',
         );
         $this->dispatch('/categories/management/create', 'POST', $postData);
         $this->assertResponseStatusCode(302);
@@ -141,9 +117,6 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         $this->assertRedirectTo('/categories/management/index');
     }
 
-    /**
-     *
-     */
     public function testEditActionCanBeAccessed()
     {
         $this->dispatch('/categories/management/edit/1');
@@ -155,65 +128,46 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         $this->assertMatchedRouteName('categories/default');
     }
 
-    /**
-     *
-     */
     public function testEditActionRedirectsAfterValidPost()
     {
-        $this->createCategory($this->categoryData);
+        /** @var \Categories\Entity\Categories $category */
+        $category = $this->createCategory($this->categoryData);
 
         $postData = array(
             'name' => 'edited',
-            'alias' => $this->categoryData['alias'],
-            'parentId' => $this->categoryData['parentId'],
-            'order' => $this->categoryData['order'],
+            'alias' => $category->getAlias(),
+            'submit' => 'Save',
         );
-        $this->dispatch('/categories/management/edit/2', 'POST', $postData);
+        $this->dispatch('/categories/management/edit/' . $category->getId(), 'POST', $postData);
         $this->assertResponseStatusCode(302);
 
         $this->assertRedirectTo('/categories/management/index');
+
+        $this->removeCategory($category);
     }
 
-    /**
-     *
-     */
-    public function testDeleteAction()
-    {
-        $this->createCategory($this->categoryData);
-
-        $deletePath = '/categories/management/delete/3';
-        $this->dispatch($deletePath);
-
-        $this->assertEquals(302, $this->getResponse()->getStatusCode());
-        $this->assertRedirectTo('/categories/management/index');
-    }
-
-    /**
-     *
-     */
     public function testOrderAction()
     {
         $subCategoryData1 = [
             'name' => 'default1',
             'alias' => 'default1',
             'order' => '3',
-            'parentId' => '1',
-            'submit' => 'Create'
+            'parentId' => '',
         ];
+        $category1 = $this->createCategory($subCategoryData1);
+
 //        $subCategoryData2 = [
 //            'name' => 'default2',
 //            'alias' => 'default2',
 //            'order' => '4',
-//            'parentId' => '1',
-//            'submit' => 'Create'
+//            'parentId' => $category1->getId(),//$category1->getId()
 //        ];
-//
-        $this->createCategory($subCategoryData1);
-//        $this->createCategory($subCategoryData2);
+//        $category2 = $this->createCategory($subCategoryData2);
 
-        $json = json_encode([['item_id' => null, "parent_id" => 'none', "depth" => 0, "left" => 1, "right" => 6],
-            ['item_id' => 4, "parent_id" => null, "depth" => 1, "left" => 2, "right" => 3, "order" => 1],
-//            ['item_id' => 5, "parent_id" => null, "depth" => 1, "left" => 4, "right" => 5, "order" => 2],
+//        $categories = $this->createSubCategory();
+        $json = json_encode([['item_id' => null, "parent_id" => 'none', "depth" => 0, "left" => 1, "right" => 4],
+//            ['item_id' => $category2->getId(), "parent_id" => null, "depth" => 1, "left" => 2, "right" => 3, "order" => 1],
+//            ['item_id' => $categories[1]->getId(), "parent_id" => null, "depth" => 1, "left" => 4, "right" => 5, "order" => 2],
         ]);
         $postData = [
             'tree' => $json,
@@ -221,51 +175,16 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         ];
 
         $this->dispatch('/categories/management/order', 'POST', $postData);
-        $this->assertResponseStatusCode(200);
-    }
 
-
-    /**
-     * remove user
-     */
-    public function removeUser()
-    {
-        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $user = $objectManager->getRepository('User\Entity\User')
-            ->findOneBy(array('email' => $this->userData['email']));
-        if ($user) {
-            $objectManager->remove($user);
-            $objectManager->flush();
-        }
+        $this->assertResponseHeaderContains('Content-Type', 'application/json; charset=utf-8');
+        //assertJson($this->getResponse());
     }
 
     /**
-     *  create user
-     */
-    public function createUser()
-    {
-        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $user = $this->getApplicationServiceLocator()->get('User\Entity\User');
-        $objectManager->getConnection()->beginTransaction();
-        $hydrator = new DoctrineHydrator($objectManager);
-        $hydrator->hydrate($this->userData, $user);
-        $user->setDisplayName($user->getEmail());
-        $user->setRole($user::ROLE_USER);
-        $user->setConfirm($user->generateConfirm());
-        $user->setStatus($user::STATUS_ACTIVE);
-        $user->setRole($user::ROLE_ADMIN);
-        $objectManager->persist($user);
-        $objectManager->flush();
-
-        /** @var $authService \User\Service\Auth */
-        $authService = $this->getApplicationServiceLocator()->get('User\Service\Auth');
-        $authService->generateEquals($user, $this->userData['password']);
-
-        $objectManager->getConnection()->commit();
-    }
-
-    /**
+     * Creates new category.
      *
+     * @param $categoryData
+     * @return \Categories\Entity\Categories
      */
     public function createCategory($categoryData)
     {
@@ -277,5 +196,23 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         $objectManager->persist($category);
         $objectManager->flush();
         $objectManager->getConnection()->commit();
+
+        return $category;
+    }
+
+    /**
+     * Deletes category.
+     *
+     * @param \Categories\Entity\Categories $category
+     */
+    public function removeCategory(\Categories\Entity\Categories $category)
+    {
+        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $category = $objectManager->getRepository('Categories\Entity\Categories')
+            ->find($category->getId());
+        if ($category) {
+            $objectManager->remove($category);
+            $objectManager->flush();
+        }
     }
 }
