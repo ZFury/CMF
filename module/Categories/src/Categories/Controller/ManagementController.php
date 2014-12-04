@@ -62,7 +62,7 @@ class ManagementController extends AbstractCrudController
                     'parentId' => $parentId])
                 ) {
                     $category = $this->getEntity();
-                    $category->setParentId($repository->find($parentId));
+                    $category->setParentId(!$parentId ? null : $repository->find($parentId));
                     $category->setOrder($this->getMaxOrder($parentId));
 
                     $hydrator = new DoctrineHydrator($entityManager);
@@ -104,7 +104,7 @@ class ManagementController extends AbstractCrudController
                     'parentId' => $entity->getParentId()], $this->params()->fromRoute('id'))
                 ) {
                     $category = $form->getData();
-                    $category->setParentId($repository->find($entity->getParentId()));
+                    $category->setParentId(!$entity->getParentId() ? null : $repository->find($entity->getParentId()));
                     $category->setOrder($entity->getOrder());
                     $entityManager->persist($form->getData());
                     $entityManager->flush();
@@ -149,6 +149,9 @@ class ManagementController extends AbstractCrudController
                             $node->parent_id = $treeParent;
                         }
 
+                        if (!$dbNode->getParentId()) {
+                            throw new \Exception();
+                        }
                         $parentId = $dbNode->getParentId()->getId();
                         if ($parentId != $node->parent_id && $node->parent_id) {
                             $dbNode->setParentId($repository->findOneBy(['id' => $node->parent_id]));
@@ -220,6 +223,12 @@ class ManagementController extends AbstractCrudController
         return new \Categories\Entity\Categories();
     }
 
+    /**
+     * Returns maximum order field value within category siblings.
+     *
+     * @param $parentId
+     * @return int|mixed
+     */
     private function getMaxOrder($parentId)
     {
         $repository = $this->getServiceLocator()
