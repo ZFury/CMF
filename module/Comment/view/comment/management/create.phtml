@@ -1,0 +1,29 @@
+<?php
+$title = 'Create entity';
+$this->headTitle($title);
+/**
+ * @var $form Zend/Form
+ */
+$form = $this->form;
+$form->setAttribute('action', $this->url('comment/default', array('controller' => 'management', 'action' => 'create')));
+$form->prepare();
+
+?>
+<?php //echo $this->form()->openTag($form); ?>
+<form class="form-horizontal" role="form">
+
+    <h1><?php echo $this->escapeHtml($title); ?></h1>
+
+        <div class="form-group ">
+            <label for="entityType" class="col-sm-2 control-label "><?= $form->get('entityType')->getLabel(); ?></label>
+            <?php echo $this->formInput($form->get('entityType')); ?>
+        </div>
+        <div class="form-group ">
+            <label for="description" class="col-sm-2 control-label"><?= $form->get('description')->getLabel(); ?></label>
+           <?php echo $this->formTextarea($form->get('description')); ?>
+        </div>
+        <div class="form-group ">
+            <input type="submit" name="submit" id="submitbutton" class="btn btn-lg btn-primary btn-block" value="Create">
+
+</div></form>
+<?php //echo $this->form()->closeTag(); ?>

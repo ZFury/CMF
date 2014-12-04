@@ -5,10 +5,10 @@
                 <?php echo $this->escapeHtml($this->comment->getUser()->getDisplayName()); ?>
                 <?php
                 if ($this->comment->getUserId()===$this->identity()->getUserId()) : ?>
-                    <a href="<?php echo $this->url('comment', array('action' => 'edit', 'id' => $this->comment->getId())); ?>">
+                    <a href="<?php echo $this->url('comment/default', array('controller'=>'index', 'action' => 'edit', 'id' => $this->comment->getId())); ?>">
                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                     </a>
-                    <a href="<?php echo $this->url('comment', array('action' => 'delete', 'id' => $this->comment->getId())); ?>">
+                    <a href="<?php echo $this->url('comment/default', array('controller'=>'index', 'action' => 'delete', 'id' => $this->comment->getId())); ?>">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     </a>
                 <?php endif; ?>

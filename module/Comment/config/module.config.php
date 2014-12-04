@@ -22,23 +22,70 @@ return array(
                 array(
                     'controller' => 'Comment\Controller\Index',
                     'roles' => array('user'),
-                )
+                ),
+                array(
+                    'controller' => 'Comment\Controller\Management',
+                    'action' => ['create', 'index', 'edit', 'delete'],
+                    'roles' => array('admin'),
+                ),
             ),
         ),
     ),
     'router' => array(
         'routes' => array(
             'comment' => array(
-                'type' => 'Segment',
+//                'type' => 'Segment',
+//                'options' => array(
+//                    'route' => '/comment[/:action[/:id]]',
+//                    'constraints' => array(
+//                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+//                        'id' => '[0-9]+',
+//                    ),
+//                    'defaults' => array(
+//                        'controller' => 'Comment\Controller\Index',
+//                    )
+//                ),
+//                'may_terminate' => true,
+//                'child_routes' => array(
+//                    'default' => array(
+//                        'type'    => 'Segment',
+//                        'options' => array(
+//                            'route'    => '/[:controller[/:action[/:id]]]',
+//                            'constraints' => array(
+//                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+//                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+//                            ),
+//                            'defaults' => array(
+//
+//                            ),
+//                        ),
+//                    ),
+//                ),
+                'type'    => 'Literal',
                 'options' => array(
-                    'route' => '/comment[/:action[/:id]]',
-                    'constraints' => array(
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id' => '[0-9]+',
-                    ),
+                    'route'    => '/comment',
                     'defaults' => array(
-                        'controller' => 'Comment\Controller\Index',
-                    )
+                        '__NAMESPACE__' => 'Comment\Controller',
+                        'controller'    => 'index',
+                        'action'        => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/[:controller[/:action[/:id]]]',
+                            'constraints' => array(
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id' => '[0-9]+',
+                            ),
+                            'defaults' => array(
+
+                            ),
+                        ),
+                    ),
                 ),
             ),
         ),
@@ -51,6 +98,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Comment\Controller\Index' => 'Comment\Controller\IndexController',
+            'Comment\Controller\Management' => 'Comment\Controller\ManagementController',
         ),
     ),
     'service_manager' => array(
@@ -64,7 +112,7 @@ return array(
             },
             'Comment\Service\Comment' => function ($sm) {
                 return new Comment\Service\Comment($sm);
-            }
+            },
         ),
     ),
     'view_helpers' => array(

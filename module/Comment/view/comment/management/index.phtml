@@ -1,0 +1,36 @@
+<?php
+$title = 'List of entities that can comment';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<div class="row">
+    <a href="<?php echo $this->url('comment/default', array('controller'=>'management', 'action' => 'create')); ?>">
+        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Сreate a new
+    </a>
+</div>
+
+<table class="table">
+    <tr>
+        <th>Entity</th>
+        <th>Description</th>
+        <th>&nbsp;</th>
+    </tr>
+    <?php
+    if(isset($entities)) :
+        foreach($entities as $entity) :
+    ?>
+        <tr>
+            <td><?php echo $this->escapeHtml($entity->getEntityType());?></td>
+            <td><?php echo $this->escapeHtml($entity->getDescription());?></td>
+            <td>
+                <a href="<?php echo $this->url('comment/default', array('controller'=>'management', 'action' => 'edit', 'id' => $entity->getId())); ?>">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                </a>
+                <a href="<?php echo $this->url('comment/default', array('controller'=>'management', 'action' => 'delete', 'id' => $entity->getId())); ?>">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </a>
+            </td>
+        </tr>
+        <?php endforeach;
+    endif; ?>
+</table>

@@ -11,6 +11,7 @@ use Zend\Form\Annotation;
  * @ORM\Table(name="entity_type")
  * @Annotation\Name("entity_type")
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @ORM\HasLifecycleCallbacks
  * @author Sergey Lopay
  */
 class EntityType
@@ -27,8 +28,9 @@ class EntityType
 
     /**
      * @var string
-     * @Annotation\Type("Zend\Form\Element\Textarea")
+     * @Annotation\Type("Zend\Form\Element\Text")
      * @Annotation\Required(true)
+     * @Annotation\Options({"label":"Entity Type:"})
      * @Annotation\Attributes({"class":"form-control"})
      * @ORM\Column(type="string", nullable=false)
      */
@@ -38,6 +40,7 @@ class EntityType
      * @var string
      * @Annotation\Type("Zend\Form\Element\Textarea")
      * @Annotation\Required(true)
+     * @Annotation\Options({"label":"Description:"})
      * @Annotation\Attributes({"class":"form-control"})
      * @ORM\Column(type="text", nullable=false)
      */
@@ -103,7 +106,7 @@ class EntityType
      */
     public function setDescription($description)
     {
-        $this->$description = $description;
+        $this->description = $description;
     }
 
     /**
@@ -113,7 +116,7 @@ class EntityType
      */
     public function getDescription()
     {
-        return $this->desc;
+        return $this->description;
     }
 
     /**
