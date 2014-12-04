@@ -9,17 +9,16 @@
 namespace CategoriesTest\Controller;
 
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use User\Service\Auth;
 use Zend\Http\Response;
 use Zend\Stdlib;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
-use Starter\Test\PHPUnit\Controller\AbstractAuthControllerTestCase;
+use Starter\Test\Controller\AbstractAuthControllerTestCase;
 
 /**
  * Class ManagementControllerTest
  * @package CategoriesTest\Controller
  */
-class ManagementControllerTest extends AbstractAuthControllerTestCase//AbstractHttpControllerTestCase
+class ManagementControllerTest extends AbstractAuthControllerTestCase
 {
     /**
      * @var bool
@@ -156,18 +155,16 @@ class ManagementControllerTest extends AbstractAuthControllerTestCase//AbstractH
         ];
         $category1 = $this->createCategory($subCategoryData1);
 
-//        $subCategoryData2 = [
-//            'name' => 'default2',
-//            'alias' => 'default2',
-//            'order' => '4',
-//            'parentId' => $category1->getId(),//$category1->getId()
-//        ];
-//        $category2 = $this->createCategory($subCategoryData2);
+        $subCategoryData2 = [
+            'name' => 'default2',
+            'alias' => 'default2',
+            'order' => '4',
+            'parentId' => $category1->getId(),//$category1->getId()
+        ];
+        $category2 = $this->createCategory($subCategoryData2);
 
-//        $categories = $this->createSubCategory();
         $json = json_encode([['item_id' => null, "parent_id" => 'none', "depth" => 0, "left" => 1, "right" => 4],
-//            ['item_id' => $category2->getId(), "parent_id" => null, "depth" => 1, "left" => 2, "right" => 3, "order" => 1],
-//            ['item_id' => $categories[1]->getId(), "parent_id" => null, "depth" => 1, "left" => 4, "right" => 5, "order" => 2],
+            ['item_id' => $category2->getId(), "parent_id" => null, "depth" => 1, "left" => 2, "right" => 3, "order" => 1],
         ]);
         $postData = [
             'tree' => $json,
@@ -177,7 +174,6 @@ class ManagementControllerTest extends AbstractAuthControllerTestCase//AbstractH
         $this->dispatch('/categories/management/order', 'POST', $postData);
 
         $this->assertResponseHeaderContains('Content-Type', 'application/json; charset=utf-8');
-        //assertJson($this->getResponse());
     }
 
     /**
@@ -188,6 +184,7 @@ class ManagementControllerTest extends AbstractAuthControllerTestCase//AbstractH
      */
     public function createCategory($categoryData)
     {
+        /** @var \Doctrine\ORM\EntityManager $objectManager */
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         $category = $this->getApplicationServiceLocator()->get('Categories\Entity\Categories');
         $objectManager->getConnection()->beginTransaction();
@@ -196,6 +193,7 @@ class ManagementControllerTest extends AbstractAuthControllerTestCase//AbstractH
         $objectManager->persist($category);
         $objectManager->flush();
         $objectManager->getConnection()->commit();
+        $objectManager->clear();
 
         return $category;
     }

@@ -6,7 +6,7 @@
  * Time: 6:27 PM
  */
 
-namespace Starter\Test\PHPUnit\Controller;
+namespace Starter\Test\Controller;
 
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use User\Service\Auth;

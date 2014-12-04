@@ -223,6 +223,12 @@ class ManagementController extends AbstractCrudController
         return new \Categories\Entity\Categories();
     }
 
+    /**
+     * Returns maximum order field value within category siblings.
+     *
+     * @param $parentId
+     * @return int|mixed
+     */
     private function getMaxOrder($parentId)
     {
         $repository = $this->getServiceLocator()
