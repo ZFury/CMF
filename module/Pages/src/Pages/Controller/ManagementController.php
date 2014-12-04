@@ -68,7 +68,6 @@ class ManagementController extends AbstractCrudController
      */
     public function viewAction()
     {
-        //set layout default
         return new ViewModel(array('page' => $this->loadEntity()));
     }
 }
