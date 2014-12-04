@@ -31,7 +31,6 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         'email' => 'adminTest@nix.com',
         'password' => '123456',
         'repeat-password' => '123456',
-        'security' => 'e801af97d7724909d619fa44b43ea61f-ecda9ef74bf39983d75c4020e3b560de',
         'submit' => 'Sign Up'
     ];
 
