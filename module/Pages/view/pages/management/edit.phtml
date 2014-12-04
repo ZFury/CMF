@@ -1,9 +1,8 @@
 <?php echo $this->headLink()->prependStylesheet($this->basePath() . '/redactor/redactor.css'); ?>
-<?php echo $this->headLink()->prependStylesheet($this->basePath() . '/module/options/css/management.css'); ?>
 
 <div class="container">
 
-    <div class="col-md-6">
+    <div class="col-md-12">
         <h1 class="create-label">Edit</h1>
         <?php $form->prepare(); ?>
         <?php echo $this->form()->openTag($form); ?>
@@ -66,14 +65,12 @@
 
         <?php echo $this->form()->closeTag(); ?>
     </div>
-    <div class="col-md-6">
-    </div>
 </div>
 
 <script>
     require(['redactor'], function() {
         $('#content').redactor({
-            scrollTarget: '.container',
+//            scrollTarget: '.container',
             minHeight: 300, // pixels
             placeholder: 'Page content'
         });

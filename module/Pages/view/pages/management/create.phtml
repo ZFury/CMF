@@ -1,5 +1,4 @@
 <?php echo $this->headLink()->prependStylesheet($this->basePath() . '/redactor/redactor.css'); ?>
-<?php echo $this->headLink()->prependStylesheet($this->basePath() . '/module/options/css/management.css'); ?>
 
 <div class="container">
 
@@ -69,9 +68,13 @@
 </div>
 
 <script>
-    require(['redactor'], function() {
+    require([
+//        'redactor-fullscreen',
+        'redactor'
+    ], function() {
         $('#content').redactor({
-            scrollTarget: '.container',
+//            plugins: ['fullscreen'],
+//            scrollTarget: '.container',
             minHeight: 300, // pixels
             placeholder: 'Page content'
         });

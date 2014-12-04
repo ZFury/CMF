@@ -19,7 +19,8 @@ require.config({
         categories: './categories',
         "delete-confirmation": './delete_confirmation',
         dashboard:'./dashboard',
-        redactor: './../redactor/redactor'
+        redactor: './../redactor/redactor',
+        //"redactor-fullscreen": './../redactor/plugins/fullscreen'
     },
     shim: {
         bootstrap: {
@@ -45,6 +46,10 @@ require.config({
             deps: ['jquery'],
             exports: '$.fn.redactor'
         },
+        //'redactor-fullscreen': {
+        //    deps: ['jquery', 'redactor'],
+        //    exports: '$.fn.redactor'
+        //}
     },
     enforceDefine: true
 });
