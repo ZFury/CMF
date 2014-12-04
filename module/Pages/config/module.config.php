@@ -46,7 +46,7 @@ return array(
                     'route'    => '/pages',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Pages\Controller',
-                        'controller'    => 'Index',
+                        'controller'    => 'Management',
                         'action'        => 'index',
                     ),
                 ),
