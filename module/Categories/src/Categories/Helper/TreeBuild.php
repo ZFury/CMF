@@ -12,6 +12,12 @@ use Zend\View\Helper\AbstractHelper;
 
 class TreeBuild extends AbstractHelper
 {
+    /**
+     * Invoke.
+     *
+     * @param $tree array Category tree.
+     * @return string
+     */
     public function __invoke($tree)
     {
         $treeView = $this->treeBuild($tree);
@@ -21,14 +27,13 @@ class TreeBuild extends AbstractHelper
     /**
      * Builds tree view for current root directory.
      *
-     * @param $tree
+     * @param $tree array Category tree.
      * @return string
      */
     public function treeBuild($tree)
     {
         $str = '';
         foreach ($tree as $node) {
-
             if (count($node->getChildren()) == 0) {
                 $str .= '<li class="mjs-nestedSortable-leaf" data-order="'
                     . $node->getOrder() . '" id="list_' . $node->getId() . '">'
@@ -47,5 +52,4 @@ class TreeBuild extends AbstractHelper
 
         return $str;
     }
-
-} 
+}

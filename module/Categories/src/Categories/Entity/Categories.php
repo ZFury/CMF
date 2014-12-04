@@ -49,7 +49,7 @@ class Categories
 
     /**
      * @var integer
-     * @Annotation\Type("Zend\Form\Element\Hidden")
+     * @Annotation\Exclude
      * @ORM\ManyToOne(targetEntity="Categories", inversedBy="children")
      * @ORM\JoinColumn(name="parentId", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
@@ -84,7 +84,7 @@ class Categories
 
     /**
      * @var integer
-     * @Annotation\Type("Zend\Form\Element\Hidden")
+     * @Annotation\Exclude
      * @ORM\Column(name="`order`", type="integer")
      */
     protected $order;
