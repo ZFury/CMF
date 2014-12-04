@@ -15,7 +15,7 @@ use Zend\Http\Response;
 use Zend\Stdlib;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
-abstract class AbstractAuthControllerTestCase extends AbstractHttpControllerTestCase
+abstract class ControllerTestCase extends AbstractHttpControllerTestCase
 {
     /**
      * Default user data.

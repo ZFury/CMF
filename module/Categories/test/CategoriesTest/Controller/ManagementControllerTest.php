@@ -11,14 +11,13 @@ namespace CategoriesTest\Controller;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Zend\Http\Response;
 use Zend\Stdlib;
-use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
-use Starter\Test\Controller\AbstractAuthControllerTestCase;
+use Starter\Test\Controller\ControllerTestCase;
 
 /**
  * Class ManagementControllerTest
  * @package CategoriesTest\Controller
  */
-class ManagementControllerTest extends AbstractAuthControllerTestCase
+class ManagementControllerTest extends ControllerTestCase
 {
     /**
      * @var bool
@@ -108,7 +107,6 @@ class ManagementControllerTest extends AbstractAuthControllerTestCase
         $postData = array(
             'name' => 'another',
             'alias' => 'another',
-            'submit' => 'Save',
         );
         $this->dispatch('/categories/management/create', 'POST', $postData);
         $this->assertResponseStatusCode(302);
@@ -135,7 +133,6 @@ class ManagementControllerTest extends AbstractAuthControllerTestCase
         $postData = array(
             'name' => 'edited',
             'alias' => $category->getAlias(),
-            'submit' => 'Save',
         );
         $this->dispatch('/categories/management/edit/' . $category->getId(), 'POST', $postData);
         $this->assertResponseStatusCode(302);
@@ -159,7 +156,7 @@ class ManagementControllerTest extends AbstractAuthControllerTestCase
             'name' => 'default2',
             'alias' => 'default2',
             'order' => '4',
-            'parentId' => $category1->getId(),//$category1->getId()
+            'parentId' => $category1->getId(),
         ];
         $category2 = $this->createCategory($subCategoryData2);
 
@@ -172,8 +169,8 @@ class ManagementControllerTest extends AbstractAuthControllerTestCase
         ];
 
         $this->dispatch('/categories/management/order', 'POST', $postData);
-
         $this->assertResponseHeaderContains('Content-Type', 'application/json; charset=utf-8');
+        $this->assertJson($this->getResponse()->getContent());
     }
 
     /**
@@ -186,7 +183,8 @@ class ManagementControllerTest extends AbstractAuthControllerTestCase
     {
         /** @var \Doctrine\ORM\EntityManager $objectManager */
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $category = $this->getApplicationServiceLocator()->get('Categories\Entity\Categories');
+//        $category = $this->getApplicationServiceLocator()->get('Categories\Entity\Categories');
+        $category = new \Categories\Entity\Categories();
         $objectManager->getConnection()->beginTransaction();
         $hydrator = new DoctrineHydrator($objectManager);
         $hydrator->hydrate($categoryData, $category);
@@ -201,16 +199,14 @@ class ManagementControllerTest extends AbstractAuthControllerTestCase
     /**
      * Deletes category.
      *
-     * @param \Categories\Entity\Categories $category
+     * @param \Categories\Entity\Categories $detachedEntity
      */
-    public function removeCategory(\Categories\Entity\Categories $category)
+    public function removeCategory(\Categories\Entity\Categories $detachedEntity)
     {
+        /** @var \Doctrine\ORM\EntityManager $objectManager */
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $category = $objectManager->getRepository('Categories\Entity\Categories')
-            ->find($category->getId());
-        if ($category) {
-            $objectManager->remove($category);
-            $objectManager->flush();
-        }
+        $category = $objectManager->merge($detachedEntity);
+        $objectManager->remove($category);
+        $objectManager->flush();
     }
 }
