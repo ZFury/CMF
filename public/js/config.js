@@ -17,11 +17,10 @@ require.config({
         html5shiv: './libs/html5shiv',
         "jquery-ui": './jquery-ui',
         "jquery-nestedSortable": './jquery.mjs.nestedSortable',
-        categories: './categories',
-        "delete-confirmation": './delete_confirmation',
         redactor: './../redactor/redactor',
         //"redactor-fullscreen": './../redactor/plugins/fullscreen'
-        dashboard:'./../module/dashboard/js/dashboard'
+        dashboard:'./../module/dashboard/js/dashboard',
+        categories: '../module/categories/js/management'
     },
     shim: {
         angular: {
