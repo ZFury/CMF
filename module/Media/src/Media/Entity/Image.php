@@ -139,7 +139,7 @@ class Image
     {
         $ext = $this->getExtension();
 
-        return ImageService::imgPath(ImageService::ORIGINAL, $this->id, $ext);
+        return \Media\Service\Image::imgPath(\Media\Service\Image::ORIGINAL, $this->id, $ext);
     }
 
     /**
@@ -149,14 +149,14 @@ class Image
     {
         $ext = $this->getExtension();
         $imageId = $this->getId();
-        $destination = ImageService::imgPath(ImageService::SMALL_THUMB, $imageId, $ext);
-        if (!file_exists(ImageService::PUBLIC_PATH . $destination)) {
+        $destination = \Media\Service\Image::imgPath(\Media\Service\Image::SMALL_THUMB, $imageId, $ext);
+        if (!file_exists(\Media\Service\Image::PUBLIC_PATH . $destination)) {
             $originalDestination = $this->getDestination();
 
             $image = new \Imagick($originalDestination);
-            $image->cropThumbnailImage(ImageService::S_THUMB_WIDTH, ImageService::S_THUMB_HEIGHT);
-            ImageService::prepareDir(ImageService::PUBLIC_PATH . $destination);
-            $image->writeimage(ImageService::PUBLIC_PATH . $destination);
+            $image->cropThumbnailImage(\Media\Service\Image::S_THUMB_WIDTH, \Media\Service\Image::S_THUMB_HEIGHT);
+            \Media\Service\Image::prepareDir(\Media\Service\Image::PUBLIC_PATH . $destination);
+            $image->writeimage(\Media\Service\Image::PUBLIC_PATH . $destination);
         }
 
         return $destination;

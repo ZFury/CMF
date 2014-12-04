@@ -9,11 +9,10 @@
 namespace Media\Service;
 
 use Zend\Filter\File\RenameUpload;
-use Media\Entity\Image;
 
-class ImageService
+class Image
 {
-    const PATH = "/uploads/media/images/";
+    const PATH = "/uploads/images/";
     const PUBLIC_PATH = "public/";
     const ORIGINAL = 3;
     const BIG_THUMB = 2;
@@ -31,6 +30,7 @@ class ImageService
         $this->sm = $sm;
     }
 
+
     /**
      * @param $data
      * @param $obj
@@ -40,66 +40,23 @@ class ImageService
     public function createImage($data, $obj, $api = false)
     {
         //Creating new image to get ID for building its path
-        $image = new Image();
+        $image = new \Media\Entity\Image();
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($image);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
         //Building path and creating directory. Then - moving
-        $ext = ImageService::getExt($data['image']['name']);
-        $destination = ImageService::imgPath(ImageService::ORIGINAL, $image->getId(), $ext);
-        ImageService::moveImage($destination, $data['image']);
+        $ext = \Media\Service\Image::getExt($data['image']['name']);
+        $destination = \Media\Service\Image::imgPath(\Media\Service\Image::ORIGINAL, $image->getId(), $ext);
+        \Media\Service\Image::moveImage($destination, $data['image']);
         //Saving original image extension in database and adding to it our User
-        $image->setExtension($ext);
-        $deleteUrl = null;
-        //just trying
-        switch (get_class($obj)) {
-            case 'User\Entity\User':
-                $image->addUser($obj);
-                $deleteUrl = '/user/delete-image/' . $image->getId();
 
-                break;
-            case 'User\Entity\Commodity':
-                $image->addCommodity($obj);
-                $deleteUrl = '/commodity-management/delete-image/' . $image->getId();
-                break;
-            default:
-                break;
-        }
+        $image->setExtension($ext);
 
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($image);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
-        //For blueimp
-        if (true === $api) {
-            $dataForJson = array(
-                'images' => array(
-                    array(
-                        'id' => $image->getId(),
-                        'url_original' => $this->getFullUrl(
-                            $this->imgPath(
-                                ImageService::ORIGINAL,
-                                $image->getId(),
-                                $image->getExtension(),
-                                true
-                            )
-                        ),
-                        'url_thumb' => $this->getFullUrl($image->getThumb()),
-                    )
-                )
-            );
-        } else {
-            $dataForJson =  ['files' =>[
-                array(
-                    'url' => $image->getThumb(),
-                    'thumbnailUrl' => $image->getThumb(),
-                    'name' => '',
-                    'type' => 'image/jpeg',
-                    'size' => '',
-                    'deleteUrl' => $deleteUrl,
-                    'deleteType' => 'POST',
-                )]];
-        }
 
-        return $dataForJson;
+        return $image;
     }
+    ///////////////////////////////////////////////////
 
     /**
      * @param $destination
@@ -137,21 +94,39 @@ class ImageService
         return true;
     }
 
-    /**
-     * @param $id
-     * @param $ext
-     * @return string
-     */
-    public static function buildPath($id, $ext)
-    {
-        $path = sprintf('%012d', $id);
-        $explodedPath = str_split($path, 3);
-        $temp = implode('/', $explodedPath);
-        $finalPath = $temp . '.' . $ext;
 
-        return $finalPath;
+    /**
+     * @param \Doctrine\ORM\PersistentCollection $images
+     * @return array
+     */
+    public function getImagesInfo(\Doctrine\ORM\PersistentCollection $images)
+    {
+        $extArr = array();
+        foreach ($images as $image) {
+            $urlOriginal = $this->getFullUrl(
+                $this->imgPath(
+                    self::ORIGINAL,
+                    $image->getId(),
+                    $image->getExtension(),
+                    true
+                )
+            );
+            $urlThumb = $this->getFullUrl($image->getThumb());
+            array_push(
+                $extArr,
+                array(
+                    'id' => $image->getId(),
+                    'url_original' => $urlOriginal,
+                    'url_thumb' => $urlThumb,
+                )
+            );
+        }
+        return $extArr;
     }
 
+    //////////////////////////////////////////////////////////
+    /////////////////////////PATH/////////////////////////////
+    //////////////////////////////////////////////////////////
     /**
      * @param $type
      * @param $id
@@ -198,104 +173,21 @@ class ImageService
     }
 
     /**
-     * @param \Doctrine\ORM\PersistentCollection $images
-     * @param $obj
-     * @return array
-     */
-    public function displayImages(\Doctrine\ORM\PersistentCollection $images, $obj)
-    {
-        switch (get_class($obj)) {
-            case 'User\Entity\User':
-                $deleteUrl = '/user/delete-image/';
-
-                break;
-            case 'User\Entity\Commodity':
-                $deleteUrl = '/commodity-management/delete-image/';
-                break;
-            default:
-                break;
-        }
-
-        $externalArray = array();
-        foreach ($images as $image) {
-            $innerArray = array(
-                'url' => $image->getThumb(),
-                'thumbnailUrl' => $image->getThumb(),
-                'deleteUrl' => $deleteUrl . $image->getId(),
-                'deleteType' => 'POST',
-                'id' => $image->getId(),
-            );
-            array_push($externalArray, $innerArray);
-        }
-
-        return $externalArray;
-    }
-
-    /**
-     * @param \Doctrine\ORM\PersistentCollection $avatars
-     * @return array|null
-     */
-    public function getAvatars(\Doctrine\ORM\PersistentCollection $avatars)
-    {
-        $avatarNames = null;
-        if (count($avatars) >= 1) {
-            $avatarNames = array();
-            foreach ($avatars as $avatarPrev) {
-                $avaPrevExt = $avatarPrev->getExtension();
-                $avaPrevId = $avatarPrev->getId();
-                $avatarPrev = ImageService::imgPath(
-                    ImageService::ORIGINAL,
-                    $avaPrevId,
-                    $avaPrevExt,
-                    ImageService::GETPATH
-                ); //It's because we need a different path if we want image to be showed
-                array_push($avatarNames, $avatarPrev);
-            }
-        }
-
-        return $avatarNames;
-    }
-
-    /**
-     * @param $urlPart
+     * @param $id
+     * @param $ext
      * @return string
      */
-    public function getFullUrl($urlPart)
+    public static function buildPath($id, $ext)
     {
-        return $this->sm->get('ViewHelperManager')->get('ServerUrl')->__invoke() . $urlPart;
-    }
+        $path = sprintf('%012d', $id);
+        $explodedPath = str_split($path, 3);
+        $temp = implode('/', $explodedPath);
+        $finalPath = $temp . '.' . $ext;
 
-    /**
-     * @param \Doctrine\ORM\PersistentCollection $images
-     * @return array
-     */
-    public function getImagesInfo(\Doctrine\ORM\PersistentCollection $images)
-    {
-        $extArr = array();
-        foreach ($images as $image) {
-            $urlOriginal = $this->getFullUrl(
-                $this->imgPath(
-                    ImageService::ORIGINAL,
-                    $image->getId(),
-                    $image->getExtension(),
-                    true
-                )
-            );
-            $urlThumb = $this->getFullUrl($image->getThumb());
-            array_push(
-                $extArr,
-                array(
-                    'id' => $image->getId(),
-                    'url_original' => $urlOriginal,
-                    'url_thumb' => $urlThumb,
-                )
-            );
-        }
-        return $extArr;
+        return $finalPath;
     }
-
     //////////////////////////////////////////////////////////
-    ////////////////////HELPERS///////////////////////////////
+    ///////////////////////HELPERS////////////////////////////
     //////////////////////////////////////////////////////////
     /**
      * @param $imageName
@@ -318,5 +210,14 @@ class ImageService
             case self::SMALL_THUMB:
                 return array('width' => self::S_THUMB_WIDTH, 'height' => self::S_THUMB_HEIGHT);
         }
+    }
+
+    /**
+     * @param $urlPart
+     * @return string
+     */
+    public function getFullUrl($urlPart)
+    {
+        return $this->sm->get('ViewHelperManager')->get('ServerUrl')->__invoke() . $urlPart;
     }
 }
