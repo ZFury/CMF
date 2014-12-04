@@ -43,7 +43,7 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         'key' => '1',
         'value' => 'value',
         'description' => 'description',
-        'submit" => "Create'
+        'submit' => 'Create'
     ];
 
     /**
@@ -126,15 +126,7 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
      */
     public function testCreateAction()
     {
-        $parameters = new Stdlib\Parameters(
-            array(
-                'namespace' => 'default',
-                'key' => '1',
-                'value' => 'value',
-                'description' => 'description',
-                "submit" => "Create"
-            )
-        );
+        $parameters = new Stdlib\Parameters($this->optionData);
 
         $this->getRequest()->setMethod('POST')
             ->setPost($parameters);
@@ -179,23 +171,6 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
     }
 
     /**
-     *  create option
-     */
-    public function createOption()
-    {
-        $option = $this->getApplicationServiceLocator()->get('Options\Entity\Options');
-        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $objectManager->getConnection()->beginTransaction();
-        $hydrator = new DoctrineHydrator($objectManager);
-        $hydrator->hydrate($this->optionData, $option);
-        $option->setCreated(new \DateTime(date('Y-m-d H:i:s')));
-        $option->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
-        $objectManager->persist($option);
-        $objectManager->flush();
-        $objectManager->getConnection()->commit();
-    }
-
-    /**
      * test delete action
      *
      * @throws \PHPUnit_Framework_ExpectationFailedException
@@ -214,9 +189,25 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
 //            ->getRepository('Options\Entity\Options')
 //            ->findOneBy(array('namespace' => $this->optionData['namespace'], 'key' => $this->optionData['key']));
 
-
         $this->assertEquals(302, $this->getResponse()->getStatusCode());
         $this->assertRedirectTo('/options/management');
+    }
+
+    /**
+     *  create option
+     */
+    public function createOption()
+    {
+        $option = $this->getApplicationServiceLocator()->get('Options\Entity\Options');
+        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $objectManager->getConnection()->beginTransaction();
+        $hydrator = new DoctrineHydrator($objectManager);
+        $hydrator->hydrate($this->optionData, $option);
+        $option->setCreated(new \DateTime(date('Y-m-d H:i:s')));
+        $option->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
+        $objectManager->persist($option);
+        $objectManager->flush();
+        $objectManager->getConnection()->commit();
     }
 
     /**
@@ -239,7 +230,6 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
     public function createUser()
     {
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-//        $user = $this->getApplicationServiceLocator()->get('User\Entity\User');
         $user = new \User\Entity\User();
         $objectManager->getConnection()->beginTransaction();
         $hydrator = new DoctrineHydrator($objectManager);
@@ -252,7 +242,7 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         $objectManager->persist($user);
         $objectManager->flush();
 
-        /** @var $authService Service\Auth */
+        /** @var $authService \User\Service\Auth */
         $authService = $this->getApplicationServiceLocator()->get('User\Service\Auth');
         $authService->generateEquals($user, $this->userData['password']);
 
