@@ -18,7 +18,8 @@ require.config({
         "jquery-nestedSortable": './jquery.mjs.nestedSortable',
         categories: './categories',
         "delete-confirmation": './delete_confirmation',
-        dashboard:'./dashboard'
+        dashboard:'./dashboard',
+        redactor: './../redactor/redactor'
     },
     shim: {
         bootstrap: {
@@ -39,7 +40,11 @@ require.config({
         "jquery-nestedSortable": {
             deps: ['jquery', 'jquery-ui'],
             exports: '$.fn.nestedSortable'
-        }
+        },
+        redactor: {
+            deps: ['jquery'],
+            exports: '$.fn.redactor'
+        },
     },
     enforceDefine: true
 });
