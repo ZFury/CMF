@@ -90,22 +90,8 @@ class ManagementController extends AbstractCrudController
      */
     public function viewAction()
     {
-        $namespace = $this->params()->fromRoute('namespace');
-        $key = $this->params()->fromRoute('key');
-        //        $namespace = $this->params()->fromQuery('namespace');
-        //        $key = $this->params()->fromQuery('key');
-
-        if (!$namespace || !$key) {
-            return $this->notFoundAction();
-        }
-
-        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $option = $objectManager
-            ->getRepository('Options\Entity\Options')
-            ->find(array('namespace' => $namespace, 'key' => $key));
-
         return new ViewModel(
-            array('option' => $option)
+            array('option' => $this->loadEntity())
         );
     }
 }

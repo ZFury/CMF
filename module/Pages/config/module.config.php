@@ -28,7 +28,7 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array(
                     'controller' => 'Pages\Controller\Index',
-                    'roles' => array('guest'),
+                    'roles' => array(),
                 ),
                 array(
                     'controller' => 'Pages\Controller\Management',

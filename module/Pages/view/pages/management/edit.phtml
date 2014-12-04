@@ -48,11 +48,7 @@
         </div>
 
         <div class="hidden-element">
-            <?php echo $this->formHidden($form->get('id')); ?>
-        </div>
-
-        <div class="hidden-element">
-            <?php echo $this->formHidden($form->get('userId')); ?>
+            <?php echo $this->formHidden($form->get('userId')->setValue($this->identity()->getUser()->getId())); ?>
         </div>
 
         <div class="form-group">
