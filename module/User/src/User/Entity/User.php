@@ -81,7 +81,7 @@ class User
      * @Annotation\Type("Zend\Form\Element\Select")     *
      * @Annotation\Options({"label":"Satus:", "value_options":{"active" : "active", "inactive" : "inactive", "unconfirmed" : "unconfirmed"}})
      * @Annotation\Attributes({"class":"form-control"})
-     * @ORM\Column(type="string", nullable=false, columnDefinition="ENUM('active','inactive','unconfirmed')", options={"default" = "unconfirmed"})
+     * @ORM\Column(type="enumstatus", nullable=false, options={"default" = "unconfirmed"})
      */
     protected $status;
 

@@ -16,6 +16,13 @@ return array(
                 )
             )
         ),
+        'configuration' => array(
+            'orm_default' => array(
+                'types' => array(
+                    'enumstatus' => 'User\DBAL\Types\EnumStatusType'
+                )
+            )
+        ),
         'authentication' => array(
             'orm_default' => array(
                 'object_manager' => 'Doctrine\ORM\EntityManager',
@@ -95,16 +102,16 @@ return array(
         'template_map' => array(
             'error/403' => __DIR__ . '/../view/error/403.phtml',
         ),
+        'strategies' => array(
+            'ViewJsonStrategy',
+        )
     ),
     'service_manager' => array(
         'factories' => array(
             'Db\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
             'Zend\Authentication\AuthenticationService' => function($serviceManager) {
-                // If you are using DoctrineORMModule:
+                // If you are using DoctrineORMModule
                 return $serviceManager->get('doctrine.authenticationservice.orm_default');
-            },
-            'User\Entity\User' => function($sm) {
-                return new User\Entity\User();
             },
             'User\Service\User' => function($sm) {
                 return new User\Service\User($sm);
@@ -148,7 +155,6 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array(
                     'controller' => 'User\Controller\Auth',
-//                    'action' => array('login', 'logout'),
                     'roles' => array('guest', 'user'),
                 ),
                 array(
@@ -165,6 +171,16 @@ return array(
                     'controller' => 'User\Controller\Management',
                     'action' => array('create'),
                     'roles' => array('user'),
+                ),
+                array(
+                    'controller' => 'User\Controller\Management',
+                    'action' => array('grid'),
+                    'roles' => array('guest','user','admin'),
+                ),
+                array(
+                    'controller' => 'User\Controller\Management',
+                    'action' => array('get-users'),
+                    'roles' => array('guest','user','admin'),
                 ),
                 array(
                     'controller' => 'User\Controller\Profile',
