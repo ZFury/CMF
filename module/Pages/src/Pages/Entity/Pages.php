@@ -79,7 +79,7 @@ class Pages
      * @var int
      * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=true)
      */
-    protected $userId;
+    protected $authorId;
 
     /**
      * @var string
@@ -252,16 +252,16 @@ class Pages
     /**
      * @return int
      */
-    public function getUserId()
+    public function getAuthorId()
     {
-        return $this->userId;
+        return $this->authorId;
     }
 
     /**
-     * @param $userId
+     * @param $authorId
      */
-    public function setUserId($userId)
+    public function setAuthorId($authorId)
     {
-        $this->userId = $userId;
+        $this->authorId = $authorId;
     }
 }

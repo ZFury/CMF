@@ -48,7 +48,7 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         'keywords' => 'keyword',
         'description' => 'description',
         'id' => '',
-        'userId' => '',
+        'authorId' => '',
         'submit' => 'Create'
     ];
 
@@ -154,6 +154,7 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
 
         //get
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
+        /** @var $entity=\Pages\Entity\Pages */
         $entity = $objectManager->getRepository('Pages\Entity\Pages')
             ->findOneBy(array('alias' => $this->pageData['alias']));
 
@@ -165,7 +166,7 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
             'keywords' => $entity->getKeywords(),
             'description' => $entity->getDescription(),
             'id' => $entity->getId(),
-            'userId' => $entity->getUserId(),
+            'authorId' => $entity->getAuthorId(),
             'submit' => 'Edit'
         ]);
 

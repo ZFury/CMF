@@ -27,7 +27,10 @@ class ManagementController extends AbstractCrudController
      */
     protected function getEntity()
     {
-        return new \Pages\Entity\Pages();
+        /** @var $entity = \Pages\Entity\Pages $entity */
+        $entity = new \Pages\Entity\Pages();
+        $entity->setAuthorId($this->identity()->getUser()->getId());
+        return $entity;
     }
 
     /**
