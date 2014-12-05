@@ -4,17 +4,17 @@
  * User: alexfloppy
  */
 
-namespace OptionsTest\Controller;
+namespace Pages\Controller;
 
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use PHPUnit_Framework_TestCase;
 use Zend\Http\Response;
 use Zend\Stdlib;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Class ManagementControllerTest
- * @package OptionsTest\Controller
+ * @package PagesTest\Controller
  */
 class ManagementControllerTest extends AbstractHttpControllerTestCase
 {
@@ -37,11 +37,18 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
     /**
      * @var array
      */
-    protected $optionData = [
-        'namespace' => 'default',
-        'key' => '1',
-        'value' => 'value',
+    protected $pageData = [
+        'title' => 'Title',
+        'alias' => 'default-page',
+        'content' => 'Hello and welcome
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+        'keywords' => 'keyword',
         'description' => 'description',
+        'id' => '',
+        'authorId' => '',
         'submit' => 'Create'
     ];
 
@@ -83,15 +90,15 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
     }
 
     /**
-     *  remove option
+     *  remove entity
      */
     public function tearDown()
     {
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $option = $objectManager->getRepository('Options\Entity\Options')
-            ->findOneBy(array('namespace' => $this->optionData['namespace'], 'key' => $this->optionData['key']));
-        if ($option) {
-            $objectManager->remove($option);
+        $entity = $objectManager->getRepository('Pages\Entity\Pages')
+            ->findOneBy(array('alias' => $this->pageData['alias']));
+        if ($entity) {
+            $objectManager->remove($entity);
             $objectManager->flush();
         }
     }
@@ -103,7 +110,7 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
      */
     public function testIndexActionCanBeAccessed()
     {
-        $this->dispatch('/options');
+        $this->dispatch('/pages');
         $this->assertResponseStatusCode(200);
     }
 
@@ -114,7 +121,7 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
      */
     public function testCreateActionCanBeAccessed()
     {
-        $this->dispatch('/options/management/create');
+        $this->dispatch('/pages/management/create');
         $this->assertEquals(200, $this->getResponse()->getStatusCode());
     }
 
@@ -125,14 +132,14 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
      */
     public function testCreateAction()
     {
-        $parameters = new Stdlib\Parameters($this->optionData);
+        $parameters = new Stdlib\Parameters($this->pageData);
 
         $this->getRequest()->setMethod('POST')
             ->setPost($parameters);
 
-        $this->dispatch('/options/management/create');
+        $this->dispatch('/pages/management/create');
         $this->assertEquals(302, $this->getResponse()->getStatusCode());
-        $this->assertRedirectTo('/options/management');
+        $this->assertRedirectTo('/pages/management');
     }
 
     /**
@@ -143,30 +150,34 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
     public function testEditAction()
     {
         //create
-        $this->createOption();
+        $this->createEntity();
 
         //get
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $option = $objectManager
-            ->getRepository('Options\Entity\Options')
-            ->findOneBy(array('namespace' => $this->optionData['namespace'], 'key' => $this->optionData['key']));
+        /** @var $entity=\Pages\Entity\Pages */
+        $entity = $objectManager->getRepository('Pages\Entity\Pages')
+            ->findOneBy(array('alias' => $this->pageData['alias']));
 
         //dispatch edit + post data
         $parameters = new Stdlib\Parameters([
-            'namespace' => $option->getNamespace(),
-            'key' => $option->getKey(),
-            'value' => $option->getValue(),
-            'description' => $option->getDescription()
+            'title' => $entity->getTitle(),
+            'alias' => $entity->getAlias(),
+            'content' => $entity->getContent(),
+            'keywords' => $entity->getKeywords(),
+            'description' => $entity->getDescription(),
+            'id' => $entity->getId(),
+            'authorId' => $entity->getAuthorId(),
+            'submit' => 'Edit'
         ]);
 
         $this->getRequest()->setMethod('POST')
             ->setPost($parameters);
 
-        $editPath = '/options/management/edit/' . $this->optionData["namespace"] . '/' . $this->optionData["key"];
+        $editPath = '/pages/management/edit/' . $entity->getId();
         $this->dispatch($editPath);
 
         $this->assertEquals(302, $this->getResponse()->getStatusCode());
-        $this->assertRedirectTo('/options/management');
+        $this->assertRedirectTo('/pages/management');
     }
 
     /**
@@ -177,36 +188,31 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
     public function testDeleteAction()
     {
         //create
-        $this->createOption();
+        $entity = $this->createEntity();
 
-        // remove option
-        $deletePath = '/options/management/delete/' . $this->optionData["namespace"] . '/' . $this->optionData["key"];
+        // remove
+        $deletePath = '/pages/management/delete/' . $entity->getId();
         $this->dispatch($deletePath);
 
-//        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-//        $option = $objectManager
-//            ->getRepository('Options\Entity\Options')
-//            ->findOneBy(array('namespace' => $this->optionData['namespace'], 'key' => $this->optionData['key']));
-
         $this->assertEquals(302, $this->getResponse()->getStatusCode());
-        $this->assertRedirectTo('/options/management');
+        $this->assertRedirectTo('/pages/management');
     }
 
     /**
-     *  create option
+     *  create entity
      */
-    public function createOption()
+    public function createEntity()
     {
-        $option = $this->getApplicationServiceLocator()->get('Options\Entity\Options');
+        $entity = new \Pages\Entity\Pages();
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         $objectManager->getConnection()->beginTransaction();
         $hydrator = new DoctrineHydrator($objectManager);
-        $hydrator->hydrate($this->optionData, $option);
-        $option->setCreated(new \DateTime(date('Y-m-d H:i:s')));
-        $option->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
-        $objectManager->persist($option);
+        $hydrator->hydrate($this->pageData, $entity);
+        $objectManager->persist($entity);
         $objectManager->flush();
         $objectManager->getConnection()->commit();
+
+        return $entity;
     }
 
     /**

@@ -14,7 +14,8 @@ $config =  array(
         'Test',
         'Dashboard',
         'Categories',
-        'Media'
+        'Media',
+        'Pages'
     ),
 
     // These are various options for the listeners attached to the ModuleManager

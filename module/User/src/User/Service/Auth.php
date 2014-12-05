@@ -142,7 +142,7 @@ class Auth
     {
         $authService = $this->createAuthService($email, $password);
         $authResult = $authService->getAdapter()->authenticate();
-        if (true !== $authResult) {
+        if (false == $authResult->getCode()) {
             throw new AuthException('Wrong login or password');
         }
         return true;
