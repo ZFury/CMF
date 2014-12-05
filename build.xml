@@ -119,7 +119,7 @@
             <arg line="--coverage-html '${logsDir}/coverage'"/>
         </exec>
 
-        <zip destfile="${logsDir}/coverage.zip" basedir="${logsDir}/coverage"/>
+        <zip destfile="${logsDir}/coverage.zip" basedir="${moduleDir}/coverage"/>
         <antcall target="publish" />
     </target>
 
