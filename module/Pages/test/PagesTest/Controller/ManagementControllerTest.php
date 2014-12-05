@@ -9,14 +9,13 @@ namespace Pages\Controller;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Zend\Http\Response;
 use Zend\Stdlib;
-use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
-use PHPUnit_Framework_TestCase;
+use Starter\Test\Controller\ControllerTestCase;
 
 /**
  * Class ManagementControllerTest
  * @package PagesTest\Controller
  */
-class ManagementControllerTest extends AbstractHttpControllerTestCase
+class ManagementControllerTest extends ControllerTestCase
 {
     /**
      * @var bool
@@ -76,17 +75,10 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         $this->setApplicationConfig(
             include 'config/application.config.php'
         );
+        $this->setTraceError(true);
         parent::setUp();
 
-        //remove user
-        $this->removeUser();
-
-        //create user
-        $this->createUser();
-
-        /** @var \User\Service\Auth $userAuth */
-        $userAuth = $this->getApplicationServiceLocator()->get('\User\Service\Auth');
-        $userAuth->authenticateEquals($this->userData['email'], $this->userData['password']);
+        $this->setupAdmin();
     }
 
     /**
@@ -213,44 +205,5 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         $objectManager->getConnection()->commit();
 
         return $entity;
-    }
-
-    /**
-     * remove user
-     */
-    public function removeUser()
-    {
-        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $user = $objectManager->getRepository('User\Entity\User')
-            ->findOneBy(array('email' => $this->userData['email']));
-        if ($user) {
-            $objectManager->remove($user);
-            $objectManager->flush();
-        }
-    }
-
-    /**
-     *  create user
-     */
-    public function createUser()
-    {
-        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $user = new \User\Entity\User();
-        $objectManager->getConnection()->beginTransaction();
-        $hydrator = new DoctrineHydrator($objectManager);
-        $hydrator->hydrate($this->userData, $user);
-        $user->setDisplayName($user->getEmail());
-        $user->setRole($user::ROLE_USER);
-        $user->setConfirm($user->generateConfirm());
-        $user->setStatus($user::STATUS_ACTIVE);
-        $user->setRole($user::ROLE_ADMIN);
-        $objectManager->persist($user);
-        $objectManager->flush();
-
-        /** @var $authService \User\Service\Auth */
-        $authService = $this->getApplicationServiceLocator()->get('User\Service\Auth');
-        $authService->generateEquals($user, $this->userData['password']);
-
-        $objectManager->getConnection()->commit();
     }
 }

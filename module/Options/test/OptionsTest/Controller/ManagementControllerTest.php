@@ -7,16 +7,15 @@
 namespace OptionsTest\Controller;
 
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use PHPUnit_Framework_TestCase;
+use Starter\Test\Controller\ControllerTestCase;
 use Zend\Http\Response;
 use Zend\Stdlib;
-use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
 /**
  * Class ManagementControllerTest
  * @package OptionsTest\Controller
  */
-class ManagementControllerTest extends AbstractHttpControllerTestCase
+class ManagementControllerTest extends ControllerTestCase
 {
     /**
      * @var bool
@@ -64,22 +63,15 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
     /**
      * @throws \User\Exception\AuthException
      */
-    protected function setUp()
+    public function setUp()
     {
         $this->setApplicationConfig(
             include 'config/application.config.php'
         );
+        $this->setTraceError(true);
         parent::setUp();
 
-        //remove user
-        $this->removeUser();
-
-        //create user
-        $this->createUser();
-
-        /** @var \User\Service\Auth $userAuth */
-        $userAuth = $this->getApplicationServiceLocator()->get('\User\Service\Auth');
-        $userAuth->authenticateEquals($this->userData['email'], $this->userData['password']);
+        $this->setupAdmin();
     }
 
     /**
@@ -183,11 +175,6 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         $deletePath = '/options/management/delete/' . $this->optionData["namespace"] . '/' . $this->optionData["key"];
         $this->dispatch($deletePath);
 
-//        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-//        $option = $objectManager
-//            ->getRepository('Options\Entity\Options')
-//            ->findOneBy(array('namespace' => $this->optionData['namespace'], 'key' => $this->optionData['key']));
-
         $this->assertEquals(302, $this->getResponse()->getStatusCode());
         $this->assertRedirectTo('/options/management');
     }
@@ -206,45 +193,6 @@ class ManagementControllerTest extends AbstractHttpControllerTestCase
         $option->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
         $objectManager->persist($option);
         $objectManager->flush();
-        $objectManager->getConnection()->commit();
-    }
-
-    /**
-     * remove user
-     */
-    public function removeUser()
-    {
-        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $user = $objectManager->getRepository('User\Entity\User')
-            ->findOneBy(array('email' => $this->userData['email']));
-        if ($user) {
-            $objectManager->remove($user);
-            $objectManager->flush();
-        }
-    }
-
-    /**
-     *  create user
-     */
-    public function createUser()
-    {
-        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $user = new \User\Entity\User();
-        $objectManager->getConnection()->beginTransaction();
-        $hydrator = new DoctrineHydrator($objectManager);
-        $hydrator->hydrate($this->userData, $user);
-        $user->setDisplayName($user->getEmail());
-        $user->setRole($user::ROLE_USER);
-        $user->setConfirm($user->generateConfirm());
-        $user->setStatus($user::STATUS_ACTIVE);
-        $user->setRole($user::ROLE_ADMIN);
-        $objectManager->persist($user);
-        $objectManager->flush();
-
-        /** @var $authService \User\Service\Auth */
-        $authService = $this->getApplicationServiceLocator()->get('User\Service\Auth');
-        $authService->generateEquals($user, $this->userData['password']);
-
         $objectManager->getConnection()->commit();
     }
 }
