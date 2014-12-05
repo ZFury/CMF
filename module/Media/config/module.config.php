@@ -18,7 +18,7 @@ return array(
         'driver' => [
             'media_driver' => [
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => [__DIR__ . '/../Media/src/Media/Entity']
+                'paths' => [__DIR__ . '/../src/Media/Entity']
             ],
             'orm_default' => [
                 'drivers' => [
