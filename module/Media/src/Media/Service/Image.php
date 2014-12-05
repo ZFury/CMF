@@ -13,7 +13,7 @@ use Zend\Filter\File\RenameUpload;
 class Image
 {
     const PATH = "/uploads/images/";
-    const PUBLIC_PATH = "public/";
+    const PUBLIC_PATH = "public";
     const ORIGINAL = 3;
     const BIG_THUMB = 2;
     const SMALL_THUMB = 1;
@@ -30,14 +30,11 @@ class Image
         $this->sm = $sm;
     }
 
-
     /**
      * @param $data
-     * @param $obj
-     * @param bool $api
-     * @return array
+     * @return \Media\Entity\Image
      */
-    public function createImage($data, $obj, $api = false)
+    public function createImage($data)
     {
         //Creating new image to get ID for building its path
         $image = new \Media\Entity\Image();
@@ -56,7 +53,6 @@ class Image
 
         return $image;
     }
-    ///////////////////////////////////////////////////
 
     /**
      * @param $destination
@@ -94,39 +90,10 @@ class Image
         return true;
     }
 
-
-    /**
-     * @param \Doctrine\ORM\PersistentCollection $images
-     * @return array
-     */
-    public function getImagesInfo(\Doctrine\ORM\PersistentCollection $images)
-    {
-        $extArr = array();
-        foreach ($images as $image) {
-            $urlOriginal = $this->getFullUrl(
-                $this->imgPath(
-                    self::ORIGINAL,
-                    $image->getId(),
-                    $image->getExtension(),
-                    true
-                )
-            );
-            $urlThumb = $this->getFullUrl($image->getThumb());
-            array_push(
-                $extArr,
-                array(
-                    'id' => $image->getId(),
-                    'url_original' => $urlOriginal,
-                    'url_thumb' => $urlThumb,
-                )
-            );
-        }
-        return $extArr;
-    }
-
     //////////////////////////////////////////////////////////
     /////////////////////////PATH/////////////////////////////
     //////////////////////////////////////////////////////////
+
     /**
      * @param $type
      * @param $id
@@ -186,9 +153,11 @@ class Image
 
         return $finalPath;
     }
+
     //////////////////////////////////////////////////////////
     ///////////////////////HELPERS////////////////////////////
     //////////////////////////////////////////////////////////
+
     /**
      * @param $imageName
      * @return mixed

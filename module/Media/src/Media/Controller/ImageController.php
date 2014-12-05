@@ -20,17 +20,27 @@ class ImageController extends AbstractActionController
     public function indexAction()
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $imageService = new \Media\Service\Image($this->getServiceLocator());
 
         $userEntityRepository = $entityManager->getRepository('User\Entity\User');
         $user = $userEntityRepository->findOneById(11);
         $imagesId = $user->getImages();
+        $imagesLocation = [];
         $imagesUrl = [];
+        $thumbsUrl = [];
         foreach ($imagesId as $imageId) {
             $image = $entityManager->getRepository('Media\Entity\Image')->findOneById($imageId);
-            array_push($imagesUrl, $image->getDestination());
+            array_push($imagesLocation, $image->getLocation());
+            array_push($imagesUrl, $imageService->getFullUrl($image->getUrlPart()));
+            array_push($thumbsUrl, $imageService->getFullUrl($image->getThumb()));
         }
 
-        return new ViewModel(['imagesId' => $imagesId, 'imagesUrl' => $imagesUrl]);
+        return new ViewModel([
+            'imagesId' => $imagesId,
+            'imagesLocation' => $imagesLocation,
+            'imagesUrl' => $imagesUrl,
+            'thumbsUrl' => $thumbsUrl
+        ]);
     }
 
     /**

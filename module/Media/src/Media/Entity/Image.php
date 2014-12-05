@@ -135,7 +135,7 @@ class Image
     /**
      * @return mixed
      */
-    public function getDestination()
+    public function getLocation()
     {
         $ext = $this->getExtension();
 
@@ -143,22 +143,34 @@ class Image
     }
 
     /**
-     * @return mixed
+     * @return string
+     */
+    public function getUrlPart()
+    {
+        $ext = $this->getExtension();
+
+        return \Media\Service\Image::imgPath(\Media\Service\Image::ORIGINAL, $this->id, $ext, true);
+    }
+
+    /**
+     * Returns the part of url
+     *
+     * @return string
      */
     public function getThumb()
     {
         $ext = $this->getExtension();
         $imageId = $this->getId();
-        $destination = \Media\Service\Image::imgPath(\Media\Service\Image::SMALL_THUMB, $imageId, $ext);
-        if (!file_exists(\Media\Service\Image::PUBLIC_PATH . $destination)) {
-            $originalDestination = $this->getDestination();
+        $urlPart = \Media\Service\Image::imgPath(\Media\Service\Image::SMALL_THUMB, $imageId, $ext);
+        if (!file_exists(\Media\Service\Image::PUBLIC_PATH . $urlPart)) {
+            $originalLocation = $this->getLocation();
 
-            $image = new \Imagick($originalDestination);
+            $image = new \Imagick($originalLocation);
             $image->cropThumbnailImage(\Media\Service\Image::S_THUMB_WIDTH, \Media\Service\Image::S_THUMB_HEIGHT);
-            \Media\Service\Image::prepareDir(\Media\Service\Image::PUBLIC_PATH . $destination);
-            $image->writeimage(\Media\Service\Image::PUBLIC_PATH . $destination);
+            \Media\Service\Image::prepareDir(\Media\Service\Image::PUBLIC_PATH . $urlPart);
+            $image->writeimage(\Media\Service\Image::PUBLIC_PATH . $urlPart);
         }
 
-        return $destination;
+        return $urlPart;
     }
 }
