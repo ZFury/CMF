@@ -68,7 +68,7 @@ class ProfileController extends AbstractActionController
                     $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
                     $user = $objectManager
                         ->getRepository('User\Entity\User')
-                        ->findOneBy(['email' => $this->identity()->getUser()->getEmail()]);
+                        ->find($this->identity()->getUser()->getId());
 
                     $userAuth->generateEquals($user, $form->getData()['password']);
                     $flashMessenger->addSuccessMessage("You have successfully changed your password!");
