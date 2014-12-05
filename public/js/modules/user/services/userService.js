@@ -28,7 +28,7 @@
              * @param callback
              * @param overlay - is overlay show
              *
-             * Created by Maxm Mandryka maxim.mandryka@nixsolutions.com
+             * Created by Maxim Mandryka maxim.mandryka@nixsolutions.com
              * */
             function ajaxRequest (/*object*/ params, /*function*/ callback, /*boolean*/ overlay) {
                 overlay = ('undefined' == typeof(overlay)) ? false : overlay;

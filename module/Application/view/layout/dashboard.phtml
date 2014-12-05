@@ -5,9 +5,12 @@
         <!-- CSS -->
         <link href="module/dashboard/css/sb-admin.css" rel="stylesheet">
         <link href="font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <script>
+            require(['jquery', 'bootstrap', 'modules/user/userApp']);
+        </script>
     </head>
     <body class="dashboard-body">
-        <div id="wrapper">
+    <div id="wrapper">
             <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
                 <?= $this->partial('layout/partial/dashboard/nav-bar.phtml') ?>
             </nav>
@@ -24,5 +27,6 @@
             </div>
             <?php echo $this->inlineScript() ?>
         </div>
+    {{a}}
     </body>
 </html>
