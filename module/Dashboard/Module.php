@@ -29,6 +29,7 @@ class Module
             $controller = $e->getTarget();
             $controllerFullName = $e->getRouteMatch()->getParam('controller');
             $controllerName = explode('\\', $controllerFullName);
+
             if ($controller instanceof Controller\IndexController || array_pop($controllerName) == 'Management') {
                 $controller->layout('layout/dashboard');
             }
