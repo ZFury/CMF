@@ -94,15 +94,32 @@
     <target name="phpunit" description="PHPUnit">
         <mkdir dir="${logsDir}/coverage"/>
         <property name="junit" value="${logsDir}/tests-report.xml" />
-        <!--<property name="env.APP_ENV" value="testing"/>-->
+
         <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix" output="${logsDir}/phpunit.log">
             <env key="APP_ENV" value="testing"/>
             <arg line="-c ${moduleDir}/Options/test/phpunit.xml"/>
             <arg line="--log-junit '${logsDir}/tests-report.xml'"/>
             <arg line="--coverage-clover '${logsDir}/phpunit.clover.xml'"/>
             <arg line="--coverage-html '${logsDir}/coverage'"/>
-        </exec> 
-        <zip destfile="${logsDir}/coverage.zip" basedir="${logsDir}/coverage"/>
+        </exec>
+
+        <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix" output="${logsDir}/phpunit.log">
+            <env key="APP_ENV" value="testing"/>
+            <arg line="-c ${moduleDir}/Pages/test/phpunit.xml"/>
+            <arg line="--log-junit '${logsDir}/tests-report.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.xml'"/>
+            <arg line="--coverage-html '${logsDir}/coverage'"/>
+        </exec>
+
+        <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix" output="${logsDir}/phpunit.log">
+            <env key="APP_ENV" value="testing"/>
+            <arg line="-c ${moduleDir}/Categories/test/phpunit.xml"/>
+            <arg line="--log-junit '${logsDir}/tests-report.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.xml'"/>
+            <arg line="--coverage-html '${logsDir}/coverage'"/>
+        </exec>
+
+        <zip destfile="${logsDir}/coverage.zip" basedir="${moduleDir}/coverage"/>
         <antcall target="publish" />
     </target>
 
