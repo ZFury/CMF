@@ -7,16 +7,15 @@
 namespace Pages\Controller;
 
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
+use Starter\Test\Controller\ControllerTestCase;
 use Zend\Http\Response;
 use Zend\Stdlib;
-use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Class IndexControllerTest
  * @package Pages\Controller
  */
-class IndexControllerTest extends AbstractHttpControllerTestCase
+class IndexControllerTest extends ControllerTestCase
 {
     /**
      * @var bool
