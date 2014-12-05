@@ -17,9 +17,10 @@ require.config({
         html5shiv: './libs/html5shiv',
         "jquery-ui": './jquery-ui',
         "jquery-nestedSortable": './jquery.mjs.nestedSortable',
-        categories: './categories',
-        "delete-confirmation": './delete_confirmation',
-        dashboard:'./../module/dashboard/js/dashboard'
+        redactor: './../redactor/redactor',
+        //"redactor-fullscreen": './../redactor/plugins/fullscreen'
+        dashboard:'./../module/dashboard/js/dashboard',
+        categories: '../module/categories/js/management'
     },
     shim: {
         angular: {
@@ -48,7 +49,15 @@ require.config({
         "jquery-nestedSortable": {
             deps: ['jquery', 'jquery-ui'],
             exports: '$.fn.nestedSortable'
-        }
+        },
+        redactor: {
+            deps: ['jquery'],
+            exports: '$.fn.redactor'
+        },
+        //'redactor-fullscreen': {
+        //    deps: ['jquery', 'redactor'],
+        //    exports: '$.fn.redactor'
+        //}
     },
     enforceDefine: true
 });

@@ -7,27 +7,30 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace Options\Controller;
+namespace Pages\Controller;
 
 use Starter\Mvc\Controller\AbstractCrudController;
 use Zend\View\Model\ViewModel;
-use Options\Form\Create;
+use Pages\Form\Create;
 use Doctrine\ORM\EntityNotFoundException;
 use Zend\Mvc\Controller\AbstractActionController;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 
 /**
  * Class ManagementController
- * @package Options\Controller
+ * @package Pages\Controller
  */
 class ManagementController extends AbstractCrudController
 {
     /**
-     * @return mixed|\Options\Entity\Options
+     * @return mixed|\Pages\Entity\Pages
      */
     protected function getEntity()
     {
-        return new \Options\Entity\Options();
+        /** @var $entity = \Pages\Entity\Pages $entity */
+        $entity = new \Pages\Entity\Pages();
+        $entity->setAuthorId($this->identity()->getUser()->getId());
+        return $entity;
     }
 
     /**
@@ -35,7 +38,7 @@ class ManagementController extends AbstractCrudController
      */
     protected function getCreateForm()
     {
-        return new \Options\Form\Create(null, ['serviceLocator' =>$this->getServiceLocator()]);
+        return new \Pages\Form\Create(null, ['serviceLocator' =>$this->getServiceLocator()]);
     }
 
     /**
@@ -43,31 +46,9 @@ class ManagementController extends AbstractCrudController
      */
     protected function getEditForm()
     {
-        $form = new \Options\Form\Create(null, ['serviceLocator' =>$this->getServiceLocator()]);
+        $form = new \Pages\Form\Create(null, ['serviceLocator' =>$this->getServiceLocator()]);
         $form->get('submit')->setValue('Save');
         return $form;
-    }
-
-    /**
-     * @return mixed
-     * @throws EntityNotFoundException
-     */
-    protected function loadEntity()
-    {
-        $namespace = $this->params()->fromRoute('namespace');
-        $key = $this->params()->fromRoute('key');
-
-        if (!$namespace || !$key) {
-            throw new EntityNotFoundException('Bad Request');
-        }
-
-        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-
-        if (!$model = $objectManager->getRepository(get_class($this->getEntity()))
-            ->find(['namespace' => $namespace, 'key' => $key])) {
-            throw new EntityNotFoundException('Entity not found');
-        }
-        return $model;
     }
 
     /**
@@ -76,11 +57,11 @@ class ManagementController extends AbstractCrudController
     public function indexAction()
     {
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $options = $objectManager->getRepository('Options\Entity\Options')->findAll();
+        $pages = $objectManager->getRepository('Pages\Entity\Pages')->findAll();
 
         return new ViewModel(
             array(
-                'options' => $options
+                'pages' => $pages
             )
         );
     }
@@ -90,8 +71,6 @@ class ManagementController extends AbstractCrudController
      */
     public function viewAction()
     {
-        return new ViewModel(
-            array('option' => $this->loadEntity())
-        );
+        return new ViewModel(array('page' => $this->loadEntity()));
     }
 }

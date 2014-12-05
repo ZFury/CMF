@@ -62,7 +62,7 @@ class ManagementController extends AbstractCrudController
                     'parentId' => $parentId])
                 ) {
                     $category = $this->getEntity();
-                    $category->setParentId($repository->find($parentId));
+                    $category->setParentId(!$parentId ? null : $repository->find($parentId));
                     $category->setOrder($this->getMaxOrder($parentId));
 
                     $hydrator = new DoctrineHydrator($entityManager);
@@ -89,6 +89,7 @@ class ManagementController extends AbstractCrudController
     public function editAction()
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $repository = $entityManager->getRepository('Categories\Entity\Categories');
 
         $form = $this->getEditForm();
 
@@ -98,9 +99,13 @@ class ManagementController extends AbstractCrudController
             $aliasValid = new Validators\NoObjectExists($entityManager->getRepository('Categories\Entity\Categories'));
 
             if ($form->isValid()) {
+                $entity = $this->loadEntity();
                 if ($aliasValid->isValid(['alias' => $form->get('alias')->getValue(),
-                    'parentId' => $form->get('parentId')->getValue()], $this->params()->fromRoute('id'))
+                    'parentId' => $entity->getParentId()], $this->params()->fromRoute('id'))
                 ) {
+                    $category = $form->getData();
+                    $category->setParentId(!$entity->getParentId() ? null : $repository->find($entity->getParentId()));
+                    $category->setOrder($entity->getOrder());
                     $entityManager->persist($form->getData());
                     $entityManager->flush();
                     $this->getServiceLocator()->get('Categories\Service\Categories')->updateChildrenPath($form->getData());
@@ -144,6 +149,9 @@ class ManagementController extends AbstractCrudController
                             $node->parent_id = $treeParent;
                         }
 
+                        if (!$dbNode->getParentId()) {
+                            throw new \Exception();
+                        }
                         $parentId = $dbNode->getParentId()->getId();
                         if ($parentId != $node->parent_id && $node->parent_id) {
                             $dbNode->setParentId($repository->findOneBy(['id' => $node->parent_id]));
@@ -215,6 +223,12 @@ class ManagementController extends AbstractCrudController
         return new \Categories\Entity\Categories();
     }
 
+    /**
+     * Returns maximum order field value within category siblings.
+     *
+     * @param $parentId
+     * @return int|mixed
+     */
     private function getMaxOrder($parentId)
     {
         $repository = $this->getServiceLocator()

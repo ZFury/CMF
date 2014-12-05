@@ -117,5 +117,4 @@ abstract class AbstractCrudController extends AbstractActionController
      * @return mixed
      */
     abstract protected function getEntity();
-
 }
