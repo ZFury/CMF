@@ -9,14 +9,13 @@
             $scope.reverse = true;
             $scope.params.searchString = '';
             $scope.params.searchField = 'email';
-            $scope.page = 0;
+            $scope.page = 1;
             /**
              * Get searched users function
              * */
             $scope.getUsers = function () {
                 if (typeof ($routeParams.params) === 'undefined') {
-                    var page = parseInt($scope.page) + 1;
-                    $location.path('/params/page=' + page);
+                    $location.path('/params/page=1');
                 } else {
                     parseUrlParams($routeParams.params);
                 }

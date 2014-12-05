@@ -27,7 +27,7 @@
                     controller: userGridController
                 })
                 .otherwise({
-                    redirectTo: '/'
+                    redirectTo: '/params'
                 });
 //                $locationProvider.html5Mode(true);
         }]);
