@@ -9,6 +9,7 @@
 namespace Media\Service;
 
 use Zend\Filter\File\RenameUpload;
+use Media\Entity\ObjectImage;
 
 class Image
 {
@@ -34,7 +35,7 @@ class Image
      * @param $data
      * @return \Media\Entity\Image
      */
-    public function createImage($data)
+    public function createImage($data, $object)
     {
         //Creating new image to get ID for building its path
         $image = new \Media\Entity\Image();
@@ -44,11 +45,14 @@ class Image
         $ext = \Media\Service\Image::getExt($data['image']['name']);
         $destination = \Media\Service\Image::imgPath(\Media\Service\Image::ORIGINAL, $image->getId(), $ext);
         \Media\Service\Image::moveImage($destination, $data['image']);
-        //Saving original image extension in database and adding to it our User
-
         $image->setExtension($ext);
-
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($image);
+
+        $objectImage = new ObjectImage();
+        $objectImage->setImage($image);
+        $objectImage->setEntityName($object->getEntityName());
+        $objectImage->setObjectId($object->getId());
+        $this->sm->get('doctrine.entitymanager.orm_default')->persist($objectImage);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
 
         return $image;
@@ -66,6 +70,7 @@ class Image
             "target" => $destination,
             'randomize' => false,
         ));
+
         return $filter->filter($image);
     }
 

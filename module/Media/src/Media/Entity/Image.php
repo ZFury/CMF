@@ -24,7 +24,7 @@ class Image
     /**
      * @var string
      *
-     * @ORM\Column(name="extension", type="string", length=5, nullable=false)
+     * @ORM\Column(name="extension", type="string", length=5, nullable=true)
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Attributes({"type":"text"})
      * @Annotation\Options({"label":"Extension:"})

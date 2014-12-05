@@ -1,6 +1,6 @@
 <?php
 if (isset($form)) {
-$form->setAttribute('action', $this->url('media/default', array('controller' => 'image', 'action' => 'upload-image')));
+$form->setAttribute('action', $this->url('test/default', array('controller' => 'image', 'action' => 'upload-image')));
 $form->setAttribute('method', 'post');
 $form->prepare();
 echo $this->form()->openTag($form);

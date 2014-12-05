@@ -8,10 +8,11 @@ return [
                 'paths' => [
                     __DIR__ . '/../src/Test/Entity'
                 ],
+
             ],
             'orm_default' => [
                 'drivers' => [
-                    'Test\Entity' => 'test_entity'
+                    'Test\Entity' => 'test_entity',
                 ],
             ],
         ],
@@ -49,6 +50,7 @@ return [
     'controllers' => [
         'invokables' => [
             'Test\Controller\Management' => 'Test\Controller\ManagementController',
+            'Test\Controller\Image' => 'Test\Controller\ImageController',
         ],
     ],
     'view_manager' => array(
@@ -62,6 +64,10 @@ return [
                 [
                     'controller' => 'Test\Controller\Management',
                     'roles' => [],
+                ],
+                [
+                    'controller' => 'Test\Controller\Image',
+                    'roles' => ['user'],
                 ],
             ],
         ],

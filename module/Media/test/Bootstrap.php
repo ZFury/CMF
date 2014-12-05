@@ -6,7 +6,7 @@
  * Time: 12:01
  */
 
-namespace Categories;
+namespace Media;
 
 use Zend\Loader\AutoloaderFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;
