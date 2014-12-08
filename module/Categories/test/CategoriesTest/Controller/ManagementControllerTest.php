@@ -48,7 +48,7 @@ class ManagementControllerTest extends ControllerTestCase
      */
     public static function setUpBeforeClass()
     {
-        exec('vendor/doctrine/doctrine-module/bin/doctrine-module orm:schema-tool:update --force');
+        exec('vendor/bin/doctrine-module orm:schema-tool:update --force');
     }
 
     /**
@@ -56,7 +56,7 @@ class ManagementControllerTest extends ControllerTestCase
      */
     public static function tearDownAfterClass()
     {
-        exec('vendor/doctrine/doctrine-module/bin/doctrine-module orm:schema-tool:drop --force');
+        exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
     }
 
     /**
