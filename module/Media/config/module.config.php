@@ -9,7 +9,7 @@
 return array(
     'service_manager' => [
         'factories' => [
-            'Media\Service\Image' => function($serviceManager) {
+            'Media\Service\Image' => function ($serviceManager) {
                 return new Media\Service\Image($serviceManager);
             },
         ]

@@ -53,7 +53,8 @@ class SignupController extends AbstractActionController
                 throw new \Exception('Invalid confirmation code');
             }
             /**
-            * @var \Doctrine\ORM\EntityManager $objectManager */
+             * @var \Doctrine\ORM\EntityManager $objectManager
+             */
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
             $user = $objectManager
                 ->getRepository('User\Entity\User')

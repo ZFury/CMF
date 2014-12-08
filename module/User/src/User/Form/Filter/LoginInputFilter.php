@@ -10,37 +10,37 @@ class LoginInputFilter extends InputFilter
     {
         $this->add(
             array(
-            'name' => 'email',
-            'required' => true,
-            'validators' => array(
-                array(
-                    'name' => 'EmailAddress'
-                )
-            ),
-            'filters' => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
-            ),
+                'name' => 'email',
+                'required' => true,
+                'validators' => array(
+                    array(
+                        'name' => 'EmailAddress'
+                    )
+                ),
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
             )
         );
 
         $this->add(
             array(
-            'name' => 'password',
-            'required' => true,
-            'validators' => array(
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'min' => 3,
-                        'max' => 25,
+                'name' => 'password',
+                'required' => true,
+                'validators' => array(
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'min' => 3,
+                            'max' => 25,
+                        ),
                     ),
                 ),
-            ),
-            'filters' => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
-            ),
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
             )
         );
     }

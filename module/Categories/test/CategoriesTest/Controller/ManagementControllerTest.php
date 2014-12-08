@@ -128,7 +128,8 @@ class ManagementControllerTest extends ControllerTestCase
     public function testEditActionRedirectsAfterValidPost()
     {
         /**
-        * @var \Categories\Entity\Categories $category */
+         * @var \Categories\Entity\Categories $category
+         */
         $category = $this->createCategory($this->categoryData);
 
         $postData = array(
@@ -163,7 +164,7 @@ class ManagementControllerTest extends ControllerTestCase
 
         $json = json_encode(
             [['item_id' => null, "parent_id" => 'none', "depth" => 0, "left" => 1, "right" => 4],
-            ['item_id' => $category2->getId(), "parent_id" => null, "depth" => 1, "left" => 2, "right" => 3, "order" => 1],
+                ['item_id' => $category2->getId(), "parent_id" => null, "depth" => 1, "left" => 2, "right" => 3, "order" => 1],
             ]
         );
         $postData = [
@@ -185,7 +186,8 @@ class ManagementControllerTest extends ControllerTestCase
     public function createCategory($categoryData)
     {
         /**
-        * @var \Doctrine\ORM\EntityManager $objectManager */
+         * @var \Doctrine\ORM\EntityManager $objectManager
+         */
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         //        $category = $this->getApplicationServiceLocator()->get('Categories\Entity\Categories');
         $category = new \Categories\Entity\Categories();
@@ -208,7 +210,8 @@ class ManagementControllerTest extends ControllerTestCase
     public function removeCategory(\Categories\Entity\Categories $detachedEntity)
     {
         /**
-        * @var \Doctrine\ORM\EntityManager $objectManager */
+         * @var \Doctrine\ORM\EntityManager $objectManager
+         */
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         $category = $objectManager->merge($detachedEntity);
         $objectManager->remove($category);

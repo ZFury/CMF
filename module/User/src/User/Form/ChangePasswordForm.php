@@ -19,47 +19,47 @@ class ChangePasswordForm extends Form
 
         $this->add(
             array(
-            'name' => 'currentPassword',
-            'attributes' => array(
-                'type'  => 'password',
-            ),
-            'options' => array(
-                'label' => 'Current password',
-            ),
+                'name' => 'currentPassword',
+                'attributes' => array(
+                    'type' => 'password',
+                ),
+                'options' => array(
+                    'label' => 'Current password',
+                ),
             )
         );
 
         $this->add(
             array(
-            'name' => 'password',
-            'attributes' => array(
-                'type'  => 'password',
-            ),
-            'options' => array(
-                'label' => 'New password',
-            ),
+                'name' => 'password',
+                'attributes' => array(
+                    'type' => 'password',
+                ),
+                'options' => array(
+                    'label' => 'New password',
+                ),
             )
         );
 
         $this->add(
             array(
-            'name' => 'repeat-password',
-            'attributes' => array(
-                'type'  => 'password',
-            ),
-            'options' => array(
-                'label' => 'Confirm new password',
-            ),
+                'name' => 'repeat-password',
+                'attributes' => array(
+                    'type' => 'password',
+                ),
+                'options' => array(
+                    'label' => 'Confirm new password',
+                ),
             )
         );
 
         $this->add(
             array(
-            'name' => 'submit',
-            'attributes' => array(
-                'type'  => 'submit',
-                'id' => 'submitbutton',
-            ),
+                'name' => 'submit',
+                'attributes' => array(
+                    'type' => 'submit',
+                    'id' => 'submitbutton',
+                ),
             )
         );
     }

@@ -34,85 +34,85 @@ class Edit extends Form
 
         $this->add(
             array(
-            'name' => 'namespace',
-            'attributes' => array(
-                'type'  => 'text',
-                'id' => 'namespace',
-                'class' => 'form-control',
-                'value' => $row->getNamespace()
-            ),
-            'options' => array(
-                'label' => 'Namespace',
-                'label_attributes' => array(
-                    'class'  => 'col-sm-2 control-label'
+                'name' => 'namespace',
+                'attributes' => array(
+                    'type' => 'text',
+                    'id' => 'namespace',
+                    'class' => 'form-control',
+                    'value' => $row->getNamespace()
                 ),
-            ),
+                'options' => array(
+                    'label' => 'Namespace',
+                    'label_attributes' => array(
+                        'class' => 'col-sm-2 control-label'
+                    ),
+                ),
             )
         );
 
         $this->add(
             array(
-            'name' => 'key',
-            'attributes' => array(
-                'type'  => 'text',
-                'id' => 'key',
-                'class' => 'form-control',
-                'value' => $row->getKey()
-            ),
-            'options' => array(
-                'label' => 'Key',
-                'label_attributes' => array(
-                    'class'  => 'col-sm-2 control-label'
+                'name' => 'key',
+                'attributes' => array(
+                    'type' => 'text',
+                    'id' => 'key',
+                    'class' => 'form-control',
+                    'value' => $row->getKey()
                 ),
-            ),
+                'options' => array(
+                    'label' => 'Key',
+                    'label_attributes' => array(
+                        'class' => 'col-sm-2 control-label'
+                    ),
+                ),
             )
         );
 
         $this->add(
             array(
-            'name' => 'value',
-            'attributes' => array(
-                'type'  => 'text',
-                'id' => 'value',
-                'class' => 'form-control',
-                'value' => $row->getValue()
-            ),
-            'options' => array(
-                'label' => 'Value',
-                'label_attributes' => array(
-                    'class'  => 'col-sm-2 control-label'
+                'name' => 'value',
+                'attributes' => array(
+                    'type' => 'text',
+                    'id' => 'value',
+                    'class' => 'form-control',
+                    'value' => $row->getValue()
                 ),
-            ),
+                'options' => array(
+                    'label' => 'Value',
+                    'label_attributes' => array(
+                        'class' => 'col-sm-2 control-label'
+                    ),
+                ),
             )
         );
 
         $this->add(
             array(
-            'name' => 'description',
-            'attributes' => array(
-                'type'  => 'text',
-                'id' => 'description',
-                'class' => 'form-control',
-                'value' => $row->getDescription()
-            ),
-            'options' => array(
-                'label' => 'Description',
-                'label_attributes' => array(
-                    'class'  => 'col-sm-2 control-label'
+                'name' => 'description',
+                'attributes' => array(
+                    'type' => 'text',
+                    'id' => 'description',
+                    'class' => 'form-control',
+                    'value' => $row->getDescription()
                 ),
-            ),
+                'options' => array(
+                    'label' => 'Description',
+                    'label_attributes' => array(
+                        'class' => 'col-sm-2 control-label'
+                    ),
+                ),
             )
         );
 
         $this->add(
             array(
-            'name' => 'submit',
-            'attributes' => array(
-                'type'  => 'submit',
-                'value' => 'Save',
-                'id' => 'submit',
-                'class' => 'form-control col-sm-6 btn btn-success'
-            ),
+                'name' => 'submit',
+                'attributes' => array(
+                    'type' => 'submit',
+                    'value' => 'Save',
+                    'id' => 'submit',
+                    'class' => 'form-control col-sm-6 btn btn-success'
+                ),
             )
         );
     }
@@ -129,85 +129,85 @@ class Edit extends Form
 
             $inputFilter->add(
                 array(
-                'name'     => 'namespace',
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => 'StringLength',
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 64,
-                        ),
+                    'name' => 'namespace',
+                    'required' => true,
+                    'filters' => array(
+                        array('name' => 'StripTags'),
+                        array('name' => 'StringTrim'),
                     ),
-                )
-                )
-            );
-
-            $inputFilter->add(
-                array(
-                'name'     => 'key',
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => 'StringLength',
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 255,
+                    'validators' => array(
+                        array(
+                            'name' => 'StringLength',
+                            'options' => array(
+                                'encoding' => 'UTF-8',
+                                'min' => 1,
+                                'max' => 64,
+                            ),
                         ),
-                    ),
-                ),
+                    )
                 )
             );
 
             $inputFilter->add(
                 array(
-                'name'     => 'value',
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => 'StringLength',
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                //                            'max'      => 255,
+                    'name' => 'key',
+                    'required' => true,
+                    'filters' => array(
+                        array('name' => 'StripTags'),
+                        array('name' => 'StringTrim'),
+                    ),
+                    'validators' => array(
+                        array(
+                            'name' => 'StringLength',
+                            'options' => array(
+                                'encoding' => 'UTF-8',
+                                'min' => 1,
+                                'max' => 255,
+                            ),
                         ),
                     ),
-                ),
                 )
             );
 
             $inputFilter->add(
                 array(
-                'name'     => 'description',
-                'required' => true,
-                'filters'  => array(
-                    array('name' => 'StripTags'),
-                    array('name' => 'StringTrim'),
-                ),
-                'validators' => array(
-                    array(
-                        'name'    => 'StringLength',
-                        'options' => array(
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                //                            'max'      => 255,
+                    'name' => 'value',
+                    'required' => true,
+                    'filters' => array(
+                        array('name' => 'StripTags'),
+                        array('name' => 'StringTrim'),
+                    ),
+                    'validators' => array(
+                        array(
+                            'name' => 'StringLength',
+                            'options' => array(
+                                'encoding' => 'UTF-8',
+                                'min' => 1,
+                                //                            'max'      => 255,
+                            ),
                         ),
                     ),
-                ),
+                )
+            );
+
+            $inputFilter->add(
+                array(
+                    'name' => 'description',
+                    'required' => true,
+                    'filters' => array(
+                        array('name' => 'StripTags'),
+                        array('name' => 'StringTrim'),
+                    ),
+                    'validators' => array(
+                        array(
+                            'name' => 'StringLength',
+                            'options' => array(
+                                'encoding' => 'UTF-8',
+                                'min' => 1,
+                                //                            'max'      => 255,
+                            ),
+                        ),
+                    ),
                 )
             );
 

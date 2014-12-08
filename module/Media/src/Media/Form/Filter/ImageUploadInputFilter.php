@@ -20,7 +20,7 @@ class ImageUploadInputFilter implements InputFilterAwareInterface
 
     public function exchangeArray($data)
     {
-        $this->imageUpload  = (isset($data['image-upload']))  ? $data['image-upload']     : null;
+        $this->imageUpload = (isset($data['image-upload'])) ? $data['image-upload'] : null;
     }
 
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -32,24 +32,24 @@ class ImageUploadInputFilter implements InputFilterAwareInterface
     {
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
-            $factory     = new InputFactory();
+            $factory = new InputFactory();
 
             $inputFilter->add(
                 $factory->createInput(
                     array(
-                    'name'     => 'image',
-                    'required' => true,
-                    'validators' => array(
-                        array(
-                            'name' => '\Zend\Validator\File\IsImage',
-                            'options' => array(
-                                'messages' => array(
-                                    'fileIsImageFalseType' => 'Please select a valid icon image to upload.',
-                                    'fileIsImageNotDetected' => 'The icon image is missing mime encoding, please verify you have saved the image with mime encoding.',
+                        'name' => 'image',
+                        'required' => true,
+                        'validators' => array(
+                            array(
+                                'name' => '\Zend\Validator\File\IsImage',
+                                'options' => array(
+                                    'messages' => array(
+                                        'fileIsImageFalseType' => 'Please select a valid icon image to upload.',
+                                        'fileIsImageNotDetected' => 'The icon image is missing mime encoding, please verify you have saved the image with mime encoding.',
+                                    ),
                                 ),
                             ),
-                        ),
-                    )
+                        )
                     )
                 )
             );

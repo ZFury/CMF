@@ -109,8 +109,8 @@ class ManagementController extends AbstractActionController
         }
         return new JsonModel(
             array(
-            'data' => $data,
-            'count' => $count
+                'data' => $data,
+                'count' => $count
             )
         );
     }

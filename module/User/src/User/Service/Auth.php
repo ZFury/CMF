@@ -118,7 +118,8 @@ class Auth
         }
 
         /**
-        * @var \User\Entity\Auth $authRow */
+         * @var \User\Entity\Auth $authRow
+         */
         $authRow = $authResult->getIdentity();
         $user = $authRow->getUser();
         if (!$user->isActive()) {

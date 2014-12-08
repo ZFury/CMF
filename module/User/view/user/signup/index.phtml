@@ -17,36 +17,48 @@ $form->prepare();
         <?php echo $this->formHidden($form->get('security')); ?>
         <div class="form-group">
             <label for="inputEmail" class="col-sm-2 control-label"><?= $form->get('email')->getLabel(); ?></label>
+
             <div class="col-sm-4">
                 <?php // $this->formInput($form->get('username')); ?>
-                <input type="email" class="form-control" id="inputEmail" name="<?= $form->get('email')->getName(); ?>" value="<?= $form->get('email')->getValue(); ?>" placeholder="<?= $form->get('email')->getLabel(); ?>">
-             </div>
+                <input type="email" class="form-control" id="inputEmail" name="<?= $form->get('email')->getName(); ?>"
+                       value="<?= $form->get('email')->getValue(); ?>"
+                       placeholder="<?= $form->get('email')->getLabel(); ?>">
+            </div>
             <?= $this->formElementErrors($form->get('email')); ?>
         </div>
         <div class="form-group">
             <label for="inputPassword" class="col-sm-2 control-label"><?= $form->get('password')->getLabel(); ?></label>
+
             <div class="col-sm-4">
-                <input type="password" class="form-control" id="inputPassword" name="<?= $form->get('password')->getName(); ?>" placeholder="<?= $form->get('password')->getLabel(); ?>">
-             </div>
+                <input type="password" class="form-control" id="inputPassword"
+                       name="<?= $form->get('password')->getName(); ?>"
+                       placeholder="<?= $form->get('password')->getLabel(); ?>">
+            </div>
             <?= $this->formElementErrors($form->get('password')); ?>
         </div>
         <div class="form-group">
-            <label for="inputRepeatPassword" class="col-sm-2 control-label"><?= $form->get('repeat-password')->getLabel(); ?></label>
+            <label for="inputRepeatPassword"
+                   class="col-sm-2 control-label"><?= $form->get('repeat-password')->getLabel(); ?></label>
+
             <div class="col-sm-4">
-                <input type="password" class="form-control" id="inputRepeatPassword" name="<?= $form->get('repeat-password')->getName(); ?>" placeholder="<?= $form->get('repeat-password')->getLabel(); ?>">
-             </div>
+                <input type="password" class="form-control" id="inputRepeatPassword"
+                       name="<?= $form->get('repeat-password')->getName(); ?>"
+                       placeholder="<?= $form->get('repeat-password')->getLabel(); ?>">
+            </div>
             <?= $this->formElementErrors($form->get('repeat-password')); ?>
         </div>
         <div class="form-group">
             <div class="col-sm-2"></div>
             <div class="col-sm-4">
-                <input type="submit" name="submit" id="submitbutton" class="btn btn-lg btn-primary btn-block" value="<?= $form->get('submit')->getValue(); ?>">
+                <input type="submit" name="submit" id="submitbutton" class="btn btn-lg btn-primary btn-block"
+                       value="<?= $form->get('submit')->getValue(); ?>">
             </div>
         </div>
         <div class="form-group">
             <div class="col-sm-2"></div>
             <div class="col-sm-4">
-                <a class="btn btn-primary col-sm-5" href="<?php echo $this->url('user/default', ['controller' => 'auth', 'action' => 'twitter']) ?>">Twitter</a>
+                <a class="btn btn-primary col-sm-5"
+                   href="<?php echo $this->url('user/default', ['controller' => 'auth', 'action' => 'twitter']) ?>">Twitter</a>
             </div>
         </div>
         <?php echo $this->form()->closeTag(); ?>

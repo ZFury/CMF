@@ -73,7 +73,8 @@ class Categories
     public function getTreeForRoot($alias)
     {
         /**
-        * @var \Doctrine\ORM\EntityManager $entityManager */
+         * @var \Doctrine\ORM\EntityManager $entityManager
+         */
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         return $entityManager->getRepository('Categories\Entity\Categories')->findOneBy(['parentId' => null, 'alias' => $alias]);
     }

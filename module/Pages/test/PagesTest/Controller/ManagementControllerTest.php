@@ -147,21 +147,22 @@ class ManagementControllerTest extends ControllerTestCase
         //get
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         /**
-        * @var $entity=\Pages\Entity\Pages */
+         * @var $entity =\Pages\Entity\Pages
+         */
         $entity = $objectManager->getRepository('Pages\Entity\Pages')
             ->findOneBy(array('alias' => $this->pageData['alias']));
 
         //dispatch edit + post data
         $parameters = new Stdlib\Parameters(
             [
-            'title' => $entity->getTitle(),
-            'alias' => $entity->getAlias(),
-            'content' => $entity->getContent(),
-            'keywords' => $entity->getKeywords(),
-            'description' => $entity->getDescription(),
-            'id' => $entity->getId(),
-            'authorId' => $entity->getAuthorId(),
-            'submit' => 'Edit'
+                'title' => $entity->getTitle(),
+                'alias' => $entity->getAlias(),
+                'content' => $entity->getContent(),
+                'keywords' => $entity->getKeywords(),
+                'description' => $entity->getDescription(),
+                'id' => $entity->getId(),
+                'authorId' => $entity->getAuthorId(),
+                'submit' => 'Edit'
             ]
         );
 

@@ -17,21 +17,21 @@ class ChangePasswordInputFilter extends CreateInputFilter
         $this->sm = $sm;
         $this->add(
             array(
-            'name'     => 'currentPassword',
-            'required' => true,
-            'validators' => array(
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'min' => 3,
-                        'max' => 25,
+                'name' => 'currentPassword',
+                'required' => true,
+                'validators' => array(
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'min' => 3,
+                            'max' => 25,
+                        ),
                     ),
                 ),
-            ),
-            'filters' => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
-            ),
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
             )
         );
 

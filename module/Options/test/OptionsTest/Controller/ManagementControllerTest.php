@@ -146,10 +146,10 @@ class ManagementControllerTest extends ControllerTestCase
         //dispatch edit + post data
         $parameters = new Stdlib\Parameters(
             [
-            'namespace' => $option->getNamespace(),
-            'key' => $option->getKey(),
-            'value' => $option->getValue(),
-            'description' => $option->getDescription()
+                'namespace' => $option->getNamespace(),
+                'key' => $option->getKey(),
+                'value' => $option->getValue(),
+                'description' => $option->getDescription()
             ]
         );
 

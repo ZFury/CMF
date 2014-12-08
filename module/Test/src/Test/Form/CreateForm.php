@@ -15,27 +15,27 @@ class CreateForm extends Form
         $this->setInputFilter(new Create($options['sm']));
         $this->add(
             [
-            'name' => 'email',
-            'type' => 'email',
-            'options' => [
-                'min' => 3,
-                'max' => 225,
-                'label' => 'email',
-            ],
-            'attributes' => ['class' => 'form-control']
+                'name' => 'email',
+                'type' => 'email',
+                'options' => [
+                    'min' => 3,
+                    'max' => 225,
+                    'label' => 'email',
+                ],
+                'attributes' => ['class' => 'form-control']
             ]
         );
 
         $this->add(
             [
-            'name' => 'name',
-            'type' => 'text',
-            'options' => [
-                'min' => 3,
-                'max' => 255,
-                'label' => 'name',
-            ],
-            'attributes' => ['class' => 'form-control']
+                'name' => 'name',
+                'type' => 'text',
+                'options' => [
+                    'min' => 3,
+                    'max' => 255,
+                    'label' => 'name',
+                ],
+                'attributes' => ['class' => 'form-control']
             ]
         );
     }

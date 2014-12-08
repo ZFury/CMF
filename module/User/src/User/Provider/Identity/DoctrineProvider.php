@@ -59,7 +59,7 @@ class DoctrineProvider implements \BjyAuthorize\Provider\Identity\ProviderInterf
     }
 
     /**
-     * @param EntityManager         $entityManager
+     * @param EntityManager $entityManager
      * @param AuthenticationService $authService
      */
     public function __construct(EntityManager $entityManager, AuthenticationService $authService)
@@ -120,7 +120,7 @@ class DoctrineProvider implements \BjyAuthorize\Provider\Identity\ProviderInterf
      */
     public function setDefaultRole($defaultRole)
     {
-        if (! ($defaultRole instanceof RoleInterface || is_string($defaultRole))) {
+        if (!($defaultRole instanceof RoleInterface || is_string($defaultRole))) {
             throw InvalidRoleException::invalidRoleInstance($defaultRole);
         }
 

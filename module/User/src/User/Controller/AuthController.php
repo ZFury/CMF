@@ -27,7 +27,8 @@ class AuthController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             // If you used another name for the authentication service, change it here
             /**
-            * @var \User\Service\Auth $userAuth */
+             * @var \User\Service\Auth $userAuth
+             */
             $userAuth = $this->getServiceLocator()->get('\User\Service\Auth');
             try {
                 $userAuth->authenticateEquals($data['email'], $data['password']);
@@ -104,10 +105,12 @@ class AuthController extends AbstractActionController
             //            }
             //            $twitterUser = $response->toValue();
             /**
-            * @var \Doctrine\ORM\EntityManager $objectManager */
+             * @var \Doctrine\ORM\EntityManager $objectManager
+             */
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
             /**
-            * @var \User\Entity\Auth $auth */
+             * @var \User\Entity\Auth $auth
+             */
             $auth = $objectManager
                 ->getRepository('User\Entity\Auth')
                 ->getAuthRow(Auth::PROVIDER_TWITTER, $token->user_id);
@@ -126,7 +129,8 @@ class AuthController extends AbstractActionController
                 if (!$this->identity()) {
                     //create new user
                     /**
-                    * @var \User\Entity\User $user */
+                     * @var \User\Entity\User $user
+                     */
                     $user = $user = new \User\Entity\User();
                     //todo: need to be checked for unique
                     $user->setDisplayName($token->screen_name);
@@ -202,10 +206,12 @@ class AuthController extends AbstractActionController
             $graphObject = $response->getGraphObject();
 
             /**
-            * @var \Doctrine\ORM\EntityManager $objectManager */
+             * @var \Doctrine\ORM\EntityManager $objectManager
+             */
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
             /**
-            * @var \User\Entity\Auth $auth */
+             * @var \User\Entity\Auth $auth
+             */
             $auth = $objectManager
                 ->getRepository('User\Entity\Auth')
                 ->getAuthRow(Auth::PROVIDER_FACEBOOK, $graphObject->getProperty('id'));

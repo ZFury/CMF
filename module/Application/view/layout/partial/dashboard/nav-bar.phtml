@@ -10,7 +10,8 @@
 <div class="collapse navbar-collapse">
     <?php if ($this->identity()) : ?>
         <p class="navbar-text navbar-right">
-            Logged in as <a href="<?php echo $this->url('user/default', ['controller' => 'profile']) ?>" class="on"><?= $this->identity()->getUser()->getEmail() ? $this->identity()->getUser()->getEmail() : $this->identity()->getUser()->getDisplayName(); ?></a>
+            Logged in as <a href="<?php echo $this->url('user/default', ['controller' => 'profile']) ?>"
+                            class="on"><?= $this->identity()->getUser()->getEmail() ? $this->identity()->getUser()->getEmail() : $this->identity()->getUser()->getDisplayName(); ?></a>
             (<a href="<?php echo $this->url('user/default', ['controller' => 'auth', 'action' => 'logout']) ?>"><?php echo $this->translate('Logout') ?></a>)
         </p>
     <?php endif; ?>

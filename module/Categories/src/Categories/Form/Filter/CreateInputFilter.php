@@ -8,7 +8,8 @@ use Zend\ServiceManager\ServiceManager;
 class CreateInputFilter extends InputFilter
 {
     /**
-    * @var  ServiceManager */
+     * @var  ServiceManager
+     */
     protected $sm;
 
     /**
@@ -28,22 +29,22 @@ class CreateInputFilter extends InputFilter
     {
         $this->add(
             array(
-            'name' => 'name',
-            'required' => true,
-            'filters' => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
-            ),
-            'validators' => array(
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'encoding' => 'UTF-8',
-                        'min' => 2,
-                        'max' => 50,
+                'name' => 'name',
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min' => 2,
+                            'max' => 50,
+                        ),
                     ),
                 ),
-            ),
             )
         );
 
@@ -57,28 +58,28 @@ class CreateInputFilter extends InputFilter
     {
         $this->add(
             array(
-            'name' => 'alias',
-            'required' => true,
-            'validators' => array(
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'min' => 2,
-                        'max' => 50,
+                'name' => 'alias',
+                'required' => true,
+                'validators' => array(
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'min' => 2,
+                            'max' => 50,
+                        ),
+                    ),
+                    array(
+                        'name' => 'Regex',
+                        'options' => array(
+                            'pattern' => '/^[a-zA-Z0-9]*$/',
+                            'message' => 'Alias contains invalid characters'
+                        ),
                     ),
                 ),
-                array(
-                    'name' => 'Regex',
-                    'options' => array(
-                        'pattern' => '/^[a-zA-Z0-9]*$/',
-                        'message' => 'Alias contains invalid characters'
-                    ),
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
                 ),
-            ),
-            'filters' => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
-            ),
             )
         );
 

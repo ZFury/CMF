@@ -35,10 +35,10 @@ class ImageController extends AbstractActionController
 
         return new ViewModel(
             [
-            'imagesId' => $imagesId,
-            'imagesLocation' => $imagesLocation,
-            'imagesUrl' => $imagesUrl,
-            'thumbsUrl' => $thumbsUrl
+                'imagesId' => $imagesId,
+                'imagesLocation' => $imagesLocation,
+                'imagesUrl' => $imagesUrl,
+                'thumbsUrl' => $thumbsUrl
             ]
         );
     }
@@ -79,10 +79,10 @@ class ImageController extends AbstractActionController
 
                 return new ViewModel(
                     [
-                    'message' => [
-                        'name' => $form->get('image')->getValue()['name'],
-                        'error' => array_shift($messages)
-                    ]
+                        'message' => [
+                            'name' => $form->get('image')->getValue()['name'],
+                            'error' => array_shift($messages)
+                        ]
                     ]
                 );
             }

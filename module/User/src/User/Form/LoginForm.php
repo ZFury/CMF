@@ -22,43 +22,43 @@ class LoginForm extends Form
         $this->setInputFilter(new LoginInputFilter());
         $this->add(
             array(
-            'name' => 'security',
-            'type' => 'Zend\Form\Element\Csrf',
+                'name' => 'security',
+                'type' => 'Zend\Form\Element\Csrf',
             )
         );
         $this->add(
             array(
-            'name' => 'email',
-            'type' => 'text',
-            'options' => array(
-                'min' => 3,
-                'max' => 25,
-                'label' => 'email',
-            ),
-            'attributes' => ['class' => 'form-control']
+                'name' => 'email',
+                'type' => 'text',
+                'options' => array(
+                    'min' => 3,
+                    'max' => 25,
+                    'label' => 'email',
+                ),
+                'attributes' => ['class' => 'form-control']
             )
         );
         $this->add(
             array(
-            'name' => 'password',
-            'type' => 'Password',
-            'options' => array(
-                'min' => 3,
-                'max' => 25,
-                'label' => 'password',
-            ),
-            'attributes' => ['class' => 'form-control']
+                'name' => 'password',
+                'type' => 'Password',
+                'options' => array(
+                    'min' => 3,
+                    'max' => 25,
+                    'label' => 'password',
+                ),
+                'attributes' => ['class' => 'form-control']
             )
         );
         $this->add(
             array(
-            'name' => 'submit',
-            'type' => 'Submit',
-            'attributes' => array(
-                'value' => 'Sign In',
-                'id' => 'submitbutton',
-                'class' => 'btn btn-lg btn-primary btn-block'
-            ),
+                'name' => 'submit',
+                'type' => 'Submit',
+                'attributes' => array(
+                    'value' => 'Sign In',
+                    'id' => 'submitbutton',
+                    'class' => 'btn btn-lg btn-primary btn-block'
+                ),
             )
         );
     }
