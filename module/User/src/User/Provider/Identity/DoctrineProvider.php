@@ -2,7 +2,7 @@
 /**
  * BjyAuthorize Module (https://github.com/bjyoungblood/BjyAuthorize)
  *
- * @link https://github.com/bjyoungblood/BjyAuthorize for the canonical source repository
+ * @link    https://github.com/bjyoungblood/BjyAuthorize for the canonical source repository
  * @license http://framework.zend.com/license/new-bsd New BSD License
  */
 
@@ -59,7 +59,7 @@ class DoctrineProvider implements \BjyAuthorize\Provider\Identity\ProviderInterf
     }
 
     /**
-     * @param EntityManager $entityManager
+     * @param EntityManager         $entityManager
      * @param AuthenticationService $authService
      */
     public function __construct(EntityManager $entityManager, AuthenticationService $authService)
@@ -82,27 +82,27 @@ class DoctrineProvider implements \BjyAuthorize\Provider\Identity\ProviderInterf
         }
 
         return $this->authService->getIdentity()->getUser()->getRole();
-//        $roles = $this->entityManager
-//            ->getRepository($providerConfig['role_entity_class'])
-//            ->findBy(array(), array('id' => 'DESC'));
-//        var_dump($roles);
-//        die();
-//
-//        // get roles associated with the logged in user
-//        $sql    = new Sql($this->adapter);
-//        $select = $sql->select()->from($this->tableName);
-//        $where  = new Where();
-//
-//        $where->equalTo('user_id', $authService->getIdentity()->getId());
-//
-//        $results = $sql->prepareStatementForSqlObject($select->where($where))->execute();
-//        $roles     = array();
-//
-//        foreach ($results as $i) {
-//            $roles[] = $i['role_id'];
-//        }
-//
-//        return $roles;
+        //        $roles = $this->entityManager
+        //            ->getRepository($providerConfig['role_entity_class'])
+        //            ->findBy(array(), array('id' => 'DESC'));
+        //        var_dump($roles);
+        //        die();
+        //
+        //        // get roles associated with the logged in user
+        //        $sql    = new Sql($this->adapter);
+        //        $select = $sql->select()->from($this->tableName);
+        //        $where  = new Where();
+        //
+        //        $where->equalTo('user_id', $authService->getIdentity()->getId());
+        //
+        //        $results = $sql->prepareStatementForSqlObject($select->where($where))->execute();
+        //        $roles     = array();
+        //
+        //        foreach ($results as $i) {
+        //            $roles[] = $i['role_id'];
+        //        }
+        //
+        //        return $roles;
     }
 
     /**

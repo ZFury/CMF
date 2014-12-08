@@ -18,11 +18,14 @@ class EditForm extends Form
             ->setHydrator(new ClassMethods());
         $this->setInputFilter(new Create($options['sm']));
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'id',
             'type' => 'hidden'
-        ]);
-        $this->add([
+            ]
+        );
+        $this->add(
+            [
             'name' => 'email',
             'type' => 'email',
             'options' => [
@@ -31,9 +34,11 @@ class EditForm extends Form
                 'label' => 'email',
             ],
             'attributes' => ['class' => 'form-control']
-        ]);
+            ]
+        );
 
-        $this->add([
+        $this->add(
+            [
             'name' => 'name',
             'type' => 'text',
             'options' => [
@@ -42,6 +47,7 @@ class EditForm extends Form
                 'label' => 'name',
             ],
             'attributes' => ['class' => 'form-control']
-        ]);
+            ]
+        );
     }
 }

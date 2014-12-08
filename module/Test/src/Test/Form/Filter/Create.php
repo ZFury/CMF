@@ -9,7 +9,8 @@ use Zend\ServiceManager\ServiceManager;
 
 class Create extends InputFilter
 {
-    /** @var  ServiceManager */
+    /**
+    * @var  ServiceManager */
     protected $sm;
 
     /**
@@ -38,7 +39,8 @@ class Create extends InputFilter
             UniqueObject::ERROR_OBJECT_NOT_UNIQUE
         );
 
-        $this->add(array(
+        $this->add(
+            array(
             'name' => 'email',
             'required' => true,
             'validators' => array(
@@ -51,14 +53,16 @@ class Create extends InputFilter
                 array('name' => 'StripTags'),
                 array('name' => 'StringTrim'),
             ),
-        ));
+            )
+        );
 
         return $this;
     }
 
     protected function name()
     {
-        $this->add(array(
+        $this->add(
+            array(
             'name' => 'name',
             'required' => true,
             'validators' => array(
@@ -74,7 +78,8 @@ class Create extends InputFilter
                 array('name' => 'StripTags'),
                 array('name' => 'StringTrim'),
             ),
-        ));
+            )
+        );
 
         return $this;
     }

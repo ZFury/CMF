@@ -33,12 +33,14 @@ class ImageController extends AbstractActionController
             array_push($thumbsUrl, $imageService->getFullUrl($image->getThumb()));
         }
 
-        return new ViewModel([
+        return new ViewModel(
+            [
             'imagesId' => $imagesId,
             'imagesLocation' => $imagesLocation,
             'imagesUrl' => $imagesUrl,
             'thumbsUrl' => $thumbsUrl
-        ]);
+            ]
+        );
     }
 
     /**
@@ -62,7 +64,8 @@ class ImageController extends AbstractActionController
             $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->beginTransaction();
             $form->setData($post);
 
-            if ($form->isValid()) { //At this moment filter is used
+            //At this moment filter is used
+            if ($form->isValid()) {
                 $data = $form->getData();
                 $image = $imageService->createImage($data, $this->identity()->getUser());
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
@@ -74,12 +77,14 @@ class ImageController extends AbstractActionController
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->rollBack();
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->close();
 
-                return new ViewModel([
+                return new ViewModel(
+                    [
                     'message' => [
                         'name' => $form->get('image')->getValue()['name'],
                         'error' => array_shift($messages)
                     ]
-                ]);
+                    ]
+                );
             }
         }
         $form = new ImageUpload('upload-image');

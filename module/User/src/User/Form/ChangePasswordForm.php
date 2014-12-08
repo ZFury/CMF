@@ -17,7 +17,8 @@ class ChangePasswordForm extends Form
         parent::__construct('changePassword');
         $this->setAttribute('method', 'post');
 
-        $this->add(array(
+        $this->add(
+            array(
             'name' => 'currentPassword',
             'attributes' => array(
                 'type'  => 'password',
@@ -25,9 +26,11 @@ class ChangePasswordForm extends Form
             'options' => array(
                 'label' => 'Current password',
             ),
-        ));
+            )
+        );
 
-        $this->add(array(
+        $this->add(
+            array(
             'name' => 'password',
             'attributes' => array(
                 'type'  => 'password',
@@ -35,9 +38,11 @@ class ChangePasswordForm extends Form
             'options' => array(
                 'label' => 'New password',
             ),
-        ));
+            )
+        );
 
-        $this->add(array(
+        $this->add(
+            array(
             'name' => 'repeat-password',
             'attributes' => array(
                 'type'  => 'password',
@@ -45,14 +50,17 @@ class ChangePasswordForm extends Form
             'options' => array(
                 'label' => 'Confirm new password',
             ),
-        ));
+            )
+        );
 
-        $this->add(array(
+        $this->add(
+            array(
             'name' => 'submit',
             'attributes' => array(
                 'type'  => 'submit',
                 'id' => 'submitbutton',
             ),
-        ));
+            )
+        );
     }
 }

@@ -8,7 +8,8 @@ class LoginInputFilter extends InputFilter
 {
     public function __construct()
     {
-        $this->add(array(
+        $this->add(
+            array(
             'name' => 'email',
             'required' => true,
             'validators' => array(
@@ -20,9 +21,11 @@ class LoginInputFilter extends InputFilter
                 array('name' => 'StripTags'),
                 array('name' => 'StringTrim'),
             ),
-        ));
+            )
+        );
 
-        $this->add(array(
+        $this->add(
+            array(
             'name' => 'password',
             'required' => true,
             'validators' => array(
@@ -38,6 +41,7 @@ class LoginInputFilter extends InputFilter
                 array('name' => 'StripTags'),
                 array('name' => 'StringTrim'),
             ),
-        ));
+            )
+        );
     }
 }

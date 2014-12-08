@@ -44,8 +44,8 @@ class Pages
     /**
      * get option by key & namespace
      *
-     * @param $key
-     * @param string $namespace
+     * @param  $key
+     * @param  string $namespace
      * @return mixed
      */
     public function getOption($key, $namespace = \Options\Entity\Options::NAMESPACE_DEFAULT)
@@ -60,7 +60,7 @@ class Pages
     /**
      * get options by namespace
      *
-     * @param string $namespace
+     * @param  string $namespace
      * @return mixed
      */
     public function getNamespace($namespace = \Options\Entity\Options::NAMESPACE_DEFAULT)
@@ -75,10 +75,10 @@ class Pages
     /**
      * set option
      *
-     * @param $key
-     * @param $value
-     * @param string $namespace
-     * @param null $description
+     * @param  $key
+     * @param  $value
+     * @param  string $namespace
+     * @param  null   $description
      * @throws \Exception
      */
     public function setOption($key, $value, $namespace = \Options\Entity\Options::NAMESPACE_DEFAULT, $description = null)
@@ -91,7 +91,8 @@ class Pages
         );
 
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        /** @var \Options\Entity\Options $option */
+        /**
+        * @var \Options\Entity\Options $option */
         $option = $this->getServiceLocator()->get('Options\Entity\Options');
         $objectManager->getConnection()->beginTransaction();
 

@@ -17,9 +17,11 @@ use Starter\DBAL\Types\EnumType;
  */
 class EnumStatusType extends EnumType
 {
-    /** @var string $name */
+    /**
+    * @var string $name */
     protected $name = 'enumstatus';
 
-    /** @var array $values */
+    /**
+    * @var array $values */
     protected $values = array('active', 'inactive', 'unconfirmed');
 }

@@ -12,7 +12,7 @@ class SignupInputFilter extends CreateInputFilter
     public function __construct(ServiceManager $sm)
     {
         $this->sm = $sm;
-//        $this->username();
+        //        $this->username();
         $this->email();
         $this->password();
         $this->repeatPassword();

@@ -8,9 +8,10 @@ use Zend\Form\Annotation;
 
 /**
  * Class Test
+ *
  * @ORM\Entity(repositoryClass="Test\Repository\Test")
  * @ORM\Table(name="test")
- * @package Test\Entity
+ * @package                                            Test\Entity
  */
 class Test
 {

@@ -20,11 +20,14 @@ class LoginForm extends Form
             ->setAttribute('role', 'form')
             ->setAttribute('class', 'form-login form-horizontal');
         $this->setInputFilter(new LoginInputFilter());
-        $this->add(array(
+        $this->add(
+            array(
             'name' => 'security',
             'type' => 'Zend\Form\Element\Csrf',
-        ));
-        $this->add(array(
+            )
+        );
+        $this->add(
+            array(
             'name' => 'email',
             'type' => 'text',
             'options' => array(
@@ -33,8 +36,10 @@ class LoginForm extends Form
                 'label' => 'email',
             ),
             'attributes' => ['class' => 'form-control']
-        ));
-        $this->add(array(
+            )
+        );
+        $this->add(
+            array(
             'name' => 'password',
             'type' => 'Password',
             'options' => array(
@@ -43,8 +48,10 @@ class LoginForm extends Form
                 'label' => 'password',
             ),
             'attributes' => ['class' => 'form-control']
-        ));
-        $this->add(array(
+            )
+        );
+        $this->add(
+            array(
             'name' => 'submit',
             'type' => 'Submit',
             'attributes' => array(
@@ -52,6 +59,7 @@ class LoginForm extends Form
                 'id' => 'submitbutton',
                 'class' => 'btn btn-lg btn-primary btn-block'
             ),
-        ));
+            )
+        );
     }
 }

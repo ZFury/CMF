@@ -22,8 +22,8 @@ class NoObjectExists
     /**
      * Checkes if value is valid.
      *
-     * @param $value
-     * @param $id
+     * @param  $value
+     * @param  $id
      * @return bool
      */
     public function isValid($value, $id)

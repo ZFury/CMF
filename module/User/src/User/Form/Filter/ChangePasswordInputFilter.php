@@ -15,7 +15,8 @@ class ChangePasswordInputFilter extends CreateInputFilter
     public function __construct($sm)
     {
         $this->sm = $sm;
-        $this->add(array(
+        $this->add(
+            array(
             'name'     => 'currentPassword',
             'required' => true,
             'validators' => array(
@@ -31,7 +32,8 @@ class ChangePasswordInputFilter extends CreateInputFilter
                 array('name' => 'StripTags'),
                 array('name' => 'StringTrim'),
             ),
-        ));
+            )
+        );
 
         $this->password();
         $this->repeatPassword();

@@ -16,7 +16,7 @@ use Zend\Form\Annotation;
  * @Annotation\Name("user")
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @ORM\HasLifecycleCallbacks
- * @author Oleksii Novikov
+ * @author                                                     Oleksii Novikov
  */
 class User
 {

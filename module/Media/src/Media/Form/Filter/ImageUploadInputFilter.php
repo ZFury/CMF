@@ -35,7 +35,8 @@ class ImageUploadInputFilter implements InputFilterAwareInterface
             $factory     = new InputFactory();
 
             $inputFilter->add(
-                $factory->createInput(array(
+                $factory->createInput(
+                    array(
                     'name'     => 'image',
                     'required' => true,
                     'validators' => array(
@@ -49,7 +50,8 @@ class ImageUploadInputFilter implements InputFilterAwareInterface
                             ),
                         ),
                     )
-                ))
+                    )
+                )
             );
             $this->inputFilter = $inputFilter;
         }

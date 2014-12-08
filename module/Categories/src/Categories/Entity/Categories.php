@@ -119,7 +119,7 @@ class Categories
     /**
      * Recursively generates path for category.
      *
-     * @param $pathArray array
+     * @param  $pathArray array
      * @return mixed
      */
     public function recursiveBuildPath($pathArray)
@@ -309,7 +309,7 @@ class Categories
     /**
      * Set path.
      *
-     * @param string $path
+     * @param  string $path
      * @return void
      */
     public function setPath($path)

@@ -63,8 +63,8 @@ class ManagementController extends AbstractCrudController
 
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
-        if (!$model = $objectManager->getRepository(get_class($this->getEntity()))
-            ->find(['namespace' => $namespace, 'key' => $key])) {
+        if (!$model = $objectManager->getRepository(get_class($this->getEntity()))->find(['namespace' => $namespace, 'key' => $key])
+) {
             throw new EntityNotFoundException('Entity not found');
         }
         return $model;

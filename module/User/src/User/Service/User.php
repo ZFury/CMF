@@ -59,7 +59,8 @@ class User
         $body = new MimeMessage();
         $body->setParts([$text, $html]);
 
-        /** @var \Zend\Mail\Message $message */
+        /**
+        * @var \Zend\Mail\Message $message */
         $message = $this->getServiceLocator()->get('mail.message');
         $message
             ->addTo($user->getEmail())
@@ -91,7 +92,8 @@ class User
             $objectManager->persist($user);
             $objectManager->flush();
 
-            /** @var $authService \User\Service\Auth */
+            /**
+            * @var $authService \User\Service\Auth */
             $authService = $this->getServiceLocator()->get('User\Service\Auth');
             $authService->generateEquals($user, $data['password']);
 

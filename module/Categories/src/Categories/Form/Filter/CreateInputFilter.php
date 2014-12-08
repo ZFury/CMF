@@ -7,7 +7,8 @@ use Zend\ServiceManager\ServiceManager;
 
 class CreateInputFilter extends InputFilter
 {
-    /** @var  ServiceManager */
+    /**
+    * @var  ServiceManager */
     protected $sm;
 
     /**
@@ -25,7 +26,8 @@ class CreateInputFilter extends InputFilter
      */
     protected function name()
     {
-        $this->add(array(
+        $this->add(
+            array(
             'name' => 'name',
             'required' => true,
             'filters' => array(
@@ -42,7 +44,8 @@ class CreateInputFilter extends InputFilter
                     ),
                 ),
             ),
-        ));
+            )
+        );
 
         return $this;
     }
@@ -52,7 +55,8 @@ class CreateInputFilter extends InputFilter
      */
     protected function alias()
     {
-        $this->add(array(
+        $this->add(
+            array(
             'name' => 'alias',
             'required' => true,
             'validators' => array(
@@ -75,7 +79,8 @@ class CreateInputFilter extends InputFilter
                 array('name' => 'StripTags'),
                 array('name' => 'StringTrim'),
             ),
-        ));
+            )
+        );
 
         return $this;
     }

@@ -13,7 +13,8 @@ use DoctrineModule\Validator\NoObjectExists;
 
 class CreateInputFilter extends InputFilter
 {
-    /** @var  ServiceManager */
+    /**
+    * @var  ServiceManager */
     protected $sm;
 
     /**
@@ -31,7 +32,8 @@ class CreateInputFilter extends InputFilter
      */
     protected function password()
     {
-        $this->add(array(
+        $this->add(
+            array(
             'name' => 'password',
             'required' => true,
             'validators' => array(
@@ -47,7 +49,8 @@ class CreateInputFilter extends InputFilter
                 array('name' => 'StripTags'),
                 array('name' => 'StringTrim'),
             ),
-        ));
+            )
+        );
 
         return $this;
     }
@@ -57,7 +60,8 @@ class CreateInputFilter extends InputFilter
      */
     protected function repeatPassword()
     {
-        $this->add(array(
+        $this->add(
+            array(
             'name' => 'repeat-password',
             'required' => true,
             'validators' => array(
@@ -79,7 +83,8 @@ class CreateInputFilter extends InputFilter
                 array('name' => 'StripTags'),
                 array('name' => 'StringTrim'),
             ),
-        ));
+            )
+        );
         return $this;
     }
 
@@ -99,7 +104,8 @@ class CreateInputFilter extends InputFilter
             NoObjectExists::ERROR_OBJECT_FOUND
         );
 
-        $this->add(array(
+        $this->add(
+            array(
             'name' => 'email',
             'required' => true,
             'validators' => array(
@@ -107,20 +113,21 @@ class CreateInputFilter extends InputFilter
                     'name' => 'EmailAddress'
                 ),
                 $recordExistsValidator
-//                array(
-//                    'name' => 'Db\NoRecordExists',
-//                    'options' => array(
-//                        'table' => $this->sm->get('Doctrine\ORM\EntityManager')->getClassMetadata('User\Entity\User')->getTableName(),
-//                        'field' => 'email',
-//                        'adapter' => $this->sm->get('Db\Adapter')
-//                    ),
-//                ),
+            //                array(
+            //                    'name' => 'Db\NoRecordExists',
+            //                    'options' => array(
+            //                        'table' => $this->sm->get('Doctrine\ORM\EntityManager')->getClassMetadata('User\Entity\User')->getTableName(),
+            //                        'field' => 'email',
+            //                        'adapter' => $this->sm->get('Db\Adapter')
+            //                    ),
+            //                ),
             ),
             'filters' => array(
                 array('name' => 'StripTags'),
                 array('name' => 'StringTrim'),
             ),
-        ));
+            )
+        );
 
         return $this;
     }
@@ -140,7 +147,8 @@ class CreateInputFilter extends InputFilter
             'User with this email already exists',
             NoObjectExists::ERROR_OBJECT_FOUND
         );
-        $this->add(array(
+        $this->add(
+            array(
             'name' => 'username',
             'required' => true,
             'validators' => array(
@@ -157,7 +165,8 @@ class CreateInputFilter extends InputFilter
                 array('name' => 'StripTags'),
                 array('name' => 'StringTrim'),
             ),
-        ));
+            )
+        );
 
         return $this;
     }

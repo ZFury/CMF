@@ -14,6 +14,7 @@ use Zend\Form\Annotation;
 
 /**
  * Images
+ *
  * @ORM\Entity(repositoryClass="Media\Repository\Image")
  * @ORM\Table(name="images")
  * @Annotation\Name("image")
@@ -104,7 +105,7 @@ class Image
     /**
      * Set extension
      *
-     * @param string $extension
+     * @param  string $extension
      * @return Image
      */
     public function setExtension($extension)

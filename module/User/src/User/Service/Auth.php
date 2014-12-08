@@ -117,7 +117,8 @@ class Auth
             throw new AuthException('Wrong login or password');
         }
 
-        /** @var \User\Entity\Auth $authRow */
+        /**
+        * @var \User\Entity\Auth $authRow */
         $authRow = $authResult->getIdentity();
         $user = $authRow->getUser();
         if (!$user->isActive()) {
@@ -133,8 +134,8 @@ class Auth
     /**
      * Checks if user's password is true or false
      *
-     * @param $email
-     * @param $password
+     * @param  $email
+     * @param  $password
      * @return bool
      * @throws AuthException
      */
@@ -151,8 +152,8 @@ class Auth
     /**
      * Creates authentication service and sets IdentityValue, Credential Value to its adapter
      *
-     * @param $email
-     * @param $password
+     * @param  $email
+     * @param  $password
      * @return array|object
      */
     public function createAuthService($email, $password)

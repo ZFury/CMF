@@ -47,9 +47,9 @@ class Categories
     /**
      * Recursively search category tree and sets path for each node.
      *
-     * @param $tree array Category tree
-     * @param $path string Path of each parent
-     * @param $entityManager \Doctrine\ORM\EntityManager
+     * @param  $tree array Category tree
+     * @param  $path string Path of each parent
+     * @param  $entityManager \Doctrine\ORM\EntityManager
      * @return bool
      */
     private function recursiveUpdatePath($tree, $path, $entityManager)
@@ -67,12 +67,13 @@ class Categories
     /**
      * Gets tree for some root category.
      *
-     * @param $alias Alias of the root category
+     * @param  $alias Alias of the root category
      * @return null|\Categories\Entity\Categories
      */
     public function getTreeForRoot($alias)
     {
-        /** @var \Doctrine\ORM\EntityManager $entityManager */
+        /**
+        * @var \Doctrine\ORM\EntityManager $entityManager */
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         return $entityManager->getRepository('Categories\Entity\Categories')->findOneBy(['parentId' => null, 'alias' => $alias]);
     }

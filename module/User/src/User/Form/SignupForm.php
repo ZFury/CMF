@@ -19,11 +19,14 @@ class SignupForm extends Form
         }
 
         $this->setInputFilter(new SignupInputFilter($options['serviceLocator']));
-        $this->add(array(
+        $this->add(
+            array(
             'name' => 'security',
             'type' => 'Zend\Form\Element\Csrf',
-        ));
-        $this->add(array(
+            )
+        );
+        $this->add(
+            array(
             'name' => 'email',
             'type' => 'text',
             'options' => array(
@@ -32,8 +35,10 @@ class SignupForm extends Form
                 'label' => 'email',
             ),
             'attributes' => ['class' => 'form-control']
-        ));
-        $this->add(array(
+            )
+        );
+        $this->add(
+            array(
             'name' => 'password',
             'type' => 'Password',
             'options' => array(
@@ -42,9 +47,11 @@ class SignupForm extends Form
                 'label' => 'password',
             ),
             'attributes' => ['class' => 'form-control']
-        ));
+            )
+        );
 
-        $this->add(array(
+        $this->add(
+            array(
             'name' => 'repeat-password',
             'type' => 'Password',
             'options' => array(
@@ -53,8 +60,10 @@ class SignupForm extends Form
                 'label' => 'repeat-password',
             ),
             'attributes' => ['class' => 'form-control']
-        ));
-        $this->add(array(
+            )
+        );
+        $this->add(
+            array(
             'name' => 'submit',
             'type' => 'Submit',
             'attributes' => array(
@@ -62,6 +71,7 @@ class SignupForm extends Form
                 'id' => 'submitbutton',
                 'class' => 'btn btn-lg btn-primary btn-block'
             ),
-        ));
+            )
+        );
     }
 }
