@@ -1,32 +1,5 @@
 <?php
-$title = 'Edit comment';
-$this->headTitle($title);
-?>
-<h1><?php echo $this->escapeHtml($title); ?></h1>
-<?php
-/**
- * @var Zend/Form/Form $form
- */
-$form = $this->form;
-$form->prepare();
-?>
-<div class="container">
-    <h1><?php echo $this->escapeHtml($this->title); ?></h1>
-
-    <div class="row">
-        <form action="" method="post" class="form-horizontal" id="newCategory">
-            <div class="form-group">
-                <label for="inputComment" class="col-sm-2 control-label"><?= $form->get('comment')->getLabel(); ?></label>
-                <div class="col-sm-4">
-                    <?php echo $this->formTextarea($form->get('comment')); ?>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-2"></div>
-                <div class="col-sm-4">
-                    <input type="submit" name="submit" class="btn btn-lg btn-primary btn-block" value="Save">
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+echo $this->partial('comment/index/add.phtml', array(
+        'form' => $this->form,
+        'title' => 'Edit comment')
+);
