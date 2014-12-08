@@ -13,24 +13,6 @@ use Doctrine\ORM\EntityRepository;
 class User extends EntityRepository
 {
     /**
-     * Return count searched users
-     *
-     * @return int
-     *
-     * Created by Maxim Mandryka maxim.mandryka@nixsolutions.com
-     */
-    public function countUsers()
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $select = $qb->select('count(u.id)')
-            ->from('\User\Entity\User', 'u');
-
-        $count = $select->getQuery()->getSingleScalarResult();
-
-        return $count;
-    }
-
-    /**
      * Return count search users
      *
      * @return int
@@ -40,6 +22,7 @@ class User extends EntityRepository
     public function countSearchUsers($searchString)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
+//        $qb = $this->getEntityManager()->getRepository('\User\Entity\User')->createQueryBuilder('users');
         $select = $qb->select('count(u.id)')
             ->from('\User\Entity\User', 'u');
         if (!empty($searchString)) {
