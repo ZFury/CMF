@@ -4,6 +4,7 @@
             var usersFactory = {};
             usersFactory.apiUrl = '/user/';
             usersFactory.templatesUrl = '/templates/';
+            $http.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
             /**
              * Get searched users
@@ -14,7 +15,7 @@
              */
             usersFactory.getUsers = function(allParams, /*function*/ callback) {
                 var params = {
-                    url: this.apiUrl + 'management/get-users',
+                    url: this.apiUrl + 'management/grid',
                     method: "POST",
                     data: $.param({data: allParams}),
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}

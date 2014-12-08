@@ -61,25 +61,11 @@ class ManagementController extends AbstractActionController
      */
     public function gridAction()
     {
-        return new ViewModel();
-    }
-
-    /**
-     * Get users action
-     *
-     * @return \Zend\View\Model\JsonModel
-     *
-     * Created by Maxim Mandryka maxim.mandryka@nixsolutions.com
-     */
-    public function getUsersAction()
-    {
         /* @var \Zend\Http\Request $request */
         $request = $this->getRequest();
-        $data = array();
         $count = null;
         $searchString = '';
-
-        if ($request->isPost()) {
+        if ($request->isXmlHttpRequest()) {
             $params = $request->getPost('data');
             if (!isset($params['page']) && !isset($params['limit'])) {
                 throw new Exception('Bad request');
@@ -107,10 +93,12 @@ class ManagementController extends AbstractActionController
             /* @var \User\Repository\User $usersManager */
             $usersManager = $em->getRepository('User\Entity\User');
             $count = $usersManager->countSearchUsers($searchString);
+            return new JsonModel(array(
+                'data' => $data,
+                'count' => $count
+            ));
+        } else {
+            return new ViewModel();
         }
-        return new JsonModel(array(
-            'data' => $data,
-            'count' => $count
-        ));
     }
 }
