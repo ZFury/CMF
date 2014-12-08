@@ -12,7 +12,11 @@ use Zend\Validator\Db;
 use Zend\Validator\Exception;
 
 /**
- *
+ * @ORM\Entity
+ * @Annotation\Name("pages")
+ * @ORM\Table(name="pages")
+ * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @ORM\HasLifecycleCallbacks
  */
 class Pages
 {
