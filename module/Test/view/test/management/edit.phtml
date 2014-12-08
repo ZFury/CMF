@@ -1,8 +1,8 @@
 <?php
 $form = $this->form;
 ?>
-<?=$this->form()->openTag($form)?>
-<?php foreach($form->getElements() as $element): ?>
+<?= $this->form()->openTag($form) ?>
+<?php foreach ($form->getElements() as $element): ?>
     <?php
     switch ($element) {
         case $element instanceof Zend\Form\Element\Select :
@@ -20,17 +20,19 @@ $form = $this->form;
     }
     ?>
     <div class="form-group">
-        <label for="<?= $element->getName(); ?>" class="col-sm-2 control-label"><?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?></label>
+        <label for="<?= $element->getName(); ?>"
+               class="col-sm-2 control-label"><?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?></label>
+
         <div class="col-sm-4">
             <?= $formElement; ?>
         </div>
         <?= $this->formElementErrors($element); ?>
     </div>
-<?php endforeach;?>
+<?php endforeach; ?>
     <div class="form-group">
         <div class="col-sm-2"></div>
         <div class="col-sm-4">
             <input type="submit" name="submit" class="btn btn-lg btn-primary btn-block" value="Edit">
         </div>
     </div>
-<?=$this->form()->closeTag($form)?>
+<?= $this->form()->closeTag($form) ?>

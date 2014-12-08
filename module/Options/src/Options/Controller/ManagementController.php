@@ -35,7 +35,7 @@ class ManagementController extends AbstractCrudController
      */
     protected function getCreateForm()
     {
-        return new \Options\Form\Create(null, ['serviceLocator' =>$this->getServiceLocator()]);
+        return new \Options\Form\Create(null, ['serviceLocator' => $this->getServiceLocator()]);
     }
 
     /**
@@ -43,7 +43,7 @@ class ManagementController extends AbstractCrudController
      */
     protected function getEditForm()
     {
-        $form = new \Options\Form\Create(null, ['serviceLocator' =>$this->getServiceLocator()]);
+        $form = new \Options\Form\Create(null, ['serviceLocator' => $this->getServiceLocator()]);
         $form->get('submit')->setValue('Save');
         return $form;
     }
@@ -63,8 +63,8 @@ class ManagementController extends AbstractCrudController
 
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
-        if (!$model = $objectManager->getRepository(get_class($this->getEntity()))
-            ->find(['namespace' => $namespace, 'key' => $key])) {
+        if (!$model = $objectManager->getRepository(get_class($this->getEntity()))->find(['namespace' => $namespace, 'key' => $key])
+        ) {
             throw new EntityNotFoundException('Entity not found');
         }
         return $model;

@@ -18,7 +18,7 @@ use Zend\ServiceManager\ServiceManager;
  * @ORM\Entity(repositoryClass="User\Repository\Auth")
  * @ORM\Table(name="auth")
  * @ORM\HasLifecycleCallbacks
- * @author Oleksii Novikov
+ * @author                                             Oleksii Novikov
  */
 class Auth
 {

@@ -39,12 +39,11 @@ class Create extends Form
             array(
                 'name' => 'id',
                 'attributes' => array(
-                    'type'  => 'hidden',
+                    'type' => 'hidden',
                     'id' => 'id',
                     'class' => 'form-control'
                 ),
-                'options' => array(
-                ),
+                'options' => array(),
             )
         );
 
@@ -52,14 +51,14 @@ class Create extends Form
             array(
                 'name' => 'title',
                 'attributes' => array(
-                    'type'  => 'text',
+                    'type' => 'text',
                     'id' => 'title',
                     'class' => 'form-control'
                 ),
                 'options' => array(
                     'label' => 'Title',
                     'label_attributes' => array(
-                        'class'  => 'col-sm-2 control-label'
+                        'class' => 'col-sm-2 control-label'
                     ),
                 ),
             )
@@ -86,14 +85,14 @@ class Create extends Form
             array(
                 'name' => 'content',
                 'attributes' => array(
-                    'type'  => 'textarea',
+                    'type' => 'textarea',
                     'id' => 'content',
                     'class' => 'form-control redactor-content'
                 ),
                 'options' => array(
                     'label' => 'Content',
                     'label_attributes' => array(
-                        'class'  => 'col-sm-2 control-label'
+                        'class' => 'col-sm-2 control-label'
                     ),
                 ),
             )
@@ -103,14 +102,14 @@ class Create extends Form
             array(
                 'name' => 'keywords',
                 'attributes' => array(
-                    'type'  => 'textarea',
+                    'type' => 'textarea',
                     'id' => 'keywords',
                     'class' => 'form-control'
                 ),
                 'options' => array(
                     'label' => 'Keywords',
                     'label_attributes' => array(
-                        'class'  => 'col-sm-2 control-label'
+                        'class' => 'col-sm-2 control-label'
                     ),
                 ),
             )
@@ -120,14 +119,14 @@ class Create extends Form
             array(
                 'name' => 'description',
                 'attributes' => array(
-                    'type'  => 'textarea',
+                    'type' => 'textarea',
                     'id' => 'description',
                     'class' => 'form-control'
                 ),
                 'options' => array(
                     'label' => 'Description',
                     'label_attributes' => array(
-                        'class'  => 'col-sm-2 control-label'
+                        'class' => 'col-sm-2 control-label'
                     ),
                 ),
             )
@@ -137,12 +136,11 @@ class Create extends Form
             array(
                 'name' => 'userId',
                 'attributes' => array(
-                    'type'  => 'hidden',
+                    'type' => 'hidden',
                     'id' => 'userId',
                     'class' => 'form-control'
                 ),
-                'options' => array(
-                ),
+                'options' => array(),
             )
         );
 
@@ -150,7 +148,7 @@ class Create extends Form
             array(
                 'name' => 'submit',
                 'attributes' => array(
-                    'type'  => 'submit',
+                    'type' => 'submit',
                     'value' => 'Create',
                     'id' => 'submit',
                     'class' => 'form-control col-sm-6 btn btn-success'

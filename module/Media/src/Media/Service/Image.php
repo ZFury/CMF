@@ -66,10 +66,12 @@ class Image
     public static function moveImage($destination, $image)
     {
         self::prepareDir($destination);
-        $filter = new RenameUpload(array(
-            "target" => $destination,
-            'randomize' => false,
-        ));
+        $filter = new RenameUpload(
+            array(
+                "target" => $destination,
+                'randomize' => false,
+            )
+        );
 
         return $filter->filter($image);
     }
@@ -107,12 +109,7 @@ class Image
      * @return string
      * @throws \Exception
      */
-    public static function imgPath(
-        $type,
-        $id,
-        $ext,
-        $onlyPath = false
-    ) //$onlyPath it's because we need another path when working with Original and when we are getting it
+    public static function imgPath($type, $id, $ext, $onlyPath = false)//$onlyPath it's because we need another path when working with Original and when we are getting it
     {
         if (self::ORIGINAL == $type) {
             if ($onlyPath == false) {

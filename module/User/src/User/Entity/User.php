@@ -16,7 +16,7 @@ use Zend\Form\Annotation;
  * @Annotation\Name("user")
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @ORM\HasLifecycleCallbacks
- * @author Oleksii Novikov
+ * @author                                                     Oleksii Novikov
  */
 class User
 {
@@ -111,6 +111,7 @@ class User
     //private $alias;
 
     private $lifecycleArgs;
+
     /**
      * Initialies the auths variable.
      */
@@ -163,7 +164,7 @@ class User
      */
     public function setId($id)
     {
-        $this->id = (int) $id;
+        $this->id = (int)$id;
     }
 
     /**

@@ -25,14 +25,17 @@ class Module
     {
         $em = $e->getApplication()->getEventManager();
 
-        $em->attach(MvcEvent::EVENT_DISPATCH, function($e) {
-            $controller = $e->getTarget();
-            $controllerFullName = $e->getRouteMatch()->getParam('controller');
-            $controllerName = explode('\\', $controllerFullName);
+        $em->attach(
+            MvcEvent::EVENT_DISPATCH,
+            function ($e) {
+                $controller = $e->getTarget();
+                $controllerFullName = $e->getRouteMatch()->getParam('controller');
+                $controllerName = explode('\\', $controllerFullName);
 
-            if ($controller instanceof Controller\IndexController || array_pop($controllerName) == 'Management') {
-                $controller->layout('layout/dashboard');
+                if ($controller instanceof Controller\IndexController || array_pop($controllerName) == 'Management') {
+                    $controller->layout('layout/dashboard');
+                }
             }
-        });
+        );
     }
 }

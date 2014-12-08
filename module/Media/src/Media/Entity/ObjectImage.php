@@ -13,6 +13,7 @@ use Zend\Form\Annotation;
 
 /**
  * Images
+ *
  * @ORM\Entity(repositoryClass="Media\Repository\ObjectImage")
  * @ORM\Table(name="objects_images")
  * @Annotation\Name("object_image")
@@ -66,7 +67,7 @@ class ObjectImage
     /**
      * Set image
      *
-     * @param string $image
+     * @param  string $image
      * @return ObjectImage
      */
     public function setImage($image)
@@ -87,7 +88,7 @@ class ObjectImage
     /**
      * Set imageId
      *
-     * @param string $imageId
+     * @param  string $imageId
      * @return ObjectImage
      */
     public function setImageId($imageId)
@@ -108,7 +109,7 @@ class ObjectImage
     /**
      * Set entityName
      *
-     * @param string $entityName
+     * @param  string $entityName
      * @return ObjectImage
      */
     public function setEntityName($entityName)
@@ -129,7 +130,7 @@ class ObjectImage
     /**
      * Set objectId
      *
-     * @param string $objectId
+     * @param  string $objectId
      * @return ObjectImage
      */
     public function setObjectId($objectId)

@@ -33,7 +33,7 @@ class ProfileController extends AbstractActionController
         );
         $config = array(
             'access_token' => array(
-                'token'  => '228442924-P7AaZphsNeEkSOrVOL7UlqHNgeLQ6SqxnIQLNOVy',
+                'token' => '228442924-P7AaZphsNeEkSOrVOL7UlqHNgeLQ6SqxnIQLNOVy',
                 'secret' => '8jXYDcJ8O6p3Z5X51WHfbSZqm8y7YPU54xFzdPPjfv8kx',
             ),
             'oauth_options' => array(

@@ -23,7 +23,7 @@ class Module
      */
     public function onBootstrap(MvcEvent $e)
     {
-        $eventManager        = $e->getApplication()->getEventManager();
+        $eventManager = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
     }
@@ -57,7 +57,7 @@ class Module
                 'Pages\Entity\Pages' => function ($sm) {
                     return new Entity\Pages();
                 },
-                'Pages\Service\Pages' => function($sm) {
+                'Pages\Service\Pages' => function ($sm) {
                     return new Service\Pages($sm);
                 },
             )

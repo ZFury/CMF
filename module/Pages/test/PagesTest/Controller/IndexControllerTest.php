@@ -81,7 +81,7 @@ class IndexControllerTest extends ControllerTestCase
         }
     }
 
-     /**
+    /**
      * test index action
      *
      * @throws \PHPUnit_Framework_ExpectationFailedException

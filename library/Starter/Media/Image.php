@@ -13,6 +13,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 trait Image
 {
     public abstract function getEntityName();
+
     public abstract function setLifecycleArgs(LifecycleEventArgs $args);
 
     /**
@@ -34,7 +35,7 @@ trait Image
         $results = $q->getResult();
 
         foreach ($results as $result) {
-            array_push($results,$result['imageId']);
+            array_push($results, $result['imageId']);
             array_shift($results);
         }
 

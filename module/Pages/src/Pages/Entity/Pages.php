@@ -17,7 +17,6 @@ use Zend\Validator\Exception;
  * @ORM\Table(name="pages")
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @ORM\HasLifecycleCallbacks
- *
  */
 class Pages
 {

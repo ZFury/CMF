@@ -144,12 +144,14 @@ class ManagementControllerTest extends ControllerTestCase
             ->findOneBy(array('namespace' => $this->optionData['namespace'], 'key' => $this->optionData['key']));
 
         //dispatch edit + post data
-        $parameters = new Stdlib\Parameters([
-            'namespace' => $option->getNamespace(),
-            'key' => $option->getKey(),
-            'value' => $option->getValue(),
-            'description' => $option->getDescription()
-        ]);
+        $parameters = new Stdlib\Parameters(
+            [
+                'namespace' => $option->getNamespace(),
+                'key' => $option->getKey(),
+                'value' => $option->getValue(),
+                'description' => $option->getDescription()
+            ]
+        );
 
         $this->getRequest()->setMethod('POST')
             ->setPost($parameters);

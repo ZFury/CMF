@@ -7,7 +7,8 @@
         <div class="tab-pane fade in active" id="users">
             <div class="row tab-wrapper row tab-wrapper-noscroll">
                 <div class="input-group col-sm-8">
-                    <input type="text" class="form-control col-md-12" placeholder="Поиск по email" ng-model="params.searchString" ng-keyup="search()">
+                    <input type="text" class="form-control col-md-12" placeholder="Поиск по email"
+                           ng-model="params.searchString" ng-keyup="search()">
                 </div>
                 <div class="col-sm-8">
                     <div class="table-scroll">
@@ -33,10 +34,12 @@
                             <div class="btn-group" ng-show="filteredUsers.length">
                                 <ul>
                                     <button class="btn btn-default" type="button" ng-disabled="page == 0"
-                                            ng-click="getPage('prev')">PREV</button>
+                                            ng-click="getPage('prev')">PREV
+                                    </button>
                                     {{page+1}} / {{gridPages}}
                                     <button type="button" class="btn btn-default" ng-click="getPage('next')"
-                                            ng-disabled="page == gridPages-1">NEXT </button>
+                                            ng-disabled="page == gridPages-1">NEXT
+                                    </button>
                                 </ul>
                             </div>
                         </div>
