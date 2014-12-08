@@ -12,7 +12,12 @@ use Zend\Validator\Db;
 use Zend\Validator\Exception;
 
 /**
- *
+ * Class Options
+ * @ORM\Entity
+ * @Annotation\Name("options")
+ * @ORM\Table(name="options")
+ * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @ORM\HasLifecycleCallbacks
  */
 class Options
 {
