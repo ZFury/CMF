@@ -25,24 +25,23 @@ class UnauthorizedStrategy extends \BjyAuthorize\View\UnauthorizedStrategy
         $result = $e->getResult();
         $response = $e->getResponse();
 
-        if ($result instanceof Response || ($response && ! $response instanceof HttpResponse)) {
+        if ($result instanceof Response || ($response && !$response instanceof HttpResponse)) {
             return;
         }
 
         $viewVariables = array(
-            'error'      => $e->getParam('error'),
-            'identity'   => $e->getParam('identity'),
+            'error' => $e->getParam('error'),
+            'identity' => $e->getParam('identity'),
         );
 
         switch ($e->getError()) {
             case Controller::ERROR:
                 $viewVariables['controller'] = $e->getParam('controller');
-                $viewVariables['action']     = $e->getParam('action');
-
+                $viewVariables['action'] = $e->getParam('action');
                 $router = $e->getRouter();
-                if ($e->getParam('exception') instanceof UnAuthorizedException &&
-                    !$e->getApplication()->getServiceManager()
-                        ->get('Zend\Authentication\AuthenticationService')->hasIdentity()) {
+                if ($e->getParam('exception') instanceof UnAuthorizedException
+                    && !$e->getApplication()->getServiceManager()->get('Zend\Authentication\AuthenticationService')->hasIdentity()
+                ) {
                     $session = new Container('location');
                     $session->location = $e->getRequest()->getUri();
                     // get url to the login route
@@ -54,10 +53,8 @@ class UnauthorizedStrategy extends \BjyAuthorize\View\UnauthorizedStrategy
                     }
                     $response->getHeaders()->addHeaderLine('Location', $url);
                     $response->setStatusCode(302);
-
                     return;
                 }
-
                 break;
             case Route::ERROR:
                 $viewVariables['route'] = $e->getParam('route');
@@ -67,20 +64,18 @@ class UnauthorizedStrategy extends \BjyAuthorize\View\UnauthorizedStrategy
                     return;
                 }
                 $viewVariables['reason'] = $e->getParam('exception')->getMessage();
-                $viewVariables['error']  = 'error-unauthorized';
-
+                $viewVariables['error'] = 'error-unauthorized';
                 break;
             default:
                 /*
-                 * do nothing if there is no error in the event or the error
-                 * does not match one of our predefined errors (we don't want
-                 * our 403 template to handle other types of errors)
-                 */
-
+                     * do nothing if there is no error in the event or the error
+                     * does not match one of our predefined errors (we don't want
+                     * our 403 template to handle other types of errors)
+                     */
                 return;
         }
 
-        $model    = new ViewModel($viewVariables);
+        $model = new ViewModel($viewVariables);
         $response = $response ?: new HttpResponse();
 
         $model->setTemplate($this->getTemplate());

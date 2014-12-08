@@ -15,8 +15,8 @@ class Auth extends EntityRepository
     /**
      * getAuthRow
      *
-     * @param string $provider
-     * @param string $foreignKey
+     * @param  string $provider
+     * @param  string $foreignKey
      * @return AbstractRow
      */
     public function getAuthRow($provider, $foreignKey)

@@ -36,46 +36,44 @@ return array(
     'router' => array(
         'routes' => array(
             'login' => array(
-                'type'    => 'Literal',
+                'type' => 'Literal',
                 'options' => array(
-                    'route'    => '/login',
+                    'route' => '/login',
                     'defaults' => array(
                         '__NAMESPACE__' => 'User\Controller',
-                        'controller'    => 'Auth',
-                        'action'        => 'login',
+                        'controller' => 'Auth',
+                        'action' => 'login',
                     ),
                 ),
                 'may_terminate' => true
             ),
             'user' => array(
-                'type'    => 'Literal',
+                'type' => 'Literal',
                 'options' => array(
-                    'route'    => '/user',
+                    'route' => '/user',
                     'defaults' => array(
                         '__NAMESPACE__' => 'User\Controller',
-                        'controller'    => 'index',
-                        'action'        => 'index',
+                        'controller' => 'index',
+                        'action' => 'index',
                     ),
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
                     'default' => array(
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route'    => '/[:controller[/:action]]',
+                            'route' => '/[:controller[/:action]]',
                             'constraints' => array(
                                 'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
-                            'defaults' => array(
-
-                            ),
+                            'defaults' => array(),
                         ),
                     ),
                     'confirm' => array(
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route'    => '/signup/confirm/:confirm',
+                            'route' => '/signup/confirm/:confirm',
                             'defaults' => array(
                                 'controller' => 'signup',
                                 'action' => 'confirm',
@@ -109,17 +107,17 @@ return array(
     'service_manager' => array(
         'factories' => array(
             'Db\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
-            'Zend\Authentication\AuthenticationService' => function($serviceManager) {
+            'Zend\Authentication\AuthenticationService' => function ($serviceManager) {
                 // If you are using DoctrineORMModule
                 return $serviceManager->get('doctrine.authenticationservice.orm_default');
             },
-            'User\Service\User' => function($sm) {
+            'User\Service\User' => function ($sm) {
                 return new User\Service\User($sm);
             },
-            'User\Service\Auth' => function($sm) {
+            'User\Service\Auth' => function ($sm) {
                 return new User\Service\Auth($sm);
             },
-            'User\Provider\Identity\DoctrineProvider' => function($sm) {
+            'User\Provider\Identity\DoctrineProvider' => function ($sm) {
                 $entityManager = $sm->get('Doctrine\ORM\EntityManager');
                 $authService = $sm->get('Zend\Authentication\AuthenticationService');
                 $doctrineProvider = new User\Provider\Identity\DoctrineProvider($entityManager, $authService);
@@ -175,12 +173,12 @@ return array(
                 array(
                     'controller' => 'User\Controller\Management',
                     'action' => array('grid'),
-                    'roles' => array('guest','user','admin'),
+                    'roles' => array('guest', 'user', 'admin'),
                 ),
                 array(
                     'controller' => 'User\Controller\Management',
                     'action' => array('get-users'),
-                    'roles' => array('guest','user','admin'),
+                    'roles' => array('guest', 'user', 'admin'),
                 ),
                 array(
                     'controller' => 'User\Controller\Profile',

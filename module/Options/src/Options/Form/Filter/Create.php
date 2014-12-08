@@ -10,19 +10,19 @@ class Create extends InputFilter
     {
         $this->add(
             array(
-                'name'     => 'namespace',
+                'name' => 'namespace',
                 'required' => true,
-                'filters'  => array(
+                'filters' => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
                 ),
                 'validators' => array(
                     array(
-                        'name'    => 'StringLength',
+                        'name' => 'StringLength',
                         'options' => array(
                             'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 64,
+                            'min' => 1,
+                            'max' => 64,
                         ),
                     ),
                     array(
@@ -39,19 +39,19 @@ class Create extends InputFilter
 
         $this->add(
             array(
-                'name'     => 'key',
+                'name' => 'key',
                 'required' => true,
-                'filters'  => array(
+                'filters' => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
                 ),
                 'validators' => array(
                     array(
-                        'name'    => 'StringLength',
+                        'name' => 'StringLength',
                         'options' => array(
                             'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 255,
+                            'min' => 1,
+                            'max' => 255,
                         ),
                     ),
                     array(
@@ -68,18 +68,18 @@ class Create extends InputFilter
 
         $this->add(
             array(
-                'name'     => 'value',
+                'name' => 'value',
                 'required' => true,
-                'filters'  => array(
+                'filters' => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
                 ),
                 'validators' => array(
                     array(
-                        'name'    => 'StringLength',
+                        'name' => 'StringLength',
                         'options' => array(
                             'encoding' => 'UTF-8',
-                            'min'      => 1
+                            'min' => 1
                         ),
                     ),
                     array(
@@ -96,18 +96,18 @@ class Create extends InputFilter
 
         $this->add(
             array(
-                'name'     => 'description',
+                'name' => 'description',
                 'required' => true,
-                'filters'  => array(
+                'filters' => array(
                     array('name' => 'StripTags'),
                     array('name' => 'StringTrim'),
                 ),
                 'validators' => array(
                     array(
-                        'name'    => 'StringLength',
+                        'name' => 'StringLength',
                         'options' => array(
                             'encoding' => 'UTF-8',
-                            'min'      => 1
+                            'min' => 1
                         ),
                     ),
                     array(

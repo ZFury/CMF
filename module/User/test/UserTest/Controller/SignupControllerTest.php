@@ -10,8 +10,9 @@ namespace UserTest\Controller;
 
 use SebastianBergmann\Exporter\Exception;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
+use Starter\Test\Controller\ControllerTestCase;
 
-class SignupControllerTest extends AbstractHttpControllerTestCase
+class SignupControllerTest extends ControllerTestCase
 {
     public function setUp()
     {
@@ -19,7 +20,7 @@ class SignupControllerTest extends AbstractHttpControllerTestCase
             include './config/application.config.php'
         );
 
-//        $this->setTraceError(true);
+        $this->setTraceError(true);
         parent::setUp();
     }
 
@@ -41,7 +42,7 @@ class SignupControllerTest extends AbstractHttpControllerTestCase
 
     /**
      */
-    public function testIndex()
+    public function testIndexActionCanBeAccessed()
     {
         $this->dispatch('/user/signup/index');
         $this->assertResponseStatusCode(200);
@@ -51,32 +52,25 @@ class SignupControllerTest extends AbstractHttpControllerTestCase
         $this->assertMatchedRouteName('user/default');
     }
 
-
-    public function testFormIndex()
+    public function testIndex()
     {
-//        $objectManager = $this->getMockBuilder('\Doctrine\ORM\EntityManager', array('getRepository', 'getConnection', 'getClassMetadata', 'persist', 'flush'), array(), '', false)
-//            ->disableOriginalConstructor()
-//            ->getMock();
-//        $this->getApplication()->getServiceManager()->setAllowOverride(true)
-//            ->setService('\Doctrine\ORM\EntityManager', $objectManager);
+        $form = new  \User\Form\SignupForm('create-user', ['serviceLocator' => $this->getApplicationServiceLocator()]);
+        $data = [
+            'security' => $form->get('security')->getValue(),
+            'email' => 'aaaaaa@gmail.com',
+            'password' => '123456',
+            'repeat-password' => '123456',
+        ];
+        $this->dispatch('/user/signup/index', 'POST', $data);
+        $this->assertResponseStatusCode(302);
+        $this->assertRedirectTo('/');
+    }
 
-        $this->getRequest()->setMethod('POST');
-        $this->dispatch('/user/signup/index');
-        $this->assertNotRedirect();
-        $this->assertResponseStatusCode(200);
-
-//        $mockEM = $this->getMock('\Doctrine\ORM\EntityManager',
-//            array('getRepository', 'getConnection', 'getClassMetadata', 'persist', 'flush'), array(), '', false);
-//
-//        $this->getApplication()->getServiceManager()->set('Doctrine\ORM\EntityManager', $objectManager);
-//        $objectManager->expects($this->once())
-//            ->method('getConnection');
-//        $objectManager = $this->getMockBuilder($this->getServiceLocator()->get('Doctrine\ORM\EntityManager'))
-//            ->disableOriginalConstructor()
-//            ->getMock();
-//        $objectManager->expects($this->once())
-//            ->method('getConnection');
-//
-//        $this->assertResponseStatusCode(200);
+    public function testConfirmAction()
+    {
+        $user = $this->createUser(null, \User\Entity\User::ROLE_USER);
+        $this->dispatch('/user/signup/confirm/' . $user->getConfirm());
+        $this->assertResponseStatusCode(302);
+        $this->assertRedirectTo('/');
     }
 }

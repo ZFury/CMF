@@ -14,6 +14,7 @@ $config =  array(
         'Test',
         'Dashboard',
         'Categories',
+        'Media',
         'Pages'
     ),
 

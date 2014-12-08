@@ -9,7 +9,9 @@ use Zend\ServiceManager\ServiceManager;
 
 class Create extends InputFilter
 {
-    /** @var  ServiceManager */
+    /**
+     * @var  ServiceManager
+     */
     protected $sm;
 
     /**
@@ -29,8 +31,8 @@ class Create extends InputFilter
         $recordExistsValidator = new UniqueObject(
             array(
                 'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')->getRepository('Test\Entity\Test'),
-                'object_manager'    => $this->sm->get('Doctrine\ORM\EntityManager'),
-                'fields'            => 'email'
+                'object_manager' => $this->sm->get('Doctrine\ORM\EntityManager'),
+                'fields' => 'email'
             )
         );
         $recordExistsValidator->setMessage(
@@ -38,43 +40,47 @@ class Create extends InputFilter
             UniqueObject::ERROR_OBJECT_NOT_UNIQUE
         );
 
-        $this->add(array(
-            'name' => 'email',
-            'required' => true,
-            'validators' => array(
-                array(
-                    'name' => 'EmailAddress'
+        $this->add(
+            array(
+                'name' => 'email',
+                'required' => true,
+                'validators' => array(
+                    array(
+                        'name' => 'EmailAddress'
+                    ),
+                    $recordExistsValidator
                 ),
-                $recordExistsValidator
-            ),
-            'filters' => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
-            ),
-        ));
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+            )
+        );
 
         return $this;
     }
 
     protected function name()
     {
-        $this->add(array(
-            'name' => 'name',
-            'required' => true,
-            'validators' => array(
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'min' => 3,
-                        'max' => 100,
-                    ),
-                )
-            ),
-            'filters' => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
-            ),
-        ));
+        $this->add(
+            array(
+                'name' => 'name',
+                'required' => true,
+                'validators' => array(
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'min' => 3,
+                            'max' => 100,
+                        ),
+                    )
+                ),
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+            )
+        );
 
         return $this;
     }

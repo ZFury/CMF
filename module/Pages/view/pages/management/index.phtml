@@ -1,5 +1,6 @@
 <div class="site-index">
     <h1>Pages</h1>
+
     <p>
         <a href="<?php echo $this->url('pages/default',
             array(
@@ -21,11 +22,11 @@
         </thead>
         <tbody>
 
-        <?php if(empty($pages)): ?>
+        <?php if (empty($pages)): ?>
             <h3>There are no pages yet</h3>
-        <?php endif ;?>
+        <?php endif; ?>
 
-        <?php foreach($pages as $page): ?>
+        <?php foreach ($pages as $page): ?>
             <tr>
                 <td>
                     <a href="<?php echo $this->url('pages/default',
@@ -34,12 +35,12 @@
                             'action' => 'view',
                             'id' => $page->getId())
                     ); ?>">
-                        <?php echo $this->escapeHtml($page->getTitle()) ;?>
+                        <?php echo $this->escapeHtml($page->getTitle()); ?>
                     </a>
                 </td>
-                <td><?php echo $this->escapeHtml($page->getDescription()) ;?></td>
-                <td><?php echo $this->escapeHtml($page->getCreated()->format('Y-m-d H:i:s')) ;?></td>
-                <td><?php echo $this->escapeHtml($page->getUpdated()->format('Y-m-d H:i:s')) ;?></td>
+                <td><?php echo $this->escapeHtml($page->getDescription()); ?></td>
+                <td><?php echo $this->escapeHtml($page->getCreated()->format('Y-m-d H:i:s')); ?></td>
+                <td><?php echo $this->escapeHtml($page->getUpdated()->format('Y-m-d H:i:s')); ?></td>
                 <td class="controls">
                     <a href="<?php echo $this->url('pages/default',
                         array(

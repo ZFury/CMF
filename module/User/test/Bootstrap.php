@@ -22,7 +22,7 @@ class Bootstrap
     public static function init()
     {
         putenv('APP_ENV=testing');
-        
+
         $zf2ModulePaths = array(dirname(dirname(__DIR__)));
         if (($path = static::findParentPath('vendor'))) {
             $zf2ModulePaths[] = $path;
@@ -87,14 +87,16 @@ class Bootstrap
         }
 
         include $zf2Path . '/Zend/Loader/AutoloaderFactory.php';
-        AutoloaderFactory::factory(array(
-            'Zend\Loader\StandardAutoloader' => array(
-                'autoregister_zf' => true,
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/' . __NAMESPACE__,
+        AutoloaderFactory::factory(
+            array(
+                'Zend\Loader\StandardAutoloader' => array(
+                    'autoregister_zf' => true,
+                    'namespaces' => array(
+                        __NAMESPACE__ => __DIR__ . '/' . __NAMESPACE__,
+                    ),
                 ),
-            ),
-        ));
+            )
+        );
     }
 
     protected static function findParentPath($path)
@@ -111,6 +113,7 @@ class Bootstrap
         return $dir . '/' . $path;
     }
 }
+
 // @codingStandardsIgnoreStart
 Bootstrap::init();
 Bootstrap::chroot();
