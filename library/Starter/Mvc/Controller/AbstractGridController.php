@@ -200,7 +200,6 @@ abstract class AbstractGridController extends AbstractController
     /**
      * Add orders
      *
-     * @param string $column
      * @param array $orders
      * @return AbstractGridController
      */
