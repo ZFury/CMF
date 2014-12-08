@@ -13,26 +13,30 @@ class CreateForm extends Form
         $this->setAttribute('method', 'post')->setAttribute('role', 'form')
             ->setAttribute('class', 'form-create form-horizontal');
         $this->setInputFilter(new Create($options['sm']));
-        $this->add([
-            'name' => 'email',
-            'type' => 'email',
-            'options' => [
-                'min' => 3,
-                'max' => 225,
-                'label' => 'email',
-            ],
-            'attributes' => ['class' => 'form-control']
-        ]);
+        $this->add(
+            [
+                'name' => 'email',
+                'type' => 'email',
+                'options' => [
+                    'min' => 3,
+                    'max' => 225,
+                    'label' => 'email',
+                ],
+                'attributes' => ['class' => 'form-control']
+            ]
+        );
 
-        $this->add([
-            'name' => 'name',
-            'type' => 'text',
-            'options' => [
-                'min' => 3,
-                'max' => 255,
-                'label' => 'name',
-            ],
-            'attributes' => ['class' => 'form-control']
-        ]);
+        $this->add(
+            [
+                'name' => 'name',
+                'type' => 'text',
+                'options' => [
+                    'min' => 3,
+                    'max' => 255,
+                    'label' => 'name',
+                ],
+                'attributes' => ['class' => 'form-control']
+            ]
+        );
     }
 }

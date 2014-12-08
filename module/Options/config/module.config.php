@@ -32,7 +32,7 @@ return array(
                 ),
                 array(
                     'controller' => 'Options\Controller\Management',
-                    'action' => ['index', 'create',  'view', 'edit', 'delete'],
+                    'action' => ['index', 'create', 'view', 'edit', 'delete'],
                     'roles' => array('admin'),
                 ),
             ),
@@ -41,38 +41,35 @@ return array(
     'router' => array(
         'routes' => array(
             'options' => array(
-                'type'    => 'Literal',
+                'type' => 'Literal',
                 'options' => array(
-                    'route'    => '/options',
+                    'route' => '/options',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Options\Controller',
-                        'controller'    => 'Management',
-                        'action'        => 'index',
+                        'controller' => 'Management',
+                        'action' => 'index',
                     ),
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
                     'default' => array(
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route'    => '/[:controller[/:action[/:namespace[/:key]]]]',
+                            'route' => '/[:controller[/:action[/:namespace[/:key]]]]',
                             'constraints' => array(
                                 'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'namespace' => '[a-zA-Z0-9_-]*',
                                 'key' => '[a-zA-Z0-9_-]*'
                             ),
-                            'defaults' => array(
-                            ),
+                            'defaults' => array(),
                         ),
                     ),
                 ),
             ),
         ),
     ),
-    'service_manager' => array(
-
-    ),
+    'service_manager' => array(),
     'controllers' => array(
         'invokables' => array(
             'Options\Controller\Index' => 'Options\Controller\IndexController',
@@ -87,8 +84,7 @@ return array(
     // Placeholder for console routes
     'console' => array(
         'router' => array(
-            'routes' => array(
-            ),
+            'routes' => array(),
         ),
     ),
     'navigation' => array(

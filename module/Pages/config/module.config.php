@@ -32,7 +32,7 @@ return array(
                 ),
                 array(
                     'controller' => 'Pages\Controller\Management',
-                    'action' => ['index', 'create',  'view', 'edit', 'delete'],
+                    'action' => ['index', 'create', 'view', 'edit', 'delete'],
                     'roles' => array('admin'),
                 ),
             ),
@@ -41,48 +41,45 @@ return array(
     'router' => array(
         'routes' => array(
             'pages' => array(
-                'type'    => 'Literal',
+                'type' => 'Literal',
                 'options' => array(
-                    'route'    => '/pages',
+                    'route' => '/pages',
                     'defaults' => array(
                         '__NAMESPACE__' => 'Pages\Controller',
-                        'controller'    => 'Management',
-                        'action'        => 'index',
+                        'controller' => 'Management',
+                        'action' => 'index',
                     ),
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
                     'default' => array(
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route'    => '/[:controller[/:action[/:id]]]',
+                            'route' => '/[:controller[/:action[/:id]]]',
                             'constraints' => array(
                                 'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'id'         => '[0-9]*'
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id' => '[0-9]*'
                             ),
-                            'defaults' => array(
-                            ),
+                            'defaults' => array(),
                         ),
                     ),
                 ),
             ),
             'page_index' => array(
-                'type'    => 'Regex',
+                'type' => 'Regex',
                 'options' => array(
                     'regex' => '/(?<alias>[a-zA-Z0-9_-]+)\.html',
                     'defaults' => array(
                         'controller' => 'Pages\Controller\Index',
-                        'action'     => 'index',
+                        'action' => 'index',
                     ),
                     'spec' => '/%alias%.%format%',
                 )
             ),
         ),
     ),
-    'service_manager' => array(
-
-    ),
+    'service_manager' => array(),
     'controllers' => array(
         'invokables' => array(
             'Pages\Controller\Index' => 'Pages\Controller\IndexController',
@@ -97,8 +94,7 @@ return array(
     // Placeholder for console routes
     'console' => array(
         'router' => array(
-            'routes' => array(
-            ),
+            'routes' => array(),
         ),
     ),
     'navigation' => array(

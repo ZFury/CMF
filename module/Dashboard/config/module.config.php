@@ -8,12 +8,12 @@ return array(
     'router' => array(
         'routes' => array(
             'dashboard' => array(
-                'type'    => 'segment',
+                'type' => 'segment',
                 'options' => array(
-                    'route'    => '/dashboard',
+                    'route' => '/dashboard',
                     'defaults' => array(
-                        'controller'    => 'Dashboard\Controller\Index',
-                        'action'        => 'index',
+                        'controller' => 'Dashboard\Controller\Index',
+                        'action' => 'index',
                     ),
                 ),
             ),

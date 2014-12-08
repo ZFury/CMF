@@ -58,8 +58,10 @@ class ManagementController extends AbstractCrudController
                     ? null
                     : $this->params()->fromRoute('parentId');
                 $aliasValid = new Validator\NoObjectExists(['object_repository' => $repository, 'fields' => ['alias', 'parentId']]);
-                if ($aliasValid->isValid(['alias' => $form->get('alias')->getValue(),
-                    'parentId' => $parentId])
+                if ($aliasValid->isValid(
+                    ['alias' => $form->get('alias')->getValue(),
+                        'parentId' => $parentId]
+                )
                 ) {
                     $category = $this->getEntity();
                     $category->setParentId(!$parentId ? null : $repository->find($parentId));
@@ -73,9 +75,11 @@ class ManagementController extends AbstractCrudController
 
                     return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
                 }
-                $form->get('alias')->setMessages(array(
-                    'errorMessageKey' => 'Alias must be unique in it\'s category!'
-                ));
+                $form->get('alias')->setMessages(
+                    array(
+                        'errorMessageKey' => 'Alias must be unique in it\'s category!'
+                    )
+                );
             }
         }
         $viewModel = new ViewModel(['form' => $form, 'title' => 'Create category']);
@@ -100,8 +104,10 @@ class ManagementController extends AbstractCrudController
 
             if ($form->isValid()) {
                 $entity = $this->loadEntity();
-                if ($aliasValid->isValid(['alias' => $form->get('alias')->getValue(),
-                    'parentId' => $entity->getParentId()], $this->params()->fromRoute('id'))
+                if ($aliasValid->isValid(
+                    ['alias' => $form->get('alias')->getValue(), 'parentId' => $entity->getParentId()],
+                    $this->params()->fromRoute('id')
+                )
                 ) {
                     $category = $form->getData();
                     $category->setParentId(!$entity->getParentId() ? null : $repository->find($entity->getParentId()));
@@ -113,9 +119,11 @@ class ManagementController extends AbstractCrudController
 
                     return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
                 }
-                $form->get('alias')->setMessages(array(
-                    'errorMessageKey' => 'Alias must be unique in its category!'
-                ));
+                $form->get('alias')->setMessages(
+                    array(
+                        'errorMessageKey' => 'Alias must be unique in its category!'
+                    )
+                );
             }
         }
         $viewModel = new ViewModel(['form' => $form, 'title' => 'Edit category']);
@@ -164,8 +172,10 @@ class ManagementController extends AbstractCrudController
                         $entityManager->flush();
 
                         $aliasValid = new Validators\NoObjectExists($repository);
-                        if (!$aliasValid->isValid(['alias' => $dbNode->getAlias(),
-                            'parentId' => $dbNode->getParentId()], $node->item_id)
+                        if (!$aliasValid->isValid(
+                            ['alias' => $dbNode->getAlias(), 'parentId' => $dbNode->getParentId()],
+                            $node->item_id
+                        )
                         ) {
                             throw new \Exception('Order has been failed!');
                         }
@@ -226,7 +236,7 @@ class ManagementController extends AbstractCrudController
     /**
      * Returns maximum order field value within category siblings.
      *
-     * @param $parentId
+     * @param  $parentId
      * @return int|mixed
      */
     private function getMaxOrder($parentId)

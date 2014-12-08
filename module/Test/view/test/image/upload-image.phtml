@@ -1,29 +1,29 @@
 <?php
 if (isset($form)) {
-$form->setAttribute('action', $this->url('test/default', array('controller' => 'image', 'action' => 'upload-image')));
-$form->setAttribute('method', 'post');
-$form->prepare();
-echo $this->form()->openTag($form);
-?>
-<div class="form-group">
-    <label for="inputImage">Image input</label>
-    <input type="file" id="inputImage" name="<?=$form->get('image')->getName()?>">
-</div>
-<button type="submit" class="btn btn-default">Upload</button>
-<?php
-echo $this->form()->closeTag($form);
+    $form->setAttribute('action', $this->url('test/default', array('controller' => 'image', 'action' => 'upload-image')));
+    $form->setAttribute('method', 'post');
+    $form->prepare();
+    echo $this->form()->openTag($form);
+    ?>
+    <div class="form-group">
+        <label for="inputImage">Image input</label>
+        <input type="file" id="inputImage" name="<?= $form->get('image')->getName() ?>">
+    </div>
+    <button type="submit" class="btn btn-default">Upload</button>
+    <?php
+    echo $this->form()->closeTag($form);
 }
 ?>
 
 <div>
     <?php
-        if (isset($image)) {
-            echo $image->getLocation();
-        } else {
-            if (isset($message)) {
-                echo $message['name'];
-                echo $message['error'];
-            }
+    if (isset($image)) {
+        echo $image->getLocation();
+    } else {
+        if (isset($message)) {
+            echo $message['name'];
+            echo $message['error'];
         }
+    }
     ?>
 </div>

@@ -15,8 +15,8 @@ class ObjectImage extends EntityRepository
     /**
      * getObjectImageRow
      *
-     * @param string $provider
-     * @param string $foreignKey
+     * @param  string $provider
+     * @param  string $foreignKey
      * @return AbstractRow
      */
     public function getImageRow($provider, $foreignKey)

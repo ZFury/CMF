@@ -1,5 +1,6 @@
 <div class="site-index">
     <h1>Options</h1>
+
     <p>
         <a href="<?php echo $this->url('options/default',
             array(
@@ -23,11 +24,11 @@
         </thead>
         <tbody>
 
-        <?php if(empty($options)): ?>
+        <?php if (empty($options)): ?>
             <h3>There are no options yet</h3>
-        <?php endif ;?>
+        <?php endif; ?>
 
-        <?php foreach($options as $option): ?>
+        <?php foreach ($options as $option): ?>
             <tr>
                 <td>
                     <a href="<?php echo $this->url('options/default',
@@ -37,14 +38,14 @@
                             'namespace' => $option->getNamespace(),
                             'key' => $option->getKey())
                     ); ?>">
-                        <?php echo $this->escapeHtml($option->getNamespace()) ;?>
+                        <?php echo $this->escapeHtml($option->getNamespace()); ?>
                     </a>
                 </td>
-                <td><?php echo $this->escapeHtml($option->getKey()) ;?></td>
-                <td><?php echo $this->escapeHtml($option->getValue()) ;?></td>
-                <td><?php echo $this->escapeHtml($option->getDescription()) ;?></td>
-                <td><?php echo $this->escapeHtml($option->getCreated()->format('Y-m-d H:i:s')) ;?></td>
-                <td><?php echo $this->escapeHtml($option->getUpdated()->format('Y-m-d H:i:s')) ;?></td>
+                <td><?php echo $this->escapeHtml($option->getKey()); ?></td>
+                <td><?php echo $this->escapeHtml($option->getValue()); ?></td>
+                <td><?php echo $this->escapeHtml($option->getDescription()); ?></td>
+                <td><?php echo $this->escapeHtml($option->getCreated()->format('Y-m-d H:i:s')); ?></td>
+                <td><?php echo $this->escapeHtml($option->getUpdated()->format('Y-m-d H:i:s')); ?></td>
                 <td class="controls">
                     <a href="<?php echo $this->url('options/default',
                         array(

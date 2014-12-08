@@ -15,7 +15,7 @@ class TreeBuild extends AbstractHelper
     /**
      * Invoke.
      *
-     * @param $tree array Category tree.
+     * @param  $tree array Category tree.
      * @return string
      */
     public function __invoke($tree)
@@ -27,7 +27,7 @@ class TreeBuild extends AbstractHelper
     /**
      * Builds tree view for current root directory.
      *
-     * @param $tree array Category tree.
+     * @param  $tree array Category tree.
      * @return string
      */
     public function treeBuild($tree)

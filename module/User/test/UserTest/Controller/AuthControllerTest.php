@@ -12,7 +12,7 @@ use SebastianBergmann\Exporter\Exception;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 use Starter\Test\Controller\ControllerTestCase;
 
-class SignupControllerTest extends ControllerTestCase
+class AuthControllerTest extends ControllerTestCase
 {
     public function setUp()
     {
@@ -42,35 +42,46 @@ class SignupControllerTest extends ControllerTestCase
 
     /**
      */
-    public function testIndexActionCanBeAccessed()
+    public function testLoginActionCanBeAccessed()
     {
-        $this->dispatch('/user/signup/index');
+        $this->dispatch('/user/auth/login');
         $this->assertResponseStatusCode(200);
         $this->assertModuleName('User');
-        $this->assertControllerName('User\Controller\Signup');
-        $this->assertControllerClass('SignupController');
+        $this->assertControllerName('User\Controller\Auth');
+        $this->assertControllerClass('AuthController');
         $this->assertMatchedRouteName('user/default');
     }
 
-    public function testIndex()
+    public function testLogoutActionCanBeAccessed()
     {
-        $form = new  \User\Form\SignupForm('create-user', ['serviceLocator' => $this->getApplicationServiceLocator()]);
-        $data = [
-            'security' => $form->get('security')->getValue(),
-            'email' => 'aaaaaa@gmail.com',
-            'password' => '123456',
-            'repeat-password' => '123456',
+        $this->dispatch('/user/auth/logout');
+        $this->assertResponseStatusCode(302);
+        $this->assertRedirectTo('/user/auth/login');
+    }
+
+    public function testLoginAction()
+    {
+        $userData = [
+            'name' => 'User',
+            'email' => 'user@nix.com',
+            'password' => '123456'
         ];
-        $this->dispatch('/user/signup/index', 'POST', $data);
+        $this->createUser($userData, \User\Entity\User::ROLE_USER);
+        $postData = [
+            'email' => $userData['email'],
+            'password' => $userData['password']
+        ];
+
+        $this->dispatch('/user/auth/login', 'POST', $postData);
         $this->assertResponseStatusCode(302);
         $this->assertRedirectTo('/');
     }
 
-    public function testConfirmAction()
+    public function testLogoutAction()
     {
-        $user = $this->createUser(null, \User\Entity\User::ROLE_USER);
-        $this->dispatch('/user/signup/confirm/' . $user->getConfirm());
+        $this->setupUser();
+        $this->dispatch('/user/auth/logout');
         $this->assertResponseStatusCode(302);
-        $this->assertRedirectTo('/');
+        $this->assertRedirectTo('/user/auth/login');
     }
 }

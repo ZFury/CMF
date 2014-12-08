@@ -27,7 +27,9 @@ class ManagementController extends AbstractCrudController
      */
     protected function getEntity()
     {
-        /** @var $entity = \Pages\Entity\Pages $entity */
+        /**
+         * @var $entity = \Pages\Entity\Pages $entity
+         */
         $entity = new \Pages\Entity\Pages();
         $entity->setAuthorId($this->identity()->getUser()->getId());
         return $entity;
@@ -38,7 +40,7 @@ class ManagementController extends AbstractCrudController
      */
     protected function getCreateForm()
     {
-        return new \Pages\Form\Create(null, ['serviceLocator' =>$this->getServiceLocator()]);
+        return new \Pages\Form\Create(null, ['serviceLocator' => $this->getServiceLocator()]);
     }
 
     /**
@@ -46,7 +48,7 @@ class ManagementController extends AbstractCrudController
      */
     protected function getEditForm()
     {
-        $form = new \Pages\Form\Create(null, ['serviceLocator' =>$this->getServiceLocator()]);
+        $form = new \Pages\Form\Create(null, ['serviceLocator' => $this->getServiceLocator()]);
         $form->get('submit')->setValue('Save');
         return $form;
     }
