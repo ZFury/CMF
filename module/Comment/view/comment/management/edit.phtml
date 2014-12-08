@@ -1,42 +1,5 @@
 <?php
-$title = 'Edit entity';
-$this->headTitle($title);
-/**
- * @var $form Zend/Form
- */
-$form = $this->form;
-$form->setAttribute('action', $this->url('comment/default', array('controller' => 'management', 'action' => 'edit')));
-$form->prepare();
-
-?>
-<div class="container">
-    <h1><?php echo $this->escapeHtml($title); ?></h1>
-    <?php echo $this->form()->openTag($form); ?>
-    <div class="row">
-        <div class="form-group">
-            <label for="entityType" class="col-sm-2 control-label "><?= $form->get('entityType')->getLabel(); ?></label>
-            <div class="col-sm-4">
-                <?php echo $this->formInput($form->get('entityType')); ?>
-            </div>
-        </div>
-    </div>
-    <div class="row"><div class="col-sm-2">&nbsp;</div></div>
-    <div class="row">
-        <div class="form-group">
-            <label for="description" class="col-sm-2 control-label"><?= $form->get('description')->getLabel(); ?></label>
-            <div class="col-sm-4">
-                <?php echo $this->formTextarea($form->get('description')); ?>
-            </div>
-        </div>
-    </div>
-    <div class="row"><div class="col-sm-2">&nbsp;</div></div>
-    <div class="row">
-        <div class="form-group">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-4">
-                <input type="submit" name="submit" id="submitbutton" class="btn btn-lg btn-primary btn-block" value="Save">
-            </div>
-        </div>
-    </div>
-    <?php echo $this->form()->closeTag(); ?>
-</div>
+echo $this->partial('comment/management/create.phtml', array(
+        'form' => $this->form,
+        'title' => 'Edit entity')
+);

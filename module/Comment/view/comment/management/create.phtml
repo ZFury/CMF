@@ -5,25 +5,33 @@ $this->headTitle($title);
  * @var $form Zend/Form
  */
 $form = $this->form;
-$form->setAttribute('action', $this->url('comment/default', array('controller' => 'management', 'action' => 'create')));
 $form->prepare();
-
 ?>
-<?php //echo $this->form()->openTag($form); ?>
-<form class="form-horizontal" role="form">
+<div class="container">
+    <h1><?php echo $this->escapeHtml($this->title); ?></h1>
 
-    <h1><?php echo $this->escapeHtml($title); ?></h1>
-
-        <div class="form-group ">
-            <label for="entityType" class="col-sm-2 control-label "><?= $form->get('entityType')->getLabel(); ?></label>
-            <?php echo $this->formInput($form->get('entityType')); ?>
-        </div>
-        <div class="form-group ">
-            <label for="description" class="col-sm-2 control-label"><?= $form->get('description')->getLabel(); ?></label>
-           <?php echo $this->formTextarea($form->get('description')); ?>
-        </div>
-        <div class="form-group ">
-            <input type="submit" name="submit" id="submitbutton" class="btn btn-lg btn-primary btn-block" value="Create">
-
-</div></form>
-<?php //echo $this->form()->closeTag(); ?>
+    <div class="row">
+        <form action="" method="post" class="form-horizontal" id="newCategory">
+            <div class="form-group">
+                <label for="entityType" class="col-sm-2 control-label"><?= $form->get('entityType')->getLabel(); ?></label>
+                <div class="col-sm-4">
+                    <?php echo $this->formInput($form->get('entityType')); ?>
+                </div>
+                <?= $this->formElementErrors($form->get('entityType')); ?>
+            </div>
+            <div class="form-group">
+                <label for="description" class="col-sm-2 control-label"><?= $form->get('description')->getLabel(); ?></label>
+                <div class="col-sm-4">
+                    <?php echo $this->formTextarea($form->get('description')); ?>
+                </div>
+                <?= $this->formElementErrors($form->get('description')); ?>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-4">
+                    <input type="submit" name="submit" class="btn btn-lg btn-primary btn-block" value="Save">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

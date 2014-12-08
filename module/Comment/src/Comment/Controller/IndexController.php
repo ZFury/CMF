@@ -6,6 +6,8 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Comment\Form;
 use Comment\Service;
+use Comment\Form\Filter;
+use DoctrineModule\Validator;
 
 class IndexController extends AbstractActionController
 {
@@ -21,13 +23,6 @@ class IndexController extends AbstractActionController
 
             return new ViewModel(array('comments' => $comments));
         }
-        /*if (isset($this->getRequest()->getQuery()->user_id)) {
-            $comments = $this->getServiceLocator()
-                ->get('Comment\Service\Comment')
-                ->getCommentsByUserId($this->identity()->getUser()->getId());
-
-            return new ViewModel(array('comments' => $comments));
-        }*/
         return new ViewModel();
     }
 
@@ -47,22 +42,34 @@ class IndexController extends AbstractActionController
 
         if ($result) {
             $this->flashMessenger()->addSuccessMessage('Comment deleted');
+
+            //TODO: redirect where?
             $url = $this->getRequest()->getHeader('Referer')->getUri();
             return $this->redirect()->toUrl($url);
-
         }
     }
 
     /**
      * @return ViewModel
+     * @throws \Exception
      */
     public function editAction()
     {
-        /*$form = new Form\AddForm(null, $this->getServiceLocator());
-        $result = $this->getServiceLocator()
+        if (!$id = $this->params()->fromRoute('id')) {
+            throw new \Exception('Bad Request');
+        }
+
+        $data = null;
+
+        if ($this->getRequest()->isPost()) {
+            $data = $this->getRequest()->getPost();
+        }
+
+        $form = $this->getServiceLocator()
             ->get('Comment\Service\Comment')
-            ->editCommentById($form,(int)$this->params()->fromRoute('id'));*/
-        return new ViewModel();
+            ->editCommentById($id, $data);
+
+        return new ViewModel(['form' => $form]);
     }
 
     /**
@@ -81,16 +88,14 @@ class IndexController extends AbstractActionController
             throw new \Exception('Unknown entity');
         }
 
-        $form = new Form\Add(null, $this->getServiceLocator());
+        $user = $this->identity()->getUser();
+        $data = null;
         if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost();
-            $user = $this->identity()->getUser();
-
-            $comment = $this->getServiceLocator()
-                ->get('Comment\Service\Comment')
-                ->addComment($form, $data, $entityType, $entityId, $user);
         }
-
+        $form = $this->getServiceLocator()
+            ->get('Comment\Service\Comment')
+            ->addComment($data, $entityType, $entityId, $user);
         return new ViewModel(['form' => $form]);
     }
 }

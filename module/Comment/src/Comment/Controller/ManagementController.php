@@ -31,7 +31,10 @@ class ManagementController extends AbstractCrudController
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $builder = new AnnotationBuilder($entityManager);
 
-        return $builder->createForm($this->getEntity());
+        $form = $builder->createForm($this->getEntity());
+        $form->setInputFilter(new Filter\CreateInputFilter($this->getServiceLocator()));
+
+        return $form;
     }
 
     /**
@@ -41,12 +44,14 @@ class ManagementController extends AbstractCrudController
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $builder = new AnnotationBuilder($entityManager);
-        $comment = $this->loadEntity();
+        $entityType = $this->loadEntity();
 
 
         $form = $builder->createForm($this->getEntity());
         $form->setHydrator(new DoctrineHydrator($entityManager));
-        $form->bind($comment);
+        $form->bind($entityType);
+
+        $form->setInputFilter(new Filter\CreateInputFilter($this->getServiceLocator()));
 
         return $form;
     }

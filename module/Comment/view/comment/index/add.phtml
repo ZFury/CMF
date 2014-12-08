@@ -11,30 +11,22 @@ $form = $this->form;
 $form->prepare();
 ?>
 <div class="container">
+    <h1><?php echo $this->escapeHtml($this->title); ?></h1>
+
     <div class="row">
-        <?php echo $this->form()->openTag($form); ?>
-        <?php echo $this->formHidden($form->get('security')); ?>
-
-        <?php $this->formRow($form->get('comment')); ?>
-
-        <div class="form-group">
-            <label for="inputComment" class="col-sm-2 control-label"><?= $form->get('comment')->getLabel(); ?></label>
-
-            <div class="col-sm-3">
-                <textarea class="form-control" name="<?= $form->get('comment')->getName(); ?>"
-                    value="<?= $form->get('comment')->getValue(); ?>"
-                    placeholder="<?= $form->get('comment')->getLabel(); ?>"
-                    rows="<?= $form->get('comment')->getOption('rows'); ?>"
-                    cols="<?= $form->get('comment')->getOption('cols'); ?>"></textarea>
+        <form action="" method="post" class="form-horizontal" id="newCategory">
+            <div class="form-group">
+                <label for="inputComment" class="col-sm-2 control-label"><?= $form->get('comment')->getLabel(); ?></label>
+                <div class="col-sm-4">
+                    <?php echo $this->formTextarea($form->get('comment')); ?>
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-3">
-                <input type="submit" name="submit" id="submitbutton" class="btn btn-lg btn-primary btn-block"
-                       value="<?= $form->get('submit')->getValue(); ?>">
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-4">
+                    <input type="submit" name="submit" class="btn btn-lg btn-primary btn-block" value="Save">
+                </div>
             </div>
-        </div>
-        <?php echo $this->form()->closeTag(); ?>
+        </form>
     </div>
 </div>

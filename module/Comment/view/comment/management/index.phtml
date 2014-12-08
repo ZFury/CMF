@@ -1,14 +1,8 @@
 <?php
-$title = 'List of entities that can comment';
+$title = 'List of entities';
 $this->headTitle($title);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
-<div class="row">
-    <a href="<?php echo $this->url('comment/default', array('controller'=>'management', 'action' => 'create')); ?>">
-        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Сreate a new
-    </a>
-</div>
-
 <table class="table">
     <tr>
         <th>Entity</th>
@@ -34,3 +28,9 @@ $this->headTitle($title);
         <?php endforeach;
     endif; ?>
 </table>
+<div class="row">
+    <a href="<?php echo $this->url('comment/default', array('controller'=>'management', 'action' => 'create')); ?>">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Сreate a new
+    </a>
+</div>
+<div>&nbsp;</div>

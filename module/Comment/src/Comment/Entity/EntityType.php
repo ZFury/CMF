@@ -30,7 +30,7 @@ class EntityType
      * @var string
      * @Annotation\Type("Zend\Form\Element\Text")
      * @Annotation\Required(true)
-     * @Annotation\Options({"label":"Entity Type:"})
+     * @Annotation\Options({"label":"Entity type:"})
      * @Annotation\Attributes({"class":"form-control"})
      * @ORM\Column(type="string", nullable=false)
      */
