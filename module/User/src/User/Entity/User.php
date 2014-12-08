@@ -3,9 +3,10 @@
 namespace User\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use Starter\Media\Image;
 use Zend\Form\Annotation;
-use Zend\ServiceManager\ServiceManager;
 
 /**
  * An example of how to implement a role aware user entity.
@@ -19,6 +20,8 @@ use Zend\ServiceManager\ServiceManager;
  */
 class User
 {
+    use Image;
+
     const ROLE_USER = 'user';
 
     const ROLE_ADMIN = 'admin';
@@ -105,12 +108,17 @@ class User
      */
     private $auths;
 
+    //private $alias;
+
+    private $lifecycleArgs;
     /**
      * Initialies the auths variable.
      */
     public function __construct()
     {
         $this->auths = new ArrayCollection();
+        $this->lifecycleArgs = new ArrayCollection();
+        //$this->alias = 'User';
     }
 
     /**
@@ -339,5 +347,19 @@ class User
     public function isUnconfirmed()
     {
         return $this->getStatus() == self::STATUS_UNCONFIRMED;
+    }
+
+
+    /**
+     * @ORM\PostLoad
+     */
+    public function setLifecycleArgs(LifecycleEventArgs $args)
+    {
+        $this->lifecycleArgs = $args;
+    }
+
+    public function getEntityName()
+    {
+        return 'User';
     }
 }
