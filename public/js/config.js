@@ -16,7 +16,7 @@ require.config({
         respond: './libs/respond.min',
         html5shiv: './libs/html5shiv',
         "jquery-ui": './libs/jquery-ui',
-        "jquery-nestedSortable": './libs/jquery.mjs.nestedSortable.js',
+        "jquery-nestedSortable": './libs/jquery.mjs.nestedSortable',
         redactor: './../redactor/redactor',
         //"redactor-fullscreen": './../redactor/plugins/fullscreen'
         dashboard:'./../module/dashboard/js/dashboard',
