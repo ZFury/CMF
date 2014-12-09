@@ -38,6 +38,7 @@ class Comment
     protected $comment;
 
     /**
+     * @Annotation\Required(true)
      * @ORM\ManyToOne(targetEntity="User\Entity\User")
      * @ORM\JoinColumn(name="userId", referencedColumnName="id", onDelete="cascade")
      */
@@ -45,21 +46,23 @@ class Comment
 
     /**
      * @var int
+     *
      * @Annotation\Type("Zend\Form\Element\Text")
-     * @Annotation\Exclude
      * @ORM\Column(type="integer", options={"unsigned"=true})
      */
     protected $userId;
 
     /**
      * @var string
-     * @Annotation\Exclude
+     * @Annotation\Type("Zend\Form\Element\Text")
+     * @Annotation\Required(true)
      * @ORM\Column(type="string", nullable=false)
      */
     protected $entityType;
 
     /**
-     * @Annotation\Exclude
+     * @Annotation\Required(true)
+     * @Annotation\Type("Zend\Form\Element\Text")
      * @ORM\Column(type="integer", nullable=false)
      */
     protected $entityId;

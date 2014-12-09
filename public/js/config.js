@@ -20,7 +20,8 @@ require.config({
         redactor: './../redactor/redactor',
         //"redactor-fullscreen": './../redactor/plugins/fullscreen'
         dashboard:'./../module/dashboard/js/dashboard',
-        categories: '../module/categories/js/management'
+        categories: '../module/categories/js/management',
+        comment: '../module/comment/js/management'
     },
     shim: {
         angular: {

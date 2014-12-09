@@ -8,6 +8,7 @@ use Comment\Form;
 use Comment\Service;
 use Comment\Form\Filter;
 use DoctrineModule\Validator;
+use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
 class IndexController extends AbstractActionController
 {
@@ -59,16 +60,23 @@ class IndexController extends AbstractActionController
             throw new \Exception('Bad Request');
         }
 
-        $data = null;
+        $form = $this->getServiceLocator()
+            ->get('Comment\Service\Comment')->createEditForm($id);
 
         if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost();
+            $data = $data->toArray();
+            $comment = $this->getServiceLocator()
+                ->get('Comment\Service\Comment')
+                ->editCommentById($form, $data);
+
+            $flashMessenger = new FlashMessenger();
+            if($comment) {
+                $flashMessenger->addSuccessMessage('Comment edited');
+            } else {
+                $flashMessenger->addErrorMessage('Comment is not changed');
+            }
         }
-
-        $form = $this->getServiceLocator()
-            ->get('Comment\Service\Comment')
-            ->editCommentById($id, $data);
-
         return new ViewModel(['form' => $form]);
     }
 
@@ -78,24 +86,31 @@ class IndexController extends AbstractActionController
      */
     public function addAction()
     {
-        if (!($this->getRequest()->getQuery()->entity) || !($entityId = intval($this->getRequest()->getQuery()->id))) {
-            throw new \Exception('Wrong query string');
-        }
-
-        $et = $this->getServiceLocator()->get('Comment\Service\EntityType');
-        $entityType = $et->get($this->getRequest()->getQuery()->entity);
-        if (!$entityType) {
-            throw new \Exception('Unknown entity');
-        }
-
-        $user = $this->identity()->getUser();
-        $data = null;
-        if ($this->getRequest()->isPost()) {
-            $data = $this->getRequest()->getPost();
-        }
         $form = $this->getServiceLocator()
-            ->get('Comment\Service\Comment')
-            ->addComment($data, $entityType, $entityId, $user);
-        return new ViewModel(['form' => $form]);
+            ->get('Comment\Service\Comment')->createForm();
+
+        if ($this->getRequest()->isPost()) {
+            $data = $this->getRequest()->getPost();  // for POST data
+            $data->set('entityType', $this->getRequest()->getQuery()->entity); // for GET (or query string) data
+            /*for GET (or query string) data*/
+            if (!($this->getRequest()->getQuery()->entity) || !($entityId = intval($this->getRequest()->getQuery()->id))) {
+                throw new \Exception('Wrong query string');
+            }
+            $data->set('entityId', $this->getRequest()->getQuery()->id);
+            $data = $data->toArray();
+
+            $comment = $this->getServiceLocator()
+                ->get('Comment\Service\Comment')
+                ->addComment($form, $data);
+
+            $flashMessenger = new FlashMessenger();
+            if($comment) {
+                $flashMessenger->addSuccessMessage('Comment created');
+            } else {
+                $flashMessenger->addErrorMessage('Comment is not created');
+            }
+        }
+
+        return new ViewModel(['form' => $form, 'title' => 'Add comment']);
     }
 }

@@ -20,7 +20,7 @@ $this->headTitle($title);
                 <a href="<?php echo $this->url('comment/default', array('controller'=>'management', 'action' => 'edit', 'id' => $entity->getId())); ?>">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                 </a>
-                <a href="<?php echo $this->url('comment/default', array('controller'=>'management', 'action' => 'delete', 'id' => $entity->getId())); ?>">
+                <a class="del" href="<?php echo $this->url('comment/default', array('controller'=>'management', 'action' => 'delete', 'id' => $entity->getId())); ?>">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </a>
             </td>
@@ -34,3 +34,6 @@ $this->headTitle($title);
     </a>
 </div>
 <div>&nbsp;</div>
+<script>
+    require(['comment']);
+</script>

@@ -4,3 +4,7 @@ $this->headTitle($title);
 if(isset($comments)) {
     echo $this->comment('comment/index/partial.phtml', $comments);
 }
+?>
+<script>
+    require(['comment']);
+</script>

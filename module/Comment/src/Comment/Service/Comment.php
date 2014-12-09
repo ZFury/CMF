@@ -9,6 +9,7 @@ use Comment\Service;
 use Comment\Form\Filter;
 use Zend\Form\Annotation\AnnotationBuilder;
 use DoctrineModule\Validator;
+use Zend\Stdlib\Hydrator;
 
 class Comment
 {
@@ -34,41 +35,57 @@ class Comment
     }
 
     /**
-     * @param $data
-     * @param $entityType
-     * @param $entityId
-     * @param $user
-     * @return \Zend\Form\Form
+     * @param \Zend\Form\Form $form
+     * @param array $data
+     * @return \Comment\Entity\Comment
      * @throws \Exception
      */
-    public function addComment($data, $entityType, $entityId, $user)
+    public function addComment(\Zend\Form\Form $form, array $data)
+    {
+        $user = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity()->getUser();
+        $data['user'] = $user;
+
+        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $comment = new \Comment\Entity\Comment();
+        $form->setData($data);
+
+        if ($form->isValid()) {
+
+            $data = $form->getData();
+
+            $et = $this->getServiceLocator()->get('Comment\Service\EntityType');
+            $entityType = $et->get($data['entityType']);
+            if (!$entityType) {
+                throw new \Exception('Unknown entity');
+            }
+
+            $entityManager->getConnection()->beginTransaction();
+            try {
+                $hydrator = new DoctrineHydrator($entityManager);
+                $hydrator->hydrate($data, $comment);
+                //$comment->setUser($user);
+                $entityManager->persist($comment);
+                $entityManager->flush();
+                $entityManager->getConnection()->commit();
+
+                return $comment;
+
+            } catch (\Exception $e) {
+                $entityManager->getConnection()->rollback();
+                throw $e;
+            }
+        }
+    }
+
+    /**
+     * @return \Zend\Form\Form
+     */
+    public function createForm()
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $builder = new AnnotationBuilder($entityManager);
         $form = $builder->createForm(new \Comment\Entity\Comment());
 
-        if($data) {
-            $form->setData($data);
-            if ($form->isValid()) {
-                $data = $form->getData();
-                $comment = new \Comment\Entity\Comment();
-
-                $entityManager->getConnection()->beginTransaction();
-                try {
-                    $hydrator = new DoctrineHydrator($entityManager);
-                    $hydrator->hydrate($data, $comment);
-                    $comment->setUser($user);
-                    $comment->setEntityType($entityType->getEntityType());
-                    $comment->setEntityId($entityId);
-                    $entityManager->persist($comment);
-                    $entityManager->flush();
-                    $entityManager->getConnection()->commit();
-                } catch (\Exception $e) {
-                    $entityManager->getConnection()->rollback();
-                    throw $e;
-                }
-            }
-        }
         return $form;
     }
 
@@ -124,30 +141,37 @@ class Comment
 
     /**
      * @param $id
-     * @param $data
      * @return \Zend\Form\Form
      * @throws \Exception
      */
-    public function editCommentById($id, $data)
+    public function createEditForm($id)
     {
+        $form = $this->createForm();
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $builder = new AnnotationBuilder($entityManager);
-        $form = $builder->createForm(new \Comment\Entity\Comment());
-
         if (!$model = $entityManager->getRepository('\Comment\Entity\Comment')->find($id)) {
-            throw new \Exception('Entity not found');
+            throw new \Exception('Comment not found');
         }
         $form->setHydrator(new DoctrineHydrator($entityManager));
         $form->bind($model);
-
-        if($data) {
-            $form->setData($data);
-            if ($form->isValid()) {
-                $entityManager->persist($model);
-                $entityManager->flush();
-                $form->bind($model);
-            }
-        }
         return $form;
+    }
+
+    /**
+     * @param \Zend\Form\Form $form
+     * @param $data
+     * @return mixed
+     */
+    public function editCommentById(\Zend\Form\Form $form, $data)
+    {
+        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+
+        $hydrator = new DoctrineHydrator($entityManager);
+        $hydrator->hydrate($data, $form->getObject());
+
+        if ($form->isValid()) {
+            $entityManager->persist($form->getObject());
+            $entityManager->flush();
+            return $form->getObject();
+        }
     }
 }

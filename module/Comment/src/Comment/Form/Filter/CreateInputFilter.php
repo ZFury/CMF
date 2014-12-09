@@ -4,6 +4,7 @@ namespace Comment\Form\Filter;
 
 use Zend\InputFilter\InputFilter;
 use Zend\ServiceManager\ServiceManager;
+use DoctrineModule\Validator\NoObjectExists;
 
 class CreateInputFilter extends InputFilter
 {
@@ -25,6 +26,17 @@ class CreateInputFilter extends InputFilter
      */
     protected function entityType()
     {
+        $recordExistsValidator = new NoObjectExists(
+            array(
+                'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')->getRepository('Comment\Entity\EntityType'),
+                'fields' => 'entityType'
+            )
+        );
+        $recordExistsValidator->setMessage(
+            'Entity with this title already exists',
+            NoObjectExists::ERROR_OBJECT_FOUND
+        );
+
         $this->add(array(
             'name' => 'entityType',
             'required' => true,
@@ -40,6 +52,7 @@ class CreateInputFilter extends InputFilter
                         'message' => 'Entity type contains invalid characters'
                     ),
                 ),
+                $recordExistsValidator
             ),
         ));
 

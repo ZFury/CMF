@@ -8,7 +8,7 @@
                     <a href="<?php echo $this->url('comment/default', array('controller'=>'index', 'action' => 'edit', 'id' => $this->comment->getId())); ?>">
                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                     </a>
-                    <a href="<?php echo $this->url('comment/default', array('controller'=>'index', 'action' => 'delete', 'id' => $this->comment->getId())); ?>">
+                    <a class="del" href="<?php echo $this->url('comment/default', array('controller'=>'index', 'action' => 'delete', 'id' => $this->comment->getId())); ?>">
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     </a>
                 <?php endif; ?>
