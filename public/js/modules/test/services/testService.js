@@ -1,23 +1,23 @@
 (function() {
     define(function() {
-        var userService = function($http) {
-            var usersFactory = {};
-            usersFactory.apiUrl = '/user/';
-            usersFactory.templatesUrl = '/templates/';
-            $http.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+        var testService = function($http) {
+            var testFactory = {};
+            testFactory.apiUrl = '/test/';
+            testFactory.templatesUrl = '/templates/';
 
             /**
-             * Get searched users
-             * @param allParams
+             * Create
+             * @param email
+             * @param name
              * @param callback
              *
              * Created by Maxim Mandryka maxim.mandryka@nixsolutions.com
              */
-            usersFactory.getUsers = function(allParams, /*function*/ callback) {
+            testFactory.createTest = function(email, name, /*function*/ callback) {
                 var params = {
-                    url: this.apiUrl + 'management/grid',
+                    url: this.apiUrl + 'management/create',
                     method: "POST",
-                    data: $.param({data: allParams}),
+                    data: $.param({email: email, name: name}),
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 };
                 ajaxRequest(params, callback);
@@ -55,8 +55,8 @@
                 }
             }
 
-            return usersFactory;
+            return testFactory;
         };
-        return ['$http', userService];
+        return ['$http', testService];
     });
 }());

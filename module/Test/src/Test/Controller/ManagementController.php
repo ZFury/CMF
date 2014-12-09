@@ -30,4 +30,9 @@ class ManagementController extends AbstractCrudController
         $repository = $objectManager->getRepository('Test\Entity\Test');
         return new ViewModel(['data' => $repository->findAll()]);
     }
+
+    public function createWithAngularAction()
+    {
+        return new ViewModel();
+    }
 }
