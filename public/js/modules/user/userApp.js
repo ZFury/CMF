@@ -20,19 +20,17 @@
         app
             .factory('userService', userService)
             .controller('userGridController', userGridController);
-//        app.config(['$routeProvider', function($routeProvider, $locationProvider) {
-//            $routeProvider
-//                .when('/users/:page', {
-//                    templateUrl: 'templates/user/grid.html',
-//                    controller: userGridController
-//                })
-//                .when('/home', {
-//                    templateUrl: 'home.html',
-//                    controller: 'Home'
-//                })
-//                .otherwise({ redirectTo: '/home' });
-////                $locationProvider.html5Mode(true);
-//        }]);
+        app.config(['$routeProvider', function($routeProvider, $locationProvider) {
+            $routeProvider
+                .when('/params/:params?', {
+                    templateUrl: 'templates/user/grid.html',
+                    controller: userGridController
+                })
+                .otherwise({
+                    redirectTo: '/params'
+                });
+//                $locationProvider.html5Mode(true);
+        }]);
 
         app.controller('Home', ['$scope', function($scope){
             $scope.message = 'Welcome to my project';

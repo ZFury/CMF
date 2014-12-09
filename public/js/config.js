@@ -15,8 +15,8 @@ require.config({
         'angularRoute': './libs/angular-route',
         respond: './libs/respond.min',
         html5shiv: './libs/html5shiv',
-        "jquery-ui": './jquery-ui',
-        "jquery-nestedSortable": './jquery.mjs.nestedSortable',
+        "jquery-ui": './libs/jquery-ui',
+        "jquery-nestedSortable": './libs/jquery.mjs.nestedSortable',
         redactor: './../redactor/redactor',
         //"redactor-fullscreen": './../redactor/plugins/fullscreen'
         dashboard:'./../module/dashboard/js/dashboard',
@@ -54,7 +54,7 @@ require.config({
         redactor: {
             deps: ['jquery'],
             exports: '$.fn.redactor'
-        },
+        }
         //'redactor-fullscreen': {
         //    deps: ['jquery', 'redactor'],
         //    exports: '$.fn.redactor'
@@ -62,5 +62,3 @@ require.config({
     },
     enforceDefine: true
 });
-
-require(['bootstrap']);
