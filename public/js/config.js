@@ -61,5 +61,3 @@ require.config({
     },
     enforceDefine: true
 });
-
-require(['bootstrap']);
