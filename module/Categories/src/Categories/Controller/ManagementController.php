@@ -82,8 +82,8 @@ class ManagementController extends AbstractCrudController
                 );
             }
         }
-        $viewModel = new ViewModel(['form' => $form, 'title' => 'Create category']);
-//        $viewModel = $this->viewModel->setVariables(['form' => $form, 'title' => 'Create category']);
+//        $viewModel = new ViewModel(['form' => $form, 'title' => 'Create category']);
+        $viewModel = $this->viewModel->setVariables(['form' => $form, 'title' => 'Create category']);
 
         return $viewModel;
     }

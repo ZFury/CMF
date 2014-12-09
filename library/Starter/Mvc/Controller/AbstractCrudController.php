@@ -20,59 +20,59 @@ abstract class AbstractCrudController extends AbstractActionController
      */
     protected $viewModel;
 
-//    /**
-//     * {@inheritdoc}
-//     */
-//    public function onDispatch(MvcEvent $e)
-//    {
-////        $name = $e->getTarget()->getRequest()->getRequestUri();
-////        $action = substr($name, strrpos($name, '/') + 1);
-//
-//
-////        $controller = $e->getTarget();
-////        $controllerClass = get_class($controller);
-////        $moduleNamespace = substr($controllerClass, 0, strpos($controllerClass, '\\'));
-////        $config = $e->getApplication()->getServiceManager()->get('config');
-////        if (isset($config['module_layouts'][$moduleNamespace])) {
-////            $controller->layout($config['module_layouts'][$moduleNamespace]);
-////        }
-//
-//
-////        $viewString = 'crud/' . $action;
-//
-//
-//        $this->viewModel = new ViewModel();
-//        $this->viewModel->setTemplate('crud/create');
-//
-//
-////        $e->getViewModel()->setTemplate('crud/create');
-//
-////        $serviceManager = $e->getApplication()->getServiceManager();
-////        $templatePathResolver = $serviceManager->get('Zend\View\Resolver\TemplatePathStack');
-////        $templatePathResolver->setPaths(array(''));
-//
-//        $routeMatch = $e->getRouteMatch();
-//        if (!$routeMatch) {
-//            /**
-//             * @todo Determine requirements for when route match is missing.
-//             *       Potentially allow pulling directly from request metadata?
-//             */
-//            throw new Exception\DomainException('Missing route matches; unsure how to retrieve action');
+    /**
+     * {@inheritdoc}
+     */
+    public function onDispatch(MvcEvent $e)
+    {
+//        $name = $e->getTarget()->getRequest()->getRequestUri();
+//        $action = substr($name, strrpos($name, '/') + 1);
+
+
+//        $controller = $e->getTarget();
+//        $controllerClass = get_class($controller);
+//        $moduleNamespace = substr($controllerClass, 0, strpos($controllerClass, '\\'));
+//        $config = $e->getApplication()->getServiceManager()->get('config');
+//        if (isset($config['module_layouts'][$moduleNamespace])) {
+//            $controller->layout($config['module_layouts'][$moduleNamespace]);
 //        }
-//
-//        $action = $routeMatch->getParam('action', 'not-found');
-//        $method = static::getMethodFromAction($action);
-//
-//        if (!method_exists($this, $method)) {
-//            $method = 'notFoundAction';
-//        }
-//
-//        $actionResponse = $this->$method();
-//
-//        $e->setResult($actionResponse);
-//
-//        return $actionResponse;
-//    }
+
+
+//        $viewString = 'crud/' . $action;
+
+
+        $this->viewModel = new ViewModel();
+        $this->viewModel->setTemplate('crud/create');
+
+
+//        $e->getViewModel()->setTemplate('crud/create');
+
+//        $serviceManager = $e->getApplication()->getServiceManager();
+//        $templatePathResolver = $serviceManager->get('Zend\View\Resolver\TemplatePathStack');
+//        $templatePathResolver->setPaths(array(''));
+
+        $routeMatch = $e->getRouteMatch();
+        if (!$routeMatch) {
+            /**
+             * @todo Determine requirements for when route match is missing.
+             *       Potentially allow pulling directly from request metadata?
+             */
+            throw new Exception\DomainException('Missing route matches; unsure how to retrieve action');
+        }
+
+        $action = $routeMatch->getParam('action', 'not-found');
+        $method = static::getMethodFromAction($action);
+
+        if (!method_exists($this, $method)) {
+            $method = 'notFoundAction';
+        }
+
+        $actionResponse = $this->$method();
+
+        $e->setResult($actionResponse);
+
+        return $actionResponse;
+    }
 
     /**
      * Create entity
@@ -96,8 +96,8 @@ abstract class AbstractCrudController extends AbstractActionController
             }
         }
 
-        return new ViewModel(['form' => $form]);
-//        return $this->viewModel->setVariables(['form' => $form]);
+//        return new ViewModel(['form' => $form]);
+        return $this->viewModel->setVariables(['form' => $form]);
     }
 
     /**
@@ -179,9 +179,9 @@ abstract class AbstractCrudController extends AbstractActionController
      */
     abstract protected function getEntity();
 
-//    protected function useCustomView()
-//    {
-//        $this->viewModel = new ViewModel();
-//        $this->viewModel->setTemplate('layout/layout');
-//    }
+    protected function useCustomView()
+    {
+        $this->viewModel = new ViewModel();
+        $this->viewModel->setTemplate('layout/layout');
+    }
 }
