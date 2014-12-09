@@ -12,6 +12,7 @@ namespace Pages\Controller;
 use Starter\Mvc\Controller\AbstractCrudController;
 use Zend\View\Model\ViewModel;
 use Pages\Form\Create;
+use Zend\Mvc\MvcEvent;
 use Doctrine\ORM\EntityNotFoundException;
 use Zend\Mvc\Controller\AbstractActionController;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
@@ -22,6 +23,19 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
  */
 class ManagementController extends AbstractCrudController
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function onDispatch(MvcEvent $e)
+    {
+        parent::onDispatch($e);
+        $e->getApplication()
+            ->getServiceManager()
+            ->get('viewhelpermanager')
+            ->get('headLink')
+            ->appendStylesheet('/redactor/redactor.css');
+    }
+
     /**
      * @return mixed|\Pages\Entity\Pages
      */
