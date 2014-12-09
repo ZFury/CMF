@@ -84,8 +84,8 @@ class Create extends Form
         $this->add(
             array(
                 'name' => 'content',
+                'type' => 'textarea',
                 'attributes' => array(
-                    'type' => 'textarea',
                     'id' => 'content',
                     'class' => 'form-control redactor-content'
                 ),
@@ -101,8 +101,8 @@ class Create extends Form
         $this->add(
             array(
                 'name' => 'keywords',
+                'type' => 'textarea',
                 'attributes' => array(
-                    'type' => 'textarea',
                     'id' => 'keywords',
                     'class' => 'form-control'
                 ),
@@ -118,8 +118,8 @@ class Create extends Form
         $this->add(
             array(
                 'name' => 'description',
+                'type' => 'textarea',
                 'attributes' => array(
-                    'type' => 'textarea',
                     'id' => 'description',
                     'class' => 'form-control'
                 ),

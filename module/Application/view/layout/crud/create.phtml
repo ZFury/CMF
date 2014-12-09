@@ -3,10 +3,11 @@
 $form = $this->form;
 ?>
 <div class="container">
-    <h1><?php echo $this->escapeHtml($this->title); ?></h1>
+    <!--    <h1>--><?php //echo $this->escapeHtml($this->title); ?><!--</h1>-->
+    <h1>CRUD view</h1>
 
-    <div class="row">
-        <form action="" method="post" class="form-horizontal" id="newCategory">
+    <div class="col-md-12">
+        <form action="" method="post" class="form-horizontal">
             <?php foreach ($this->form->getElements() as $element) : ?>
                 <?php
                 switch ($element) {
@@ -30,24 +31,31 @@ $form = $this->form;
                         break;
                 }
                 ?>
+                <?php $element->getAttributes()['type'] == 'submit' ? $submit = true : $submit = false; ?>
                 <div class="form-group">
-                    <?php if ($element->getAttributes()['type'] !== 'hidden'): ?>
-                        <label for="<?= $element->getName(); ?>" class="col-sm-2 control-label">
-                            <?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?>
-                        </label>
+                    <?php if ($element->getAttributes()['type'] !== 'submit'): ?>
+                        <?php if ($element->getAttributes()['type'] !== 'hidden'): ?>
+                            <label for="<?= $element->getName(); ?>" class="col-sm-2 control-label">
+                                <?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?>
+                            </label>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <div class="col-sm-2"></div>
                     <?php endif; ?>
-                    <div class="col-sm-4">
+                    <div class="col-sm-10">
                         <?= $formElement; ?>
                     </div>
                     <?= $this->formElementErrors($element); ?>
                 </div>
             <?php endforeach; ?>
-            <div class="form-group">
-                <div class="col-sm-2"></div>
-                <div class="col-sm-4">
-                    <input type="submit" name="submit" class="btn btn-lg btn-primary btn-block" value="Save">
+            <?php if (!$submit): ?>
+                <div class="form-group">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-10">
+                        <input type="submit" name="submit" class="form-control col-sm-6 btn btn-success" value="Save">
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
         </form>
     </div>
 </div>
