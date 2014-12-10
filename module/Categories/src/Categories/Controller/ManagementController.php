@@ -5,14 +5,28 @@ namespace Categories\Controller;
 use Starter\Mvc\Controller\AbstractCrudController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
+use Zend\Mvc\MvcEvent;
+use Zend\Form\Annotation\AnnotationBuilder;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Categories\Form\Filter;
-use Zend\Form\Annotation\AnnotationBuilder;
 use DoctrineModule\Validator;
 use Categories\Validators;
 
 class ManagementController extends AbstractCrudController
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function onDispatch(MvcEvent $e)
+    {
+        parent::onDispatch($e);
+        $e->getApplication()
+            ->getServiceManager()
+            ->get('viewhelpermanager')
+            ->get('headLink')
+            ->appendStylesheet('module/categories/css/management.css');
+    }
+
     /**
      * @return array|ViewModel
      */

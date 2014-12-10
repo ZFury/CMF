@@ -36,7 +36,9 @@ abstract class AbstractCrudController extends AbstractActionController
         $action = $routeMatch->getParam('action', 'not-found');
 
         $this->viewModel = new ViewModel();
-        $this->viewModel->setTemplate('crud/' . $action);
+        if ($action == 'create' || $action == 'edit') {
+            $this->viewModel->setTemplate('crud/' . $action);
+        }
 
         parent::onDispatch($e);
     }

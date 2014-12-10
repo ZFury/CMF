@@ -1,10 +1,10 @@
 <?php
 /**@var $form Zend\Form\Form */
 $form = $this->form;
-if (!$this->title) $this->title = 'Create';
+$requireScript = '';
 ?>
 <div class="container">
-    <h1 class="create-label"><?php echo $this->escapeHtml($this->title); ?></h1>
+    <h1 class="create-label"><?= !$this->title ? 'Create' : $this->escapeHtml($this->title); ?></h1>
 
     <div class="col-md-12">
         <form action="" method="post" class="form-horizontal">
@@ -19,6 +19,10 @@ if (!$this->title) $this->title = 'Create';
                         break;
                     case $element instanceof Zend\Form\Element\Password :
                         $formElement = $this->formPassword($element);
+                        break;
+                    case $element instanceof \Starter\Form\Element\Redactor :
+                        $requireScript = 'redactorContent';
+                        $formElement = $this->formTextarea($element);
                         break;
                     case $element instanceof Zend\Form\Element\Textarea :
                         $formElement = $this->formTextarea($element);
@@ -53,7 +57,7 @@ if (!$this->title) $this->title = 'Create';
                     <div class="col-sm-2"></div>
                     <div class="col-sm-8">
                         <input type="submit" name="submit" class="form-control col-sm-6 btn btn-success"
-                               value="<?= $this->title == 'Edit' ? 'Save' : $this->title; ?>">
+                               value="<?= $this->title == 'Edit' ? 'Save' : 'Create'; ?>">
                     </div>
                 </div>
             <?php endif; ?>
@@ -62,14 +66,14 @@ if (!$this->title) $this->title = 'Create';
 </div>
 <script>
     require([
-//        'redactor-fullscreen',
-        'redactor'
-    ], function () {
-        $('#content').redactor({
-//            plugins: ['fullscreen'],
-//            scrollTarget: '.container',
-            minHeight: 300, // pixels
-            placeholder: 'Page content'
-        });
-    });
+        'frontend',
+        <?= $requireScript?"'$requireScript'":null; ?>
+        <?php
+        if ($this->scripts) {
+            foreach ($this->scripts as $script) {
+                echo ",'$script'";
+            }
+        }
+        ?>
+    ]);
 </script>
