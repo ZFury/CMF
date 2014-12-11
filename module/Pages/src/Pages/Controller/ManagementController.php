@@ -29,11 +29,6 @@ class ManagementController extends AbstractCrudController
     public function onDispatch(MvcEvent $e)
     {
         parent::onDispatch($e);
-        $e->getApplication()
-            ->getServiceManager()
-            ->get('viewhelpermanager')
-            ->get('headLink')
-            ->appendStylesheet('/redactor/redactor.css');
     }
 
     /**

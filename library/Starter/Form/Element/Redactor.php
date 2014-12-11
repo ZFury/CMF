@@ -14,5 +14,6 @@ class Redactor extends Textarea
 {
     protected $attributes = array(
         'type' => 'redactor',
+        'class' => 'form-control redactor-content'
     );
 }
