@@ -30,7 +30,7 @@ interface ImageUploaderInterface
      * $imageService->deleteImage($this->getEvent()->getRouteMatch()->getParam('id'));
      * return $blueimpService->deleteImageJson($this->getEvent()->getRouteMatch()->getParam('id'));
      */
-    public function deleteAction();
+    public function deleteImageAction();
 
     /**
      * This method must return a full url of deleting an image, using Image service. For example you can do this

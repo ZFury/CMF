@@ -8,6 +8,7 @@
 
 namespace Test\Controller;
 
+use Media\Service\Image;
 use Zend\View\Model\JsonModel;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -32,8 +33,8 @@ class ImageController extends AbstractActionController implements ImageUploaderI
     public function uploadImageAction()
     {
         $form = new ImageUpload('upload-image');
-
-        return new ViewModel(array('form' => $form));
+        $imageService = new Image($this->getServiceLocator());
+        return new ViewModel(['form' => $form, 'imageService' => $imageService]);
     }
 
     /**
@@ -86,7 +87,7 @@ class ImageController extends AbstractActionController implements ImageUploaderI
         return new JsonModel($dataForJson);
     }
 
-    public function deleteAction()
+    public function deleteImageAction()
     {
         $this->getServiceLocator()->get('Media\Service\Image')
             ->deleteImage($this->getEvent()->getRouteMatch()->getParam('id'));

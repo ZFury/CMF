@@ -32,6 +32,11 @@ trait Image
             ->setParameter('name', $this->getEntityName())
             ->setParameter('id', $this->id);
         $results = $subQb->getQuery()->getResult();
+
+        if (!$results) {
+            return [];
+        }
+
         foreach ($results as $result) {
             array_push($results, $result['imageId']);
             array_shift($results);
@@ -41,6 +46,8 @@ trait Image
             ->from('Media\Entity\Image', 'i')
             ->where($qb->expr()->in('i.id', $results));
 
-        return $qb->getQuery()->getResult();
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
     }
 }
