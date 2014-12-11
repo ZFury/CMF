@@ -19,8 +19,9 @@ require.config({
         "jquery-nestedSortable": './libs/jquery.mjs.nestedSortable',
         redactor: './../redactor/redactor',
         //"redactor-fullscreen": './../redactor/plugins/fullscreen'
-        dashboard:'./../module/dashboard/js/dashboard',
-        categories: '../module/categories/js/management'
+        dashboard: './../module/dashboard/js/dashboard',
+        categories: '../module/categories/js/management',
+        'redactorContent': '../redactor/redactorContent'
     },
     shim: {
         angular: {
@@ -53,6 +54,12 @@ require.config({
         redactor: {
             deps: ['jquery'],
             exports: '$.fn.redactor'
+        },
+        frontend: {
+            deps: ['bootstrap']
+        },
+        backend: {
+            deps: ['angularRoute', 'angularSanitize']
         }
         //'redactor-fullscreen': {
         //    deps: ['jquery', 'redactor'],
