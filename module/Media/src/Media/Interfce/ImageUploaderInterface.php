@@ -11,12 +11,6 @@ namespace Media\Interfce;
 interface ImageUploaderInterface
 {
     /**
-     * This method must create form: new ImageUpload('upload-image')
-     * and return it into the view
-     */
-    public function uploadImageAction();
-
-    /**
      * This method will receive POST\GET requests. In case of a POST request,
      * it must upload an image and return appropriate JSON using Blueimp service.
      * In case of a GET request it must return appropriate JSON that contains all images
