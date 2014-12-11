@@ -19,8 +19,26 @@ require.config({
         "jquery-nestedSortable": './libs/jquery.mjs.nestedSortable',
         redactor: './../redactor/redactor',
         //"redactor-fullscreen": './../redactor/plugins/fullscreen'
-        dashboard: './../module/dashboard/js/dashboard',
+        dashboard:'./../module/dashboard/js/dashboard',
         categories: '../module/categories/js/management',
+        //BLUEIMP BEGIN
+        "load-image": './libs/jQuery-File-Upload-master/load-image',
+        "load-image-meta": './libs/jQuery-File-Upload-master/load-image-meta',
+        "load-image-exif": './libs/jQuery-File-Upload-master/load-image-exif',
+        "load-image-ios": './libs/jQuery-File-Upload-master/load-image-ios',
+        "jquery.ui.widget": './libs/jQuery-File-Upload-master/vendor/jquery.ui.widget',
+        "canvas-to-blob": './libs/jQuery-File-Upload-master/canvas-to-blob.min',
+        "fileupload": './libs/jQuery-File-Upload-master/jquery.fileupload',
+        "fileupload-process": './libs/jQuery-File-Upload-master/jquery.fileupload-process',
+        "fileupload-image": './libs/jQuery-File-Upload-master/jquery.fileupload-image',
+        "fileupload-audio": './libs/jQuery-File-Upload-master/jquery.fileupload-audio',
+        "fileupload-video": './libs/jQuery-File-Upload-master/jquery.fileupload-video',
+        "fileupload-validate": './libs/jQuery-File-Upload-master/jquery.fileupload-validate',
+        "tmpl": './libs/jQuery-File-Upload-master/tmpl.min',
+        "iframe-transport": './libs/jQuery-File-Upload-master/jquery.iframe-transport',
+        "fileupload-ui": './libs/jQuery-File-Upload-master/jquery.fileupload-ui',
+        "blueimp": './modules/media/blueimp',
+        //BLUEIMP END
         'redactorContent': '../redactor/redactorContent'
     },
     shim: {
