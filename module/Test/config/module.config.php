@@ -57,6 +57,9 @@ return [
         'template_path_stack' => array(
             __DIR__ . '/../view',
         ),
+        'strategies' => array(
+            'ViewJsonStrategy',
+        ),
     ),
     'bjyauthorize' => [
         'guards' => [
@@ -72,4 +75,22 @@ return [
             ],
         ],
     ],
+    'navigation' => array(
+        'default' => array(
+            array(
+                'label' => 'Test',
+                'controller' => 'test',
+                'pages' => array(
+                    array(
+                        'label' => 'Images',
+                        'controller' => 'image',
+                        'action' => 'upload-image',
+                        'route' => 'test/default',
+                        'controller_namespace' => 'Test\Controller\Image',
+                        'module' => 'Test'
+                    )
+                )
+            )
+        )
+    )
 ];

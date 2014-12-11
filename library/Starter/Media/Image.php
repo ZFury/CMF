@@ -23,22 +23,24 @@ trait Image
      */
     public function getImages()
     {
-        $q = $this->lifecycleArgs->getEntityManager()->createQueryBuilder()
-            ->select('oi.imageId')
+        $qb = $this->lifecycleArgs->getEntityManager()->createQueryBuilder();
+        $subQb = $this->lifecycleArgs->getEntityManager()->createQueryBuilder();
+        $subQb->select('oi.imageId')
             ->from('Media\Entity\ObjectImage', 'oi')
             ->where('oi.entityName=:name')
             ->andWhere('oi.objectId=:id')
             ->setParameter('name', $this->getEntityName())
-            ->setParameter('id', $this->id)
-            ->getQuery();
-
-        $results = $q->getResult();
-
+            ->setParameter('id', $this->id);
+        $results = $subQb->getQuery()->getResult();
         foreach ($results as $result) {
             array_push($results, $result['imageId']);
             array_shift($results);
         }
 
-        return $results;
+        $qb->select('i')
+            ->from('Media\Entity\Image', 'i')
+            ->where($qb->expr()->in('i.id', $results));
+
+        return $qb->getQuery()->getResult();
     }
 }

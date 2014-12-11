@@ -59,6 +59,20 @@ class Image
     }
 
     /**
+     * @param $imageId
+     */
+    public function deleteImage($imageId)
+    {
+        $objectImage = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\ObjectImage')->findOneByImageId($imageId);
+        $this->sm->get('doctrine.entitymanager.orm_default')->remove($objectImage);
+        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+
+        $image = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\Image')->findOneById($imageId);
+        $this->sm->get('doctrine.entitymanager.orm_default')->remove($image);
+        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+    }
+
+    /**
      * @param $destination
      * @param $image
      * @return array|string
@@ -96,10 +110,6 @@ class Image
 
         return true;
     }
-
-    //////////////////////////////////////////////////////////
-    /////////////////////////PATH/////////////////////////////
-    //////////////////////////////////////////////////////////
 
     /**
      * @param $type
@@ -155,10 +165,6 @@ class Image
 
         return $finalPath;
     }
-
-    //////////////////////////////////////////////////////////
-    ///////////////////////HELPERS////////////////////////////
-    //////////////////////////////////////////////////////////
 
     /**
      * @param $imageName
