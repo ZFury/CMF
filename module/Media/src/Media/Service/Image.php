@@ -198,8 +198,9 @@ class Image
         return $this->sm->get('ViewHelperManager')->get('ServerUrl')->__invoke() . $urlPart;
     }
 
-    public function generateImageUploadForm()
+    public function generateImageUploadForm($module)
     {
         echo $this->sm->get('ViewHelperManager')->get('Partial')->__invoke('layout/file-upload/image-upload-form.phtml');
+        echo "<script>require(['" . $module . "']);</script>";
     }
 }
