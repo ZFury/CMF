@@ -18,33 +18,31 @@ use Zend\View\Model\JsonModel;
 class Module
 {
     /**
-     * @param MvcEvent $e
+     * @param MvcEvent $event
      */
-    public function onBootstrap(MvcEvent $e)
+    public function onBootstrap(MvcEvent $event)
     {
-        $eventManager = $e->getApplication()->getEventManager();
+        $eventventManager = $event->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
-        $moduleRouteListener->attach($eventManager);
+        $moduleRouteListener->attach($eventventManager);
 
-        $config = $e->getApplication()->getServiceManager()->get('Config');
+        $config = $event->getApplication()->getServiceManager()->get('Config');
         $phpSettings = $config['phpSettings'];
         foreach ($phpSettings as $settingName => $settingValue) {
             ini_set($settingName, $settingValue);
         }
 
         // attach the JSON view strategy
-        $app      = $e->getTarget();
+        $app      = $event->getTarget();
         $locator  = $app->getServiceManager();
         $view     = $locator->get('ZendViewView');
         $strategy = $locator->get('ViewJsonStrategy');
         $view->getEventManager()->attach($strategy, 100);
 
         /** @var \Zend\Mvc\MvcEvent; $events */
-        $events = $e->getTarget()->getEventManager();
+        $events = $event->getTarget()->getEventManager();
         $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'onDispatch'), '-1000');
-        if ($this->isJson($e)) {
-            $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onDispatchError'), '99999');
-        }
+        $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onDispatchError'), '99999');
 
         set_error_handler(['Application\Module', 'errorHandler']);
     }
@@ -58,19 +56,29 @@ class Module
             $model = new JsonModel();
             $event->setViewModel($model);
         }
-        // $eventException = $event->getParam('exception');
+        $eventException = $event->getParam('exception');
+        $result = array(
+            'exception' => array(
+                'message' => $eventException->getMessage(),
+                'code' => $eventException->getCode(),
+            )
+        );
+
+        $model = new JsonModel(array($result));
+        $event->setViewModel($model);
+        $event->stopPropagation(true);
     }
 
     /**
-     * @param $e
+     * @param $event
      */
-    public function onDispatch($e)
+    public function onDispatch(MvcEvent $event)
     {
-        if (!$this->isJson($e)) {
+        if (!$this->isJson($event)) {
             return;
         }
 
-        $response = $e->getResponse();
+        $response = $event->getResponse();
         $response->getHeaders()->addHeaders(
             array(
                 'Accept' => 'application/json',
@@ -78,29 +86,7 @@ class Module
             )
         );
 
-        $childrens =$e->getViewModel()->getChildren();
-        foreach ($childrens as $children) {
-            $params = $children->getVariables();
-        }
-
-        $result = array();
-        foreach ($params as $param) {
-            if (method_exists($param, 'toArray')) {
-                $result[] = $param->toArray();
-            } elseif ($param instanceof \Zend\Form\Form) {
-                foreach ($param->getElements() as $formElement) {
-                    if ($formElement->getMessages()) {
-                        var_dump($formElement->getMessages());
-                    }
-                }
-//                var_dump($param);
-//                die('form');
-            }
-            $result[] = $param;
-        }
-
-        $model = new JsonModel(array($result));
-        $e->setViewModel($model);
+        $this->jsonHandler($event);
     }
 
     /**
@@ -157,12 +143,12 @@ class Module
     }
 
     /**
-     * @param $e
+     * @param $event
      * @return bool
      */
-    public function isJson($e)
+    public function isJson(MvcEvent $event)
     {
-        $request = $e->getRequest();
+        $request = $event->getRequest();
         if (!$request instanceof HttpRequest) {
             return false;
         }
@@ -180,5 +166,40 @@ class Module
         }
 
         return true;
+    }
+
+    /**
+     * @param $event
+     */
+    public function jsonHandler(MvcEvent $event)
+    {
+        $childrens =$event->getViewModel()->getChildren();
+        foreach ($childrens as $children) {
+            $params = $children->getVariables();
+        }
+
+        $result = array(
+            'params' => array(),
+            'errors' => array(),
+            'form-errors' => array(),
+            'options' => array()
+        );
+        foreach ($params as $param) {
+            if (method_exists($param, 'toArray')) {
+                $result['params'][] = $param->toArray();
+            } elseif ($param instanceof \Zend\Form\Form) {
+                foreach ($param->getElements() as $formElement) {
+                    if ($formElement->getMessages()) {
+                        var_dump($formElement->getMessages());
+                    }
+                }
+//                var_dump($param);
+//                die('form');
+            }
+            $result[] = $param;
+        }
+
+        $model = new JsonModel(array($result));
+        $event->setViewModel($model);
     }
 }
