@@ -15,5 +15,5 @@ abstract class EntityBase
     /**
      * @return mixed
      */
-    abstract  function toArray();
+    abstract public function toArray();
 }
