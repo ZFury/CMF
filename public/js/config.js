@@ -38,6 +38,7 @@ require.config({
         "iframe-transport": './libs/jQuery-File-Upload-master/jquery.iframe-transport',
         "fileupload-ui": './libs/jQuery-File-Upload-master/jquery.fileupload-ui',
         "blueimp": './modules/media/blueimp',
+        "image": './modules/categories/image',
         //BLUEIMP END
         'redactorContent': '../redactor/redactorContent'
     },

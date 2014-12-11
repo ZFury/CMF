@@ -7,7 +7,7 @@ $requireScript = '';
 <div class="container">
     <h1 class="create-label"><?= !$this->title ? 'Create' : $this->escapeHtml($this->title); ?></h1>
 
-    <div class="col-md-12">
+    <div class="col-md-6">
         <form action="" method="post" class="form-horizontal">
             <?php foreach ($this->form->getElements() as $element) : ?>
                 <?php
@@ -47,7 +47,7 @@ $requireScript = '';
                     <?php else: ?>
                         <div class="col-sm-2"></div>
                     <?php endif; ?>
-                    <div class="col-sm-8">
+                    <div class="col-sm-10">
                         <?= $formElement; ?>
                     </div>
                     <?= $this->formElementErrors($element); ?>
@@ -56,13 +56,16 @@ $requireScript = '';
             <?php if (!$submit): ?>
                 <div class="form-group">
                     <div class="col-sm-2"></div>
-                    <div class="col-sm-8">
+                    <div class="col-sm-10">
                         <input type="submit" name="submit" class="form-control col-sm-6 btn btn-success"
                                value="<?= $this->title == 'Edit' ? 'Save' : 'Create'; ?>">
                     </div>
                 </div>
             <?php endif; ?>
         </form>
+    </div>
+    <div class="col-md-6">
+        <?php if ($imageUploadForm) echo $imageService->generateImageUploadForm($module); ?>
     </div>
 </div>
 <script>
