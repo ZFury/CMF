@@ -12,7 +12,7 @@ use Categories\Form\Filter;
 use DoctrineModule\Validator;
 use Categories\Validators;
 
-class ManagementController extends AbstractCrudController
+class ManagementController extends AbstractCrudController implements \Media\Interfce\ImageUploaderInterface
 {
     /**
      * {@inheritdoc}

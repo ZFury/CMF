@@ -5,6 +5,7 @@ namespace Categories\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 
 /**
  * Categories\Entity\Categories
@@ -17,6 +18,8 @@ use Zend\Form\Annotation;
  */
 class Categories
 {
+    use \Starter\Media\Image;
+
     /**
      * @var integer
      * @Annotation\Type("Zend\Form\Element\Text")
@@ -88,6 +91,8 @@ class Categories
      * @ORM\Column(name="`order`", type="integer")
      */
     protected $order;
+
+    private $lifecycleArgs;
 
     /**
      *
@@ -315,5 +320,18 @@ class Categories
     public function setPath($path)
     {
         $this->path = $path;
+    }
+
+    /**
+     * @ORM\PostLoad
+     */
+    public function setLifecycleArgs(LifecycleEventArgs $args)
+    {
+        $this->lifecycleArgs = $args;
+    }
+
+    public function getEntityName()
+    {
+        return 'Categories';
     }
 }
