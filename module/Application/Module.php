@@ -66,9 +66,9 @@ class Module
      */
     public function onDispatch($e)
     {
-//        if (!$this->isJson($e)) {
-//            return;
-//        }
+        if (!$this->isJson($e)) {
+            return;
+        }
 
         $response = $e->getResponse();
         $response->getHeaders()->addHeaders(
@@ -94,7 +94,7 @@ class Module
                     }
                 }
 //                var_dump($param);
-                die('form');
+//                die('form');
             }
             $result[] = $param;
         }
