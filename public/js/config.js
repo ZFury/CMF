@@ -37,8 +37,9 @@ require.config({
         "tmpl": './libs/jQuery-File-Upload-master/tmpl.min',
         "iframe-transport": './libs/jQuery-File-Upload-master/jquery.iframe-transport',
         "fileupload-ui": './libs/jQuery-File-Upload-master/jquery.fileupload-ui',
-        "blueimp": './modules/media/blueimp'
+        "blueimp": './modules/media/blueimp',
         //BLUEIMP END
+        'redactorContent': '../redactor/redactorContent'
     },
     shim: {
         angular: {
@@ -71,6 +72,12 @@ require.config({
         redactor: {
             deps: ['jquery'],
             exports: '$.fn.redactor'
+        },
+        frontend: {
+            deps: ['bootstrap']
+        },
+        backend: {
+            deps: ['angularRoute', 'angularSanitize']
         }
         //'redactor-fullscreen': {
         //    deps: ['jquery', 'redactor'],

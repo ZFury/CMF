@@ -1,0 +1,79 @@
+<?php
+/**@var $form Zend\Form\Form */
+$form = $this->form;
+$requireScript = '';
+?>
+<div class="container">
+    <h1 class="create-label"><?= !$this->title ? 'Create' : $this->escapeHtml($this->title); ?></h1>
+
+    <div class="col-md-12">
+        <form action="" method="post" class="form-horizontal">
+            <?php foreach ($this->form->getElements() as $element) : ?>
+                <?php
+                switch ($element) {
+                    case $element instanceof Zend\Form\Element\Select :
+                        $formElement = $this->formSelect($element);
+                        break;
+                    case $element instanceof Zend\Form\Element\Email :
+                        $formElement = $this->formEmail($element);
+                        break;
+                    case $element instanceof Zend\Form\Element\Password :
+                        $formElement = $this->formPassword($element);
+                        break;
+                    case $element instanceof \Starter\Form\Element\Redactor :
+                        $requireScript = 'redactorContent';
+                        $formElement = $this->formTextarea($element);
+                        break;
+                    case $element instanceof Zend\Form\Element\Textarea :
+                        $formElement = $this->formTextarea($element);
+                        break;
+                    case $element instanceof Zend\Form\Element\Hidden :
+                        $formElement = $this->formHidden($element);
+                        break;
+                    default :
+                        $formElement = $this->formInput($element);
+                        break;
+                }
+                ?>
+                <?php $element->getAttributes()['type'] == 'submit' ? $submit = true : $submit = false; ?>
+                <div class="form-group">
+                    <?php if ($element->getAttributes()['type'] !== 'submit'): ?>
+                        <?php if ($element->getAttributes()['type'] !== 'hidden'): ?>
+                            <label for="<?= $element->getName(); ?>" class="col-sm-2 control-label">
+                                <?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?>
+                            </label>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <div class="col-sm-2"></div>
+                    <?php endif; ?>
+                    <div class="col-sm-8">
+                        <?= $formElement; ?>
+                    </div>
+                    <?= $this->formElementErrors($element); ?>
+                </div>
+            <?php endforeach; ?>
+            <?php if (!$submit): ?>
+                <div class="form-group">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-8">
+                        <input type="submit" name="submit" class="form-control col-sm-6 btn btn-success"
+                               value="<?= $this->title == 'Edit' ? 'Save' : 'Create'; ?>">
+                    </div>
+                </div>
+            <?php endif; ?>
+        </form>
+    </div>
+</div>
+<script>
+    require([
+        'frontend',
+        <?= $requireScript?"'$requireScript'":null; ?>
+        <?php
+        if ($this->scripts) {
+            foreach ($this->scripts as $script) {
+                echo ",'$script'";
+            }
+        }
+        ?>
+    ]);
+</script>

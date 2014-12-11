@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityNotFoundException;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Mvc\Exception;
+use Zend\Mvc\MvcEvent;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 
 /**
@@ -14,6 +15,34 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
  */
 abstract class AbstractCrudController extends AbstractActionController
 {
+    /**
+     * @var ViewModel
+     */
+    protected $viewModel;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function onDispatch(MvcEvent $e)
+    {
+        $routeMatch = $e->getRouteMatch();
+        if (!$routeMatch) {
+            /**
+             * @todo Determine requirements for when route match is missing.
+             *       Potentially allow pulling directly from request metadata?
+             */
+            throw new Exception\DomainException('Missing route matches; unsure how to retrieve action');
+        }
+        $action = $routeMatch->getParam('action', 'not-found');
+
+        $this->viewModel = new ViewModel();
+        if ($action == 'create' || $action == 'edit') {
+            $this->viewModel->setTemplate('crud/' . $action);
+        }
+
+        parent::onDispatch($e);
+    }
+
     /**
      * Create entity
      * @return ViewModel
@@ -35,8 +64,9 @@ abstract class AbstractCrudController extends AbstractActionController
                 $this->redirect()->toRoute(null, ['controller' => 'management']);
             }
         }
+        $viewModel = $this->getViewModel();
 
-        return new ViewModel(['form' => $form]);
+        return $viewModel->setVariables(['form' => $form]);
     }
 
     /**
@@ -59,8 +89,9 @@ abstract class AbstractCrudController extends AbstractActionController
                 $this->redirect()->toRoute(null, ['controller' => 'management']);
             }
         }
+        $viewModel = $this->getViewModel();
 
-        return new ViewModel(['form' => $form]);
+        return $viewModel->setVariables(['form' => $form]);
     }
 
     /**
@@ -117,4 +148,14 @@ abstract class AbstractCrudController extends AbstractActionController
      * @return mixed
      */
     abstract protected function getEntity();
+
+    /**
+     * Return CRUD view model.
+     *
+     * @return ViewModel
+     */
+    protected function getViewModel()
+    {
+        return $this->viewModel;
+    }
 }
