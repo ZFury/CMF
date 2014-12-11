@@ -7,7 +7,6 @@
  */
 namespace Media\Service;
 
-use Media\Service\Image;
 use Zend\View\Model\JsonModel;
 
 class Blueimp
@@ -19,6 +18,11 @@ class Blueimp
         $this->sm = $sm;
     }
 
+    /**
+     * @param $image
+     * @param $deleteUrl
+     * @return array
+     */
     public function getImageJson($image, $deleteUrl)
     {
         $imageService = $this->sm->get('Media\Service\Image');
@@ -34,6 +38,11 @@ class Blueimp
         ];
     }
 
+    /**
+     * @param $image
+     * @param $deleteUrl
+     * @return array
+     */
     public function displayUploadedImage($image, $deleteUrl)
     {
         return [
@@ -43,6 +52,11 @@ class Blueimp
         ];
     }
 
+    /**
+     * @param $images
+     * @param $deleteUrls
+     * @return array
+     */
     public function displayUploadedImages($images, $deleteUrls)
     {
         $imagesJson = array();
@@ -57,23 +71,14 @@ class Blueimp
         return [ 'files' =>  $imagesJson ];
     }
 
+    /**
+     * @param $imageId
+     * @return JsonModel
+     */
     public function deleteImageJson($imageId)
     {
         return new JsonModel([
             'files' =>[ $imageId => 'true' ]
         ]);
-    }
-
-    public function deleteImagesUrl($images)
-    {
-        $deleteUrls = [];
-        foreach ($images as $image) {
-            array_push($deleteUrls, [
-                'id' => $image->getId(),
-                'deleteUrl' => $this->getDeleteUrl($image)
-            ]);
-        }
-
-        return $deleteUrls;
     }
 }

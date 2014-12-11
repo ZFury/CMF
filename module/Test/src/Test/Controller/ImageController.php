@@ -107,6 +107,14 @@ class ImageController extends AbstractActionController implements ImageUploaderI
 
     public function getDeleteUrls($images)
     {
-        return $this->getServiceLocator()->get('Media\Service\Blueimp')->deleteImagesUrl($images);
+        $deleteUrls = [];
+        foreach ($images as $image) {
+            array_push($deleteUrls, [
+                'id' => $image->getId(),
+                'deleteUrl' => $this->getDeleteUrl($image)
+            ]);
+        }
+        die();
+        return $deleteUrls;
     }
 }
