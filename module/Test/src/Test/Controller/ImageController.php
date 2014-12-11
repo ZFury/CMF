@@ -69,7 +69,7 @@ class ImageController extends AbstractActionController implements ImageUploaderI
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->rollBack();
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->close();
 
-                $dataForJson = [ 'message' => [
+                $dataForJson = [ 'files' => [
                         [
                             'name' => $form->get('image')->getValue()['name'],
                             'error' => array_shift($messages)
