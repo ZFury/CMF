@@ -79,8 +79,8 @@ class ImageController extends AbstractActionController implements ImageUploaderI
         } else {
             $dataForJson = $blueimpService->displayUploadedImages(
                 $user->getImages(),
-                $this->getDeleteUrls($user->getImages()
-            ));
+                $this->getDeleteUrls($user->getImages())
+            );
         }
 
         return new JsonModel($dataForJson);
@@ -114,7 +114,7 @@ class ImageController extends AbstractActionController implements ImageUploaderI
                 'deleteUrl' => $this->getDeleteUrl($image)
             ]);
         }
-        die();
+
         return $deleteUrls;
     }
 }
