@@ -75,22 +75,30 @@ return [
             ],
         ],
     ],
-    'navigation' => array(
-        'default' => array(
-            array(
+    'navigation' => [
+        'default' => [
+            [
                 'label' => 'Test',
                 'controller' => 'test',
-                'pages' => array(
-                    array(
+                'pages' => [
+                    [
                         'label' => 'Images',
                         'controller' => 'image',
                         'action' => 'upload-image',
                         'route' => 'test/default',
                         'controller_namespace' => 'Test\Controller\Image',
                         'module' => 'Test'
-                    )
-                )
-            )
-        )
-    )
+                    ],
+                    [
+                        'label' => 'Users',
+                        'controller' => 'management',
+                        'action' => 'index',
+                        'route' => 'test/default',
+                        'controller_namespace' => 'Test\Controller\Management',
+                        'module' => 'Test'
+                    ]
+                ]
+            ]
+        ]
+    ]
 ];
