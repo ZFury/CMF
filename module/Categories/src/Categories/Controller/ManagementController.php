@@ -110,7 +110,7 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
         return $viewModel->setVariables(['form' => $form,
             'imageUploadForm' => $imageUploadForm,
             'imageService' => $imageService,
-            'module' => 'image',
+            'module' => 'image-categories',
             'id' => null
         ]);
     }
@@ -296,13 +296,6 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
         }
 
         return $order;
-    }
-
-    public function uploadImageAction()
-    {
-//        $form = new ImageUpload('upload-image');
-//        $imageService = new Image($this->getServiceLocator());
-//        return new ViewModel(['form' => $form, 'imageService' => $imageService]);
     }
 
     /**

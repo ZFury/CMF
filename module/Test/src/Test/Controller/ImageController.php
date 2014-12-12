@@ -101,7 +101,7 @@ class ImageController extends AbstractActionController implements ImageUploaderI
         $imageService = $this->getServiceLocator()->get('Media\Service\Image');
         return $imageService->getFullUrl($url('test/default', [
             'controller' => 'image',
-            'action' => 'delete',
+            'action' => 'delete-image',
             'id' => $image->getId()
         ]));
     }
