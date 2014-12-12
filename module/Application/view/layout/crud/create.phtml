@@ -5,9 +5,11 @@ $form = $this->form;
 $requireScript = '';
 ?>
 <div class="container">
+    <input type="hidden" id="id" value="<?= $this->id; ?>">
+
     <h1 class="create-label"><?= !$this->title ? 'Create' : $this->escapeHtml($this->title); ?></h1>
 
-    <div class="col-md-6">
+    <div class="col-md-11">
         <form action="" method="post" class="form-horizontal">
             <?php foreach ($this->form->getElements() as $element) : ?>
                 <?php
@@ -55,19 +57,19 @@ $requireScript = '';
             <?php endforeach; ?>
             <?php if (!$submit): ?>
                 <div class="form-group">
-                    <div class="col-sm-2"></div>
-                    <div class="col-sm-10">
-                        <input type="submit" name="submit" class="form-control col-sm-6 btn btn-success"
+                    <div class="col-sm-10 col-md-offset-2">
+                        <input type="submit" name="submit" class="form-control col-md-6 btn btn-success"
                                value="<?= $this->title == 'Edit' ? 'Save' : 'Create'; ?>">
                     </div>
                 </div>
             <?php endif; ?>
         </form>
     </div>
-    <div class="col-md-6">
-        <?php if ($imageUploadForm) echo $imageService->generateImageUploadForm($module); ?>
+    <div class="col-md-10 col-md-offset-2">
+        <?php if ($this->imageUploadForm) echo $this->imageService->generateImageUploadForm($this->module); ?>
     </div>
 </div>
+
 <script>
     require([
         'frontend',

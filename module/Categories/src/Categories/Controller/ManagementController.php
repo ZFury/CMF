@@ -11,6 +11,7 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Categories\Form\Filter;
 use DoctrineModule\Validator;
 use Categories\Validators;
+use Zend\Session\Container as SessionContainer;
 
 class ManagementController extends AbstractCrudController implements \Media\Interfce\ImageUploaderInterface
 {
@@ -96,6 +97,9 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                     )
                 );
             }
+        } else {
+            $this->session = new SessionContainer('imageUpload');
+            $this->session->ids = [];
         }
 //        return new ViewModel(['form' => $form]);
         $viewModel = $this->getViewModel();
@@ -103,7 +107,12 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
         $imageUploadForm = new \Media\Form\ImageUpload('upload-image');
         $imageService = new \Media\Service\Image($this->getServiceLocator());
 
-        return $viewModel->setVariables(['form' => $form, 'imageUploadForm' => $imageUploadForm, 'imageService' => $imageService, 'module' => 'image']);
+        return $viewModel->setVariables(['form' => $form,
+            'imageUploadForm' => $imageUploadForm,
+            'imageService' => $imageService,
+            'module' => 'image',
+            'id' => null
+        ]);
     }
 
     /**
@@ -148,7 +157,15 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
 //        return new ViewModel(['form' => $form]);
         $viewModel = $this->getViewModel();
 
-        return $viewModel->setVariables(['form' => $form]);
+        $imageUploadForm = new \Media\Form\ImageUpload('upload-image');
+        $imageService = new \Media\Service\Image($this->getServiceLocator());
+
+        return $viewModel->setVariables(['form' => $form,
+            'imageUploadForm' => $imageUploadForm,
+            'imageService' => $imageService,
+            'module' => 'image',
+            'id' => $this->params()->fromRoute('id')
+        ]);
     }
 
     /**
@@ -283,9 +300,9 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
 
     public function uploadImageAction()
     {
-        $form = new ImageUpload('upload-image');
-        $imageService = new Image($this->getServiceLocator());
-        return new ViewModel(['form' => $form, 'imageService' => $imageService]);
+//        $form = new ImageUpload('upload-image');
+//        $imageService = new Image($this->getServiceLocator());
+//        return new ViewModel(['form' => $form, 'imageService' => $imageService]);
     }
 
     /**
@@ -293,13 +310,20 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
      */
     public function startUploadAction()
     {
+        $repository = $this->getServiceLocator()
+            ->get('Doctrine\ORM\EntityManager')
+            ->getRepository('Categories\Entity\Categories');
 
-        $user = $this->identity()->getUser();
+        $id = $this->params()->fromRoute('id');
+        if ($id) {
+            $category = $repository->find($id);
+        }
+
         $imageService = $this->getServiceLocator()->get('Media\Service\Image');
         $blueimpService = $this->getServiceLocator()->get('Media\Service\Blueimp');
         if ($this->getRequest()->isPost()) {
-            $form = new ImageUpload('upload-image');
-            $inputFilter = new ImageUploadInputFilter();
+            $form = new \Media\Form\ImageUpload('upload-image');
+            $inputFilter = new \Media\Form\Filter\ImageUploadInputFilter();
             $form->setInputFilter($inputFilter->getInputFilter());
 
             $request = $this->getRequest();
@@ -312,7 +336,7 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
 
             if ($form->isValid()) {
                 $data = $form->getData();
-                $image = $imageService->createImage($data, $this->identity()->getUser());
+                $image = $imageService->createImage($data, $category);
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
                 $dataForJson = $blueimpService->displayUploadedImage($image, $this->getDeleteUrl($image));
             } else {
@@ -330,8 +354,8 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
             }
         } else {
             $dataForJson = $blueimpService->displayUploadedImages(
-                $user->getImages(),
-                $this->getDeleteUrls($user->getImages())
+                $category->getImages(),
+                $this->getDeleteUrls($category->getImages())
             );
         }
 
@@ -350,9 +374,9 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
     {
         $url = $this->serviceLocator->get('ViewHelperManager')->get('url');
         $imageService = $this->getServiceLocator()->get('Media\Service\Image');
-        return $imageService->getFullUrl($url('test/default', [
-            'controller' => 'image',
-            'action' => 'delete',
+        return $imageService->getFullUrl($url('categories/default', [
+            'controller' => 'management',
+            'action' => 'delete-image',
             'id' => $image->getId()
         ]));
     }

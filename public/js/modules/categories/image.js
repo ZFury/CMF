@@ -18,12 +18,16 @@ define([
 ], function ($) {
     $(function () {
         'use strict';
-
+        var id;//= $('#id').val();
+        var idString = '';
+        if (id = $('#id').val())
+            idString = '/' + id;
+        //console.log(x);
         // Initialize the jQuery File Upload widget:
         $('#fileupload').fileupload({
             // Uncomment the following to send cross-domain cookies:
             //xhrFields: {withCredentials: true},
-            url: 'categories/management/start-upload'
+            url: 'categories/management/start-upload' + idString
         });
 
         // Enable iframe cross-domain access via redirect option:
@@ -77,6 +81,5 @@ define([
             });
         }
 
-    })});/**
- * Created by babich on 12/11/14.
- */
+    })
+});

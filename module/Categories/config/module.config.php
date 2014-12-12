@@ -89,7 +89,7 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array(
                     'controller' => 'Categories\Controller\Management',
-                    'action' => ['create', 'index', 'edit', 'order', 'delete'],
+                    'action' => ['create', 'index', 'edit', 'order', 'delete', 'start-upload', 'delete-image'],
                     'roles' => array('admin'),
                 ),
             ),

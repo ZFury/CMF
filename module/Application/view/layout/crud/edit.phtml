@@ -10,5 +10,10 @@ echo $this->partial('layout/crud/create.phtml',
     [
         'form' => $this->form,
         'title' => 'Edit',
+        'scripts' => $this->scripts ? $this->scripts : null,
+        'imageUploadForm' => $this->imageUploadForm,
+        'imageService' => $this->imageService,
+        'module' => $this->module,
+        'id' => $this->id ? $this->id : null
     ]
 );
