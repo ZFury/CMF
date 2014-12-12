@@ -12,6 +12,9 @@ return array(
             'Media\Service\Image' => function ($serviceManager) {
                 return new Media\Service\Image($serviceManager);
             },
+            'Media\Service\Blueimp' => function ($serviceManager) {
+                return new Media\Service\Blueimp($serviceManager);
+            },
         ]
     ],
     'doctrine' => [

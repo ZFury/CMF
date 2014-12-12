@@ -59,6 +59,20 @@ class Image
     }
 
     /**
+     * @param $imageId
+     */
+    public function deleteImage($imageId)
+    {
+        $objectImage = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\ObjectImage')->findOneByImageId($imageId);
+        $this->sm->get('doctrine.entitymanager.orm_default')->remove($objectImage);
+        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+
+        $image = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\Image')->findOneById($imageId);
+        $this->sm->get('doctrine.entitymanager.orm_default')->remove($image);
+        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+    }
+
+    /**
      * @param $destination
      * @param $image
      * @return array|string
@@ -96,10 +110,6 @@ class Image
 
         return true;
     }
-
-    //////////////////////////////////////////////////////////
-    /////////////////////////PATH/////////////////////////////
-    //////////////////////////////////////////////////////////
 
     /**
      * @param $type
@@ -156,10 +166,6 @@ class Image
         return $finalPath;
     }
 
-    //////////////////////////////////////////////////////////
-    ///////////////////////HELPERS////////////////////////////
-    //////////////////////////////////////////////////////////
-
     /**
      * @param $imageName
      * @return mixed
@@ -190,5 +196,11 @@ class Image
     public function getFullUrl($urlPart)
     {
         return $this->sm->get('ViewHelperManager')->get('ServerUrl')->__invoke() . $urlPart;
+    }
+
+    public function generateImageUploadForm($module)
+    {
+        echo $this->sm->get('ViewHelperManager')->get('Partial')->__invoke('layout/file-upload/image-upload-form.phtml');
+        echo "<script>require(['" . $module . "']);</script>";
     }
 }

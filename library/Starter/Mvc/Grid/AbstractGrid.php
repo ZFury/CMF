@@ -3,9 +3,9 @@
 namespace Starter\Mvc\Grid;
 
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\EntityRepository;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
-class Grid
+abstract class AbstractGrid
 {
     const ORDER_ASC = 'ASC';
     const ORDER_DESC = 'DESC';
@@ -28,22 +28,22 @@ class Grid
     protected $params = array();
 
     /**
-     * Default page = 1
+     * Page
      * @var int
      */
-    protected $page = 1;
+    protected $page;
 
     /**
      * Limit per page
      * @var int
      */
-    protected $limit = 2;
+    protected $limit;
 
     /**
-     * Default orders - ASC
+     * Orders
      * @var array
      */
-    protected $orders = array('field' => 'id', 'order' => self::ORDER_ASC);
+    protected $orders = array();
 
     /**
      * Filters
@@ -52,15 +52,26 @@ class Grid
     protected $filters = array();
 
     /**
+     * Service locator
+     * @var ServiceLocatorInterface
+     */
+    public $sm;
+
+    /**
      * __construct
      *
-     * @param QueryBuilder $source
-     * @return Grid
+     * @param ServiceLocatorInterface $serviseManager
+     * @return AbstractGrid
      */
-    public function __construct(QueryBuilder $source)
+    public function __construct(ServiceLocatorInterface $serviseManager)
     {
-        $this->source = $source;
+        $this->sm = $serviseManager;
     }
+
+    /**
+     * Abstract function init
+     */
+    abstract public function init();
 
     /**
      *  Get data
@@ -98,6 +109,17 @@ class Grid
     }
 
     /**
+     * Set source
+     *
+     * @param \Doctrine\ORM\QueryBuilder $source
+     * @return AbstractGrid
+     */
+    public function setSource($source)
+    {
+        $this->source = $source;
+    }
+
+    /**
      * Get settings
      *
      * @return array
@@ -115,7 +137,7 @@ class Grid
      * Set settings
      *
      * @param array $params
-     * @return Grid
+     * @return AbstractGrid
      */
     public function setSettings(array $params)
     {
@@ -127,7 +149,7 @@ class Grid
      * Set page
      *
      * @param int $page
-     * @return Grid
+     * @return AbstractGrid
      */
     public function setPage($page)
     {
@@ -149,7 +171,7 @@ class Grid
      * Set limit
      *
      * @param int $limit
-     * @return Grid
+     * @return AbstractGrid
      */
     public function setLimit($limit)
     {
@@ -171,7 +193,7 @@ class Grid
      * Set order
      *
      * @param array $order
-     * @return Grid
+     * @return AbstractGrid
      */
     public function setOrder($order)
     {
@@ -193,7 +215,7 @@ class Grid
      * Set filter
      *
      * @param array $filters
-     * @return Grid
+     * @return AbstractGrid
      */
     public function setFilter($filters)
     {
