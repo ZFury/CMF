@@ -61,14 +61,34 @@
 
 <script>
     require([
-//        'redactor-fullscreen',
         'redactor'
     ], function () {
         $('#content').redactor({
-//            plugins: ['fullscreen'],
-//            scrollTarget: '.container',
             minHeight: 300, // pixels
             placeholder: 'Page content'
         });
+        $('form').submit(function(){
+            $.ajax({
+                url: $(this).attr('action'),
+                dataType: "json",
+                method: "POST",
+                data: {
+                    "title" : $("form input[name=title]").val(),
+                    "alias" : $("form input[name=alias]").val(),
+                    "content" : $("form textarea[name=content]").val()
+                },
+                success: function(result)
+                {
+                    console.log('result', result)
+                }
+            });
+//            $.ajax(
+//
+//                $(this).attr('action'),
+//                $(this).serializeArray()
+//            );
+            return false;
+        });
+
     });
 </script>

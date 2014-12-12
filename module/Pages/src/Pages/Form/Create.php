@@ -81,28 +81,23 @@ class Create extends Form
             )
         );
 
-        $this->add(
-            array(
-                'name' => 'content',
-                'attributes' => array(
-                    'type' => 'textarea',
-                    'id' => 'content',
-                    'class' => 'form-control redactor-content'
-                ),
-                'options' => array(
-                    'label' => 'Content',
-                    'label_attributes' => array(
-                        'class' => 'col-sm-2 control-label'
-                    ),
-                ),
-            )
-        );
+        $redactor = new \Starter\Form\Element\Redactor();
+        $redactor->setName('content')
+            ->setAttributes(['id' => 'content',
+                'class' => 'form-control redactor-content'])
+            ->setOptions([
+                'label' => 'Content',
+                'label_attributes' => [
+                    'class' => 'col-sm-2 control-label'
+                ]
+            ]);
+        $this->add($redactor);
 
         $this->add(
             array(
                 'name' => 'keywords',
+                'type' => 'textarea',
                 'attributes' => array(
-                    'type' => 'textarea',
                     'id' => 'keywords',
                     'class' => 'form-control'
                 ),
@@ -118,8 +113,8 @@ class Create extends Form
         $this->add(
             array(
                 'name' => 'description',
+                'type' => 'textarea',
                 'attributes' => array(
-                    'type' => 'textarea',
                     'id' => 'description',
                     'class' => 'form-control'
                 ),

@@ -50,7 +50,6 @@ class Comment
         $form->setData($data);
 
         if ($form->isValid()) {
-
             $data = $form->getData();
 
             $et = $this->getServiceLocator()->get('Comment\Service\EntityType');

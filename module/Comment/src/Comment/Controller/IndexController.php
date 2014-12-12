@@ -25,12 +25,12 @@ class IndexController extends AbstractActionController
 
         // for GET (or query string) data
         if ($this->getRequest()->getQuery()->entity && $entityId = intval($this->getRequest()->getQuery()->id)) {
-            $data = Array();
+            $data = array();
             $data['entityType'] = $this->getRequest()->getQuery()->entity;
             $data['entityId'] = $this->getRequest()->getQuery()->id;
         }
 
-        if(!isset($data)) {
+        if (!isset($data)) {
             return $this->notFoundAction();
         }
 
@@ -85,7 +85,7 @@ class IndexController extends AbstractActionController
                 ->editCommentById($form, $data);
 
             $flashMessenger = new FlashMessenger();
-            if($comment) {
+            if ($comment) {
                 $flashMessenger->addSuccessMessage('Comment edited');
             } else {
                 $flashMessenger->addErrorMessage('Comment is not changed');
@@ -119,7 +119,7 @@ class IndexController extends AbstractActionController
                 ->addComment($form, $data);
 
             $flashMessenger = new FlashMessenger();
-            if($comment) {
+            if ($comment) {
                 $flashMessenger->addSuccessMessage('Comment created');
             } else {
                 $flashMessenger->addErrorMessage('Comment is not created');

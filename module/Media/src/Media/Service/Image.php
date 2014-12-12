@@ -31,31 +31,67 @@ class Image
         $this->sm = $sm;
     }
 
-    /**
-     * @param $data
-     * @return \Media\Entity\Image
-     */
-    public function createImage($data, $object)
+    public function writeImage($data)
     {
         //Creating new image to get ID for building its path
         $image = new \Media\Entity\Image();
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($image);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+
         //Building path and creating directory. Then - moving
         $ext = \Media\Service\Image::getExt($data['image']['name']);
         $destination = \Media\Service\Image::imgPath(\Media\Service\Image::ORIGINAL, $image->getId(), $ext);
         \Media\Service\Image::moveImage($destination, $data['image']);
         $image->setExtension($ext);
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($image);
+        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+        
+        return $image;
+    }
 
+    public function writeObjectImage($object, $image)
+    {
         $objectImage = new ObjectImage();
         $objectImage->setImage($image);
         $objectImage->setEntityName($object->getEntityName());
         $objectImage->setObjectId($object->getId());
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($objectImage);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+    }
+
+    /**
+     * @param $data
+     * @return \Media\Entity\Image
+     */
+    public function createImage($data, $object)
+    {
+        $image = $this->writeImage($data);
+        $this->writeObjectImage($object, $image);
 
         return $image;
+    }
+
+    public function deleteObjectImageEntity($imageId)
+    {
+        $objectImage = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\ObjectImage')->findOneByImageId($imageId);
+        $this->sm->get('doctrine.entitymanager.orm_default')->remove($objectImage);
+        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+    }
+
+    public function deleteImageEntity($imageId)
+    {
+        $image = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\Image')->findOneById($imageId);
+        $this->sm->get('doctrine.entitymanager.orm_default')->remove($image);
+        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+    }
+
+    /**
+     * @param $imageId
+     */
+    public function deleteImage($imageId)
+    {
+        $this->deleteObjectImageEntity($imageId);
+        $this->deleteImageEntity($imageId);
     }
 
     /**
@@ -96,10 +132,6 @@ class Image
 
         return true;
     }
-
-    //////////////////////////////////////////////////////////
-    /////////////////////////PATH/////////////////////////////
-    //////////////////////////////////////////////////////////
 
     /**
      * @param $type
@@ -156,10 +188,6 @@ class Image
         return $finalPath;
     }
 
-    //////////////////////////////////////////////////////////
-    ///////////////////////HELPERS////////////////////////////
-    //////////////////////////////////////////////////////////
-
     /**
      * @param $imageName
      * @return mixed
@@ -190,5 +218,11 @@ class Image
     public function getFullUrl($urlPart)
     {
         return $this->sm->get('ViewHelperManager')->get('ServerUrl')->__invoke() . $urlPart;
+    }
+
+    public function generateImageUploadForm($module)
+    {
+        echo $this->sm->get('ViewHelperManager')->get('Partial')->__invoke('layout/file-upload/image-upload-form.phtml');
+        echo "<script>require(['" . $module . "']);</script>";
     }
 }
