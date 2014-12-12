@@ -98,8 +98,8 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                 );
             }
         } else {
-            $this->session = new SessionContainer('imageUpload');
-            $this->session->ids = [];
+            $session = new SessionContainer('imageUpload');
+            $session->ids = [];
         }
 //        return new ViewModel(['form' => $form]);
         $viewModel = $this->getViewModel();
@@ -307,6 +307,8 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
             ->get('Doctrine\ORM\EntityManager')
             ->getRepository('Categories\Entity\Categories');
 
+        $session = new SessionContainer('imageUpload');
+
         $id = $this->params()->fromRoute('id');
         if ($id) {
             $category = $repository->find($id);
@@ -329,7 +331,17 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
 
             if ($form->isValid()) {
                 $data = $form->getData();
-                $image = $imageService->createImage($data, $category);
+                if (!$id) {
+                    //to service//
+                    $image = $imageService->writeImage($data);
+                    if (!isset($session->ids) || !is_array($session->ids)) {
+                        $session->ids = [];
+                    }
+                    array_push($session->ids, $image->getId());
+                    //////////////
+                } else {
+                    $image = $imageService->createImage($data, $category);
+                }
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
                 $dataForJson = $blueimpService->displayUploadedImage($image, $this->getDeleteUrl($image));
             } else {
@@ -346,9 +358,22 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                 ]];
             }
         } else {
+            if ($id) {
+                $images = $category->getImages();
+            } else {
+                if (isset($session->ids) && is_array($session->ids) && count($session->ids) != 0) {
+                    foreach ($session->ids as $imageId) {
+                        $images = $this->getServiceLocator()
+                            ->get('Doctrine\ORM\EntityManager')
+                            ->getRepository('Media\Entity\Image')->find($imageId);
+                    }
+                } else {
+                    $images = [];
+                }
+            }
             $dataForJson = $blueimpService->displayUploadedImages(
-                $category->getImages(),
-                $this->getDeleteUrls($category->getImages())
+                $images,
+                $this->getDeleteUrls($images)
             );
         }
 
