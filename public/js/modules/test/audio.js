@@ -23,7 +23,7 @@ $(function () {
     $('#fileupload').fileupload({
         // Uncomment the following to send cross-domain cookies:
         //xhrFields: {withCredentials: true},
-        url: 'test/image/start-upload'
+        url: 'test/audio/start-upload'
     });
 
     // Enable iframe cross-domain access via redirect option:
@@ -45,7 +45,7 @@ $(function () {
             // send Blob objects via XHR requests:
             disableImageResize: /Android(?!.*Chrome)|Opera/
                 .test(window.navigator.userAgent),
-            maxFileSize: 50000000,
+            maxFileSize: 500000000,
             acceptFileTypes: /(\.|\/)(mp3)$/i
         });
         // Upload server status check for browsers with CORS support:

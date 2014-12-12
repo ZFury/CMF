@@ -18,18 +18,6 @@ use Media\Interfce\ImageUploaderInterface;
 
 class ImageController extends AbstractActionController implements ImageUploaderInterface
 {
-    public function indexAction()
-    {
-        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-
-
-        $userEntityRepository = $entityManager->getRepository('User\Entity\User');
-        $user = $userEntityRepository->findOneById($this->identity()->getUser()->getId());
-        $images = $user->getImages();
-
-        return new ViewModel(['images' => $images]);
-    }
-
     public function uploadImageAction()
     {
         $form = new ImageUpload('upload-image');

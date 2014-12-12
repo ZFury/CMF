@@ -9,7 +9,7 @@
 namespace Media\Service;
 
 use Zend\Filter\File\RenameUpload;
-use Media\Entity\ObjectImage;
+use Media\Entity\ObjectAudio;
 
 class Audio
 {
@@ -26,51 +26,53 @@ class Audio
 
     /**
      * @param $data
+     * @param $object
      * @return \Media\Entity\Audio
      */
     public function createAudio($data, $object)
     {
         //Creating new image to get ID for building its path
-        $image = new \Media\Entity\Audio();
-        $this->sm->get('doctrine.entitymanager.orm_default')->persist($image);
+        $audio = new \Media\Entity\Audio();
+        $this->sm->get('doctrine.entitymanager.orm_default')->persist($audio);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
         //Building path and creating directory. Then - moving
-        $ext = \Media\Service\Audio::getExt($data['image']['name']);
-        $destination = \Media\Service\Audio::imgPath(\Media\Service\Audio::ORIGINAL, $image->getId(), $ext);
-        \Media\Service\Audio::moveImage($destination, $data['image']);
-        $image->setExtension($ext);
-        $this->sm->get('doctrine.entitymanager.orm_default')->persist($image);
+        $ext = $this->getExt($data['audio']['name']);//??????????????????
+        $destination = $this->audioPath($audio->getId(), $ext);
+        $this->moveAudio($destination, $data['audio']);//??????????????????
+        $audio->setExtension($ext);
+        $this->sm->get('doctrine.entitymanager.orm_default')->persist($audio);
 
-        $objectImage = new ObjectImage();
-        $objectImage->setImage($image);
-        $objectImage->setEntityName($object->getEntityName());
-        $objectImage->setObjectId($object->getId());
-        $this->sm->get('doctrine.entitymanager.orm_default')->persist($objectImage);
+
+        $objectAudio = new ObjectAudio();
+        $objectAudio->setAudio($audio);
+        $objectAudio->setEntityName($object->getEntityName());
+        $objectAudio->setObjectId($object->getId());
+        $this->sm->get('doctrine.entitymanager.orm_default')->persist($objectAudio);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
 
-        return $image;
+        return $audio;
     }
 
     /**
-     * @param $imageId
+     * @param $audioId
      */
-    public function deleteImage($imageId)
+    public function deleteAudio($audioId)
     {
-        $objectImage = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\ObjectImage')->findOneByImageId($imageId);
-        $this->sm->get('doctrine.entitymanager.orm_default')->remove($objectImage);
+        $objectAudio = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\ObjectAudio')->findOneByAudioId($audioId);
+        $this->sm->get('doctrine.entitymanager.orm_default')->remove($objectAudio);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
 
-        $image = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\Image')->findOneById($imageId);
-        $this->sm->get('doctrine.entitymanager.orm_default')->remove($image);
+        $audio = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\Audio')->findOneById($audioId);
+        $this->sm->get('doctrine.entitymanager.orm_default')->remove($audio);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
     }
 
     /**
      * @param $destination
-     * @param $image
+     * @param $audio
      * @return array|string
      */
-    public static function moveImage($destination, $image)
+    public static function moveAudio($destination, $audio)
     {
         self::prepareDir($destination);
         $filter = new RenameUpload(
@@ -80,7 +82,7 @@ class Audio
             )
         );
 
-        return $filter->filter($image);
+        return $filter->filter($audio);
     }
 
     /**
@@ -91,7 +93,7 @@ class Audio
      */
     public static function prepareDir($path, $mode = 0775)
     {
-        $destination = preg_replace('/.[0-9]*\.((jpeg)|(jpg)|(png))$/', '', $path);
+        $destination = preg_replace('/.[0-9]*\.((mp3))$/', '', $path);
         if (!is_dir($destination)) {
             if (self::prepareDir(dirname($destination), $mode)) {
                 if (!is_writable(dirname($destination))) {
@@ -105,32 +107,21 @@ class Audio
     }
 
     /**
-     * @param $type
      * @param $id
      * @param $ext
      * @param bool $onlyPath
      * @return string
      * @throws \Exception
      */
-    public static function imgPath($type, $id, $ext, $onlyPath = false)//$onlyPath it's because we need another path when working with Original and when we are getting it
+    public static function audioPath($id, $ext, $onlyPath = false)//$onlyPath it's because we need another path when working with Original and when we are getting it
     {
-        if (self::ORIGINAL == $type) {
-            if ($onlyPath == false) {
-                $path = self::PUBLIC_PATH . self::PATH . "original";
-            } else {
-                $path = self::PATH . "original";
-            }
-
-
+        if ($onlyPath == false) {
+            $path = self::PUBLIC_PATH . self::PATH;
         } else {
-            $size = self::sizeByType($type);
-            if (empty($size)) {
-                throw new \Exception('Unsupported size');
-            }
-            $path = self::PATH . $size['width'] . 'x' . $size['height'];
+            $path = self::PATH;
         }
 
-        return self::buildImagePath($id, $path, $ext);
+        return self::buildAudioPath($id, $path, $ext);
     }
 
     /**
@@ -139,7 +130,7 @@ class Audio
      * @param $ext
      * @return string
      */
-    public static function buildImagePath($id, $path, $ext)
+    public static function buildAudioPath($id, $path, $ext)
     {
         return rtrim($path, "/") . "/" . trim(self::buildPath($id, $ext), '/');
     }
@@ -169,20 +160,6 @@ class Audio
     }
 
     /**
-     * @param $type
-     * @return array
-     */
-    protected static function sizeByType($type)
-    {
-        switch ($type) {
-            case self::BIG_THUMB:
-                return array('width' => self::B_THUMB_WIDTH, 'height' => self::B_THUMB_HEIGHT);
-            case self::SMALL_THUMB:
-                return array('width' => self::S_THUMB_WIDTH, 'height' => self::S_THUMB_HEIGHT);
-        }
-    }
-
-    /**
      * @param $urlPart
      * @return string
      */
@@ -191,9 +168,9 @@ class Audio
         return $this->sm->get('ViewHelperManager')->get('ServerUrl')->__invoke() . $urlPart;
     }
 
-    public function generateImageUploadForm($module)
+    public function generateAudioUploadForm($module)
     {
-        echo $this->sm->get('ViewHelperManager')->get('Partial')->__invoke('layout/file-upload/image-upload-form.phtml');
+        echo $this->sm->get('ViewHelperManager')->get('Partial')->__invoke('layout/file-upload/audio-upload-form.phtml');
         echo "<script>require(['" . $module . "']);</script>";
     }
 }

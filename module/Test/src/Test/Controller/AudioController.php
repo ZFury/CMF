@@ -8,33 +8,21 @@
 
 namespace Test\Controller;
 
-use Media\Service\Image;
+use Media\Service\Audio;
 use Zend\View\Model\JsonModel;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Media\Form\ImageUpload;
-use Media\Form\Filter\ImageUploadInputFilter;
-use Media\Interfce\ImageUploaderInterface;
+use Media\Form\AudioUpload;
+use Media\Form\Filter\AudioUploadInputFilter;
+use Media\Interfce\AudioUploaderInterface;
 
-class ImageController extends AbstractActionController implements ImageUploaderInterface
+class AudioController extends AbstractActionController implements AudioUploaderInterface
 {
-    public function indexAction()
+    public function uploadAudioAction()
     {
-        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-
-
-        $userEntityRepository = $entityManager->getRepository('User\Entity\User');
-        $user = $userEntityRepository->findOneById($this->identity()->getUser()->getId());
-        $images = $user->getImages();
-
-        return new ViewModel(['images' => $images]);
-    }
-
-    public function uploadImageAction()
-    {
-        $form = new ImageUpload('upload-image');
-        $imageService = new Image($this->getServiceLocator());
-        return new ViewModel(['form' => $form, 'imageService' => $imageService]);
+        $form = new AudioUpload('upload-audio');
+        $audioService = new Audio($this->getServiceLocator());
+        return new ViewModel(['form' => $form, 'audioService' => $audioService]);
     }
 
     /**
@@ -44,11 +32,11 @@ class ImageController extends AbstractActionController implements ImageUploaderI
     {
 
         $user = $this->identity()->getUser();
-        $imageService = $this->getServiceLocator()->get('Media\Service\Image');
+        $audioService = $this->getServiceLocator()->get('Media\Service\Audio');
         $blueimpService = $this->getServiceLocator()->get('Media\Service\Blueimp');
         if ($this->getRequest()->isPost()) {
-            $form = new ImageUpload('upload-image');
-            $inputFilter = new ImageUploadInputFilter();
+            $form = new AudioUpload('upload-image');
+            $inputFilter = new AudioUploadInputFilter();
             $form->setInputFilter($inputFilter->getInputFilter());
 
             $request = $this->getRequest();
@@ -61,9 +49,9 @@ class ImageController extends AbstractActionController implements ImageUploaderI
 
             if ($form->isValid()) {
                 $data = $form->getData();
-                $image = $imageService->createImage($data, $this->identity()->getUser());
+                $audio = $audioService->createAudio($data, $this->identity()->getUser());
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
-                $dataForJson = $blueimpService->displayUploadedImage($image, $this->getDeleteUrl($image));
+                $dataForJson = $blueimpService->displayUploadedAudio($audio, $this->getDeleteUrl($audio));
             } else {
                 $messages = $form->getMessages();
                 $messages = array_shift($messages);
@@ -72,47 +60,47 @@ class ImageController extends AbstractActionController implements ImageUploaderI
 
                 $dataForJson = [ 'files' => [
                         [
-                            'name' => $form->get('image')->getValue()['name'],
+                            'name' => $form->get('audio')->getValue()['name'],
                             'error' => array_shift($messages)
                         ]
                 ]];
             }
         } else {
-            $dataForJson = $blueimpService->displayUploadedImages(
-                $user->getImages(),
-                $this->getDeleteUrls($user->getImages())
+            $dataForJson = $blueimpService->displayUploadedAudios(
+                $user->getAudios(),
+                $this->getDeleteUrls($user->getAudios())
             );
         }
 
         return new JsonModel($dataForJson);
     }
 
-    public function deleteImageAction()
+    public function deleteAudioAction()
     {
-        $this->getServiceLocator()->get('Media\Service\Image')
-            ->deleteImage($this->getEvent()->getRouteMatch()->getParam('id'));
+        $this->getServiceLocator()->get('Media\Service\Audio')
+            ->deleteAudio($this->getEvent()->getRouteMatch()->getParam('id'));
         return $this->getServiceLocator()->get('Media\Service\Blueimp')
             ->deleteImageJson($this->getEvent()->getRouteMatch()->getParam('id'));
     }
 
-    public function getDeleteUrl($image)
+    public function getDeleteUrl($audio)
     {
         $url = $this->serviceLocator->get('ViewHelperManager')->get('url');
-        $imageService = $this->getServiceLocator()->get('Media\Service\Image');
-        return $imageService->getFullUrl($url('test/default', [
-            'controller' => 'image',
+        $audioService = $this->getServiceLocator()->get('Media\Service\Audio');
+        return $audioService->getFullUrl($url('test/default', [
+            'controller' => 'audio',
             'action' => 'delete',
-            'id' => $image->getId()
+            'id' => $audio->getId()
         ]));
     }
 
-    public function getDeleteUrls($images)
+    public function getDeleteUrls($audios)
     {
         $deleteUrls = [];
-        foreach ($images as $image) {
+        foreach ($audios as $audio) {
             array_push($deleteUrls, [
-                'id' => $image->getId(),
-                'deleteUrl' => $this->getDeleteUrl($image)
+                'id' => $audio->getId(),
+                'deleteUrl' => $this->getDeleteUrl($audio)
             ]);
         }
 

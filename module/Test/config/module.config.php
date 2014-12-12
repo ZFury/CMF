@@ -51,6 +51,7 @@ return [
         'invokables' => [
             'Test\Controller\Management' => 'Test\Controller\ManagementController',
             'Test\Controller\Image' => 'Test\Controller\ImageController',
+            'Test\Controller\Audio' => 'Test\Controller\AudioController',
         ],
     ],
     'view_manager' => array(
@@ -72,6 +73,10 @@ return [
                     'controller' => 'Test\Controller\Image',
                     'roles' => ['user'],
                 ],
+                [
+                    'controller' => 'Test\Controller\Audio',
+                    'roles' => ['user'],
+                ],
             ],
         ],
     ],
@@ -87,6 +92,14 @@ return [
                         'action' => 'upload-image',
                         'route' => 'test/default',
                         'controller_namespace' => 'Test\Controller\Image',
+                        'module' => 'Test'
+                    ],
+                    [
+                        'label' => 'Audios',
+                        'controller' => 'audio',
+                        'action' => 'upload-audio',
+                        'route' => 'test/default',
+                        'controller_namespace' => 'Test\Controller\Audio',
                         'module' => 'Test'
                     ],
                     [

@@ -39,6 +39,26 @@ class Blueimp
     }
 
     /**
+     * @param $audio
+     * @param $deleteUrl
+     * @return array
+     */
+    public function getAudioJson($audio, $deleteUrl)
+    {
+        $audioService = $this->sm->get('Media\Service\Audio');
+
+        return [
+            'url' => $audioService->getFullUrl($audio->getUrlPart()),
+            'thumbnailUrl' => $audioService->getFullUrl($audio->getUrlPart()),
+            'name' => '',
+            'type' => 'audio/mp3',
+            'size' => '',
+            'deleteUrl' => $deleteUrl,
+            'deleteType' => 'POST',
+        ];
+    }
+
+    /**
      * @param $image
      * @param $deleteUrl
      * @return array
@@ -49,6 +69,20 @@ class Blueimp
           'files' => [
               $this->getImageJson($image, $deleteUrl)
           ]
+        ];
+    }
+
+    /**
+     * @param $audio
+     * @param $deleteUrl
+     * @return array
+     */
+    public function displayUploadedAudio($audio, $deleteUrl)
+    {
+        return [
+            'files' => [
+                $this->getAudioJson($audio, $deleteUrl)
+            ]
         ];
     }
 
@@ -72,6 +106,25 @@ class Blueimp
     }
 
     /**
+     * @param $audios
+     * @param $deleteUrls
+     * @return array
+     */
+    public function displayUploadedAudios($audios, $deleteUrls)
+    {
+        $imagesJson = array();
+        foreach ($audios as $audio) {
+            foreach ($deleteUrls as $deleteUrl) {
+                if ($deleteUrl['id'] == $audio->getId()) {
+                    array_push($imagesJson, $this->getAudioJson($audio, $deleteUrl['deleteUrl']));
+                }
+            }
+        }
+
+        return [ 'files' =>  $imagesJson ];
+    }
+
+    /**
      * @param $imageId
      * @return JsonModel
      */
@@ -79,6 +132,17 @@ class Blueimp
     {
         return new JsonModel([
             'files' =>[ $imageId => 'true' ]
+        ]);
+    }
+
+    /**
+     * @param $audioId
+     * @return JsonModel
+     */
+    public function deleteAudioJson($audioId)
+    {
+        return new JsonModel([
+            'files' =>[ $audioId => 'true' ]
         ]);
     }
 }

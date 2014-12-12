@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Starter\Media\Image;
+use Starter\Media\Audio;
 use Zend\Form\Annotation;
 
 /**
@@ -21,6 +22,7 @@ use Zend\Form\Annotation;
 class User
 {
     use Image;
+    use Audio;
 
     const ROLE_USER = 'user';
 
