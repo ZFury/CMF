@@ -63,17 +63,4 @@ class ManagementController extends AbstractCrudController
     {
         return new \Comment\Entity\EntityType();
     }
-
-    public function deleteAction()
-    {
-        $entity = $this->loadEntity();
-
-        //TODO: change method to post maybe
-        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $objectManager->remove($entity);
-        $objectManager->flush();
-
-        //TODO: redirect where?
-//        $this->redirect()->toRoute(null, ['controller' => 'management']);
-    }
 }

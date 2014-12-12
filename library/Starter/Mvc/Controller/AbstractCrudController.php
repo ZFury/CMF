@@ -76,7 +76,7 @@ abstract class AbstractCrudController extends AbstractActionController
         $objectManager->flush();
 
         //TODO: redirect where?
-        $this->redirect()->toRoute(null, ['controller' => 'management']);
+        return $this->redirect()->toRoute(null, ['controller' => 'management']);
     }
 
     /**

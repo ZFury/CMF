@@ -44,9 +44,9 @@ class Comment
     {
         $user = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity()->getUser();
         $data['user'] = $user;
-
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $comment = new \Comment\Entity\Comment();
+
         $form->setData($data);
 
         if ($form->isValid()) {
@@ -78,25 +78,23 @@ class Comment
     }
 
     /**
-     * @param $entityType
-     * @param $entityId
-     * @param null $userId
+     * @param array $data
      * @return array
      */
-    public function getCommentsByEntityId($entityType, $entityId, $userId = null)
+    public function getCommentsByEntityId(array $data)
     {
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
 
-        if (isset($userId)) {
-            $comments = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => $entityType, 'entityId' => $entityId, 'userId' => $userId));
-        } else {
-            $comments = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => $entityType, 'entityId' => $entityId));
-        }
+        $comments = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => $data['entityType'], 'entityId' => $data['entityId']));
 
         $arrayComments = array();
         foreach ($comments as $comment) {
             $arrayComments[$comment->getId()]['comment'] = $comment;
-            $arrayComments[$comment->getId()]['childs'] = self::getCommentsByEntityId('comment', $comment->getId());
+            $data = [
+                'entityType' => 'comment',
+                'entityId' => $comment->getId()
+            ];
+            $arrayComments[$comment->getId()]['childs'] = self::getCommentsByEntityId($data);
         }
         return $arrayComments;
     }

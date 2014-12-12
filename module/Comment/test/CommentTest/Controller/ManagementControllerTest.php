@@ -56,7 +56,7 @@ class ManagementControllerTest extends ControllerTestCase
      */
     public static function tearDownAfterClass()
     {
-//        exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
+        exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
     }
 
     /**
@@ -73,100 +73,84 @@ class ManagementControllerTest extends ControllerTestCase
         $this->setupAdmin();
     }
 
-//    public function testIndexActionCanBeAccessed()
-//    {
-//        $this->dispatch('/comment/management');
-//        $this->assertResponseStatusCode(200);
-//
-//        $this->assertModuleName('Comment');
-//        $this->assertControllerName('Comment\Controller\Management');
-//        $this->assertControllerClass('ManagementController');
-//        $this->assertMatchedRouteName('comment/default');
-//    }
+    public function testIndexActionCanBeAccessed()
+    {
+        $this->dispatch('/comment/management');
+        $this->assertResponseStatusCode(200);
 
-//    public function testCreateActionCanBeAccessed()
-//    {
-//        $this->dispatch('/comment/management/create');
-//        $this->assertResponseStatusCode(200);
-//
-//        $this->assertModuleName('comment');
-//        $this->assertControllerName('Comment\Controller\Management');
-//        $this->assertControllerClass('ManagementController');
-//        $this->assertMatchedRouteName('comment/default');
-//    }
+        $this->assertModuleName('Comment');
+        $this->assertControllerName('Comment\Controller\Management');
+        $this->assertControllerClass('ManagementController');
+        $this->assertMatchedRouteName('comment/default');
+    }
 
-//    public function testCreateActionRedirectsAfterValidPost()
-//    {
-//        $postData = array(
-//            'entityType' => 'another',
-//            'description' => 'another',
-//        );
-//        $this->dispatch('/comment/management/create', 'POST', $postData);
-//        $this->assertResponseStatusCode(302);
-//
-//        $this->assertRedirectTo('/comment/management');
-//    }
 
-//    public function testEditActionCanBeAccessed()
-//    {
-//        $this->dispatch('/comment/management/edit/1');
-//        $this->assertResponseStatusCode(200);
-//
-//        $this->assertModuleName('Comment');
-//        $this->assertControllerName('Comment\Controller\Management');
-//        $this->assertControllerClass('ManagementController');
-//        $this->assertMatchedRouteName('comment/default');
-//    }
+    public function testCreateActionRedirectsAfterValidPost()
+    {
+        $postData = array(
+            'entityType' => 'another',
+            'description' => 'another',
+        );
+        $this->dispatch('/comment/management/create', 'POST', $postData);
+        $this->assertResponseStatusCode(302);
+
+        $this->assertRedirectTo('/comment/management');
+    }
+
+    public function testEditActionCanBeAccessed()
+    {
+        $this->dispatch('/comment/management/edit/1');
+        $this->assertResponseStatusCode(200);
+
+        $this->assertModuleName('Comment');
+        $this->assertControllerName('Comment\Controller\Management');
+        $this->assertControllerClass('ManagementController');
+        $this->assertMatchedRouteName('comment/default');
+    }
 
     public function testDeleteActionCanBeAccessed()
     {
-       //$entity = $this->createEntity($this->entityData);
-        //var_dump($entity);
-        //die();
-        $this->dispatch("/comment/management/delete/3");
+        $entity = $this->createEntity($this->entityData);
+        $this->dispatch("/comment/management/delete/".$entity->getId());
         $this->assertResponseStatusCode(302);
 
-//        $this->assertModuleName('comment');
-//        $this->assertControllerName('Comment\Controller\Management');
-//        $this->assertControllerClass('ManagementController');
-//        $this->assertMatchedRouteName('comment/default');
+        $this->assertModuleName('comment');
+        $this->assertControllerName('Comment\Controller\Management');
+        $this->assertControllerClass('ManagementController');
+        $this->assertMatchedRouteName('comment/default');
     }
 
-//    public function testEditActionRedirectsAfterValidPost()
-//    {
-//        /**
-//         * @var \Comment\Entity\EntityType $entity
-//         */
-//        $entity = $this->createEntity($this->entityData);
-//
-//        $postData = array(
-//            'entityType' => 'edited',
-//            'description' => 'edited',
-//        );
-//        $this->dispatch('/comment/management/edit/' . $entity->getId(), 'POST', $postData);
-//        $this->assertResponseStatusCode(302);
-//
-//        $this->assertRedirectTo('/comment/management');
-//
-//        $this->removeEntity($entity);
-//    }
+    public function testEditActionRedirectsAfterValidPost()
+    {
+        /**
+         * @var \Comment\Entity\EntityType $entity
+         */
+        $entity = $this->createEntity($this->entityData);
 
+        $postData = array(
+            'entityType' => 'edited',
+            'description' => 'edited',
+        );
+        $this->dispatch('/comment/management/edit/' . $entity->getId(), 'POST', $postData);
+        $this->assertResponseStatusCode(302);
 
+        $this->assertRedirectTo('/comment/management');
 
-//    public function testDeleteActionRedirectsAfterValidPost()
-//    {
-//        /**
-//         * @var \Comment\Entity\EntityType $entity
-//         */
-//        $entity = $this->createEntity($this->entityDataDel);
-//
-//        $this->dispatch('/comment/management/delete/' . $entity->getId());
-//        $this->assertResponseStatusCode(302);
-//
-//        $this->assertRedirectTo('/comment/management');
-//    }
+        $this->removeEntity($entity);
+    }
 
+    public function testDeleteActionRedirectsAfterValidPost()
+    {
+        /**
+         * @var \Comment\Entity\EntityType $entity
+         */
+        $entity = $this->createEntity($this->entityDataDel);
 
+        $this->dispatch('/comment/management/delete/' . $entity->getId());
+        $this->assertResponseStatusCode(302);
+
+        $this->assertRedirectTo('/comment/management');
+    }
 
     /**
      * Creates new entityType.

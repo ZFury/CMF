@@ -17,14 +17,28 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
-        if (isset($this->getRequest()->getQuery()->entity) && isset($this->getRequest()->getQuery()->id)) {
-            $comments = $this->getServiceLocator()
-                ->get('Comment\Service\Comment')
-                ->getCommentsByEntityId($this->getRequest()->getQuery()->entity, $this->getRequest()->getQuery()->id);
 
-            return new ViewModel(array('comments' => $comments));
+        // for POST data
+        if ($this->getRequest()->isPost()) {
+            $data = $this->getRequest()->getPost()->toArray();
         }
-        return new ViewModel();
+
+        // for GET (or query string) data
+        if ($this->getRequest()->getQuery()->entity && $entityId = intval($this->getRequest()->getQuery()->id)) {
+            $data = Array();
+            $data['entityType'] = $this->getRequest()->getQuery()->entity;
+            $data['entityId'] = $this->getRequest()->getQuery()->id;
+        }
+
+        if(!isset($data)) {
+            return $this->notFoundAction();
+        }
+
+        $comments = $this->getServiceLocator()
+            ->get('Comment\Service\Comment')
+            ->getCommentsByEntityId($data);
+
+        return new ViewModel(array('comments' => $comments));
     }
 
     /**
@@ -91,12 +105,13 @@ class IndexController extends AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost();  // for POST data
-            $data->set('entityType', $this->getRequest()->getQuery()->entity); // for GET (or query string) data
-            /*for GET (or query string) data*/
-            if (!($this->getRequest()->getQuery()->entity) || !($entityId = intval($this->getRequest()->getQuery()->id))) {
-                throw new \Exception('Wrong query string');
+
+            // for GET (or query string) data
+            if ($this->getRequest()->getQuery()->entity && $entityId = intval($this->getRequest()->getQuery()->id)) {
+                $data->set('entityType', $this->getRequest()->getQuery()->entity);
+                $data->set('entityId', $this->getRequest()->getQuery()->id);
             }
-            $data->set('entityId', $this->getRequest()->getQuery()->id);
+
             $data = $data->toArray();
 
             $comment = $this->getServiceLocator()
