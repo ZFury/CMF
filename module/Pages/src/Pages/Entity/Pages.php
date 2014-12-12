@@ -10,6 +10,7 @@ use Zend\InputFilter\InputFilter;
 use Zend\I18n\Validator;
 use Zend\Validator\Db;
 use Zend\Validator\Exception;
+use Starter\DBAL\Entity\EntityBase;
 
 /**
  * @ORM\Entity
@@ -18,7 +19,7 @@ use Zend\Validator\Exception;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @ORM\HasLifecycleCallbacks
  */
-class Pages
+class Pages extends EntityBase
 {
     /**
      * @var int
