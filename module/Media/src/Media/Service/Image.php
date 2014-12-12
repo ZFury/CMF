@@ -31,16 +31,13 @@ class Image
         $this->sm = $sm;
     }
 
-    /**
-     * @param $data
-     * @return \Media\Entity\Image
-     */
-    public function createImage($data, $object)
+    public function writeImage($data)
     {
         //Creating new image to get ID for building its path
         $image = new \Media\Entity\Image();
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($image);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+
         //Building path and creating directory. Then - moving
         $ext = \Media\Service\Image::getExt($data['image']['name']);
         $destination = \Media\Service\Image::imgPath(\Media\Service\Image::ORIGINAL, $image->getId(), $ext);
@@ -48,12 +45,27 @@ class Image
         $image->setExtension($ext);
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($image);
 
+        return $image;
+    }
+
+    public function writeObjectImage($object, $image)
+    {
         $objectImage = new ObjectImage();
         $objectImage->setImage($image);
         $objectImage->setEntityName($object->getEntityName());
         $objectImage->setObjectId($object->getId());
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($objectImage);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+    }
+
+    /**
+     * @param $data
+     * @return \Media\Entity\Image
+     */
+    public function createImage($data, $object)
+    {
+        $image = $this->writeImage($data);
+        $this->writeObjectImage($object, $image);
 
         return $image;
     }
