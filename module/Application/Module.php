@@ -52,9 +52,8 @@ class Module
      */
     public function onDispatchError(MvcEvent $event)
     {
-        if ($this->isJson($event)) {
-            $model = new JsonModel();
-            $event->setViewModel($model);
+        if (!$this->isJson($event)) {
+            return;
         }
         $eventException = $event->getParam('exception');
         $result = array(
@@ -149,6 +148,7 @@ class Module
     public function isJson(MvcEvent $event)
     {
         $request = $event->getRequest();
+
         if (!$request instanceof HttpRequest) {
             return false;
         }
@@ -159,7 +159,9 @@ class Module
         }
 
         $accept = $headers->get('Accept');
+
         $match  = $accept->match('application/json');
+
         if (!$match || $match->getTypeString() == '*/*') {
             // not application/json
             return false;
@@ -181,7 +183,7 @@ class Module
         $result = array(
             'params' => array(),
             'errors' => array(),
-            'form-errors' => array(),
+//            'form-errors' => array(),
             'options' => array()
         );
         foreach ($params as $param) {
@@ -190,13 +192,20 @@ class Module
             } elseif ($param instanceof \Zend\Form\Form) {
                 foreach ($param->getElements() as $formElement) {
                     if ($formElement->getMessages()) {
-                        var_dump($formElement->getMessages());
+                        foreach ($formElement->getMessages() as $type => $message) {
+                            $messages[] = $message;
+                        }
+                        $result['errors'][] = array(
+                            $formElement->getName() => $messages
+                            //$formElement->getName() => array($formElement->getMessages())
+                        );
                     }
                 }
-//                var_dump($param);
-//                die('form');
+                $result['params'] = $param->getData();
+                $result['options'] = array(
+                    'method' => $param->getAttribute('method')
+                );
             }
-            $result[] = $param;
         }
 
         $model = new JsonModel(array($result));
