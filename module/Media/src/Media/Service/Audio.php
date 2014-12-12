@@ -8,102 +8,56 @@
 
 namespace Media\Service;
 
-use Zend\Filter\File\RenameUpload;
 use Media\Entity\ObjectAudio;
 
-class Audio
+class Audio extends File
 {
-    const PATH = "/uploads/audio/";
-    const PUBLIC_PATH = "public";
-    const GETPATH = true;
+    const AUDIOS_PATH = "audio/";
 
-    protected $sm;
-
-    public function __construct($sm)
+    public function writeObjectFileEntity($audio, $object)
     {
-        $this->sm = $sm;
-    }
-
-    /**
-     * @param $data
-     * @param $object
-     * @return \Media\Entity\Audio
-     */
-    public function createAudio($data, $object)
-    {
-        //Creating new image to get ID for building its path
-        $audio = new \Media\Entity\Audio();
-        $this->sm->get('doctrine.entitymanager.orm_default')->persist($audio);
-        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
-        //Building path and creating directory. Then - moving
-        $ext = $this->getExt($data['audio']['name']);//??????????????????
-        $destination = $this->audioPath($audio->getId(), $ext);
-        $this->moveAudio($destination, $data['audio']);//??????????????????
-        $audio->setExtension($ext);
-        $this->sm->get('doctrine.entitymanager.orm_default')->persist($audio);
-
-
         $objectAudio = new ObjectAudio();
         $objectAudio->setAudio($audio);
         $objectAudio->setEntityName($object->getEntityName());
         $objectAudio->setObjectId($object->getId());
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($objectAudio);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+    }
+
+    public function writeFileEntity($data)
+    {
+        //Creating new image to get ID for building its path
+        $audio = new \Media\Entity\Audio();
+        $this->sm->get('doctrine.entitymanager.orm_default')->persist($audio);
+        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+        //Building path and creating directory. Then - moving
+        $ext = $this->getExt($data['audio']['name']);
+        $destination = $this->audioPath($audio->getId(), $ext);
+        $this->moveFile($destination, $data['audio']);
+        $audio->setExtension($ext);
+        $this->sm->get('doctrine.entitymanager.orm_default')->persist($audio);
+        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
 
         return $audio;
     }
 
-    /**
-     * @param $audioId
-     */
-    public function deleteAudio($audioId)
+    public function deleteFileEntity($fileId)
     {
-        $objectAudio = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\ObjectAudio')->findOneByAudioId($audioId);
-        $this->sm->get('doctrine.entitymanager.orm_default')->remove($objectAudio);
-        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
-
-        $audio = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\Audio')->findOneById($audioId);
-        $this->sm->get('doctrine.entitymanager.orm_default')->remove($audio);
+        $file = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\Audio')->findOneById($fileId);
+        $this->sm->get('doctrine.entitymanager.orm_default')->remove($file);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
     }
 
-    /**
-     * @param $destination
-     * @param $audio
-     * @return array|string
-     */
-    public static function moveAudio($destination, $audio)
+    public function deleteObjectFileEntity($fileId)
     {
-        self::prepareDir($destination);
-        $filter = new RenameUpload(
-            array(
-                "target" => $destination,
-                'randomize' => false,
-            )
-        );
-
-        return $filter->filter($audio);
+        $objectFile = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\ObjectAudio')->findOneByAudioId($fileId);
+        $this->sm->get('doctrine.entitymanager.orm_default')->remove($objectFile);
+        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
     }
 
-    /**
-     * @param $path
-     * @param int $mode
-     * @return bool
-     * @throws \Exception
-     */
-    public static function prepareDir($path, $mode = 0775)
+    public static function getDestination($path)
     {
-        $destination = preg_replace('/.[0-9]*\.((mp3))$/', '', $path);
-        if (!is_dir($destination)) {
-            if (self::prepareDir(dirname($destination), $mode)) {
-                if (!is_writable(dirname($destination))) {
-                    throw new \Exception('Directory ' . dirname($destination) . 'is not writable');
-                }
-                return mkdir($destination) && chmod($destination, $mode);
-            }
-        }
-
-        return true;
+        return preg_replace('/.[0-9]*\.((mp3))$/', '', $path);
     }
 
     /**
@@ -116,61 +70,11 @@ class Audio
     public static function audioPath($id, $ext, $onlyPath = false)//$onlyPath it's because we need another path when working with Original and when we are getting it
     {
         if ($onlyPath == false) {
-            $path = self::PUBLIC_PATH . self::PATH;
+            $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::AUDIOS_PATH;
         } else {
-            $path = self::PATH;
+            $path = self::UPLOADS_PATH . self::AUDIOS_PATH;
         }
 
-        return self::buildAudioPath($id, $path, $ext);
-    }
-
-    /**
-     * @param $id
-     * @param $path
-     * @param $ext
-     * @return string
-     */
-    public static function buildAudioPath($id, $path, $ext)
-    {
-        return rtrim($path, "/") . "/" . trim(self::buildPath($id, $ext), '/');
-    }
-
-    /**
-     * @param $id
-     * @param $ext
-     * @return string
-     */
-    public static function buildPath($id, $ext)
-    {
-        $path = sprintf('%012d', $id);
-        $explodedPath = str_split($path, 3);
-        $temp = implode('/', $explodedPath);
-        $finalPath = $temp . '.' . $ext;
-
-        return $finalPath;
-    }
-
-    /**
-     * @param $imageName
-     * @return mixed
-     */
-    public static function getExt($imageName)
-    {
-        return preg_replace('(.*\.)', '', $imageName);
-    }
-
-    /**
-     * @param $urlPart
-     * @return string
-     */
-    public function getFullUrl($urlPart)
-    {
-        return $this->sm->get('ViewHelperManager')->get('ServerUrl')->__invoke() . $urlPart;
-    }
-
-    public function generateAudioUploadForm($module)
-    {
-        echo $this->sm->get('ViewHelperManager')->get('Partial')->__invoke('layout/file-upload/audio-upload-form.phtml');
-        echo "<script>require(['" . $module . "']);</script>";
+        return self::buildFilePath($id, $path, $ext);
     }
 }

@@ -25,17 +25,16 @@ class Blueimp
      */
     public function getFileJson($file, $deleteUrl)
     {
-        $fileService = null;
+        $fileService = $this->sm->get('Media\Service\File');
         $thumbnailUrl = null;
         $type = null;
         switch (get_class($file)) {
             case \Media\Entity\File::IMAGE_CLASSNAME:
-                $fileService = $this->sm->get('Media\Service\Image');
+                $imageService = $this->sm->get('Media\Service\Image');
                 $thumbnailUrl = $fileService->getFullUrl($file->getThumb());
                 $type = 'image/jpeg';
                 break;
             case \Media\Entity\File::AUDIO_CLASSNAME:
-                $fileService = $this->sm->get('Media\Service\Audio');
                 $thumbnailUrl = $fileService->getFullUrl($file->getUrlPart());
                 $type = 'audio/mp3';
                 break;

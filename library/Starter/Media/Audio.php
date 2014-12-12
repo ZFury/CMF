@@ -25,8 +25,8 @@ trait Audio
     {
         $qb = $this->lifecycleArgs->getEntityManager()->createQueryBuilder();
         $subQb = $this->lifecycleArgs->getEntityManager()->createQueryBuilder();
-        $subQb->select('oi.audioId')
-            ->from('Media\Entity\ObjectAudio', 'oi')
+        $subQb->select('oi.fileId')
+            ->from('Media\Entity\ObjectFile', 'oi')
             ->where('oi.entityName=:name')
             ->andWhere('oi.objectId=:id')
             ->setParameter('name', $this->getEntityName())
@@ -38,12 +38,12 @@ trait Audio
         }
 
         foreach ($results as $result) {
-            array_push($results, $result['audioId']);
+            array_push($results, $result['fileId']);
             array_shift($results);
         }
 
         $qb->select('i')
-            ->from('Media\Entity\Audio', 'i')
+            ->from('Media\Entity\File', 'i')
             ->where($qb->expr()->in('i.id', $results));
 
         $result = $qb->getQuery()->getResult();
