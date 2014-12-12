@@ -382,8 +382,15 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
 
     public function deleteImageAction()
     {
-        $this->getServiceLocator()->get('Media\Service\Image')
-            ->deleteImage($this->getEvent()->getRouteMatch()->getParam('id'));
+        $session = new SessionContainer('imageUpload');
+        if (!isset($session->ids) || !is_array($session->ids)) {
+            $this->getServiceLocator()->get('Media\Service\Image')
+                ->deleteImage($this->getEvent()->getRouteMatch()->getParam('id'));
+        } else {
+            $this->getServiceLocator()->get('Media\Service\Image')
+                ->deleteImageEntity($this->getEvent()->getRouteMatch()->getParam('id'));
+        }
+
         return $this->getServiceLocator()->get('Media\Service\Blueimp')
             ->deleteImageJson($this->getEvent()->getRouteMatch()->getParam('id'));
     }

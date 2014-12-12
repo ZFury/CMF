@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Starter\DBAL\Entity\EntityBase;
 
 /**
  * Categories\Entity\Categories
@@ -16,7 +17,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @ORM\HasLifecycleCallbacks
  */
-class Categories
+class Categories extends EntityBase
 {
     use \Starter\Media\Image;
 
@@ -333,5 +334,25 @@ class Categories
     public function getEntityName()
     {
         return 'Categories';
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $result = array(
+            "id" => $this->getId(),
+            "name" => $this->getName(),
+            "alias" => $this->getAlias(),
+            "parentId" => $this->getParentId(),
+            "children" => $this->getChildren(),
+            "path" => $this->getPath(),
+            "created" => $this->getCreated(),
+            "updated" => $this->getUpdated(),
+            "order" => $this->getOrder(),
+        );
+
+        return $result;
     }
 }

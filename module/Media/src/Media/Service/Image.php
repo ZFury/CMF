@@ -71,18 +71,27 @@ class Image
         return $image;
     }
 
+    public function deleteObjectImageEntity($imageId)
+    {
+        $objectImage = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\ObjectImage')->findOneByImageId($imageId);
+        $this->sm->get('doctrine.entitymanager.orm_default')->remove($objectImage);
+        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+    }
+
+    public function deleteImageEntity($imageId)
+    {
+        $image = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\Image')->findOneById($imageId);
+        $this->sm->get('doctrine.entitymanager.orm_default')->remove($image);
+        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+    }
+
     /**
      * @param $imageId
      */
     public function deleteImage($imageId)
     {
-        $objectImage = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\ObjectImage')->findOneByImageId($imageId);
-        $this->sm->get('doctrine.entitymanager.orm_default')->remove($objectImage);
-        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
-
-        $image = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\Image')->findOneById($imageId);
-        $this->sm->get('doctrine.entitymanager.orm_default')->remove($image);
-        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+        $this->deleteObjectImageEntity($imageId);
+        $this->deleteImageEntity($imageId);
     }
 
     /**
