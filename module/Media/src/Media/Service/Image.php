@@ -44,7 +44,8 @@ class Image
         \Media\Service\Image::moveImage($destination, $data['image']);
         $image->setExtension($ext);
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($image);
-
+        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+        
         return $image;
     }
 
