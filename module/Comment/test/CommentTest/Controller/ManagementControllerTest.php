@@ -36,6 +36,14 @@ class ManagementControllerTest extends ControllerTestCase
     ];
 
     /**
+     * @var array
+     */
+    protected $entityDataDel = [
+        'entityType' => 'defaultDel',
+        'description' => 'defaultDel',
+    ];
+
+    /**
      *  Migration up
      */
     public static function setUpBeforeClass()
@@ -48,7 +56,7 @@ class ManagementControllerTest extends ControllerTestCase
      */
     public static function tearDownAfterClass()
     {
-        //exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
+//        exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
     }
 
     /**
@@ -65,102 +73,100 @@ class ManagementControllerTest extends ControllerTestCase
         $this->setupAdmin();
     }
 
-    public function testIndexActionCanBeAccessed()
+//    public function testIndexActionCanBeAccessed()
+//    {
+//        $this->dispatch('/comment/management');
+//        $this->assertResponseStatusCode(200);
+//
+//        $this->assertModuleName('Comment');
+//        $this->assertControllerName('Comment\Controller\Management');
+//        $this->assertControllerClass('ManagementController');
+//        $this->assertMatchedRouteName('comment/default');
+//    }
+
+//    public function testCreateActionCanBeAccessed()
+//    {
+//        $this->dispatch('/comment/management/create');
+//        $this->assertResponseStatusCode(200);
+//
+//        $this->assertModuleName('comment');
+//        $this->assertControllerName('Comment\Controller\Management');
+//        $this->assertControllerClass('ManagementController');
+//        $this->assertMatchedRouteName('comment/default');
+//    }
+
+//    public function testCreateActionRedirectsAfterValidPost()
+//    {
+//        $postData = array(
+//            'entityType' => 'another',
+//            'description' => 'another',
+//        );
+//        $this->dispatch('/comment/management/create', 'POST', $postData);
+//        $this->assertResponseStatusCode(302);
+//
+//        $this->assertRedirectTo('/comment/management');
+//    }
+
+//    public function testEditActionCanBeAccessed()
+//    {
+//        $this->dispatch('/comment/management/edit/1');
+//        $this->assertResponseStatusCode(200);
+//
+//        $this->assertModuleName('Comment');
+//        $this->assertControllerName('Comment\Controller\Management');
+//        $this->assertControllerClass('ManagementController');
+//        $this->assertMatchedRouteName('comment/default');
+//    }
+
+    public function testDeleteActionCanBeAccessed()
     {
-        $this->dispatch('/comment/management');
-        $this->assertResponseStatusCode(200);
-
-        $this->assertModuleName('Comment');
-        $this->assertControllerName('Comment\Controller\Management');
-        $this->assertControllerClass('ManagementController');
-        $this->assertMatchedRouteName('comment/default');
-    }
-
-    public function testCreateActionCanBeAccessed()
-    {
-        $this->dispatch('/comment/management/create');
-        $this->assertResponseStatusCode(200);
-
-        $this->assertModuleName('comment');
-        $this->assertControllerName('Comment\Controller\Management');
-        $this->assertControllerClass('ManagementController');
-        $this->assertMatchedRouteName('comment/default');
-    }
-
-    public function testCreateActionRedirectsAfterValidPost()
-    {
-        $postData = array(
-            'entityType' => 'another',
-            'description' => 'another',
-        );
-        $this->dispatch('/comment/management/create', 'POST', $postData);
+       //$entity = $this->createEntity($this->entityData);
+        //var_dump($entity);
+        //die();
+        $this->dispatch("/comment/management/delete/3");
         $this->assertResponseStatusCode(302);
 
-        $this->assertRedirectTo('/comment/management');
+//        $this->assertModuleName('comment');
+//        $this->assertControllerName('Comment\Controller\Management');
+//        $this->assertControllerClass('ManagementController');
+//        $this->assertMatchedRouteName('comment/default');
     }
 
-    public function testEditActionCanBeAccessed()
-    {
-        $this->dispatch('/comment/management/edit/1');
-        $this->assertResponseStatusCode(200);
+//    public function testEditActionRedirectsAfterValidPost()
+//    {
+//        /**
+//         * @var \Comment\Entity\EntityType $entity
+//         */
+//        $entity = $this->createEntity($this->entityData);
+//
+//        $postData = array(
+//            'entityType' => 'edited',
+//            'description' => 'edited',
+//        );
+//        $this->dispatch('/comment/management/edit/' . $entity->getId(), 'POST', $postData);
+//        $this->assertResponseStatusCode(302);
+//
+//        $this->assertRedirectTo('/comment/management');
+//
+//        $this->removeEntity($entity);
+//    }
 
-        $this->assertModuleName('Comment');
-        $this->assertControllerName('Comment\Controller\Management');
-        $this->assertControllerClass('ManagementController');
-        $this->assertMatchedRouteName('comment/default');
-    }
 
-    public function testEditActionRedirectsAfterValidPost()
-    {
-        /**
-         * @var \Comment\Entity\EntityType $entity
-         */
-        $entity = $this->createEntity($this->entityData);
 
-        $postData = array(
-            'entityType' => 'edited',
-            'description' => 'edited',
-        );
-        $this->dispatch('/comment/management/edit/' . $entity->getId(), 'POST', $postData);
-        $this->assertResponseStatusCode(302);
+//    public function testDeleteActionRedirectsAfterValidPost()
+//    {
+//        /**
+//         * @var \Comment\Entity\EntityType $entity
+//         */
+//        $entity = $this->createEntity($this->entityDataDel);
+//
+//        $this->dispatch('/comment/management/delete/' . $entity->getId());
+//        $this->assertResponseStatusCode(302);
+//
+//        $this->assertRedirectTo('/comment/management');
+//    }
 
-        $this->assertRedirectTo('/comment/management');
 
-        $this->removeEntity($entity);
-    }
-
-    /*public function testOrderAction()
-    {
-        $subCategoryData1 = [
-            'name' => 'default1',
-            'alias' => 'default1',
-            'order' => '3',
-            'parentId' => '',
-        ];
-        $category1 = $this->createCategory($subCategoryData1);
-
-        $subCategoryData2 = [
-            'name' => 'default2',
-            'alias' => 'default2',
-            'order' => '4',
-            'parentId' => $category1->getId(),
-        ];
-        $category2 = $this->createCategory($subCategoryData2);
-
-        $json = json_encode(
-            [['item_id' => null, "parent_id" => 'none', "depth" => 0, "left" => 1, "right" => 4],
-                ['item_id' => $category2->getId(), "parent_id" => null, "depth" => 1, "left" => 2, "right" => 3, "order" => 1],
-            ]
-        );
-        $postData = [
-            'tree' => $json,
-            'treeParent' => 1,
-        ];
-
-        $this->dispatch('/categories/management/order', 'POST', $postData);
-        $this->assertResponseHeaderContains('Content-Type', 'application/json; charset=utf-8');
-        $this->assertJson($this->getResponse()->getContent());
-    }*/
 
     /**
      * Creates new entityType.

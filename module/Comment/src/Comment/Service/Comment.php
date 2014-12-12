@@ -78,18 +78,6 @@ class Comment
     }
 
     /**
-     * @return \Zend\Form\Form
-     */
-    public function createForm()
-    {
-        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $builder = new AnnotationBuilder($entityManager);
-        $form = $builder->createForm(new \Comment\Entity\Comment());
-
-        return $form;
-    }
-
-    /**
      * @param $entityType
      * @param $entityId
      * @param null $userId
@@ -140,23 +128,6 @@ class Comment
     }
 
     /**
-     * @param $id
-     * @return \Zend\Form\Form
-     * @throws \Exception
-     */
-    public function createEditForm($id)
-    {
-        $form = $this->createForm();
-        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        if (!$model = $entityManager->getRepository('\Comment\Entity\Comment')->find($id)) {
-            throw new \Exception('Comment not found');
-        }
-        $form->setHydrator(new DoctrineHydrator($entityManager));
-        $form->bind($model);
-        return $form;
-    }
-
-    /**
      * @param \Zend\Form\Form $form
      * @param $data
      * @return mixed
@@ -173,5 +144,34 @@ class Comment
             $entityManager->flush();
             return $form->getObject();
         }
+    }
+
+    /**
+     * @return \Zend\Form\Form
+     */
+    public function createForm()
+    {
+        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $builder = new AnnotationBuilder($entityManager);
+        $form = $builder->createForm(new \Comment\Entity\Comment());
+
+        return $form;
+    }
+
+    /**
+     * @param $id
+     * @return \Zend\Form\Form
+     * @throws \Exception
+     */
+    public function createEditForm($id)
+    {
+        $form = $this->createForm();
+        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        if (!$model = $entityManager->getRepository('\Comment\Entity\Comment')->find($id)) {
+            throw new \Exception('Comment not found');
+        }
+        $form->setHydrator(new DoctrineHydrator($entityManager));
+        $form->bind($model);
+        return $form;
     }
 }
