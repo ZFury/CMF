@@ -19,19 +19,35 @@ class Blueimp
     }
 
     /**
-     * @param $image
+     * @param $file
      * @param $deleteUrl
      * @return array
      */
-    public function getImageJson($image, $deleteUrl)
+    public function getFileJson($file, $deleteUrl)
     {
-        $imageService = $this->sm->get('Media\Service\Image');
+        $fileService = null;
+        $thumbnailUrl = null;
+        $type = null;
+        switch (get_class($file)) {
+            case \Media\Entity\File::IMAGE_CLASSNAME:
+                $fileService = $this->sm->get('Media\Service\Image');
+                $thumbnailUrl = $fileService->getFullUrl($file->getThumb());
+                $type = 'image/jpeg';
+                break;
+            case \Media\Entity\File::AUDIO_CLASSNAME:
+                $fileService = $this->sm->get('Media\Service\Audio');
+                $thumbnailUrl = $fileService->getFullUrl($file->getUrlPart());
+                $type = 'audio/mp3';
+                break;
+            default:
+                break;
+        }
 
         return [
-            'url' => $imageService->getFullUrl($image->getUrlPart()),
-            'thumbnailUrl' => $imageService->getFullUrl($image->getThumb()),
+            'url' => $fileService->getFullUrl($file->getUrlPart()),
+            'thumbnailUrl' => $thumbnailUrl,
             'name' => '',
-            'type' => 'image/jpeg',
+            'type' => $type,
             'size' => '',
             'deleteUrl' => $deleteUrl,
             'deleteType' => 'POST',
@@ -39,110 +55,43 @@ class Blueimp
     }
 
     /**
-     * @param $audio
+     * @param $file
      * @param $deleteUrl
      * @return array
      */
-    public function getAudioJson($audio, $deleteUrl)
+    public function displayUploadedFile($file, $deleteUrl)
     {
-        $audioService = $this->sm->get('Media\Service\Audio');
-
-        return [
-            'url' => $audioService->getFullUrl($audio->getUrlPart()),
-            'thumbnailUrl' => $audioService->getFullUrl($audio->getUrlPart()),
-            'name' => '',
-            'type' => 'audio/mp3',
-            'size' => '',
-            'deleteUrl' => $deleteUrl,
-            'deleteType' => 'POST',
-        ];
+        return ['files' => [ $this->getFileJson($file, $deleteUrl) ]];
     }
 
-    /**
-     * @param $image
-     * @param $deleteUrl
-     * @return array
-     */
-    public function displayUploadedImage($image, $deleteUrl)
-    {
-        return [
-          'files' => [
-              $this->getImageJson($image, $deleteUrl)
-          ]
-        ];
-    }
 
     /**
-     * @param $audio
-     * @param $deleteUrl
-     * @return array
-     */
-    public function displayUploadedAudio($audio, $deleteUrl)
-    {
-        return [
-            'files' => [
-                $this->getAudioJson($audio, $deleteUrl)
-            ]
-        ];
-    }
-
-    /**
-     * @param $images
+     * @param $files
      * @param $deleteUrls
      * @return array
      */
-    public function displayUploadedImages($images, $deleteUrls)
+    public function displayUploadedFiles($files, $deleteUrls)
     {
-        $imagesJson = array();
-        foreach ($images as $image) {
+        $filesJson = array();
+        foreach ($files as $file) {
             foreach ($deleteUrls as $deleteUrl) {
-                if ($deleteUrl['id'] == $image->getId()) {
-                    array_push($imagesJson, $this->getImageJson($image, $deleteUrl['deleteUrl']));
+                if ($deleteUrl['id'] == $file->getId()) {
+                    array_push($filesJson, $this->getFileJson($file, $deleteUrl['deleteUrl']));
                 }
             }
         }
 
-        return [ 'files' =>  $imagesJson ];
+        return [ 'files' =>  $filesJson ];
     }
 
     /**
-     * @param $audios
-     * @param $deleteUrls
-     * @return array
-     */
-    public function displayUploadedAudios($audios, $deleteUrls)
-    {
-        $imagesJson = array();
-        foreach ($audios as $audio) {
-            foreach ($deleteUrls as $deleteUrl) {
-                if ($deleteUrl['id'] == $audio->getId()) {
-                    array_push($imagesJson, $this->getAudioJson($audio, $deleteUrl['deleteUrl']));
-                }
-            }
-        }
-
-        return [ 'files' =>  $imagesJson ];
-    }
-
-    /**
-     * @param $imageId
+     * @param $fileId
      * @return JsonModel
      */
-    public function deleteImageJson($imageId)
+    public function deleteFileJson($fileId)
     {
         return new JsonModel([
-            'files' =>[ $imageId => 'true' ]
-        ]);
-    }
-
-    /**
-     * @param $audioId
-     * @return JsonModel
-     */
-    public function deleteAudioJson($audioId)
-    {
-        return new JsonModel([
-            'files' =>[ $audioId => 'true' ]
+            'files' =>[ $fileId => 'true' ]
         ]);
     }
 }

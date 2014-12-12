@@ -51,7 +51,7 @@ class ImageController extends AbstractActionController implements ImageUploaderI
                 $data = $form->getData();
                 $image = $imageService->createImage($data, $this->identity()->getUser());
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
-                $dataForJson = $blueimpService->displayUploadedImage($image, $this->getDeleteUrl($image));
+                $dataForJson = $blueimpService->displayUploadedFile($image, $this->getDeleteUrl($image));
             } else {
                 $messages = $form->getMessages();
                 $messages = array_shift($messages);
@@ -66,7 +66,7 @@ class ImageController extends AbstractActionController implements ImageUploaderI
                 ]];
             }
         } else {
-            $dataForJson = $blueimpService->displayUploadedImages(
+            $dataForJson = $blueimpService->displayUploadedFiles(
                 $user->getImages(),
                 $this->getDeleteUrls($user->getImages())
             );
@@ -80,7 +80,7 @@ class ImageController extends AbstractActionController implements ImageUploaderI
         $this->getServiceLocator()->get('Media\Service\Image')
             ->deleteImage($this->getEvent()->getRouteMatch()->getParam('id'));
         return $this->getServiceLocator()->get('Media\Service\Blueimp')
-            ->deleteImageJson($this->getEvent()->getRouteMatch()->getParam('id'));
+            ->deleteFileJson($this->getEvent()->getRouteMatch()->getParam('id'));
     }
 
     public function getDeleteUrl($image)
@@ -89,7 +89,7 @@ class ImageController extends AbstractActionController implements ImageUploaderI
         $imageService = $this->getServiceLocator()->get('Media\Service\Image');
         return $imageService->getFullUrl($url('test/default', [
             'controller' => 'image',
-            'action' => 'delete',
+            'action' => 'delete-image',
             'id' => $image->getId()
         ]));
     }

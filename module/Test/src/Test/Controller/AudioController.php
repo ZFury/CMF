@@ -35,7 +35,7 @@ class AudioController extends AbstractActionController implements AudioUploaderI
         $audioService = $this->getServiceLocator()->get('Media\Service\Audio');
         $blueimpService = $this->getServiceLocator()->get('Media\Service\Blueimp');
         if ($this->getRequest()->isPost()) {
-            $form = new AudioUpload('upload-image');
+            $form = new AudioUpload('upload-audio');
             $inputFilter = new AudioUploadInputFilter();
             $form->setInputFilter($inputFilter->getInputFilter());
 
@@ -51,7 +51,7 @@ class AudioController extends AbstractActionController implements AudioUploaderI
                 $data = $form->getData();
                 $audio = $audioService->createAudio($data, $this->identity()->getUser());
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
-                $dataForJson = $blueimpService->displayUploadedAudio($audio, $this->getDeleteUrl($audio));
+                $dataForJson = $blueimpService->displayUploadedFile($audio, $this->getDeleteUrl($audio));
             } else {
                 $messages = $form->getMessages();
                 $messages = array_shift($messages);
@@ -66,7 +66,7 @@ class AudioController extends AbstractActionController implements AudioUploaderI
                 ]];
             }
         } else {
-            $dataForJson = $blueimpService->displayUploadedAudios(
+            $dataForJson = $blueimpService->displayUploadedFiles(
                 $user->getAudios(),
                 $this->getDeleteUrls($user->getAudios())
             );
@@ -80,7 +80,7 @@ class AudioController extends AbstractActionController implements AudioUploaderI
         $this->getServiceLocator()->get('Media\Service\Audio')
             ->deleteAudio($this->getEvent()->getRouteMatch()->getParam('id'));
         return $this->getServiceLocator()->get('Media\Service\Blueimp')
-            ->deleteImageJson($this->getEvent()->getRouteMatch()->getParam('id'));
+            ->deleteFileJson($this->getEvent()->getRouteMatch()->getParam('id'));
     }
 
     public function getDeleteUrl($audio)
@@ -89,7 +89,7 @@ class AudioController extends AbstractActionController implements AudioUploaderI
         $audioService = $this->getServiceLocator()->get('Media\Service\Audio');
         return $audioService->getFullUrl($url('test/default', [
             'controller' => 'audio',
-            'action' => 'delete',
+            'action' => 'delete-audio',
             'id' => $audio->getId()
         ]));
     }
