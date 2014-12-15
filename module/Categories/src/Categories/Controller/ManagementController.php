@@ -93,9 +93,12 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                     if ($categoriesService->ifImagesExist()) {
                         $imageService = $this->getServiceLocator()->get('Media\Service\Image');
                         foreach ($categoriesService->getSession()->ids as $imageId) {
-                            $imageService->writeObjectImage($category, $this->getServiceLocator()
-                                ->get('Doctrine\ORM\EntityManager')
-                                ->getRepository('Media\Entity\Image')->find($imageId));
+                            $imageService->writeObjectImage(
+                                $category,
+                                $this->getServiceLocator()
+                                    ->get('Doctrine\ORM\EntityManager')
+                                    ->getRepository('Media\Entity\Image')->find($imageId)
+                            );
                         }
                     }
 
@@ -370,9 +373,12 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
             } else {
                 if ($categoriesService->ifImagesExist()) {
                     foreach ($categoriesService->getSession()->ids as $imageId) {
-                        array_push($images, $this->getServiceLocator()
-                            ->get('Doctrine\ORM\EntityManager')
-                            ->getRepository('Media\Entity\Image')->find($imageId));
+                        array_push(
+                            $images,
+                            $this->getServiceLocator()
+                                ->get('Doctrine\ORM\EntityManager')
+                                ->getRepository('Media\Entity\Image')->find($imageId)
+                        );
                     }
                 }
             }
@@ -390,8 +396,10 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
         /** @var \Categories\Service\Categories $categoriesService */
         $categoriesService = $this->getServiceLocator()->get('Categories\Service\Categories');
 
-        $idImageSes = array_search($this->getEvent()->getRouteMatch()->getParam('id'),
-            $categoriesService->getSession()->ids);
+        $idImageSes = array_search(
+            $this->getEvent()->getRouteMatch()->getParam('id'),
+            $categoriesService->getSession()->ids
+        );
         if (!is_null($idImageSes)) {
             $this->getServiceLocator()->get('Media\Service\Image')
                 ->deleteImage($this->getEvent()->getRouteMatch()->getParam('id'));

@@ -19,7 +19,7 @@ require.config({
         "jquery-nestedSortable": './libs/jquery.mjs.nestedSortable',
         redactor: './../redactor/redactor',
         //"redactor-fullscreen": './../redactor/plugins/fullscreen'
-        dashboard:'./../module/dashboard/js/dashboard',
+        dashboard: './../module/dashboard/js/dashboard',
         categories: '../module/categories/js/management',
         //BLUEIMP BEGIN
         "load-image": './libs/jQuery-File-Upload-master/load-image',
@@ -37,9 +37,10 @@ require.config({
         "tmpl": './libs/jQuery-File-Upload-master/tmpl.min',
         "iframe-transport": './libs/jQuery-File-Upload-master/jquery.iframe-transport',
         "fileupload-ui": './libs/jQuery-File-Upload-master/jquery.fileupload-ui',
+        //BLUEIMP END
         "image-categories": './modules/categories/image',
         "image": './modules/test/image',
-        //BLUEIMP END
+        "audio": './modules/test/audio',
         'redactorContent': '../redactor/redactorContent'
     },
     shim: {
