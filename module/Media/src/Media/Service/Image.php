@@ -217,7 +217,8 @@ class Image
      */
     public function getFullUrl($urlPart)
     {
-        return $this->sm->get('ViewHelperManager')->get('ServerUrl')->__invoke() . $urlPart;
+//        var_dump($this->sm->get('ViewHelperManager')->get('ServerUrl')->__invoke());die();
+        return $this->sm->get('ViewHelperManager')->get('ServerUrl')->setPort(80)->__invoke() . $urlPart;
     }
 
     public function generateImageUploadForm($module)

@@ -45,7 +45,8 @@ abstract class AbstractCrudController extends AbstractActionController
 
     /**
      * Create entity
-     * @return ViewModel
+     *
+     * @return \Zend\Http\Response|ViewModel
      */
     public function createAction()
     {
@@ -61,7 +62,7 @@ abstract class AbstractCrudController extends AbstractActionController
                 $objectManager->flush();
 
                 //TODO: redirect where?
-                $this->redirect()->toRoute(null, ['controller' => 'management']);
+                return $this->redirect()->toRoute(null, ['controller' => 'management']);
             }
         }
         $viewModel = $this->getViewModel();
@@ -71,7 +72,9 @@ abstract class AbstractCrudController extends AbstractActionController
 
     /**
      * Edit entity
-     * @return ViewModel
+     *
+     * @return \Zend\Http\Response|ViewModel
+     * @throws EntityNotFoundException
      */
     public function editAction()
     {
@@ -86,7 +89,7 @@ abstract class AbstractCrudController extends AbstractActionController
                 $objectManager->flush();
 
                 //TODO: redirect where?
-                $this->redirect()->toRoute(null, ['controller' => 'management']);
+                return $this->redirect()->toRoute(null, ['controller' => 'management']);
             }
         }
         $viewModel = $this->getViewModel();
@@ -96,7 +99,9 @@ abstract class AbstractCrudController extends AbstractActionController
 
     /**
      * Delete entity
-     * @return void
+     *
+     * @return \Zend\Http\Response
+     * @throws EntityNotFoundException
      */
     public function deleteAction()
     {
@@ -107,7 +112,7 @@ abstract class AbstractCrudController extends AbstractActionController
         $objectManager->flush();
 
         //TODO: redirect where?
-        $this->redirect()->toRoute(null, ['controller' => 'management']);
+        return $this->redirect()->toRoute(null, ['controller' => 'management']);
     }
 
     /**

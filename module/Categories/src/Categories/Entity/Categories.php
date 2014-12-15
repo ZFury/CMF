@@ -34,12 +34,11 @@ class Categories extends EntityBase
     /**
      * @var string
      * @Annotation\Type("Zend\Form\Element\Text")
-     * @Annotation\Required(true)
      * @Annotation\Attributes({"class":"form-control"})
      * @Annotation\Options({"label":"Name:"})
      * @ORM\Column(type="string", length=50, nullable=false)
      */
-    protected $name;
+    protected $name;//     * @Annotation\Required(true)
 
     /**
      * @var string

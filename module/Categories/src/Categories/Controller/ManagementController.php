@@ -11,7 +11,6 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Categories\Form\Filter;
 use DoctrineModule\Validator;
 use Categories\Validators;
-use Zend\Session\Container as SessionContainer;
 
 class ManagementController extends AbstractCrudController implements \Media\Interfce\ImageUploaderInterface
 {
@@ -62,6 +61,8 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $repository = $entityManager->getRepository('Categories\Entity\Categories');
+        /** @var \Categories\Service\Categories $categoriesService */
+        $categoriesService = $this->getServiceLocator()->get('Categories\Service\Categories');
 
         $form = $this->getCreateForm();
 
@@ -87,6 +88,17 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                     $hydrator->hydrate($form->getData(), $category);
                     $entityManager->persist($category);
                     $entityManager->flush();
+
+                    //Add image from session
+                    if ($categoriesService->ifImagesExist()) {
+                        $imageService = $this->getServiceLocator()->get('Media\Service\Image');
+                        foreach ($categoriesService->getSession()->ids as $imageId) {
+                            $imageService->writeObjectImage($category, $this->getServiceLocator()
+                                ->get('Doctrine\ORM\EntityManager')
+                                ->getRepository('Media\Entity\Image')->find($imageId));
+                        }
+                    }
+
                     $this->flashMessenger()->addSuccessMessage('Category has been successfully added!');
 
                     return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
@@ -98,8 +110,7 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                 );
             }
         } else {
-            $session = new SessionContainer('imageUpload');
-            $session->ids = [];
+            $categoriesService->clearImages();
         }
 //        return new ViewModel(['form' => $form]);
         $viewModel = $this->getViewModel();
@@ -163,7 +174,7 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
         return $viewModel->setVariables(['form' => $form,
             'imageUploadForm' => $imageUploadForm,
             'imageService' => $imageService,
-            'module' => 'image',
+            'module' => 'image-categories',
             'id' => $this->params()->fromRoute('id')
         ]);
     }
@@ -306,8 +317,8 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
         $repository = $this->getServiceLocator()
             ->get('Doctrine\ORM\EntityManager')
             ->getRepository('Categories\Entity\Categories');
-
-        $session = new SessionContainer('imageUpload');
+        /** @var \Categories\Service\Categories $categoriesService */
+        $categoriesService = $this->getServiceLocator()->get('Categories\Service\Categories');
 
         $id = $this->params()->fromRoute('id');
         if ($id) {
@@ -332,13 +343,8 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
             if ($form->isValid()) {
                 $data = $form->getData();
                 if (!$id) {
-                    //to service//
                     $image = $imageService->writeImage($data);
-                    if (!isset($session->ids) || !is_array($session->ids)) {
-                        $session->ids = [];
-                    }
-                    array_push($session->ids, $image->getId());
-                    //////////////
+                    $categoriesService->addImageToSession($image);
                 } else {
                     $image = $imageService->createImage($data, $category);
                 }
@@ -358,17 +364,16 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                 ]];
             }
         } else {
+            $images = [];
             if ($id) {
                 $images = $category->getImages();
             } else {
-                if (isset($session->ids) && is_array($session->ids) && count($session->ids) != 0) {
-                    foreach ($session->ids as $imageId) {
-                        $images = $this->getServiceLocator()
+                if ($categoriesService->ifImagesExist()) {
+                    foreach ($categoriesService->getSession()->ids as $imageId) {
+                        array_push($images, $this->getServiceLocator()
                             ->get('Doctrine\ORM\EntityManager')
-                            ->getRepository('Media\Entity\Image')->find($imageId);
+                            ->getRepository('Media\Entity\Image')->find($imageId));
                     }
-                } else {
-                    $images = [];
                 }
             }
             $dataForJson = $blueimpService->displayUploadedImages(
@@ -382,8 +387,12 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
 
     public function deleteImageAction()
     {
-        $session = new SessionContainer('imageUpload');
-        if (!isset($session->ids) || !is_array($session->ids)) {
+        /** @var \Categories\Service\Categories $categoriesService */
+        $categoriesService = $this->getServiceLocator()->get('Categories\Service\Categories');
+
+        $idImageSes = array_search($this->getEvent()->getRouteMatch()->getParam('id'),
+            $categoriesService->getSession()->ids);
+        if (!is_null($idImageSes)) {
             $this->getServiceLocator()->get('Media\Service\Image')
                 ->deleteImage($this->getEvent()->getRouteMatch()->getParam('id'));
         } else {
