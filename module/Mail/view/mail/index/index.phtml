@@ -1,0 +1,5 @@
+<?php $this->headMeta()->appendName('description', $this->escapeHtml($page->getDescription())); ?>
+<?php $this->headMeta()->appendName('keywords', $this->escapeHtml($page->getKeywords())); ?>
+
+    <h2 class="page-header"><?php echo $this->escapeHtml($page->getTitle()); ?></h2>
+<?php echo $this->escapeHtml($page->getContent()); ?>
