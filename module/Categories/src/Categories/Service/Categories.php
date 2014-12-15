@@ -3,6 +3,7 @@
 namespace Categories\Service;
 
 use Zend\ServiceManager\ServiceManager;
+use Zend\Session\Container as SessionContainer;
 
 /**
  * Class Categories
@@ -77,5 +78,57 @@ class Categories
          */
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         return $entityManager->getRepository('Categories\Entity\Categories')->findOneBy(['parentId' => null, 'alias' => $alias]);
+    }
+
+    /**
+     * Gets session.
+     *
+     * @return SessionContainer
+     */
+    public static function getSession()
+    {
+        $session = new SessionContainer('imageUpload');
+        if (!isset($session->ids) || !is_array($session->ids)) {
+            $session->ids = [];
+        }
+        return $session;
+    }
+
+    /**
+     * Clears image variable of current session.
+     */
+    public static function clearImages()
+    {
+        $session = self::getSession();
+        unset($session->ids);
+    }
+
+    /**
+     * Checks if images exist in session.
+     *
+     * @return bool
+     */
+    public function ifImagesExist()
+    {
+        $session = new SessionContainer('imageUpload');
+        if (isset($session->ids)
+            && is_array($session->ids)
+            && count($session->ids) != 0
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Adds new image id to session
+     *
+     * @param \Media\Entity\Image $image
+     */
+    public function addImageToSession(\Media\Entity\File $image)
+    {
+        $session = self::getSession();
+        array_push($session->ids, $image->getId());
     }
 }

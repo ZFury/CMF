@@ -19,7 +19,7 @@ use Starter\DBAL\Entity\EntityBase;
  */
 class Categories extends EntityBase
 {
-    use \Starter\Media\Image;
+    use \Starter\Media\File;
 
     /**
      * @var integer
@@ -34,12 +34,11 @@ class Categories extends EntityBase
     /**
      * @var string
      * @Annotation\Type("Zend\Form\Element\Text")
-     * @Annotation\Required(true)
      * @Annotation\Attributes({"class":"form-control"})
      * @Annotation\Options({"label":"Name:"})
      * @ORM\Column(type="string", length=50, nullable=false)
      */
-    protected $name;
+    protected $name;//     * @Annotation\Required(true)
 
     /**
      * @var string
@@ -324,7 +323,6 @@ class Categories extends EntityBase
     }
 
     /**
-     * <<<<<<< HEAD
      * @ORM\PostLoad
      */
     public function setLifecycleArgs(LifecycleEventArgs $args)

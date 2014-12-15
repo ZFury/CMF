@@ -12,7 +12,7 @@ use Media\Entity\ObjectImage;
 
 class Image extends File
 {
-    const IMAGES_PATH ="images/";
+    const IMAGES_PATH = "images/";
 
     const ORIGINAL = 3;
     const BIG_THUMB = 2;

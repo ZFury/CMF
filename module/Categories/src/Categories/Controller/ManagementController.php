@@ -61,6 +61,8 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $repository = $entityManager->getRepository('Categories\Entity\Categories');
+        /** @var \Categories\Service\Categories $categoriesService */
+        $categoriesService = $this->getServiceLocator()->get('Categories\Service\Categories');
 
         $form = $this->getCreateForm();
 
@@ -86,6 +88,20 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                     $hydrator->hydrate($form->getData(), $category);
                     $entityManager->persist($category);
                     $entityManager->flush();
+
+                    //Add image from session
+                    if ($categoriesService->ifImagesExist()) {
+                        $imageService = $this->getServiceLocator()->get('Media\Service\File');
+                        foreach ($categoriesService->getSession()->ids as $imageId) {
+                            $imageService->writeObjectFileEntity(
+                                $this->getServiceLocator()
+                                    ->get('Doctrine\ORM\EntityManager')
+                                    ->getRepository('Media\Entity\File')->find($imageId),
+                                $category
+                            );
+                        }
+                    }
+
                     $this->flashMessenger()->addSuccessMessage('Category has been successfully added!');
 
                     return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
@@ -96,11 +112,22 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                     )
                 );
             }
+        } else {
+            $categoriesService->clearImages();
         }
 //        return new ViewModel(['form' => $form]);
         $viewModel = $this->getViewModel();
 
-        return $viewModel->setVariables(['form' => $form]);
+        $imageUploadForm = new \Media\Form\ImageUpload('upload-image');
+        $imageService = new \Media\Service\File($this->getServiceLocator());
+
+        return $viewModel->setVariables(['form' => $form,
+            'imageUploadForm' => $imageUploadForm,
+            'imageService' => $imageService,
+            'module' => 'image-categories',
+            'type' => \Media\Entity\File::IMAGE_FILETYPE,
+            'id' => null
+        ]);
     }
 
     /**
@@ -145,7 +172,16 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
 //        return new ViewModel(['form' => $form]);
         $viewModel = $this->getViewModel();
 
-        return $viewModel->setVariables(['form' => $form]);
+        $imageUploadForm = new \Media\Form\ImageUpload('upload-image');
+        $imageService = new \Media\Service\File($this->getServiceLocator());
+
+        return $viewModel->setVariables(['form' => $form,
+            'imageUploadForm' => $imageUploadForm,
+            'imageService' => $imageService,
+            'module' => 'image-categories',
+            'type' => \Media\Entity\File::IMAGE_FILETYPE,
+            'id' => $this->params()->fromRoute('id')
+        ]);
     }
 
     /**
@@ -276,5 +312,129 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
         }
 
         return $order;
+    }
+
+    /**
+     * Advanced avatar uploader Blueimp UI
+     */
+    public function startUploadAction()
+    {
+        $repository = $this->getServiceLocator()
+            ->get('Doctrine\ORM\EntityManager')
+            ->getRepository('Categories\Entity\Categories');
+        /** @var \Categories\Service\Categories $categoriesService */
+        $categoriesService = $this->getServiceLocator()->get('Categories\Service\Categories');
+
+        $id = $this->params()->fromRoute('id');
+        if ($id) {
+            $category = $repository->find($id);
+        }
+
+        $imageService = $this->getServiceLocator()->get('Media\Service\File');
+        $blueimpService = $this->getServiceLocator()->get('Media\Service\Blueimp');
+        if ($this->getRequest()->isPost()) {
+            $form = new \Media\Form\ImageUpload('upload-image');
+            $inputFilter = new \Media\Form\Filter\ImageUploadInputFilter();
+            $form->setInputFilter($inputFilter->getInputFilter());
+
+            $request = $this->getRequest();
+            $post = array_merge_recursive(
+                $request->getPost()->toArray(),
+                $request->getFiles()->toArray()
+            );
+            $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->beginTransaction();
+            $form->setData($post);
+
+            if ($form->isValid()) {
+                $data = $form->getData();
+                if (!$id) {
+                    $image = $imageService->writeFileEntity($data);
+                    $categoriesService->addImageToSession($image);
+                } else {
+                    $image = $imageService->createFile($data, $category);
+                }
+                $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
+                $dataForJson = $blueimpService->displayUploadedFile($image, $this->getDeleteUrl($image));
+            } else {
+                $messages = $form->getMessages();
+                $messages = array_shift($messages);
+                $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->rollBack();
+                $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->close();
+
+                $dataForJson = ['files' => [
+                    [
+                        'name' => $form->get('image')->getValue()['name'],
+                        'error' => array_shift($messages)
+                    ]
+                ]];
+            }
+        } else {
+            $images = [];
+            if ($id) {
+                $images = $category->getImages();
+            } else {
+                if ($categoriesService->ifImagesExist()) {
+                    foreach ($categoriesService->getSession()->ids as $imageId) {
+                        array_push(
+                            $images,
+                            $this->getServiceLocator()
+                                ->get('Doctrine\ORM\EntityManager')
+                                ->getRepository('Media\Entity\File')->find($imageId)
+                        );
+                    }
+                }
+            }
+            $dataForJson = $blueimpService->displayUploadedFiles(
+                $images,
+                $this->getDeleteUrls($images)
+            );
+        }
+
+        return new JsonModel($dataForJson);
+    }
+
+    public function deleteImageAction()
+    {
+        /** @var \Categories\Service\Categories $categoriesService */
+        $categoriesService = $this->getServiceLocator()->get('Categories\Service\Categories');
+
+        $idImageSes = array_search(
+            $this->getEvent()->getRouteMatch()->getParam('id'),
+            $categoriesService->getSession()->ids
+        );
+        if (!is_null($idImageSes)) {
+            $this->getServiceLocator()->get('Media\Service\File')
+                ->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
+        } else {
+            $this->getServiceLocator()->get('Media\Service\File')
+                ->deleteFileEntity($this->getEvent()->getRouteMatch()->getParam('id'));
+        }
+
+        return $this->getServiceLocator()->get('Media\Service\Blueimp')
+            ->deleteImageJson($this->getEvent()->getRouteMatch()->getParam('id'));
+    }
+
+    public function getDeleteUrl($image)
+    {
+        $url = $this->serviceLocator->get('ViewHelperManager')->get('url');
+        $imageService = $this->getServiceLocator()->get('Media\Service\File');
+        return $imageService->getFullUrl($url('categories/default', [
+            'controller' => 'management',
+            'action' => 'delete-image',
+            'id' => $image->getId()
+        ]));
+    }
+
+    public function getDeleteUrls($images)
+    {
+        $deleteUrls = [];
+        foreach ($images as $image) {
+            array_push($deleteUrls, [
+                'id' => $image->getId(),
+                'deleteUrl' => $this->getDeleteUrl($image)
+            ]);
+        }
+
+        return $deleteUrls;
     }
 }
