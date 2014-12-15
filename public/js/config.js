@@ -41,6 +41,7 @@ require.config({
         "image-categories": './modules/categories/image',
         "image": './modules/test/image',
         "audio": './modules/test/audio',
+        "video": './modules/test/video',
         'redactorContent': '../redactor/redactorContent'
     },
     shim: {

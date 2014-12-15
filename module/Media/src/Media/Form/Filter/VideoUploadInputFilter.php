@@ -13,14 +13,14 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
 
-class AudioUploadInputFilter implements InputFilterAwareInterface
+class VideoUploadInputFilter implements InputFilterAwareInterface
 {
-    public $audioUpload;
+    public $videoUpload;
     protected $inputFilter;
 
     public function exchangeArray($data)
     {
-        $this->audioUpload = (isset($data['audio-upload'])) ? $data['audio-upload'] : null;
+        $this->videoUpload = (isset($data['video-upload'])) ? $data['video-upload'] : null;
     }
 
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -37,7 +37,7 @@ class AudioUploadInputFilter implements InputFilterAwareInterface
             $inputFilter->add(
                 $factory->createInput(
                     array(
-                        'name' => 'audio',
+                        'name' => 'video',
                         'required' => true,
                         //'validators' => array(
                             //array(

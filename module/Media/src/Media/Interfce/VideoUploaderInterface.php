@@ -8,7 +8,7 @@
 
 namespace Media\Interfce;
 
-interface ImageUploaderInterface
+interface VideoUploaderInterface
 {
     /**
      * This method will receive POST\GET requests. In case of a POST request,
@@ -16,7 +16,7 @@ interface ImageUploaderInterface
      * In case of a GET request it must return appropriate JSON that contains all videos
      * using also Blueimp service
      */
-    public function startImageUploadAction();
+    public function startVideoUploadAction();
 
     /**
      * This method must contain two strings. One actually deletes video from DB using File service and
@@ -24,26 +24,26 @@ interface ImageUploaderInterface
      * $fileService->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
      * return $blueimpService->deleteFileJson($this->getEvent()->getRouteMatch()->getParam('id'));
      */
-    public function deleteImageAction();
+    public function deleteVideoAction();
 
     /**
-     * This method must return a full url of deleting an image, using File service. For example you can do this
+     * This method must return a full url of deleting a video, using File service. For example you can do this
      * like that:
      * $url = $this->serviceLocator->get('ViewHelperManager')->get('url');
      * return $fileService->getFullUrl($url('test/default', [
-     *      'controller' => 'image',
+     *      'controller' => 'video',
      *      'action' => 'delete',
      *      'id' => $video->getId()
      * ]));
-     * @param $image
+     * @param $video
      * @return mixed
      */
-    public function getDeleteImageUrl($image);
+    public function getDeleteVideoUrl($video);
 
     /**
      * This method must return an array of urls for deleting using method deleteFilesUrl($files) of Blueimp service
-     * @param $images
+     * @param $videos
      * @return mixed
      */
-    public function getDeleteImageUrls($images);
+    public function getDeleteVideoUrls($videos);
 }

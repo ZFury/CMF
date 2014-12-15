@@ -8,13 +8,13 @@
 
 namespace Media\Service;
 
-class Audio extends File
+class Video extends File
 {
-    const AUDIOS_PATH = "audio/";
+    const VIDEOS_PATH = "video/";
 
     public static function getDestination($path)
     {
-        return preg_replace('/.[0-9]*\.((mp3))$/', '', $path);
+        return preg_replace('/.[0-9]*\.((mp4))$/', '', $path);
     }
 
     /**
@@ -24,12 +24,12 @@ class Audio extends File
      * @return string
      * @throws \Exception
      */
-    public static function audioPath($id, $ext, $onlyPath = false)//$onlyPath it's because we need another path when working with Original and when we are getting it
+    public static function videoPath($id, $ext, $onlyPath = false)//$onlyPath it's because we need another path when working with Original and when we are getting it
     {
         if ($onlyPath == false) {
-            $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::AUDIOS_PATH;
+            $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::VIDEOS_PATH;
         } else {
-            $path = self::UPLOADS_PATH . self::AUDIOS_PATH;
+            $path = self::UPLOADS_PATH . self::VIDEOS_PATH;
         }
 
         return self::buildFilePath($id, $path, $ext);

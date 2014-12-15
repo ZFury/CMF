@@ -29,11 +29,11 @@ class Blueimp
         $thumbnailUrl = null;
         $type = null;
         switch ($file->getType()) {
-            case \Media\Service\File::FILETYPE_IMAGE:
+            case \Media\Entity\File::IMAGE_FILETYPE:
                 $thumbnailUrl = $fileService->getFullUrl($file->getThumb());
                 $type = 'image/jpeg';
                 break;
-            case \Media\Service\File::FILETYPE_AUDIO:
+            case \Media\Entity\File::AUDIO_FILETYPE:
                 $thumbnailUrl = $fileService->getFullUrl($file->getUrlPart());
                 $type = 'audio/mp3';
                 break;

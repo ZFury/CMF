@@ -13,8 +13,6 @@ use Zend\Filter\File\RenameUpload;
 
 class File
 {
-    const FILETYPE_AUDIO = 'audio';
-    const FILETYPE_IMAGE = 'image';
     const PUBLIC_PATH = "public";
     const UPLOADS_PATH = "/uploads/";
     const GETPATH = true;
@@ -166,18 +164,24 @@ class File
         $destination = null;
         $type = null;
         switch (array_keys($data)[0]) {
-            case self::FILETYPE_AUDIO:
-                $ext = $this->getExt($data[self::FILETYPE_AUDIO]['name']);
+            case \Media\Entity\File::AUDIO_FILETYPE:
+                $ext = $this->getExt($data[\Media\Entity\File::AUDIO_FILETYPE]['name']);
                 $destination = \Media\Service\Audio::audioPath($file->getId(), $ext);
-                $type = self::FILETYPE_AUDIO;
-                $this->moveFile($destination, $data[self::FILETYPE_AUDIO]);
+                $type = \Media\Entity\File::AUDIO_FILETYPE;
+                $this->moveFile($destination, $data[\Media\Entity\File::AUDIO_FILETYPE]);
                 break;
-            case self::FILETYPE_IMAGE:
-                $ext = $this->getExt($data[self::FILETYPE_IMAGE]['name']);
+            case \Media\Entity\File::VIDEO_FILETYPE:
+                $ext = $this->getExt($data[\Media\Entity\File::VIDEO_FILETYPE]['name']);
+                $destination = \Media\Service\Video::videoPath($file->getId(), $ext);
+                $type = \Media\Entity\File::VIDEO_FILETYPE;
+                $this->moveFile($destination, $data[\Media\Entity\File::VIDEO_FILETYPE]);
+                break;
+            case \Media\Entity\File::IMAGE_FILETYPE:
+                $ext = $this->getExt($data[\Media\Entity\File::IMAGE_FILETYPE]['name']);
                 $destination = \Media\Service\Image::imgPath(\Media\Service\Image::ORIGINAL, $file->getId(), $ext);
 
-                $type = self::FILETYPE_IMAGE;
-                $this->moveFile($destination, $data[self::FILETYPE_IMAGE]);
+                $type = \Media\Entity\File::IMAGE_FILETYPE;
+                $this->moveFile($destination, $data[\Media\Entity\File::IMAGE_FILETYPE]);
                 break;
             default:
                 break;
@@ -193,7 +197,7 @@ class File
 
     public function generateFileUploadForm($module, $filetype)
     {
-        echo $this->sm->get('ViewHelperManager')->get('Partial')->__invoke("layout/file-upload/$filetype-upload-form.phtml");
+        echo $this->sm->get('ViewHelperManager')->get('Partial')->__invoke("layout/file-upload/file-upload-form.phtml", ['filetype' => $filetype]);
         echo "<script>require(['" . $module . "']);</script>";
     }
 }
