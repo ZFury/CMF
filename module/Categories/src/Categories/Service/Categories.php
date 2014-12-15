@@ -126,7 +126,7 @@ class Categories
      *
      * @param \Media\Entity\Image $image
      */
-    public function addImageToSession(\Media\Entity\Image $image)
+    public function addImageToSession(\Media\Entity\File $image)
     {
         $session = self::getSession();
         array_push($session->ids, $image->getId());

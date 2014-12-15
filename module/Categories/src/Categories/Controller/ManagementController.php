@@ -91,13 +91,13 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
 
                     //Add image from session
                     if ($categoriesService->ifImagesExist()) {
-                        $imageService = $this->getServiceLocator()->get('Media\Service\Image');
+                        $imageService = $this->getServiceLocator()->get('Media\Service\File');
                         foreach ($categoriesService->getSession()->ids as $imageId) {
-                            $imageService->writeObjectImage(
-                                $category,
+                            $imageService->writeObjectFileEntity(
                                 $this->getServiceLocator()
                                     ->get('Doctrine\ORM\EntityManager')
-                                    ->getRepository('Media\Entity\Image')->find($imageId)
+                                    ->getRepository('Media\Entity\File')->find($imageId),
+                                $category
                             );
                         }
                     }
@@ -119,12 +119,13 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
         $viewModel = $this->getViewModel();
 
         $imageUploadForm = new \Media\Form\ImageUpload('upload-image');
-        $imageService = new \Media\Service\Image($this->getServiceLocator());
+        $imageService = new \Media\Service\File($this->getServiceLocator());
 
         return $viewModel->setVariables(['form' => $form,
             'imageUploadForm' => $imageUploadForm,
             'imageService' => $imageService,
             'module' => 'image-categories',
+            'type' => \Media\Entity\File::IMAGE_FILETYPE,
             'id' => null
         ]);
     }
@@ -172,12 +173,13 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
         $viewModel = $this->getViewModel();
 
         $imageUploadForm = new \Media\Form\ImageUpload('upload-image');
-        $imageService = new \Media\Service\Image($this->getServiceLocator());
+        $imageService = new \Media\Service\File($this->getServiceLocator());
 
         return $viewModel->setVariables(['form' => $form,
             'imageUploadForm' => $imageUploadForm,
             'imageService' => $imageService,
             'module' => 'image-categories',
+            'type' => \Media\Entity\File::IMAGE_FILETYPE,
             'id' => $this->params()->fromRoute('id')
         ]);
     }
@@ -328,7 +330,7 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
             $category = $repository->find($id);
         }
 
-        $imageService = $this->getServiceLocator()->get('Media\Service\Image');
+        $imageService = $this->getServiceLocator()->get('Media\Service\File');
         $blueimpService = $this->getServiceLocator()->get('Media\Service\Blueimp');
         if ($this->getRequest()->isPost()) {
             $form = new \Media\Form\ImageUpload('upload-image');
@@ -346,13 +348,13 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
             if ($form->isValid()) {
                 $data = $form->getData();
                 if (!$id) {
-                    $image = $imageService->writeImage($data);
+                    $image = $imageService->writeFileEntity($data);
                     $categoriesService->addImageToSession($image);
                 } else {
-                    $image = $imageService->createImage($data, $category);
+                    $image = $imageService->createFile($data, $category);
                 }
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
-                $dataForJson = $blueimpService->displayUploadedImage($image, $this->getDeleteUrl($image));
+                $dataForJson = $blueimpService->displayUploadedFile($image, $this->getDeleteUrl($image));
             } else {
                 $messages = $form->getMessages();
                 $messages = array_shift($messages);
@@ -377,12 +379,12 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                             $images,
                             $this->getServiceLocator()
                                 ->get('Doctrine\ORM\EntityManager')
-                                ->getRepository('Media\Entity\Image')->find($imageId)
+                                ->getRepository('Media\Entity\File')->find($imageId)
                         );
                     }
                 }
             }
-            $dataForJson = $blueimpService->displayUploadedImages(
+            $dataForJson = $blueimpService->displayUploadedFiles(
                 $images,
                 $this->getDeleteUrls($images)
             );
@@ -401,11 +403,11 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
             $categoriesService->getSession()->ids
         );
         if (!is_null($idImageSes)) {
-            $this->getServiceLocator()->get('Media\Service\Image')
-                ->deleteImage($this->getEvent()->getRouteMatch()->getParam('id'));
+            $this->getServiceLocator()->get('Media\Service\File')
+                ->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
         } else {
-            $this->getServiceLocator()->get('Media\Service\Image')
-                ->deleteImageEntity($this->getEvent()->getRouteMatch()->getParam('id'));
+            $this->getServiceLocator()->get('Media\Service\File')
+                ->deleteFileEntity($this->getEvent()->getRouteMatch()->getParam('id'));
         }
 
         return $this->getServiceLocator()->get('Media\Service\Blueimp')
@@ -415,7 +417,7 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
     public function getDeleteUrl($image)
     {
         $url = $this->serviceLocator->get('ViewHelperManager')->get('url');
-        $imageService = $this->getServiceLocator()->get('Media\Service\Image');
+        $imageService = $this->getServiceLocator()->get('Media\Service\File');
         return $imageService->getFullUrl($url('categories/default', [
             'controller' => 'management',
             'action' => 'delete-image',

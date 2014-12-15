@@ -19,7 +19,7 @@ use Starter\DBAL\Entity\EntityBase;
  */
 class Categories extends EntityBase
 {
-    use \Starter\Media\Image;
+    use \Starter\Media\File;
 
     /**
      * @var integer
