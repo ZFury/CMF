@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: alexander
- * Date: 12/3/14
- * Time: 12:48 PM
+ * Date: 12/12/14
+ * Time: 4:01 PM
  */
 
 namespace Media\Entity;
@@ -12,13 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
 
 /**
- * Images
+ * Files
  *
- * @ORM\Entity(repositoryClass="Media\Repository\ObjectImage")
- * @ORM\Table(name="objects_images")
- * @Annotation\Name("object_image")
+ * @ORM\Entity(repositoryClass="Media\Repository\ObjectFile")
+ * @ORM\Table(name="objects_files")
+ * @Annotation\Name("object_file")
  */
-class ObjectImage
+class ObjectFile
 {
 
     /**
@@ -42,10 +42,10 @@ class ObjectImage
     /**
      * @var integer
      *
-     * @ORM\Column(name="image_id", type="integer", nullable=false)
-     * @Annotation\Options({"label":"Image ID:"})
+     * @ORM\Column(name="file_id", type="integer", nullable=true)
+     * @Annotation\Options({"label":"File ID:"})
      */
-    private $imageId;
+    private $fileId;
 
     /**
      * @var integer
@@ -59,20 +59,20 @@ class ObjectImage
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="Image", inversedBy="objectsImages")
-     * @ORM\JoinColumn(name="image_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="File", inversedBy="objectsFiles")
+     * @ORM\JoinColumn(name="file_id", referencedColumnName="id")
      */
-    private $image;
+    private $file;
 
     /**
-     * Set image
+     * Set file
      *
-     * @param  string $image
-     * @return ObjectImage
+     * @param  string $file
+     * @return ObjectFile
      */
-    public function setImage($image)
+    public function setFile($file)
     {
-        $this->image = $image;
+        $this->file = $file;
 
         return $this;
     }
@@ -80,20 +80,20 @@ class ObjectImage
     /**
      * @return string
      */
-    public function getImage()
+    public function getFile()
     {
-        return $this->image;
+        return $this->file;
     }
 
     /**
-     * Set imageId
+     * Set $fileId
      *
-     * @param  string $imageId
-     * @return ObjectImage
+     * @param  string $fileId
+     * @return ObjectFile
      */
-    public function setImageId($imageId)
+    public function setFileId($fileId)
     {
-        $this->imageId = $imageId;
+        $this->fileId = $fileId;
 
         return $this;
     }
@@ -101,9 +101,9 @@ class ObjectImage
     /**
      * @return string
      */
-    public function getImageId()
+    public function getFileId()
     {
-        return $this->imageId;
+        return $this->fileId;
     }
 
     /**

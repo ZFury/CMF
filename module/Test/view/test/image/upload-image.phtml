@@ -1,3 +1,4 @@
 <?php
 $form->setAttribute('action', $this->url('test/default', array('controller' => 'image', 'action' => 'start-upload')));
-$imageService->generateImageUploadForm('image');
+$imageService->generateFileUploadForm($module, $type);
+
