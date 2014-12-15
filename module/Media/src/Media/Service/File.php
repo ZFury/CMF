@@ -119,8 +119,8 @@ class File
      */
     public function deleteFile($fileId)
     {
-        $this->deleteFileEntity($fileId);
         $this->deleteObjectFileEntity($fileId);
+        $this->deleteFileEntity($fileId);
     }
 
     public function deleteFileEntity($fileId)
@@ -175,6 +175,7 @@ class File
             case self::FILETYPE_IMAGE:
                 $ext = $this->getExt($data[self::FILETYPE_IMAGE]['name']);
                 $destination = \Media\Service\Image::imgPath(\Media\Service\Image::ORIGINAL, $file->getId(), $ext);
+
                 $type = self::FILETYPE_IMAGE;
                 $this->moveFile($destination, $data[self::FILETYPE_IMAGE]);
                 break;

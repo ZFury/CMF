@@ -8,7 +8,7 @@
 
 namespace Test\Controller;
 
-use Media\Service\Image;
+use Media\Service\File;
 use Zend\View\Model\JsonModel;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -21,8 +21,8 @@ class ImageController extends AbstractActionController implements ImageUploaderI
     public function uploadImageAction()
     {
         $form = new ImageUpload('upload-image');
-        $imageService = new Image($this->getServiceLocator());
-        return new ViewModel(['form' => $form, 'imageService' => $imageService]);
+        $imageService = new File($this->getServiceLocator());
+        return new ViewModel(['form' => $form, 'imageService' => $imageService, 'module'=> 'image', 'type' => \Media\Service\File::FILETYPE_IMAGE]);
     }
 
     /**
@@ -32,7 +32,7 @@ class ImageController extends AbstractActionController implements ImageUploaderI
     {
 
         $user = $this->identity()->getUser();
-        $imageService = $this->getServiceLocator()->get('Media\Service\Image');
+        $imageService = $this->getServiceLocator()->get('Media\Service\File');
         $blueimpService = $this->getServiceLocator()->get('Media\Service\Blueimp');
         if ($this->getRequest()->isPost()) {
             $form = new ImageUpload('upload-image');
@@ -49,7 +49,7 @@ class ImageController extends AbstractActionController implements ImageUploaderI
 
             if ($form->isValid()) {
                 $data = $form->getData();
-                $image = $imageService->createImage($data, $this->identity()->getUser());
+                $image = $imageService->createFile($data, $this->identity()->getUser());
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
                 $dataForJson = $blueimpService->displayUploadedFile($image, $this->getDeleteUrl($image));
             } else {
@@ -77,8 +77,8 @@ class ImageController extends AbstractActionController implements ImageUploaderI
 
     public function deleteImageAction()
     {
-        $this->getServiceLocator()->get('Media\Service\Image')
-            ->deleteImage($this->getEvent()->getRouteMatch()->getParam('id'));
+        $this->getServiceLocator()->get('Media\Service\File')
+            ->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
         return $this->getServiceLocator()->get('Media\Service\Blueimp')
             ->deleteFileJson($this->getEvent()->getRouteMatch()->getParam('id'));
     }
@@ -86,8 +86,8 @@ class ImageController extends AbstractActionController implements ImageUploaderI
     public function getDeleteUrl($image)
     {
         $url = $this->serviceLocator->get('ViewHelperManager')->get('url');
-        $imageService = $this->getServiceLocator()->get('Media\Service\Image');
-        return $imageService->getFullUrl($url('test/default', [
+        $fileService = $this->getServiceLocator()->get('Media\Service\File');
+        return $fileService->getFullUrl($url('test/default', [
             'controller' => 'image',
             'action' => 'delete-image',
             'id' => $image->getId()

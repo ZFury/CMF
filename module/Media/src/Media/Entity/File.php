@@ -59,7 +59,7 @@ class File
     /**
      * @var ArrayCollection()
      *
-     * @ORM\OneToMany(targetEntity="ObjectImage", mappedBy="image")
+     * @ORM\OneToMany(targetEntity="ObjectFile", mappedBy="file")
      */
     private $objectsFiles;
 
@@ -193,5 +193,35 @@ class File
         }
 
         return null;
+    }
+
+    /**
+     * Returns the part of url
+     *
+     * @return string
+     */
+    public function getThumb()
+    {
+        switch ($this->type) {
+            case self::IMAGE_FILETYPE:
+                $ext = $this->getExtension();
+                $imageId = $this->getId();
+                $urlPart = \Media\Service\Image::imgPath(\Media\Service\Image::SMALL_THUMB, $imageId, $ext);
+                if (!file_exists(\Media\Service\File::PUBLIC_PATH . $urlPart)) {
+                    $originalLocation = $this->getLocation();
+                    $image = new \Imagick($originalLocation);
+                    $image->cropThumbnailImage(\Media\Service\Image::S_THUMB_WIDTH, \Media\Service\Image::S_THUMB_HEIGHT);
+                    \Media\Service\File::prepareDir(\Media\Service\File::PUBLIC_PATH . $urlPart);
+                    $image->writeimage(\Media\Service\File::PUBLIC_PATH . $urlPart);
+                }
+
+                return $urlPart;
+            case self::AUDIO_FILETYPE:
+                return \Media\Service\Audio::audioPath($this->id, $this->getExtension(), true);
+            default:
+        }
+
+        return null;
+
     }
 }

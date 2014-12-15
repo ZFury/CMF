@@ -22,48 +22,6 @@ class Image extends File
     const S_THUMB_WIDTH = 150;
     const S_THUMB_HEIGHT = 150;
 
-    public function writeObjectFileEntity($image, $object)
-    {
-        $objectImage = new ObjectImage();
-        $objectImage->setImage($image);
-        $objectImage->setEntityName($object->getEntityName());
-        $objectImage->setObjectId($object->getId());
-        $this->sm->get('doctrine.entitymanager.orm_default')->persist($objectImage);
-        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
-    }
-
-    public function writeFileEntity($data)
-    {
-        //Creating new image to get ID for building its path
-        $image = new \Media\Entity\Image();
-        $this->sm->get('doctrine.entitymanager.orm_default')->persist($image);
-        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
-        //Building path and creating directory. Then - moving
-        $ext = $this->getExt($data['image']['name']);
-        $destination = $this->imgPath(self::ORIGINAL, $image->getId(), $ext);
-        $this->moveFile($destination, $data['image']);
-        $image->setExtension($ext);
-        $this->sm->get('doctrine.entitymanager.orm_default')->persist($image);
-        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
-
-        return $image;
-    }
-
-    /**
-     * @param $imageId
-     */
-    public function deleteImage($imageId)
-    {
-        $objectImage = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\ObjectImage')->findOneByImageId($imageId);
-        $this->sm->get('doctrine.entitymanager.orm_default')->remove($objectImage);
-        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
-
-        $image = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\Image')->findOneById($imageId);
-        $this->sm->get('doctrine.entitymanager.orm_default')->remove($image);
-        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
-    }
-
-
     public static function getDestination($path)
     {
         return preg_replace('/.[0-9]*\.((jpeg)|(jpg)|(png))$/', '', $path);
@@ -81,9 +39,9 @@ class Image extends File
     {
         if (self::ORIGINAL == $type) {
             if ($onlyPath == false) {
-                $path = self::PUBLIC_PATH . self::UPLOADS_PATH . "original/";
+                $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::IMAGES_PATH . "original/";
             } else {
-                $path = self::UPLOADS_PATH . "original/";
+                $path = self::UPLOADS_PATH . self::IMAGES_PATH . "original/";
             }
 
 

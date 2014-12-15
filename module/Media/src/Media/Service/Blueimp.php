@@ -28,20 +28,18 @@ class Blueimp
         $fileService = $this->sm->get('Media\Service\File');
         $thumbnailUrl = null;
         $type = null;
-        switch (get_class($file)) {
-            case \Media\Entity\File::IMAGE_CLASSNAME:
-                $imageService = $this->sm->get('Media\Service\Image');
+        switch ($file->getType()) {
+            case \Media\Service\File::FILETYPE_IMAGE:
                 $thumbnailUrl = $fileService->getFullUrl($file->getThumb());
                 $type = 'image/jpeg';
                 break;
-            case \Media\Entity\File::AUDIO_CLASSNAME:
+            case \Media\Service\File::FILETYPE_AUDIO:
                 $thumbnailUrl = $fileService->getFullUrl($file->getUrlPart());
                 $type = 'audio/mp3';
                 break;
             default:
                 break;
         }
-
         return [
             'url' => $fileService->getFullUrl($file->getUrlPart()),
             'thumbnailUrl' => $thumbnailUrl,

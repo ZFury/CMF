@@ -1,3 +1,3 @@
 <?php
 $form->setAttribute('action', $this->url('test/default', array('controller' => 'audio', 'action' => 'start-upload')));
-$fileService->generateFileUploadForm('audio', \Media\Service\File::FILETYPE_AUDIO);
+$fileService->generateFileUploadForm($module, $type);
