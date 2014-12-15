@@ -37,9 +37,9 @@ require.config({
         "tmpl": './libs/jQuery-File-Upload-master/tmpl.min',
         "iframe-transport": './libs/jQuery-File-Upload-master/jquery.iframe-transport',
         "fileupload-ui": './libs/jQuery-File-Upload-master/jquery.fileupload-ui',
+        //BLUEIMP END
         "image": './modules/test/image',
         "audio": './modules/test/audio',
-        //BLUEIMP END
         'redactorContent': '../redactor/redactorContent'
     },
     shim: {

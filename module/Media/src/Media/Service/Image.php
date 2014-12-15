@@ -22,11 +22,6 @@ class Image extends File
     const S_THUMB_WIDTH = 150;
     const S_THUMB_HEIGHT = 150;
 
-    public static function getDestination($path)
-    {
-        return preg_replace('/.[0-9]*\.((jpeg)|(jpg)|(png))$/', '', $path);
-    }
-
     /**
      * @param $type
      * @param $id

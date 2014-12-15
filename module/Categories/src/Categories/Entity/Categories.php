@@ -5,6 +5,7 @@ namespace Categories\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
+use Starter\DBAL\Entity\EntityBase;
 
 /**
  * Categories\Entity\Categories
@@ -15,7 +16,7 @@ use Zend\Form\Annotation;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @ORM\HasLifecycleCallbacks
  */
-class Categories
+class Categories extends EntityBase
 {
     /**
      * @var integer
@@ -315,5 +316,25 @@ class Categories
     public function setPath($path)
     {
         $this->path = $path;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $result = array(
+            "id" => $this->getId(),
+            "name" => $this->getName(),
+            "alias" => $this->getAlias(),
+            "parentId" => $this->getParentId(),
+            "children" => $this->getChildren(),
+            "path" => $this->getPath(),
+            "created" => $this->getCreated(),
+            "updated" => $this->getUpdated(),
+            "order" => $this->getOrder(),
+        );
+
+        return $result;
     }
 }
