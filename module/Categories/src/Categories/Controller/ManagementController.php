@@ -327,7 +327,7 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
     /**
      * Advanced avatar uploader Blueimp UI
      */
-    public function startUploadAction()
+    public function startImageUploadAction()
     {
         $repository = $this->getServiceLocator()
             ->get('Doctrine\ORM\EntityManager')
@@ -364,7 +364,7 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                     $image = $imageService->createFile($data, $category);
                 }
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
-                $dataForJson = $blueimpService->displayUploadedFile($image, $this->getDeleteUrl($image));
+                $dataForJson = $blueimpService->displayUploadedFile($image, $this->getDeleteImageUrl($image));
             } else {
                 $messages = $form->getMessages();
                 $messages = array_shift($messages);
@@ -396,7 +396,7 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
             }
             $dataForJson = $blueimpService->displayUploadedFiles(
                 $images,
-                $this->getDeleteUrls($images)
+                $this->getDeleteImageUrls($images)
             );
         }
 
@@ -416,7 +416,6 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
             $this->getServiceLocator()->get('Media\Service\File')
                 ->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
         } else {
-
             $this->getServiceLocator()->get('Media\Service\File')
                 ->deleteFileEntity($this->getEvent()->getRouteMatch()->getParam('id'));
         }
@@ -425,7 +424,7 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
             ->deleteFileJson($this->getEvent()->getRouteMatch()->getParam('id'));
     }
 
-    public function getDeleteUrl($image)
+    public function getDeleteImageUrl($image)
     {
         $url = $this->serviceLocator->get('ViewHelperManager')->get('url');
         $imageService = $this->getServiceLocator()->get('Media\Service\File');
@@ -436,13 +435,13 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
         ]));
     }
 
-    public function getDeleteUrls($images)
+    public function getDeleteImageUrls($images)
     {
         $deleteUrls = [];
         foreach ($images as $image) {
             array_push($deleteUrls, [
                 'id' => $image->getId(),
-                'deleteUrl' => $this->getDeleteUrl($image)
+                'deleteUrl' => $this->getDeleteImageUrl($image)
             ]);
         }
 
