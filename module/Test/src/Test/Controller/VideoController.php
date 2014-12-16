@@ -21,9 +21,8 @@ class VideoController extends AbstractActionController implements VideoUploaderI
 {
     public function uploadVideoAction()
     {
-        $form = new VideoUpload('upload-video');
         $fileService = new File($this->getServiceLocator());
-        return new ViewModel(['form' => $form, 'fileService' => $fileService, 'module'=> 'video', 'type' => \Media\Entity\File::VIDEO_FILETYPE]);
+        return new ViewModel(['fileService' => $fileService, 'module'=> 'video', 'type' => \Media\Entity\File::VIDEO_FILETYPE]);
     }
 
     /**

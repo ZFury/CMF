@@ -21,9 +21,8 @@ class AudioController extends AbstractActionController implements AudioUploaderI
 {
     public function uploadAudioAction()
     {
-        $form = new AudioUpload('upload-audio');
         $fileService = new File($this->getServiceLocator());
-        return new ViewModel(['form' => $form, 'fileService' => $fileService, 'module'=> 'audio', 'type' => \Media\Entity\File::AUDIO_FILETYPE]);
+        return new ViewModel(['fileService' => $fileService, 'module'=> 'audio', 'type' => \Media\Entity\File::AUDIO_FILETYPE]);
     }
 
     /**

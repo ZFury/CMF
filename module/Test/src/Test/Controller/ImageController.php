@@ -20,9 +20,8 @@ class ImageController extends AbstractActionController implements ImageUploaderI
 {
     public function uploadImageAction()
     {
-        $form = new ImageUpload('upload-image');
         $imageService = new File($this->getServiceLocator());
-        return new ViewModel(['form' => $form, 'imageService' => $imageService, 'module'=> 'image', 'type' => \Media\Entity\File::IMAGE_FILETYPE]);
+        return new ViewModel(['imageService' => $imageService, 'module'=> 'image', 'type' => \Media\Entity\File::IMAGE_FILETYPE]);
     }
 
     /**
