@@ -199,17 +199,17 @@ class File
     }
 
     /**
-     * Returns the part of url
-     *
-     * @return string
+     * @param int $thumbSize
+     * @return null|string
+     * @throws \Exception
      */
-    public function getThumb()
+    public function getThumb($thumbSize = \Media\Service\Image::SMALL_THUMB)
     {
         switch ($this->type) {
             case self::IMAGE_FILETYPE:
                 $ext = $this->getExtension();
                 $imageId = $this->getId();
-                $urlPart = \Media\Service\Image::imgPath(\Media\Service\Image::SMALL_THUMB, $imageId, $ext);
+                $urlPart = \Media\Service\Image::imgPath($thumbSize, $imageId, $ext);
                 if (!file_exists(\Media\Service\File::PUBLIC_PATH . $urlPart)) {
                     $originalLocation = $this->getLocation();
                     $image = new \Imagick($originalLocation);
