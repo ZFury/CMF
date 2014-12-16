@@ -18,16 +18,15 @@ define([
 ], function ($) {
     $(function () {
         'use strict';
-        var id;//= $('#id').val();
+        var id;
         var idString = '';
         if (id = $('#id').val())
             idString = '/' + id;
-        //console.log(x);
         // Initialize the jQuery File Upload widget:
         $('#fileupload').fileupload({
             // Uncomment the following to send cross-domain cookies:
             //xhrFields: {withCredentials: true},
-            url: 'categories/management/start-upload' + idString
+            url: 'categories/management/start-image-upload' + idString
         });
 
         // Enable iframe cross-domain access via redirect option:

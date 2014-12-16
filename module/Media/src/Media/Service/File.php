@@ -74,7 +74,7 @@ class File
      */
     public function getFullUrl($urlPart)
     {
-        return $this->sm->get('ViewHelperManager')->get('ServerUrl')->__invoke() . $urlPart;
+        return $this->sm->get('ViewHelperManager')->get('ServerUrl')->setPort(80)->__invoke() . $urlPart;
     }
 
     /**
