@@ -120,7 +120,6 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
             $categoriesService->clearImages();
         }
 
-        $imageUploadForm = new ImageUpload('upload-image');
         $imageService = new File($this->getServiceLocator());
 
         return $this->prepareViewModel(
@@ -128,7 +127,6 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
             null,
             null,
             [
-                'imageUploadForm' => $imageUploadForm,
                 'imageService' => $imageService,
                 'module' => 'image-categories',
                 'type' => \Media\Entity\File::IMAGE_FILETYPE,
@@ -177,7 +175,6 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
             }
         }
 
-        $imageUploadForm = new ImageUpload('upload-image');
         $imageService = new File($this->getServiceLocator());
 
         return $this->prepareViewModel(
@@ -185,7 +182,6 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
             null,
             null,
             [
-                'imageUploadForm' => $imageUploadForm,
                 'imageService' => $imageService,
                 'module' => 'image-categories',
                 'type' => \Media\Entity\File::IMAGE_FILETYPE,

@@ -3,7 +3,6 @@
 /**@var $form Zend\Form\Form */
 $form = $this->form;
 $requireScript = '';
-//var_dump();die();
 ?>
 <div class="container">
     <input type="hidden" id="id" value="<?= $this->fileUpload['id'] ? $this->fileUpload['id'] : ''; ?>">
@@ -67,7 +66,7 @@ $requireScript = '';
         </form>
     </div>
     <div class="col-md-10 col-md-offset-2">
-        <?php if ($this->fileUpload['imageUploadForm']): ?>
+        <?php if ($this->fileUpload): ?>
             <?php
             echo $this->fileUpload['imageService']->generateFileUploadForm(
                 $this->fileUpload['module'],

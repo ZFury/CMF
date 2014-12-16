@@ -124,7 +124,7 @@ class Categories
     /**
      * Adds new image id to session
      *
-     * @param \Media\Entity\Image $image
+     * @param \Media\Entity\File $image
      */
     public function addImageToSession(\Media\Entity\File $image)
     {

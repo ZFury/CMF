@@ -185,7 +185,6 @@ abstract class AbstractCrudController extends AbstractActionController
      * @param array $fileUpload Set that parameter if you want to use file upload form in your view.
      * <code>
      * 'fileUpload' => array(
-     *     'imageUploadForm' => [upload form instance],
      *     'imageService' => [file service instance],
      *     'module' => [upload js name],
      *     'type' => [file type],
