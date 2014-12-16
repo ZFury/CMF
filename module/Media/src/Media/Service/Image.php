@@ -8,8 +8,6 @@
 
 namespace Media\Service;
 
-use Media\Entity\ObjectImage;
-
 class Image extends File
 {
     const IMAGES_PATH = "images/";

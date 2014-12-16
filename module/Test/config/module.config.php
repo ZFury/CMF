@@ -52,6 +52,7 @@ return [
             'Test\Controller\Management' => 'Test\Controller\ManagementController',
             'Test\Controller\Image' => 'Test\Controller\ImageController',
             'Test\Controller\Audio' => 'Test\Controller\AudioController',
+            'Test\Controller\Video' => 'Test\Controller\VideoController',
         ],
     ],
     'view_manager' => array(
@@ -77,6 +78,10 @@ return [
                     'controller' => 'Test\Controller\Audio',
                     'roles' => ['user'],
                 ],
+                [
+                    'controller' => 'Test\Controller\Video',
+                    'roles' => ['user'],
+                ],
             ],
         ],
     ],
@@ -100,6 +105,14 @@ return [
                         'action' => 'upload-audio',
                         'route' => 'test/default',
                         'controller_namespace' => 'Test\Controller\Audio',
+                        'module' => 'Test'
+                    ],
+                    [
+                        'label' => 'Videos',
+                        'controller' => 'video',
+                        'action' => 'upload-video',
+                        'route' => 'test/default',
+                        'controller_namespace' => 'Test\Controller\Video',
                         'module' => 'Test'
                     ],
                     [

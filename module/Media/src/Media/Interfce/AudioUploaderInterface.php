@@ -12,38 +12,38 @@ interface AudioUploaderInterface
 {
     /**
      * This method will receive POST\GET requests. In case of a POST request,
-     * it must upload an audio and return appropriate JSON using Blueimp service.
-     * In case of a GET request it must return appropriate JSON that contains all audios
+     * it must upload an video and return appropriate JSON using Blueimp service.
+     * In case of a GET request it must return appropriate JSON that contains all videos
      * using also Blueimp service
      */
-    public function startUploadAction();
+    public function startAudioUploadAction();
 
     /**
-     * This method must contain two strings. One actually deletes image from DB using Audio service and
+     * This method must contain two strings. One actually deletes video from DB using File service and
      * another one returns appropriate Json to the view. So you need to write:
-     * $audioService->deleteAudio($this->getEvent()->getRouteMatch()->getParam('id'));
-     * return $blueimpService->deleteAudioJson($this->getEvent()->getRouteMatch()->getParam('id'));
+     * $fileService->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
+     * return $blueimpService->deleteFileJson($this->getEvent()->getRouteMatch()->getParam('id'));
      */
     public function deleteAudioAction();
 
     /**
-     * This method must return a full url of deleting an image, using Audio service. For example you can do this
+     * This method must return a full url of deleting an audio, using File service. For example you can do this
      * like that:
      * $url = $this->serviceLocator->get('ViewHelperManager')->get('url');
-     * return $imageService->getFullUrl($url('test/default', [
+     * return $fileService->getFullUrl($url('test/default', [
      *      'controller' => 'audio',
      *      'action' => 'delete',
-     *      'id' => $audio->getId()
+     *      'id' => $video->getId()
      * ]));
      * @param $audio
      * @return mixed
      */
-    public function getDeleteUrl($audio);
+    public function getDeleteAudioUrl($audio);
 
     /**
-     * This method must return an array of urls for deleting using method deleteAudiosUrl($audios) of Blueimp service
+     * This method must return an array of urls for deleting using method deleteFilesUrl($files) of Blueimp service
      * @param $audios
      * @return mixed
      */
-    public function getDeleteUrls($audios);
+    public function getDeleteAudioUrls($audios);
 }

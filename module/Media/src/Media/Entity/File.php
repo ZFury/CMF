@@ -21,10 +21,9 @@ use Zend\Form\Annotation;
  */
 class File
 {
-    const IMAGE_CLASSNAME = 'Media\Entity\Image';
-    const AUDIO_CLASSNAME = 'Media\Entity\Audio';
     const IMAGE_FILETYPE = 'image';
     const AUDIO_FILETYPE = 'audio';
+    const VIDEO_FILETYPE = 'video';
 
     /**
      * @var string
@@ -171,6 +170,8 @@ class File
                 return \Media\Service\Image::imgPath(\Media\Service\Image::ORIGINAL, $this->id, $ext);
             case self::AUDIO_FILETYPE:
                 return \Media\Service\Audio::audioPath($this->id, $ext);
+            case self::VIDEO_FILETYPE:
+                return \Media\Service\Video::videoPath($this->id, $ext);
             default:
         }
 
@@ -189,6 +190,8 @@ class File
                 return \Media\Service\Image::imgPath(\Media\Service\Image::ORIGINAL, $this->id, $ext, true);
             case self::AUDIO_FILETYPE:
                 return \Media\Service\Audio::audioPath($this->id, $ext, true);
+            case self::VIDEO_FILETYPE:
+                return \Media\Service\Video::videoPath($this->id, $ext, true);
             default:
         }
 
@@ -218,6 +221,8 @@ class File
                 return $urlPart;
             case self::AUDIO_FILETYPE:
                 return \Media\Service\Audio::audioPath($this->id, $this->getExtension(), true);
+            case self::VIDEO_FILETYPE:
+                return \Media\Service\Video::videoPath($this->id, $this->getExtension(), true);
             default:
         }
 

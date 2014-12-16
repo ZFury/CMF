@@ -23,7 +23,7 @@ $(function () {
     $('#fileupload').fileupload({
         // Uncomment the following to send cross-domain cookies:
         //xhrFields: {withCredentials: true},
-        url: 'test/audio/start-audio-upload'
+        url: 'test/video/start-video-upload'
     });
 
     // Enable iframe cross-domain access via redirect option:
@@ -46,7 +46,7 @@ $(function () {
             disableImageResize: /Android(?!.*Chrome)|Opera/
                 .test(window.navigator.userAgent),
             maxFileSize: 500000000,
-            acceptFileTypes: /(\.|\/)(mp3)$/i
+            acceptFileTypes: /(\.|\/)(mp4)$/i
         });
         // Upload server status check for browsers with CORS support:
         if ($.support.cors) {
