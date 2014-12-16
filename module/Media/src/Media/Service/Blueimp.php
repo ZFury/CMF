@@ -19,19 +19,32 @@ class Blueimp
     }
 
     /**
-     * @param $image
+     * @param $file
      * @param $deleteUrl
      * @return array
      */
-    public function getImageJson($image, $deleteUrl)
+    public function getFileJson($file, $deleteUrl)
     {
-        $imageService = $this->sm->get('Media\Service\Image');
-
+        $fileService = $this->sm->get('Media\Service\File');
+        $thumbnailUrl = null;
+        $type = null;
+        switch ($file->getType()) {
+            case \Media\Entity\File::IMAGE_FILETYPE:
+                $thumbnailUrl = $fileService->getFullUrl($file->getThumb());
+                $type = 'image/jpeg';
+                break;
+            case \Media\Entity\File::AUDIO_FILETYPE:
+                $thumbnailUrl = $fileService->getFullUrl($file->getUrlPart());
+                $type = 'audio/mp3';
+                break;
+            default:
+                break;
+        }
         return [
-            'url' => $imageService->getFullUrl($image->getUrlPart()),
-            'thumbnailUrl' => $imageService->getFullUrl($image->getThumb()),
+            'url' => $fileService->getFullUrl($file->getUrlPart()),
+            'thumbnailUrl' => $thumbnailUrl,
             'name' => '',
-            'type' => 'image/jpeg',
+            'type' => $type,
             'size' => '',
             'deleteUrl' => $deleteUrl,
             'deleteType' => 'POST',
@@ -39,46 +52,43 @@ class Blueimp
     }
 
     /**
-     * @param $image
+     * @param $file
      * @param $deleteUrl
      * @return array
      */
-    public function displayUploadedImage($image, $deleteUrl)
+    public function displayUploadedFile($file, $deleteUrl)
     {
-        return [
-          'files' => [
-              $this->getImageJson($image, $deleteUrl)
-          ]
-        ];
+        return ['files' => [ $this->getFileJson($file, $deleteUrl) ]];
     }
 
+
     /**
-     * @param $images
+     * @param $files
      * @param $deleteUrls
      * @return array
      */
-    public function displayUploadedImages($images, $deleteUrls)
+    public function displayUploadedFiles($files, $deleteUrls)
     {
-        $imagesJson = array();
-        foreach ($images as $image) {
+        $filesJson = array();
+        foreach ($files as $file) {
             foreach ($deleteUrls as $deleteUrl) {
-                if ($deleteUrl['id'] == $image->getId()) {
-                    array_push($imagesJson, $this->getImageJson($image, $deleteUrl['deleteUrl']));
+                if ($deleteUrl['id'] == $file->getId()) {
+                    array_push($filesJson, $this->getFileJson($file, $deleteUrl['deleteUrl']));
                 }
             }
         }
 
-        return [ 'files' =>  $imagesJson ];
+        return [ 'files' =>  $filesJson ];
     }
 
     /**
-     * @param $imageId
+     * @param $fileId
      * @return JsonModel
      */
-    public function deleteImageJson($imageId)
+    public function deleteFileJson($fileId)
     {
         return new JsonModel([
-            'files' =>[ $imageId => 'true' ]
+            'files' =>[ $fileId => 'true' ]
         ]);
     }
 }

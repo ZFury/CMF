@@ -19,7 +19,7 @@ require.config({
         "jquery-nestedSortable": './libs/jquery.mjs.nestedSortable',
         redactor: './../redactor/redactor',
         //"redactor-fullscreen": './../redactor/plugins/fullscreen'
-        dashboard:'./../module/dashboard/js/dashboard',
+        dashboard: './../module/dashboard/js/dashboard',
         comment: '../module/comment/js/management',
         categories: '../module/categories/js/management',
         //BLUEIMP BEGIN
@@ -38,8 +38,11 @@ require.config({
         "tmpl": './libs/jQuery-File-Upload-master/tmpl.min',
         "iframe-transport": './libs/jQuery-File-Upload-master/jquery.iframe-transport',
         "fileupload-ui": './libs/jQuery-File-Upload-master/jquery.fileupload-ui',
-        "image": './modules/test/image',
         //BLUEIMP END
+        "image-categories": './modules/categories/image',
+        "image": './modules/test/image',
+        "audio": './modules/test/audio',
+        "video": './modules/test/video',
         'redactorContent': '../redactor/redactorContent'
     },
     shim: {
@@ -73,6 +76,12 @@ require.config({
         redactor: {
             deps: ['jquery'],
             exports: '$.fn.redactor'
+        },
+        frontend: {
+            deps: ['bootstrap']
+        },
+        backend: {
+            deps: ['angularRoute', 'angularSanitize']
         }
         //'redactor-fullscreen': {
         //    deps: ['jquery', 'redactor'],
