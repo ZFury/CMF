@@ -3,8 +3,9 @@ $title = 'List of entities';
 $this->headTitle($title);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
-<table class="table">
+<table class="table grid">
     <tr>
+        <th>Alias entity</th>
         <th>Entity</th>
         <th>Description</th>
         <th>&nbsp;</th>
@@ -14,7 +15,8 @@ $this->headTitle($title);
         foreach($entities as $entity) :
     ?>
         <tr>
-            <td><?php echo $this->escapeHtml($entity->getEntityType());?></td>
+            <td><?php echo $this->escapeHtml($entity->getAliasEntity());?></td>
+            <td><?php echo $this->escapeHtml($entity->getEntity());?></td>
             <td><?php echo $this->escapeHtml($entity->getDescription());?></td>
             <td>
                 <a href="<?php echo $this->url('comment/default', array('controller'=>'management', 'action' => 'edit', 'id' => $entity->getId())); ?>">
@@ -28,12 +30,11 @@ $this->headTitle($title);
         <?php endforeach;
     endif; ?>
 </table>
-<div class="row">
-    <a href="<?php echo $this->url('comment/default', array('controller'=>'management', 'action' => 'create')); ?>">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Сreate a new
-    </a>
-</div>
-<div>&nbsp;</div>
+
+<p>
+    <a href="<?php echo $this->url('comment/default', array('controller' => 'management', 'action' => 'create'));?>" class="btn btn-success">Create</a>
+</p>
+
 <script>
     require(['comment']);
 </script>

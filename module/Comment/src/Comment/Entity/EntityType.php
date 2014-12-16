@@ -3,6 +3,7 @@
 namespace Comment\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Starter\DBAL\Entity\EntityBase;
 use Zend\Form\Annotation;
 
 /**
@@ -14,7 +15,7 @@ use Zend\Form\Annotation;
  * @ORM\HasLifecycleCallbacks
  * @author Sergey Lopay
  */
-class EntityType
+class EntityType extends EntityBase
 {
     /**
      * @var int
@@ -30,11 +31,21 @@ class EntityType
      * @var string
      * @Annotation\Type("Zend\Form\Element\Text")
      * @Annotation\Required(true)
-     * @Annotation\Options({"label":"Entity type:"})
+     * @Annotation\Options({"label":"Alias entity:"})
      * @Annotation\Attributes({"class":"form-control"})
      * @ORM\Column(type="string", nullable=false)
      */
-    protected $entityType;
+    protected $aliasEntity;
+
+    /**
+     * @var string
+     * @Annotation\Type("Zend\Form\Element\Select")
+     * @Annotation\Required(true)
+     * @Annotation\Options({"label":"Entity:"})
+     * @Annotation\Attributes({"class":"form-control"})
+     * @ORM\Column(type="string", nullable=false)
+     */
+    protected $entity;
 
     /**
      * @var string
@@ -120,25 +131,47 @@ class EntityType
     }
 
     /**
-     * Set entityType.
+     * Set aliasEntity.
      *
-     * @param int $entityType
+     * @param int $aliasEntity
      *
      * @return void
      */
-    public function setEntityType($entityType)
+    public function setAliasEntity($aliasEntity)
     {
-        $this->entityType = $entityType;
+        $this->aliasEntity = $aliasEntity;
     }
 
     /**
-     * Get entityType.
+     * Get aliasEntity.
      *
      * @return string
      */
-    public function getEntityType()
+    public function getAliasEntity()
     {
-        return $this->entityType;
+        return $this->aliasEntity;
+    }
+
+    /**
+     * Set entity.
+     *
+     * @param int $entity
+     *
+     * @return void
+     */
+    public function setEntity($entity)
+    {
+        $this->entity = $entity;
+    }
+
+    /**
+     * Get entity.
+     *
+     * @return string
+     */
+    public function getEntity()
+    {
+        return $this->entity;
     }
 
     /**
@@ -183,5 +216,24 @@ class EntityType
     public function setUpdated($updated)
     {
         $this->updated = $updated;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        {
+            $result = array(
+                "id" => $this->getId(),
+                "aliasEntity" => $this->getAliasEntity(),
+                "entity" => $this->getEntity(),
+                "description" => $this->getDescription(),
+                "created" => $this->getCreated(),
+                "updated" => $this->getUpdated(),
+            );
+
+            return $result;
+        }
     }
 }

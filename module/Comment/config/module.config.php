@@ -102,10 +102,10 @@ return array(
         ),
     ),
     'service_manager' => array(
-        'entityTypes' => array(
+        /*'entityTypes' => array(
             'User',
             'Example'
-        ),
+        ),*/
         'factories' => array(
             'Comment\Service\EntityType' => function ($sm) {
                 return new Comment\Service\EntityType($sm);
@@ -120,5 +120,31 @@ return array(
             'comment' => 'Comment\View\Helper\Comment'
         ),
     ),
+    'navigation' => array(
+        'default' => array(
+            array(
+                'label' => 'Comment',
+                'controller' => 'comment',
+                'pages' => array(
+                    array(
+                        'label' => 'Create entity',
+                        'controller' => 'management',
+                        'action' => 'create',
+                        'route' => 'comment/default',
+                        'controller_namespace' => 'Comment\Controller\Management',
+                        'module' => 'Comment'
+                    ),
+                    array(
+                        'label' => 'All entities',
+                        'controller' => 'management',
+                        'action' => 'index',
+                        'route' => 'comment/default',
+                        'controller_namespace' => 'Comment\Controller\Management',
+                        'module' => 'Comment'
+                    )
+                )
+            )
+        )
+    )
 
 );

@@ -17,28 +17,29 @@ class CreateInputFilter extends InputFilter
     public function __construct(ServiceManager $sm)
     {
         $this->sm = $sm;
-        $this->entityType();
+        $this->aliasEntity();
+        $this->entity();
         $this->description();
     }
 
     /**
      * @return $this
      */
-    protected function entityType()
+    protected function aliasEntity()
     {
-        $recordExistsValidator = new NoObjectExists(
+        /*$recordExistsValidator = new NoObjectExists(
             array(
                 'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')->getRepository('Comment\Entity\EntityType'),
-                'fields' => 'entityType'
+                'fields' => 'aliasEntity'
             )
         );
         $recordExistsValidator->setMessage(
-            'Entity with this title already exists',
+            'Alias entity with this title already exists',
             NoObjectExists::ERROR_OBJECT_FOUND
-        );
+        );*/
 
         $this->add(array(
-            'name' => 'entityType',
+            'name' => 'aliasEntity',
             'required' => true,
             'filters' => array(
                 array('name' => 'StripTags'),
@@ -52,7 +53,38 @@ class CreateInputFilter extends InputFilter
                         'message' => 'Entity type contains invalid characters'
                     ),
                 ),
-                $recordExistsValidator
+                //$recordExistsValidator
+            ),
+        ));
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function entity()
+    {
+        /*$recordExistsValidator = new NoObjectExists(
+            array(
+                'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')->getRepository('Comment\Entity\EntityType'),
+                'fields' => 'entity'
+            )
+        );
+        $recordExistsValidator->setMessage(
+            'Entity with this title already exists',
+            NoObjectExists::ERROR_OBJECT_FOUND
+        );*/
+
+        $this->add(array(
+            'name' => 'entity',
+            'required' => true,
+            'filters' => array(
+                array('name' => 'StripTags'),
+                array('name' => 'StringTrim'),
+            ),
+            'validators' => array(
+                //$recordExistsValidator
             ),
         ));
 

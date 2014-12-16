@@ -52,9 +52,9 @@ class Comment
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $et = $this->getServiceLocator()->get('Comment\Service\EntityType');
-            $entityType = $et->get($data['entityType']);
-            if (!$entityType) {
+            $entityType = $this->getServiceLocator()->get('Comment\Service\EntityType');
+            $result = $entityType->get($data['entityType'],$data['entityId']);
+            if (!$result) {
                 throw new \Exception('Unknown entity');
             }
 

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use User\Entity\User;
 use Zend\Form\Annotation;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Starter\DBAL\Entity\EntityBase;
 
 /**
  *
@@ -16,7 +17,7 @@ use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
  * @ORM\HasLifecycleCallbacks
  * @author Sergey Lopay
  */
-class Comment
+class Comment extends EntityBase
 {
     /**
      * @var int
@@ -272,5 +273,25 @@ class Comment
     public function setUpdated($updated)
     {
         $this->updated = $updated;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        {
+            $result = array(
+                "id" => $this->getId(),
+                "comment" => $this->getComment(),
+                "entityType" => $this->getEntityType(),
+                "entityId" => $this->getEntityId(),
+                "user" => $this->getUser(),
+                "created" => $this->getCreated(),
+                "updated" => $this->getUpdated(),
+            );
+
+            return $result;
+        }
     }
 }

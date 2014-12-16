@@ -28,13 +28,22 @@ class EntityType
     }
 
     /**
-     * @param $entityType
-     * @return mixed
+     * @param $aliasEntity
+     * @param $entityId
+     * @return bool
      */
-    public function get($entityType)
+    public function get($aliasEntity, $entityId)
     {
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
 
-        return $objectManager->getRepository('Comment\Entity\EntityType')->findOneBy(array('entityType' => $entityType));
+        $match = $objectManager->getRepository('Comment\Entity\EntityType')->findOneBy(array('aliasEntity' => $aliasEntity));
+        if(count($match)==0) {
+            return false;
+        }
+        $entity = $objectManager->getRepository($match->getEntity())->find($entityId);
+        if(count($entity)==0) {
+            return false;
+        }
+        return true;
     }
 }

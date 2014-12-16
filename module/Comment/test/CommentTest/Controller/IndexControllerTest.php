@@ -116,6 +116,23 @@ class IndexControllerTest extends ControllerTestCase
         $this->assertControllerName('Comment\Controller\Index');
         $this->assertControllerClass('IndexController');
         $this->assertMatchedRouteName('comment/default');
+        $this->removeEntity($comment);
+    }
+
+    public function testEditActionRedirectsAfterValidPost()
+    {
+        /**
+         * @var \Comment\Entity\Comment $comment
+         */
+        $comment = $this->createComment($this->commentData);
+
+        $postData = array(
+            'comment' => 'edited'
+        );
+        $this->dispatch('/comment/index/edit/' . $comment->getId(), 'POST', $postData);
+        $this->assertResponseStatusCode(200);
+
+        $this->removeEntity($comment);
     }
 
     /**
@@ -142,6 +159,23 @@ class IndexControllerTest extends ControllerTestCase
         return $entity;
     }
 
+    /*public function testDeleteActionCanBeAccessed()
+    {
+        $comment = $this->createComment($this->commentData);
+        $this->dispatch("/comment/index/delete/".$comment->getId());
+        $this->assertResponseStatusCode(200);
+
+        $this->assertModuleName('comment');
+        $this->assertControllerName('Comment\Controller\Index');
+        $this->assertControllerClass('IndexController');
+        $this->assertMatchedRouteName('comment/default');
+    }*/
+
+    /**
+     * @param $commentData
+     * @return \Comment\Entity\Comment
+     * @throws \Doctrine\DBAL\ConnectionException
+     */
     public function createComment($commentData)
     {
         /**
@@ -159,5 +193,19 @@ class IndexControllerTest extends ControllerTestCase
         $objectManager->clear();
 
         return $comment;
+    }
+
+    /**
+     * @param \Comment\Entity\Comment $detachedEntity
+     */
+    public function removeEntity(\Comment\Entity\Comment $detachedEntity)
+    {
+        /**
+         * @var \Doctrine\ORM\EntityManager $objectManager
+         */
+        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $entity = $objectManager->merge($detachedEntity);
+        $objectManager->remove($entity);
+        $objectManager->flush();
     }
 }
