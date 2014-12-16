@@ -18,11 +18,10 @@ define([
 ], function ($) {
     $(function () {
         'use strict';
-        var id;//= $('#id').val();
+        var id;
         var idString = '';
         if (id = $('#id').val())
             idString = '/' + id;
-        //console.log(x);
         // Initialize the jQuery File Upload widget:
         $('#fileupload').fileupload({
             // Uncomment the following to send cross-domain cookies:

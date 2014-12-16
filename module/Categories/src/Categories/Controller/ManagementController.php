@@ -11,6 +11,10 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Categories\Form\Filter;
 use DoctrineModule\Validator;
 use Categories\Validators;
+use Media\Form\ImageUpload;
+use Media\Service\File;
+use Categories\Entity\Categories;
+use Media\Form\Filter\ImageUploadInputFilter;
 
 class ManagementController extends AbstractCrudController implements \Media\Interfce\ImageUploaderInterface
 {
@@ -115,19 +119,22 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
         } else {
             $categoriesService->clearImages();
         }
-//        return new ViewModel(['form' => $form]);
-        $viewModel = $this->getViewModel();
 
-        $imageUploadForm = new \Media\Form\ImageUpload('upload-image');
-        $imageService = new \Media\Service\File($this->getServiceLocator());
+        $imageUploadForm = new ImageUpload('upload-image');
+        $imageService = new File($this->getServiceLocator());
 
-        return $viewModel->setVariables(['form' => $form,
-            'imageUploadForm' => $imageUploadForm,
-            'imageService' => $imageService,
-            'module' => 'image-categories',
-            'type' => \Media\Entity\File::IMAGE_FILETYPE,
-            'id' => null
-        ]);
+        return $this->prepareViewModel(
+            $form,
+            null,
+            null,
+            [
+                'imageUploadForm' => $imageUploadForm,
+                'imageService' => $imageService,
+                'module' => 'image-categories',
+                'type' => \Media\Entity\File::IMAGE_FILETYPE,
+                'id' => null
+            ]
+        );
     }
 
     /**
@@ -169,19 +176,22 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                 );
             }
         }
-//        return new ViewModel(['form' => $form]);
-        $viewModel = $this->getViewModel();
 
-        $imageUploadForm = new \Media\Form\ImageUpload('upload-image');
-        $imageService = new \Media\Service\File($this->getServiceLocator());
+        $imageUploadForm = new ImageUpload('upload-image');
+        $imageService = new File($this->getServiceLocator());
 
-        return $viewModel->setVariables(['form' => $form,
-            'imageUploadForm' => $imageUploadForm,
-            'imageService' => $imageService,
-            'module' => 'image-categories',
-            'type' => \Media\Entity\File::IMAGE_FILETYPE,
-            'id' => $this->params()->fromRoute('id')
-        ]);
+        return $this->prepareViewModel(
+            $form,
+            null,
+            null,
+            [
+                'imageUploadForm' => $imageUploadForm,
+                'imageService' => $imageService,
+                'module' => 'image-categories',
+                'type' => \Media\Entity\File::IMAGE_FILETYPE,
+                'id' => $this->params()->fromRoute('id')
+            ]
+        );
     }
 
     /**
@@ -283,7 +293,7 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
      */
     protected function getEntity()
     {
-        return new \Categories\Entity\Categories();
+        return new Categories();
     }
 
     /**
@@ -333,8 +343,8 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
         $imageService = $this->getServiceLocator()->get('Media\Service\File');
         $blueimpService = $this->getServiceLocator()->get('Media\Service\Blueimp');
         if ($this->getRequest()->isPost()) {
-            $form = new \Media\Form\ImageUpload('upload-image');
-            $inputFilter = new \Media\Form\Filter\ImageUploadInputFilter();
+            $form = new ImageUpload('upload-image');
+            $inputFilter = new ImageUploadInputFilter();
             $form->setInputFilter($inputFilter->getInputFilter());
 
             $request = $this->getRequest();
@@ -406,12 +416,13 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
             $this->getServiceLocator()->get('Media\Service\File')
                 ->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
         } else {
+
             $this->getServiceLocator()->get('Media\Service\File')
                 ->deleteFileEntity($this->getEvent()->getRouteMatch()->getParam('id'));
         }
 
         return $this->getServiceLocator()->get('Media\Service\Blueimp')
-            ->deleteImageJson($this->getEvent()->getRouteMatch()->getParam('id'));
+            ->deleteFileJson($this->getEvent()->getRouteMatch()->getParam('id'));
     }
 
     public function getDeleteUrl($image)

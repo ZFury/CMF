@@ -163,4 +163,44 @@ abstract class AbstractCrudController extends AbstractActionController
     {
         return $this->viewModel;
     }
+
+    /**
+     * Gets CRUD view model and sets require parameters.
+     *
+     * @param $form
+     * @param array $variables Variables that will be used in view.
+     * <code>
+     * 'variables' => array(
+     *      '[variable name]' => [variable value]
+     * )
+     * </code>
+     * @param array $scripts Scripts for require that will be used in view.
+     * <code>
+     * 'scripts' => array(
+     *      '[require js module name1],
+     *      '[require js module name2],
+     *      ...
+     * )
+     * </code>
+     * @param array $fileUpload Set that parameter if you want to use file upload form in your view.
+     * <code>
+     * 'fileUpload' => array(
+     *     'imageUploadForm' => [upload form instance],
+     *     'imageService' => [file service instance],
+     *     'module' => [upload js name],
+     *     'type' => [file type],
+     *      'id' => [entity id]
+     * )
+     * </code>
+     * @return ViewModel
+     */
+    protected function prepareViewModel($form, array $variables = null, array $scripts = null, array $fileUpload = null)
+    {
+        return $this->viewModel->setVariables([
+            'form' => $form,
+            'variables' => $variables,
+            'scripts' => $scripts,
+            'fileUpload' => $fileUpload
+        ]);
+    }
 }

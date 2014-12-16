@@ -3,15 +3,16 @@
 /**@var $form Zend\Form\Form */
 $form = $this->form;
 $requireScript = '';
+//var_dump();die();
 ?>
 <div class="container">
-    <input type="hidden" id="id" value="<?= $this->id; ?>">
+    <input type="hidden" id="id" value="<?= $this->fileUpload['id'] ? $this->fileUpload['id'] : ''; ?>">
 
     <h1 class="create-label"><?= !$this->title ? 'Create' : $this->escapeHtml($this->title); ?></h1>
 
     <div class="col-md-11">
         <form action="" method="post" class="form-horizontal">
-            <?php foreach ($this->form->getElements() as $element) : ?>
+            <?php foreach ($form->getElements() as $element) : ?>
                 <?php
                 switch ($element) {
                     case $element instanceof Zend\Form\Element\Select :
@@ -66,13 +67,20 @@ $requireScript = '';
         </form>
     </div>
     <div class="col-md-10 col-md-offset-2">
-        <?php if ($this->imageUploadForm) echo $this->imageService->generateFileUploadForm($this->module, $this->type); ?>
+        <?php if ($this->fileUpload['imageUploadForm']): ?>
+            <?php
+            echo $this->fileUpload['imageService']->generateFileUploadForm(
+                $this->fileUpload['module'],
+                $this->fileUpload['type']
+            );
+            ?>
+        <?php endif; ?>
     </div>
 </div>
 
 <script>
     require([
-        'frontend',
+        'frontend'
         <?= $requireScript?"'$requireScript'":null; ?>
         <?php
         if ($this->scripts) {
