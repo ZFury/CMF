@@ -25,16 +25,20 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
-        if (!$alias = $this->params()->fromRoute('alias')) {
-            //TODO: fix exception
-            throw new EntityNotFoundException('Bad Request');
-        }
+
+    }
+
+    public function testAction()
+    {
+        $alias = 'mail1';
 
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        if (!$page = $objectManager->getRepository('Pages\Entity\Pages')->findOneBy(['alias' => $alias])) {
+        if (!$mailTemplate = $objectManager->getRepository('Mail\Entity\Mail')->findOneBy(['alias' => $alias])) {
             throw new EntityNotFoundException('Entity not found');
         }
 
-        return new ViewModel(array('page' => $page));
+        var_dump($mailTemplate);
+        die();
+
     }
 }

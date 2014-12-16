@@ -1,5 +1,5 @@
 <div class="site-index">
-    <h1>Pages</h1>
+    <h1>Mail templates</h1>
 
     <p>
         <a href="<?php echo $this->url('mail/default',
@@ -28,16 +28,7 @@
 
         <?php foreach ($pages as $page): ?>
             <tr>
-                <td>
-                    <a href="<?php echo $this->url('mail/default',
-                        array(
-                            'controller' => 'management',
-                            'action' => 'view',
-                            'id' => $page->getId())
-                    ); ?>">
-                        <?php echo $this->escapeHtml($page->getAlias()); ?>
-                    </a>
-                </td>
+                <td><?php echo $this->escapeHtml($page->getAlias()); ?></td>
                 <td><?php echo $this->escapeHtml($page->getDescription()); ?></td>
                 <td><?php echo $this->escapeHtml($page->getCreated()->format('Y-m-d H:i:s')); ?></td>
                 <td><?php echo $this->escapeHtml($page->getUpdated()->format('Y-m-d H:i:s')); ?></td>

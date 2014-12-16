@@ -27,9 +27,10 @@ class Create extends Form
     {
         $this->serviceLocator = $options['serviceLocator'];
 
-        $this->setHydrator(new ClassMethods);
+        $this->setHydrator(new ClassMethods(false));
 
         parent::__construct($name);
+
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'form-horizontal');
         $this->setAttribute('role', 'form');
@@ -100,10 +101,10 @@ class Create extends Form
 
         $this->add(
             array(
-                'name' => 'from_email',
+                'name' => 'fromEmail',
                 'attributes' => array(
                     'type' => 'text',
-                    'id' => 'from_email',
+                    'id' => 'fromEmail',
                     'class' => 'form-control'
                 ),
                 'options' => array(
@@ -117,10 +118,10 @@ class Create extends Form
 
         $this->add(
             array(
-                'name' => 'from_name',
+                'name' => 'fromName',
                 'attributes' => array(
                     'type' => 'text',
-                    'id' => 'from_name',
+                    'id' => 'fromName',
                     'class' => 'form-control'
                 ),
                 'options' => array(
@@ -133,8 +134,8 @@ class Create extends Form
         );
 
         $redactor = new \Starter\Form\Element\Redactor();
-        $redactor->setName('body_html')
-            ->setAttributes(['id' => 'body_html',
+        $redactor->setName('bodyHtml')
+            ->setAttributes(['id' => 'bodyHtml',
                 'class' => 'form-control redactor-content'])
             ->setOptions([
                 'label' => 'Body (html)',
@@ -146,10 +147,10 @@ class Create extends Form
 
         $this->add(
             array(
-                'name' => 'body_text',
+                'name' => 'bodyText',
                 'type' => 'textarea',
                 'attributes' => array(
-                    'id' => 'body_text',
+                    'id' => 'bodyText',
                     'class' => 'form-control'
                 ),
                 'options' => array(

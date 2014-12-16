@@ -10,5 +10,12 @@ use Doctrine\ORM\EntityRepository;
  */
 class Mail extends EntityRepository
 {
-
+    /**
+     * @param $alias
+     * @return null|object
+     */
+    public function getTemplate($alias)
+    {
+        return $this->findOneBy(['alias' => $alias]);
+    }
 }

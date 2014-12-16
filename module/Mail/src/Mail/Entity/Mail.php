@@ -14,8 +14,9 @@ use Starter\DBAL\Entity\EntityBase;
 
 /**
  * @ORM\Entity
- * @Annotation\Name("mail")
- * @ORM\Table(name="mail")
+ * @ORM\Entity(repositoryClass="Mail\Repository\Mail")
+ * @Annotation\Name("mail_templates")
+ * @ORM\Table(name="mail_templates")
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @ORM\HasLifecycleCallbacks
  */
@@ -53,25 +54,25 @@ class Mail extends EntityBase
      * @var string
      * @ORM\Column(type="string", length=255)
      */
-    protected $from_email;
+    protected $fromEmail;
 
     /**
      * @var string
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    protected $from_name;
+    protected $fromName;
 
     /**
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
-    protected $body_html;
+    protected $bodyHtml;
 
     /**
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
-    protected $body_text;
+    protected $bodyText;
 
     /**
      * @var created
@@ -95,7 +96,7 @@ class Mail extends EntityBase
 //     * @Annotation\Attributes({"class":"form-control"})
 //     * @ORM\Column(type="string", length=128, options={"default" = "Member"})
 //     */
-    protected $is_used;
+//    protected $isUsed;
 
     /**
      * @var string
@@ -186,7 +187,7 @@ class Mail extends EntityBase
      */
     public function getFromEmail()
     {
-        return $this->from_email;
+        return $this->fromEmail;
     }
 
     /**
@@ -194,7 +195,7 @@ class Mail extends EntityBase
      */
     public function setFromEmail($fromEmail)
     {
-        $this->from_email = $fromEmail;
+        $this->fromEmail = $fromEmail;
     }
 
     /**
@@ -202,7 +203,7 @@ class Mail extends EntityBase
      */
     public function getFromName()
     {
-        return $this->from_name;
+        return $this->fromName;
     }
 
     /**
@@ -210,7 +211,7 @@ class Mail extends EntityBase
      */
     public function setFromName($fromName)
     {
-        $this->from_name = $fromName;
+        $this->fromName = $fromName;
     }
 
     /**
@@ -218,7 +219,7 @@ class Mail extends EntityBase
      */
     public function getBodyHtml()
     {
-        return $this->body_html;
+        return $this->bodyHtml;
     }
 
     /**
@@ -226,7 +227,7 @@ class Mail extends EntityBase
      */
     public function setBodyHtml($bodyHtml)
     {
-        $this->body_html = $bodyHtml;
+        $this->bodyHtml = $bodyHtml;
     }
 
     /**
@@ -234,7 +235,7 @@ class Mail extends EntityBase
      */
     public function getBodyText()
     {
-        return $this->body_text;
+        return $this->bodyText;
     }
 
     /**
@@ -242,7 +243,7 @@ class Mail extends EntityBase
      */
     public function setBodyText($bodyText)
     {
-        $this->body_text = $bodyText;
+        $this->bodyText = $bodyText;
     }
 
     /**
@@ -294,7 +295,7 @@ class Mail extends EntityBase
      */
 //    public function getIsUsed()
 //    {
-//        return $this->is_used;
+//        return $this->isUsed;
 //    }
 
     /**
@@ -302,7 +303,7 @@ class Mail extends EntityBase
      */
 //    public function setIsUsed($isUsed)
 //    {
-//        $this->is_used = $isUsed;
+//        $this->isUsed = $isUsed;
 //    }
 
     /**
@@ -315,10 +316,10 @@ class Mail extends EntityBase
             "alias" => $this->getAlias(),
             "description" => $this->getDescription(),
             "subject" => $this->getSubject(),
-            "from_email" => $this->getFromEmail(),
-            "from_name" => $this->getFromName(),
-            "body_html" => $this->getBodyHtml(),
-            "body_text" => $this->getBodyText(),
+            "fromEmail" => $this->getFromEmail(),
+            "fromName" => $this->getFromName(),
+            "bodyHtml" => $this->getBodyHtml(),
+            "bodyText" => $this->getBodyText(),
             "created" => $this->getCreated(),
             "updated" => $this->getUpdated(),
 //            "isUsed" => $this->getIsUsed(),

@@ -5,6 +5,7 @@ namespace Mail\Service;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Mvc\Controller\Plugin\Url;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
+use Doctrine\ORM\EntityNotFoundException;
 
 /**
  * Class Mail
@@ -39,5 +40,14 @@ class Mail
     public function getObjectManager()
     {
         return $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+    }
+
+    public function getTemplate($alias)
+    {
+        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        if (!$mailTemplate = $objectManager->getRepository('Mail\Entity\Mail')->findOneBy(['alias' => $alias])) {
+            throw new EntityNotFoundException("Template by name '{$alias}' not found");
+        }
+        return $mailTemplate;
     }
 }

@@ -27,7 +27,7 @@ class Create extends Form
     {
         $this->serviceLocator = $options['serviceLocator'];
 
-        $this->setHydrator(new ClassMethods);
+        $this->setHydrator(new ClassMethods(false));
 
         parent::__construct($name);
         $this->setAttribute('method', 'post');
@@ -129,10 +129,10 @@ class Create extends Form
 
         $this->add(
             array(
-                'name' => 'userId',
+                'name' => 'authorId',
                 'attributes' => array(
                     'type' => 'hidden',
-                    'id' => 'userId',
+                    'id' => 'authorId',
                     'class' => 'form-control'
                 ),
                 'options' => array(),
