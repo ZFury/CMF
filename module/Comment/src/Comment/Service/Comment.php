@@ -42,18 +42,23 @@ class Comment
      */
     public function addComment(\Zend\Form\Form $form, array $data)
     {
+        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        if(!$entity = $entityManager->getRepository('Comment\Entity\EntityType')->getEntityType($data['entityType'])) {
+            throw new \Exception('Unknown entity');
+        }
+        $data['entityType'] = $entity;
+
         $user = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity()->getUser();
         $data['user'] = $user;
-        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+
         $comment = new \Comment\Entity\Comment();
 
         $form->setData($data);
 
         if ($form->isValid()) {
             $data = $form->getData();
-
             $entityType = $this->getServiceLocator()->get('Comment\Service\EntityType');
-            $result = $entityType->get($data['entityType'],$data['entityId']);
+            $result = $entityType->get($data['entityType']->getAliasEntity(), $data['entityId']);
             if (!$result) {
                 throw new \Exception('Unknown entity');
             }
@@ -62,7 +67,6 @@ class Comment
             try {
                 $hydrator = new DoctrineHydrator($entityManager);
                 $hydrator->hydrate($data, $comment);
-                //$comment->setUser($user);
                 $entityManager->persist($comment);
                 $entityManager->flush();
                 $entityManager->getConnection()->commit();
@@ -79,14 +83,19 @@ class Comment
     /**
      * @param array $data
      * @return array
+     * @throws \Exception
      */
     public function getCommentsByEntityId(array $data)
     {
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
-
-        $comments = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => $data['entityType'], 'entityId' => $data['entityId']));
-
+        if(!$entityType = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType($data['entityType'])) {
+            throw new \Exception('Unknown entity');
+        }
+        $comments = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => $entityType, 'entityId' => $data['entityId']));
         $arrayComments = array();
+
+        //$entityComment = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment');
+
         foreach ($comments as $comment) {
             $arrayComments[$comment->getId()]['comment'] = $comment;
             $data = [

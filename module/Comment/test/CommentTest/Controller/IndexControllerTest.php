@@ -18,22 +18,14 @@ class IndexControllerTest extends ControllerTestCase
      */
     protected $traceError = true;
 
-    /**
-     * @var array
-     */
-    protected $userData = [
-        'name' => 'adminTest1',
-        'email' => 'aaa@gmail.com',
-        'password' => '123456',
-    ];
+    protected $user;
 
-    /**
-     * @var array
-     */
-    protected $commentData = [
-        'comment' => 'text Comment',
-        'entityType' => 'default',
-        'entityId' => 1,
+    protected $entityType;
+
+    protected $anotherUser = [
+        'name' => 'Admin1',
+        'email' => 'admin1@nix.com',
+        'password' => '123456'
     ];
 
     /**
@@ -64,6 +56,21 @@ class IndexControllerTest extends ControllerTestCase
         parent::setUp();
 
         $this->setupAdmin();
+
+        $this->user = $this->createUser($this->anotherUser);
+        $entityType = array(
+            'aliasEntity' =>'user',
+            'entity' =>'User\Entity\User',
+            'description' =>'description',
+        );
+        $this->entityType = $this->createEntityType($entityType);
+    }
+
+    public function tearDown()
+    {
+        $this->removeUser($this->anotherUser);
+        $this->dropComments();
+        $this->removeEntityType($this->entityType);
     }
 
     public function testIndexActionCanBeAccessed()
@@ -92,22 +99,16 @@ class IndexControllerTest extends ControllerTestCase
     {
         $postData = array(
             'comment' => "test comment",
-            'entityType' => 'another',
-            'entityId' => 1,
+            'entityType' => $this->entityType->getAliasEntity(),
+            'entityId' => $this->user->getId(),
         );
-        $entityType = array(
-            'entityType' =>$postData['entityType'],
-            'description' =>'description',
-        );
-        $this->createEntityType($entityType);
-
         $this->dispatch('/comment/index/add', 'POST', $postData);
         $this->assertResponseStatusCode(200);
     }
 
     public function testEditActionCanBeAccessed()
     {
-        $comment = $this->createComment($this->commentData);
+        $comment = $this->createComment('testComment');
 
         $this->dispatch('/comment/index/edit/'.$comment->getId());
         $this->assertResponseStatusCode(200);
@@ -116,72 +117,65 @@ class IndexControllerTest extends ControllerTestCase
         $this->assertControllerName('Comment\Controller\Index');
         $this->assertControllerClass('IndexController');
         $this->assertMatchedRouteName('comment/default');
-        $this->removeEntity($comment);
     }
 
     public function testEditActionRedirectsAfterValidPost()
     {
-        /**
-         * @var \Comment\Entity\Comment $comment
-         */
-        $comment = $this->createComment($this->commentData);
+        $comment = $this->createComment('Comment for edited');
 
         $postData = array(
             'comment' => 'edited'
         );
         $this->dispatch('/comment/index/edit/' . $comment->getId(), 'POST', $postData);
         $this->assertResponseStatusCode(200);
-
-        $this->removeEntity($comment);
     }
 
+//    public function testDeleteActionCanBeAccessed()
+//    {
+//        $comment = $this->createComment('Comment for deleted');
+//        $this->dispatch("/comment/index/delete/".$comment->getId());
+//        $this->assertResponseStatusCode(200);
+//
+//        $this->assertModuleName('comment');
+//        $this->assertControllerName('Comment\Controller\Index');
+//        $this->assertControllerClass('IndexController');
+//        $this->assertMatchedRouteName('comment/default');
+//    }
+
     /**
-     * Creates new entityType.
-     *
-     * @param  $entityData
+     * @param $entityData
      * @return \Comment\Entity\EntityType
      */
     public function createEntityType($entityData)
     {
-        /**
-         * @var \Doctrine\ORM\EntityManager $objectManager
-         */
-        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         $entity = new \Comment\Entity\EntityType();
+        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         $objectManager->getConnection()->beginTransaction();
         $hydrator = new DoctrineHydrator($objectManager);
         $hydrator->hydrate($entityData, $entity);
         $objectManager->persist($entity);
         $objectManager->flush();
         $objectManager->getConnection()->commit();
-        $objectManager->clear();
 
         return $entity;
     }
 
-    /*public function testDeleteActionCanBeAccessed()
-    {
-        $comment = $this->createComment($this->commentData);
-        $this->dispatch("/comment/index/delete/".$comment->getId());
-        $this->assertResponseStatusCode(200);
-
-        $this->assertModuleName('comment');
-        $this->assertControllerName('Comment\Controller\Index');
-        $this->assertControllerClass('IndexController');
-        $this->assertMatchedRouteName('comment/default');
-    }*/
-
     /**
-     * @param $commentData
+     * @param $commentText
      * @return \Comment\Entity\Comment
      * @throws \Doctrine\DBAL\ConnectionException
      */
-    public function createComment($commentData)
+    public function createComment($commentText)
     {
         /**
          * @var \Doctrine\ORM\EntityManager $objectManager
          */
-        $commentData['user'] = $this->getApplicationServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity()->getUser();
+        $commentData = array(
+            'comment' => $commentText,
+            'entityType' => $this->entityType,
+            'entityId' => $this->user->getId(),
+            'user' => $this->getApplicationServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity()->getUser(),
+        );
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         $comment = new \Comment\Entity\Comment();
         $objectManager->getConnection()->beginTransaction();
@@ -196,9 +190,9 @@ class IndexControllerTest extends ControllerTestCase
     }
 
     /**
-     * @param \Comment\Entity\Comment $detachedEntity
+     * @param \Comment\Entity\EntityType $detachedEntity
      */
-    public function removeEntity(\Comment\Entity\Comment $detachedEntity)
+    public function removeEntityType(\Comment\Entity\EntityType $detachedEntity)
     {
         /**
          * @var \Doctrine\ORM\EntityManager $objectManager
@@ -207,5 +201,19 @@ class IndexControllerTest extends ControllerTestCase
         $entity = $objectManager->merge($detachedEntity);
         $objectManager->remove($entity);
         $objectManager->flush();
+    }
+
+    /**
+     * Truncate table comment
+     */
+    public function dropComments() {
+        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $sql = 'TRUNCATE TABLE comment';
+        $objectManager->getConnection()->beginTransaction();
+        $connection = $objectManager->getConnection();
+        $stmt = $connection->prepare($sql);
+        $stmt->execute();
+        $objectManager->getConnection()->commit();
+        $objectManager->clear();
     }
 }

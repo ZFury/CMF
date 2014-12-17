@@ -19,4 +19,14 @@ class EntityType extends EntityRepository
         }
         return $entities;
     }
+
+    /**
+     * @param $aliasEntity
+     * @return mixed
+     */
+    public function getEntityType($aliasEntity)
+    {
+        $comments = $this->findOneBy(['aliasEntity' => $aliasEntity]);
+        return $comments;
+    }
 }

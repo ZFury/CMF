@@ -37,11 +37,11 @@ class EntityType
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
 
         $match = $objectManager->getRepository('Comment\Entity\EntityType')->findOneBy(array('aliasEntity' => $aliasEntity));
-        if(count($match)==0) {
+        if (count($match)==0) {
             return false;
         }
         $entity = $objectManager->getRepository($match->getEntity())->find($entityId);
-        if(count($entity)==0) {
+        if (count($entity)==0) {
             return false;
         }
         return true;

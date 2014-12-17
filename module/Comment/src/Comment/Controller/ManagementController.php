@@ -45,7 +45,7 @@ class ManagementController extends AbstractCrudController
                     $viewModel = $this->getViewModel();
                     return $viewModel->setVariables(['form' => $form]);
                 }
-                if(!$entityValid->isValid(['entity' => $form->get('entity')->getValue()], $this->params()->fromRoute('id'))) {
+                if (!$entityValid->isValid(['entity' => $form->get('entity')->getValue()], $this->params()->fromRoute('id'))) {
                     $form->get('entity')->setMessages(
                         array(
                             'errorMessageKey' => 'Entity must be unique in its category!'
@@ -81,7 +81,6 @@ class ManagementController extends AbstractCrudController
         $entity = $this->loadEntity();
         $form->bind($entity);
         if ($this->getRequest()->isPost()) {
-
             $form->setData($this->getRequest()->getPost());
             $form->setBindOnValidate(Form::BIND_MANUAL);
             if ($form->isValid()) {
@@ -95,7 +94,7 @@ class ManagementController extends AbstractCrudController
                     $viewModel = $this->getViewModel();
                     return $viewModel->setVariables(['form' => $form]);
                 }
-                if(!$entityValid->isValid(['entity' => $form->get('entity')->getValue()], $this->params()->fromRoute('id'))) {
+                if (!$entityValid->isValid(['entity' => $form->get('entity')->getValue()], $this->params()->fromRoute('id'))) {
                     $form->get('entity')->setMessages(
                         array(
                             'errorMessageKey' => 'Entity must be unique in its category!'
@@ -150,8 +149,6 @@ class ManagementController extends AbstractCrudController
         $entityType = $this->loadEntity();
         $form->setHydrator(new DoctrineHydrator($entityManager));
         $form->bind($entityType);
-       // var_dump($form->getObject());
-        //die();
 
         $form->setInputFilter(new Filter\CreateInputFilter($this->getServiceLocator()));
 

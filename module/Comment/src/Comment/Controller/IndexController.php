@@ -17,7 +17,6 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
-
         // for POST data
         if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost()->toArray();
@@ -113,7 +112,9 @@ class IndexController extends AbstractActionController
             }
 
             $data = $data->toArray();
-
+            if (!isset($data['entityType']) || !isset($data['entityId'])) {
+                return $this->notFoundAction();
+            }
             $comment = $this->getServiceLocator()
                 ->get('Comment\Service\Comment')
                 ->addComment($form, $data);

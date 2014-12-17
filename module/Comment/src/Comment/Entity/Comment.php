@@ -4,6 +4,7 @@ namespace Comment\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use User\Entity\User;
+use Comment\Entity\EntityType;
 use Zend\Form\Annotation;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Starter\DBAL\Entity\EntityBase;
@@ -54,12 +55,18 @@ class Comment extends EntityBase
     protected $userId;
 
     /**
-     * @var string
-     * @Annotation\Type("Zend\Form\Element\Text")
      * @Annotation\Required(true)
-     * @ORM\Column(type="string", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Comment\Entity\EntityType")
+     * @ORM\JoinColumn(name="entityTypeId", referencedColumnName="id")
      */
     protected $entityType;
+
+    /**
+     * @var int
+     * @Annotation\Type("Zend\Form\Element\Text")
+     * @ORM\Column(type="integer", nullable=false, options={"unsigned"=true})
+     */
+    protected $entityTypeId;
 
     /**
      * @Annotation\Required(true)
@@ -90,7 +97,8 @@ class Comment extends EntityBase
     public function deleteChild(LifecycleEventArgs $args)
     {
         $objectManager = $args->getObjectManager();
-        $comments = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => 'comment', 'entityId' => $this->getId()));
+        $entityType = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment');
+        $comments = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => $entityType, 'entityId' => $this->getId()));
         foreach ($comments as $comment) {
             $objectManager->remove($comment);
         }
@@ -188,25 +196,41 @@ class Comment extends EntityBase
     }
 
     /**
-     * Set entityType.
-     *
-     * @param int $entityType
-     *
-     * @return void
+     * @param EntityType $entityType
      */
-    public function setEntityType($entityType)
+    public function setEntityType(EntityType $entityType)
     {
         $this->entityType = $entityType;
     }
 
     /**
-     * Get entityType.
-     *
-     * @return string
+     * @return mixed
      */
     public function getEntityType()
     {
         return $this->entityType;
+    }
+
+    /**
+     * Set entityTypeId.
+     *
+     * @param int $entityTypeId
+     *
+     * @return void
+     */
+    public function setEntityTypeId($entityTypeId)
+    {
+        $this->entityTypeId = $entityTypeId;
+    }
+
+    /**
+     * Get entityTypeId.
+     *
+     * @return int
+     */
+    public function getEntityTypeId()
+    {
+        return $this->entityTypeId;
     }
 
     /**
