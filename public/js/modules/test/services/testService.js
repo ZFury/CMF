@@ -18,6 +18,7 @@
                     url: this.apiUrl + 'management/create',
                     method: "POST",
                     data: $.param({email: email, name: name}),
+                    contentType:'json',
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 };
                 ajaxRequest(params, callback);

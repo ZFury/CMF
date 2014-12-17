@@ -1,4 +1,3 @@
-<?php echo $this->headLink()->prependStylesheet($this->basePath() . '/module/categories/css/management.css'); ?>
 <div id="dialog">
 </div>
 <div class="category-page-wrapper">
@@ -6,7 +5,7 @@
         <div class="form-group">
             <div class="col-lg-1">
                 <a href="<?= $this->url('categories/create') ?>"
-                   class="btn btn-primary navbar-btn dialog"
+                   class="btn btn-success navbar-btn dialog"
                    data-ajax-method="get"><?php echo $this->translate('Create category') ?></a>
             </div>
             <div class="col-lg-5">
@@ -64,5 +63,5 @@
     </div>
 </div>
 <script>
-    require(['categories']);
+    require(['frontend','categories']);
 </script>

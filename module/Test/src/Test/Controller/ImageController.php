@@ -8,50 +8,32 @@
 
 namespace Test\Controller;
 
+use Media\Service\File;
+use Zend\View\Model\JsonModel;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Media\Form\ImageUpload;
 use Media\Form\Filter\ImageUploadInputFilter;
+use Media\Interfce\ImageUploaderInterface;
 
-class ImageController extends AbstractActionController
+class ImageController extends AbstractActionController implements ImageUploaderInterface
 {
-    public function indexAction()
+    public function uploadImageAction()
     {
-        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $imageService = $this->getServiceLocator()->get('Media\Service\Image');
-
-        $userEntityRepository = $entityManager->getRepository('User\Entity\User');
-        $user = $userEntityRepository->findOneById($this->identity()->getUser()->getId());
-        $imagesId = $user->getImages();
-        $imagesLocation = [];
-        $imagesUrl = [];
-        $thumbsUrl = [];
-        foreach ($imagesId as $imageId) {
-            $image = $entityManager->getRepository('Media\Entity\Image')->findOneById($imageId);
-            array_push($imagesLocation, $image->getLocation());
-            array_push($imagesUrl, $imageService->getFullUrl($image->getUrlPart()));
-            array_push($thumbsUrl, $imageService->getFullUrl($image->getThumb()));
-        }
-
-        return new ViewModel(
-            [
-                'imagesId' => $imagesId,
-                'imagesLocation' => $imagesLocation,
-                'imagesUrl' => $imagesUrl,
-                'thumbsUrl' => $thumbsUrl
-            ]
-        );
+        $imageService = new File($this->getServiceLocator());
+        return new ViewModel(['imageService' => $imageService, 'module'=> 'image', 'type' => \Media\Entity\File::IMAGE_FILETYPE]);
     }
 
     /**
      * Advanced avatar uploader Blueimp UI
      */
-    public function uploadImageAction()
+    public function startImageUploadAction()
     {
-        if ($this->getRequest()->isPost()) {
-            $user = $this->identity()->getUser();
 
-            $imageService = $this->getServiceLocator()->get('Media\Service\Image');
+        $user = $this->identity()->getUser();
+        $imageService = $this->getServiceLocator()->get('Media\Service\File');
+        $blueimpService = $this->getServiceLocator()->get('Media\Service\Blueimp');
+        if ($this->getRequest()->isPost()) {
             $form = new ImageUpload('upload-image');
             $inputFilter = new ImageUploadInputFilter();
             $form->setInputFilter($inputFilter->getInputFilter());
@@ -64,31 +46,63 @@ class ImageController extends AbstractActionController
             $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->beginTransaction();
             $form->setData($post);
 
-            //At this moment filter is used
             if ($form->isValid()) {
                 $data = $form->getData();
-                $image = $imageService->createImage($data, $this->identity()->getUser());
+                $image = $imageService->createFile($data, $this->identity()->getUser());
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
-
-                return new ViewModel(['image' => $image]);
+                $dataForJson = $blueimpService->displayUploadedFile($image, $this->getDeleteImageUrl($image));
             } else {
                 $messages = $form->getMessages();
                 $messages = array_shift($messages);
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->rollBack();
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->close();
 
-                return new ViewModel(
-                    [
-                        'message' => [
+                $dataForJson = [ 'files' => [
+                        [
                             'name' => $form->get('image')->getValue()['name'],
                             'error' => array_shift($messages)
                         ]
-                    ]
-                );
+                ]];
             }
+        } else {
+            $dataForJson = $blueimpService->displayUploadedFiles(
+                $user->getImages(),
+                $this->getDeleteImageUrls($user->getImages())
+            );
         }
-        $form = new ImageUpload('upload-image');
 
-        return new ViewModel(array('form' => $form));
+        return new JsonModel($dataForJson);
+    }
+
+    public function deleteImageAction()
+    {
+        $this->getServiceLocator()->get('Media\Service\File')
+            ->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
+        return $this->getServiceLocator()->get('Media\Service\Blueimp')
+            ->deleteFileJson($this->getEvent()->getRouteMatch()->getParam('id'));
+    }
+
+    public function getDeleteImageUrl($image)
+    {
+        $url = $this->serviceLocator->get('ViewHelperManager')->get('url');
+        $fileService = $this->getServiceLocator()->get('Media\Service\File');
+        return $fileService->getFullUrl($url('test/default', [
+            'controller' => 'image',
+            'action' => 'delete-image',
+            'id' => $image->getId()
+        ]));
+    }
+
+    public function getDeleteImageUrls($images)
+    {
+        $deleteUrls = [];
+        foreach ($images as $image) {
+            array_push($deleteUrls, [
+                'id' => $image->getId(),
+                'deleteUrl' => $this->getDeleteImageUrl($image)
+            ]);
+        }
+
+        return $deleteUrls;
     }
 }
