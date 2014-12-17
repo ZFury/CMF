@@ -36,7 +36,7 @@ class Video extends File
         return self::buildFilePath($id, $path, $ext);
     }
 
-    public function convertVideoToMp4(\Media\Entity\File $videoEntity)
+    public function convertVideoToMp4(\Media\Entity\File $videoEntity, $bitrate = 300)
     {
         //With libav avconv installed
         $oldLocation = $videoEntity->getLocation();
@@ -45,7 +45,7 @@ class Video extends File
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
         $newLocation = $videoEntity->getLocation();
         //exec("avconv -i $oldLocation -map 0 -c:v libx264 -c:a copy $newLocation");
-        exec("avconv -i $oldLocation -strict experimental -b 300k $newLocation");
+        exec("avconv -i $oldLocation -strict experimental -b $bitrate" . "k $newLocation");
 
         return $videoEntity;
     }
