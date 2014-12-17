@@ -46,7 +46,7 @@ $(function () {
             disableImageResize: /Android(?!.*Chrome)|Opera/
                 .test(window.navigator.userAgent),
             maxFileSize: 500000000,
-            acceptFileTypes: /(\.|\/)(mp4)$/i
+            acceptFileTypes: /(\.|\/)((mp4)|(flv)|(avi))$/i
         });
         // Upload server status check for browsers with CORS support:
         if ($.support.cors) {

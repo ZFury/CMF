@@ -192,6 +192,16 @@ class File
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($file);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
 
+        if ($file->getType() == \Media\Entity\File::VIDEO_FILETYPE &&
+            $file->getExtension() !== \Media\Service\Video::MP4_EXT
+        ) {
+            $file = $this->sm->get('Media\Service\Video')->convertVideoToMp4($file);
+        } elseif ($file->getType() == \Media\Entity\File::AUDIO_FILETYPE &&
+            $file->getExtension() !== \Media\Service\Audio::MP3_EXT
+        ) {
+            $file = $this->sm->get('Media\Service\Audio')->convertAudioToMp3($file);
+        }
+
         return $file;
     }
 
