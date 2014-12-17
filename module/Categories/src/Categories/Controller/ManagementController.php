@@ -104,11 +104,15 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                                 $category
                             );
                         }
+                        $categoriesService->clearImages();
                     }
+                    if (!$this->getRequest()->isXmlHttpRequest()) {
+                        $this->flashMessenger()->addSuccessMessage('Category has been successfully added!');
 
-                    $this->flashMessenger()->addSuccessMessage('Category has been successfully added!');
-
-                    return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
+                        return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
+                    } else {
+                        return true;
+                    }
                 }
                 $form->get('alias')->setMessages(
                     array(
@@ -122,7 +126,7 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
 
         $imageService = new File($this->getServiceLocator());
 
-        return $this->prepareViewModel(
+        $viewModel = $this->prepareViewModel(
             $form,
             null,
             null,
@@ -133,6 +137,12 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                 'id' => null
             ]
         );
+//        var_dump($this->getRequest()->isXmlHttpRequest());die();
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            $viewModel->setTerminal(true);
+        }
+//        var_dump($viewModel->getVariables());
+        return $viewModel;
     }
 
     /**
@@ -177,7 +187,7 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
 
         $imageService = new File($this->getServiceLocator());
 
-        return $this->prepareViewModel(
+        $viewModel = $this->prepareViewModel(
             $form,
             null,
             null,
@@ -188,6 +198,11 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                 'id' => $this->params()->fromRoute('id')
             ]
         );
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            $viewModel->setTerminal(true);
+        }
+
+        return $viewModel;
     }
 
     /**
@@ -403,17 +418,17 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
     {
         /** @var \Categories\Service\Categories $categoriesService */
         $categoriesService = $this->getServiceLocator()->get('Categories\Service\Categories');
-
         $idImageSes = array_search(
             $this->getEvent()->getRouteMatch()->getParam('id'),
             $categoriesService->getSession()->ids
         );
-        if (!is_null($idImageSes)) {
-            $this->getServiceLocator()->get('Media\Service\File')
-                ->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
-        } else {
+        if ($idImageSes !== false) {
+            unset($categoriesService->getSession()->ids[$idImageSes]);
             $this->getServiceLocator()->get('Media\Service\File')
                 ->deleteFileEntity($this->getEvent()->getRouteMatch()->getParam('id'));
+        } else {
+            $this->getServiceLocator()->get('Media\Service\File')
+                ->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
         }
 
         return $this->getServiceLocator()->get('Media\Service\Blueimp')

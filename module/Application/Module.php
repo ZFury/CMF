@@ -33,9 +33,9 @@ class Module
         }
 
         // attach the JSON view strategy
-        $app      = $event->getTarget();
-        $locator  = $app->getServiceManager();
-        $view     = $locator->get('ZendViewView');
+        $app = $event->getTarget();
+        $locator = $app->getServiceManager();
+        $view = $locator->get('ZendViewView');
         $strategy = $locator->get('ViewJsonStrategy');
         $view->getEventManager()->attach($strategy, 100);
 
@@ -160,7 +160,7 @@ class Module
 
         $accept = $headers->get('Accept');
 
-        $match  = $accept->match('application/json');
+        $match = $accept->match('application/json');
 
         if (!$match || $match->getTypeString() == '*/*') {
             // not application/json
@@ -180,10 +180,13 @@ class Module
             return;
         }
 
-        $childrens =$event->getViewModel()->getChildren();
-
-        foreach ($childrens as $children) {
-            $params = $children->getVariables();
+        $childrens = $event->getViewModel()->getChildren();
+        if ($childrens) {
+            foreach ($childrens as $children) {
+                $params = $children->getVariables();
+            }
+        } else {
+            $params = $event->getViewModel()->getVariables();
         }
 
         $result = array(
@@ -197,16 +200,17 @@ class Module
                 $result['params'][] = $param->toArray();
             } elseif ($param instanceof \Zend\Form\Form) {
                 foreach ($param->getElements() as $formElement) {
+                    $messages = array();
                     if ($formElement->getMessages()) {
                         foreach ($formElement->getMessages() as $type => $message) {
                             $messages[] = $message;
                         }
-                        $result['errors'][] = array(
-                            $formElement->getName() => $messages
+                        $key = $formElement->getName();
+                        $errors[$key] = $messages;
                             //$formElement->getName() => array($formElement->getMessages())
-                        );
                     }
                 }
+                $result['errors'] = $errors;
                 $result['params'] = $param->getData();
                 $result['options'] = array(
                     'method' => $param->getAttribute('method')
@@ -214,7 +218,7 @@ class Module
             }
         }
 
-        $model = new JsonModel(array($result));
+        $model = new JsonModel($result);
         $event->setViewModel($model);
     }
 }

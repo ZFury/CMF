@@ -41,6 +41,7 @@ abstract class AbstractCrudController extends AbstractActionController
         }
 
         parent::onDispatch($e);
+        $this->layout('layout/dashboard');
     }
 
     /**
@@ -66,6 +67,9 @@ abstract class AbstractCrudController extends AbstractActionController
             }
         }
         $viewModel = $this->getViewModel();
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            $viewModel->setTerminal(true);
+        }
 
         return $viewModel->setVariables(['form' => $form]);
     }
@@ -93,6 +97,9 @@ abstract class AbstractCrudController extends AbstractActionController
             }
         }
         $viewModel = $this->getViewModel();
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            $viewModel->setTerminal(true);
+        }
 
         return $viewModel->setVariables(['form' => $form]);
     }
