@@ -54,9 +54,9 @@ class Module
     {
         return array(
             'factories' => array(
-//                'Mail\Entity\Mail' => function ($sm) {
-//                    return new Entity\Mail();
-//                },
+                'Mail\Entity\Mail' => function ($sm) {
+                    return new Entity\Mail();
+                },
                 'Mail\Service\Mail' => function ($sm) {
                     return new Service\Mail($sm);
                 },

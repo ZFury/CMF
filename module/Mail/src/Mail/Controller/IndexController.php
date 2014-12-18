@@ -25,20 +25,29 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
+        $text = 'sfsdf sdfsdf sdfsdf sdf sdf %some%';
+        $name =  'some';
+        $value = '77777777777';
+        $result = str_replace("%" . $name . "%", $value, $text);
 
+        var_dump($result);
+        die();
     }
 
     public function testAction()
     {
-        $alias = 'mail1';
-
+        if (!$this->identity()) {
+            return $this->redirect()->toUrl('/login');
+        }
+        $id = $this->identity()->getUser()->getId();
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        if (!$mailTemplate = $objectManager->getRepository('Mail\Entity\Mail')->findOneBy(['alias' => $alias])) {
+        if (!$user = $objectManager->getRepository('User\Entity\User')->find($id)) {
             throw new EntityNotFoundException('Entity not found');
         }
 
-        var_dump($mailTemplate);
+        /** @var \Mail\Service\Mail $mailService */
+        $mailService = $this->getServiceLocator()->get('Mail\Service\Mail');
+        var_dump($mailService->signUpMail($user));
         die();
-
     }
 }
