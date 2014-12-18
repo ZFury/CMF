@@ -43,7 +43,7 @@ class Comment
     public function addComment(\Zend\Form\Form $form, array $data)
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        if(!$entity = $entityManager->getRepository('Comment\Entity\EntityType')->getEntityType($data['entityType'])) {
+        if (!$entity = $entityManager->getRepository('Comment\Entity\EntityType')->getEntityType($data['entityType'])) {
             throw new \Exception('Unknown entity');
         }
         $data['entityType'] = $entity;
@@ -88,7 +88,7 @@ class Comment
     public function getCommentsByEntityId(array $data)
     {
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
-        if(!$entityType = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType($data['entityType'])) {
+        if (!$entityType = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType($data['entityType'])) {
             throw new \Exception('Unknown entity');
         }
         $comments = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => $entityType, 'entityId' => $data['entityId']));
@@ -105,6 +105,21 @@ class Comment
             $arrayComments[$comment->getId()]['childs'] = self::getCommentsByEntityId($data);
         }
         return $arrayComments;
+    }
+
+    public function getCommentsByEntityIdByArray($comments, &$rezult)
+    {
+        foreach($comments as $key => $comment) {
+
+            $rezult[$key]['comment']['text'] = $comment['comment']->getComment();
+            $rezult[$key]['comment']['user'] = $comment['comment']->getUser()->getDisplayName();
+            $rezult[$key]['comment']['create'] = $comment['comment']->getCreated()->format('Y-m-d H:i:s');
+            $rezult[$key]['comment']['update'] = $comment['comment']->getUpdated()->format('Y-m-d H:i:s');
+            foreach($comment['childs'] as $childKey => $childComment) {
+                $rezult[$key]['childs'][$childKey] = self::getCommentsByEntityIdByArray($childComment['comment'], $rezult);
+            }
+        }
+        return $rezult;
     }
 
     /**

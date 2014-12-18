@@ -33,7 +33,7 @@ class EntityType extends EntityBase
      * @Annotation\Required(true)
      * @Annotation\Options({"label":"Alias entity:"})
      * @Annotation\Attributes({"class":"form-control"})
-     * @ORM\Column(type="string", nullable=false)
+     * @ORM\Column(type="string", unique=true,  nullable=false)
      */
     protected $aliasEntity;
 
@@ -43,7 +43,7 @@ class EntityType extends EntityBase
      * @Annotation\Required(true)
      * @Annotation\Options({"label":"Entity:"})
      * @Annotation\Attributes({"class":"form-control"})
-     * @ORM\Column(type="string", nullable=false)
+     * @ORM\Column(type="string", unique=true, nullable=false)
      */
     protected $entity;
 

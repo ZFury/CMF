@@ -4,11 +4,13 @@ namespace Comment\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\View\Model\JsonModel;
 use Comment\Form;
 use Comment\Service;
 use Comment\Form\Filter;
 use DoctrineModule\Validator;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
+use Zend;
 
 class IndexController extends AbstractActionController
 {
@@ -17,6 +19,7 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
+
         // for POST data
         if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost()->toArray();
@@ -29,7 +32,7 @@ class IndexController extends AbstractActionController
             $data['entityId'] = $this->getRequest()->getQuery()->id;
         }
 
-        if (!isset($data)) {
+        if (!isset($data['entityType']) || !isset($data['entityId'])) {
             return $this->notFoundAction();
         }
 
@@ -37,7 +40,13 @@ class IndexController extends AbstractActionController
             ->get('Comment\Service\Comment')
             ->getCommentsByEntityId($data);
 
-        return new ViewModel(array('comments' => $comments));
+        $viewModel = new ViewModel(array('comments' => $comments));
+
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            $viewModel->setTerminal(true);
+        }
+
+        return $viewModel;
     }
 
     /**
@@ -79,6 +88,7 @@ class IndexController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost();
             $data = $data->toArray();
+
             $comment = $this->getServiceLocator()
                 ->get('Comment\Service\Comment')
                 ->editCommentById($form, $data);
@@ -86,11 +96,19 @@ class IndexController extends AbstractActionController
             $flashMessenger = new FlashMessenger();
             if ($comment) {
                 $flashMessenger->addSuccessMessage('Comment edited');
+                $url = $this->getRequest()->getHeader('Referer')->getUri();
+                return $this->redirect()->toUrl($url);
             } else {
                 $flashMessenger->addErrorMessage('Comment is not changed');
             }
         }
-        return new ViewModel(['form' => $form]);
+        $viewModel = new ViewModel(['form' => $form, 'path' => $this->getRequest()->getUri()->getPath()]);
+
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            $viewModel->setTerminal(true);
+        }
+
+        return $viewModel;
     }
 
     /**
@@ -122,11 +140,19 @@ class IndexController extends AbstractActionController
             $flashMessenger = new FlashMessenger();
             if ($comment) {
                 $flashMessenger->addSuccessMessage('Comment created');
+                //TODO: redirect where?
+                $url = $this->getRequest()->getHeader('Referer')->getUri();
+                return $this->redirect()->toUrl($url);
             } else {
                 $flashMessenger->addErrorMessage('Comment is not created');
             }
         }
 
-        return new ViewModel(['form' => $form, 'title' => 'Add comment']);
+        $viewModel = new ViewModel(['form' => $form, 'title' => 'Add comment', 'path' => $this->getRequest()->getUri()->getPath().'?'.$this->getRequest()->getUri()->getQuery()]);
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            $viewModel->setTerminal(true);
+        }
+
+        return $viewModel;
     }
 }

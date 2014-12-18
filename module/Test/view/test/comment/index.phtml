@@ -1,0 +1,44 @@
+<!--<a class="btn btn-primary"
+   href="<?//= $this->url('test/default', ['controller' => 'management', 'action' => 'create']) ?>">Create</a>-->
+<div id="grid">
+    <div class="head row">
+        <div class="col-md-1">id</div>
+        <div class="col-md-2">email</div>
+        <div class="col-md-2">name</div>
+        <div class="col-md-3"></div>
+        <hr/>
+    </div>
+    <?php foreach ($this->data as $row) : ?>
+        <div class="row entity" data-href="<?=
+        $this->url('comment/default', ['controller' => 'index', 'action' => 'index'],['query' => ['entity' => 'test','id' => $row->getId()]])
+        ?>">
+            <div class="col-md-1">
+                <strong><?= $row->getId() ?></strong>
+            </div>
+            <div class="col-md-2">
+                <strong><?= $row->getEmail() ?></strong>
+            </div>
+            <div class="col-md-2">
+                <strong><?= $row->getName() ?></strong>
+            </div>
+            <div class="col-md-3">
+                <a type="button" data-toggle="modal" data-target="#myModal" class="btn btn-success add-com" href="#" data-href="<?=
+                $this->url('comment/default', ['controller' => 'index', 'action' => 'add'],['query' => ['entity' => 'test','id' => $row->getId()]])
+                ?>">New comment</a>
+            </div>
+        </div>
+        <div class="row"></div>
+    <?php endforeach; ?>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+             <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    require(['test']);
+</script>

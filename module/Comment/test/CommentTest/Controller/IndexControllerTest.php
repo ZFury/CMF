@@ -206,7 +206,8 @@ class IndexControllerTest extends ControllerTestCase
     /**
      * Truncate table comment
      */
-    public function dropComments() {
+    public function dropComments()
+    {
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         $sql = 'TRUNCATE TABLE comment';
         $objectManager->getConnection()->beginTransaction();

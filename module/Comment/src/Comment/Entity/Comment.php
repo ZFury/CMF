@@ -34,6 +34,7 @@ class Comment extends EntityBase
      * @var string
      * @Annotation\Type("Zend\Form\Element\Textarea")
      * @Annotation\Required(true)
+     * @Annotation\Options({"label":"Comment:",})
      * @Annotation\Attributes({"class":"form-control"})
      * @ORM\Column(type="text", nullable=false)
      */
@@ -56,8 +57,8 @@ class Comment extends EntityBase
 
     /**
      * @Annotation\Required(true)
-     * @ORM\ManyToOne(targetEntity="Comment\Entity\EntityType")
-     * @ORM\JoinColumn(name="entityTypeId", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Comment\Entity\EntityType", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="entityTypeId", referencedColumnName="id", onDelete="cascade")
      */
     protected $entityType;
 

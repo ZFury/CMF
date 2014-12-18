@@ -82,7 +82,7 @@ class ManagementController extends AbstractCrudController
         $form->bind($entity);
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
-            $form->setBindOnValidate(Form::BIND_MANUAL);
+           // $form->setBindOnValidate(Form::BIND_MANUAL);
             if ($form->isValid()) {
                 $entityValid = new Validators\NoObjectExists($objectManager->getRepository('Comment\Entity\EntityType'));
                 if (!$entityValid->isValid(['aliasEntity' => $form->get('aliasEntity')->getValue()], $this->params()->fromRoute('id'))) {

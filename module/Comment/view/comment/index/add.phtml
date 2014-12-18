@@ -9,15 +9,15 @@ $form->prepare();
     <h1><?php echo $this->escapeHtml($this->title); ?></h1>
 
     <div class="row">
-        <form action="" method="post" class="form-horizontal" id="newCategory">
+        <form action="<?=$this->path?>" method="post" class="form-horizontal" id="newCategory">
             <div class="form-group">
-                <label for="inputComment" class="col-sm-2 control-label"><?= $form->get('comment')->getLabel(); ?></label>
+                <label for="inputComment" class="col-sm-1 control-label"><?= $form->get('comment')->getLabel(); ?></label>
                 <div class="col-sm-4">
                     <?php echo $this->formTextarea($form->get('comment')); ?>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-2"></div>
+                <div class="col-sm-1"></div>
                 <div class="col-sm-4">
                     <input type="submit" name="submit" class="form-control col-sm-4 btn btn-success" value="Save">
                 </div>
