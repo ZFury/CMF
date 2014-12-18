@@ -11,6 +11,7 @@ namespace Media\Service;
 class Video extends File
 {
     const VIDEOS_PATH = "video/";
+    const MP4_EXT = 'mp4';
 
     public static function getDestination($path)
     {
@@ -33,5 +34,19 @@ class Video extends File
         }
 
         return self::buildFilePath($id, $path, $ext);
+    }
+
+    public function convertVideoToMp4(\Media\Entity\File $videoEntity, $bitrate = 300)
+    {
+        //With libav avconv installed
+        $oldLocation = $videoEntity->getLocation();
+        $videoEntity->setExtension(self::MP4_EXT);
+        $this->sm->get('doctrine.entitymanager.orm_default')->persist($videoEntity);
+        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+        $newLocation = $videoEntity->getLocation();
+        //exec("avconv -i $oldLocation -map 0 -c:v libx264 -c:a copy $newLocation");
+        exec("avconv -i $oldLocation -strict experimental -b $bitrate" . "k $newLocation");
+
+        return $videoEntity;
     }
 }

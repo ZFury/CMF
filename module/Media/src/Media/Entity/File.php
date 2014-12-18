@@ -227,6 +227,5 @@ class File
         }
 
         return null;
-
     }
 }

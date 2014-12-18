@@ -43,7 +43,7 @@ class VideoUploadInputFilter implements InputFilterAwareInterface
                             array(
                                 'name' => '\Zend\Validator\File\MimeType',
                                 'options' => array(
-                                    'mimeType' => 'video/mp4'
+                                    'mimeType' => ['video/mp4', 'video/x-flv', 'video/x-msvideo', 'video/x-ms-asf']
                                 ),
                             ),
                         )

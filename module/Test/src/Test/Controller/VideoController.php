@@ -56,7 +56,6 @@ class VideoController extends AbstractActionController implements VideoUploaderI
                 $messages = array_shift($messages);
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->rollBack();
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->close();
-
                 $dataForJson = [ 'files' => [
                         [
                             'name' => $form->get('video')->getValue()['name'],
