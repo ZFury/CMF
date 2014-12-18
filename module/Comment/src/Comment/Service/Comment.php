@@ -109,13 +109,12 @@ class Comment
 
     public function getCommentsByEntityIdByArray($comments, &$rezult)
     {
-        foreach($comments as $key => $comment) {
-
+        foreach ($comments as $key => $comment) {
             $rezult[$key]['comment']['text'] = $comment['comment']->getComment();
             $rezult[$key]['comment']['user'] = $comment['comment']->getUser()->getDisplayName();
             $rezult[$key]['comment']['create'] = $comment['comment']->getCreated()->format('Y-m-d H:i:s');
             $rezult[$key]['comment']['update'] = $comment['comment']->getUpdated()->format('Y-m-d H:i:s');
-            foreach($comment['childs'] as $childKey => $childComment) {
+            foreach ($comment['childs'] as $childKey => $childComment) {
                 $rezult[$key]['childs'][$childKey] = self::getCommentsByEntityIdByArray($childComment['comment'], $rezult);
             }
         }
