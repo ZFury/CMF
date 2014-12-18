@@ -175,7 +175,13 @@ class Module
      */
     public function jsonHandler(MvcEvent $event)
     {
+        $view = $event->getViewModel();
+        if ($view instanceof JsonModel) {
+            return;
+        }
+
         $childrens =$event->getViewModel()->getChildren();
+
         foreach ($childrens as $children) {
             $params = $children->getVariables();
         }

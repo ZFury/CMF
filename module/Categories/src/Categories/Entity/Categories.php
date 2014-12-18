@@ -5,6 +5,7 @@ namespace Categories\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Starter\DBAL\Entity\EntityBase;
 
 /**
@@ -18,6 +19,8 @@ use Starter\DBAL\Entity\EntityBase;
  */
 class Categories extends EntityBase
 {
+    use \Starter\Media\File;
+
     /**
      * @var integer
      * @Annotation\Type("Zend\Form\Element\Text")
@@ -31,12 +34,11 @@ class Categories extends EntityBase
     /**
      * @var string
      * @Annotation\Type("Zend\Form\Element\Text")
-     * @Annotation\Required(true)
      * @Annotation\Attributes({"class":"form-control"})
      * @Annotation\Options({"label":"Name:"})
      * @ORM\Column(type="string", length=50, nullable=false)
      */
-    protected $name;
+    protected $name;//     * @Annotation\Required(true)
 
     /**
      * @var string
@@ -89,6 +91,8 @@ class Categories extends EntityBase
      * @ORM\Column(name="`order`", type="integer")
      */
     protected $order;
+
+    private $lifecycleArgs;
 
     /**
      *
@@ -316,6 +320,19 @@ class Categories extends EntityBase
     public function setPath($path)
     {
         $this->path = $path;
+    }
+
+    /**
+     * @ORM\PostLoad
+     */
+    public function setLifecycleArgs(LifecycleEventArgs $args)
+    {
+        $this->lifecycleArgs = $args;
+    }
+
+    public function getEntityName()
+    {
+        return 'Categories';
     }
 
     /**

@@ -8,7 +8,7 @@
 
 namespace Test\Controller;
 
-use Media\Service\Image;
+use Media\Service\File;
 use Zend\View\Model\JsonModel;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -18,33 +18,20 @@ use Media\Interfce\ImageUploaderInterface;
 
 class ImageController extends AbstractActionController implements ImageUploaderInterface
 {
-    public function indexAction()
-    {
-        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-
-
-        $userEntityRepository = $entityManager->getRepository('User\Entity\User');
-        $user = $userEntityRepository->findOneById($this->identity()->getUser()->getId());
-        $images = $user->getImages();
-
-        return new ViewModel(['images' => $images]);
-    }
-
     public function uploadImageAction()
     {
-        $form = new ImageUpload('upload-image');
-        $imageService = new Image($this->getServiceLocator());
-        return new ViewModel(['form' => $form, 'imageService' => $imageService]);
+        $imageService = new File($this->getServiceLocator());
+        return new ViewModel(['imageService' => $imageService, 'module'=> 'image', 'type' => \Media\Entity\File::IMAGE_FILETYPE]);
     }
 
     /**
      * Advanced avatar uploader Blueimp UI
      */
-    public function startUploadAction()
+    public function startImageUploadAction()
     {
 
         $user = $this->identity()->getUser();
-        $imageService = $this->getServiceLocator()->get('Media\Service\Image');
+        $imageService = $this->getServiceLocator()->get('Media\Service\File');
         $blueimpService = $this->getServiceLocator()->get('Media\Service\Blueimp');
         if ($this->getRequest()->isPost()) {
             $form = new ImageUpload('upload-image');
@@ -61,9 +48,9 @@ class ImageController extends AbstractActionController implements ImageUploaderI
 
             if ($form->isValid()) {
                 $data = $form->getData();
-                $image = $imageService->createImage($data, $this->identity()->getUser());
+                $image = $imageService->createFile($data, $this->identity()->getUser());
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
-                $dataForJson = $blueimpService->displayUploadedImage($image, $this->getDeleteUrl($image));
+                $dataForJson = $blueimpService->displayUploadedFile($image, $this->getDeleteImageUrl($image));
             } else {
                 $messages = $form->getMessages();
                 $messages = array_shift($messages);
@@ -78,9 +65,9 @@ class ImageController extends AbstractActionController implements ImageUploaderI
                 ]];
             }
         } else {
-            $dataForJson = $blueimpService->displayUploadedImages(
+            $dataForJson = $blueimpService->displayUploadedFiles(
                 $user->getImages(),
-                $this->getDeleteUrls($user->getImages())
+                $this->getDeleteImageUrls($user->getImages())
             );
         }
 
@@ -89,30 +76,30 @@ class ImageController extends AbstractActionController implements ImageUploaderI
 
     public function deleteImageAction()
     {
-        $this->getServiceLocator()->get('Media\Service\Image')
-            ->deleteImage($this->getEvent()->getRouteMatch()->getParam('id'));
+        $this->getServiceLocator()->get('Media\Service\File')
+            ->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
         return $this->getServiceLocator()->get('Media\Service\Blueimp')
-            ->deleteImageJson($this->getEvent()->getRouteMatch()->getParam('id'));
+            ->deleteFileJson($this->getEvent()->getRouteMatch()->getParam('id'));
     }
 
-    public function getDeleteUrl($image)
+    public function getDeleteImageUrl($image)
     {
         $url = $this->serviceLocator->get('ViewHelperManager')->get('url');
-        $imageService = $this->getServiceLocator()->get('Media\Service\Image');
-        return $imageService->getFullUrl($url('test/default', [
+        $fileService = $this->getServiceLocator()->get('Media\Service\File');
+        return $fileService->getFullUrl($url('test/default', [
             'controller' => 'image',
             'action' => 'delete-image',
             'id' => $image->getId()
         ]));
     }
 
-    public function getDeleteUrls($images)
+    public function getDeleteImageUrls($images)
     {
         $deleteUrls = [];
         foreach ($images as $image) {
             array_push($deleteUrls, [
                 'id' => $image->getId(),
-                'deleteUrl' => $this->getDeleteUrl($image)
+                'deleteUrl' => $this->getDeleteImageUrl($image)
             ]);
         }
 
