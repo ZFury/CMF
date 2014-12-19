@@ -42,7 +42,7 @@ abstract class AbstractCrudController extends AbstractActionController
         }
 
         parent::onDispatch($e);
-        $this->layout('layout/dashboard');
+        $this->layout('layout/dashboard/dashboard');
     }
 
     /**
