@@ -20,18 +20,19 @@ class Image extends File
     const S_THUMB_WIDTH = 150;
     const S_THUMB_HEIGHT = 150;
 
+
     /**
      * @param $type
      * @param $id
      * @param $ext
-     * @param bool $onlyPath
+     * @param bool $from
      * @return string
      * @throws \Exception
      */
-    public static function imgPath($type, $id, $ext, $onlyPath = false)//$onlyPath it's because we need another path when working with Original and when we are getting it
+    public static function imgPath($type, $id, $ext, $from = \Media\Service\File::FROM_ROOT)//$onlyPath it's because we need another path when working with Original and when we are getting it
     {
         if (self::ORIGINAL == $type) {
-            if ($onlyPath == false) {
+            if ($from == \Media\Service\File::FROM_ROOT) {
                 $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::IMAGES_PATH . "original/";
             } else {
                 $path = self::UPLOADS_PATH . self::IMAGES_PATH . "original/";
@@ -43,7 +44,11 @@ class Image extends File
             if (empty($size)) {
                 throw new \Exception('Unsupported size');
             }
-            $path = self::UPLOADS_PATH . self::IMAGES_PATH . $size['width'] . 'x' . $size['height'];
+            if ($from == \Media\Service\File::FROM_ROOT) {
+                $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::IMAGES_PATH . $size['width'] . 'x' . $size['height'];
+            } elseif ($from == \Media\Service\File::FROM_PUBLIC) {
+                $path = self::UPLOADS_PATH . self::IMAGES_PATH . $size['width'] . 'x' . $size['height'];
+            }
         }
 
         return self::buildFilePath($id, $path, $ext);
