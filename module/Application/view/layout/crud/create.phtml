@@ -83,7 +83,7 @@ $requireScript = '';
 <script>
     require([
         'frontend'
-        <?= $requireScript?"'$requireScript'":null; ?>
+        <?= $requireScript?",'$requireScript'":null; ?>
         <?php
         if ($this->scripts) {
             foreach ($this->scripts as $script) {

@@ -64,7 +64,11 @@ abstract class AbstractCrudController extends AbstractActionController
                 $objectManager->flush();
 
                 //TODO: redirect where?
-                return $this->redirect()->toRoute(null, ['controller' => 'management']);
+                if (!$this->getRequest()->isXmlHttpRequest()) {
+                    return $this->redirect()->toRoute(null, ['controller' => 'management']);
+                } else {
+                    return;
+                }
             }
         }
         $viewModel = $this->getViewModel();
@@ -94,7 +98,11 @@ abstract class AbstractCrudController extends AbstractActionController
                 $objectManager->flush();
 
                 //TODO: redirect where?
-                return $this->redirect()->toRoute(null, ['controller' => 'management']);
+                if (!$this->getRequest()->isXmlHttpRequest()) {
+                    return $this->redirect()->toRoute(null, ['controller' => 'management']);
+                } else {
+                    return;
+                }
             }
         }
         $viewModel = $this->getViewModel();
