@@ -17,11 +17,17 @@ use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
 class ProfileController extends AbstractActionController
 {
+    /**
+     * @return array|ViewModel
+     */
     public function indexAction()
     {
         return new ViewModel([]);
     }
 
+    /**
+     *
+     */
     public function checkIfFollowing()
     {
         $httpClientOptions = array(
@@ -50,6 +56,9 @@ class ProfileController extends AbstractActionController
         $twitter->usersSearch('twitter')->toValue()[0]->following;
     }
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     */
     public function changePasswordAction()
     {
         $form = new ChangePasswordForm();

@@ -42,10 +42,11 @@ require.config({
         "fileupload-ui": './libs/jQuery-File-Upload-master/jquery.fileupload-ui',
         //BLUEIMP END
         "image-categories": './modules/categories/image',
-        "image": './modules/test/image',
-        "audio": './modules/test/audio',
-        "video": './modules/test/video',
-        'redactorContent': '../redactor/redactorContent'
+        "image": '../module/test/js/image',
+        "audio": '../module/test/js/audio',
+        "video": '../module/test/js/video',
+        'redactorContent': '../redactor/redactorContent',
+        'conversion': '../module/media/js/conversion'
     },
     shim: {
         angular: {

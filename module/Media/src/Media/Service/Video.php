@@ -21,13 +21,13 @@ class Video extends File
     /**
      * @param $id
      * @param $ext
-     * @param bool $onlyPath
+     * @param bool $from
      * @return string
      * @throws \Exception
      */
-    public static function videoPath($id, $ext, $onlyPath = false)//$onlyPath it's because we need another path when working with Original and when we are getting it
+    public static function videoPath($id, $ext, $from = \Media\Service\File::FROM_ROOT)//$onlyPath it's because we need another path when working with Original and when we are getting it
     {
-        if ($onlyPath == false) {
+        if ($from == \Media\Service\File::FROM_ROOT) {
             $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::VIDEOS_PATH;
         } else {
             $path = self::UPLOADS_PATH . self::VIDEOS_PATH;
@@ -44,9 +44,18 @@ class Video extends File
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($videoEntity);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
         $newLocation = $videoEntity->getLocation();
-        //exec("avconv -i $oldLocation -map 0 -c:v libx264 -c:a copy $newLocation");
-        exec("avconv -i $oldLocation -strict experimental -b $bitrate" . "k $newLocation");
+        $this->executeConversion($oldLocation, $newLocation, $bitrate);
 
         return $videoEntity;
+    }
+
+    public function executeConversion($oldLocation, $newLocation, $bitrate = 300)
+    {
+        exec("avconv -i $oldLocation -strict experimental -b $bitrate" . "k -y $newLocation", $output, $return);
+        if (isset($return) && 0 === $return) {
+            return true;
+        }
+
+        return false;
     }
 }

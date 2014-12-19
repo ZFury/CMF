@@ -1,10 +1,11 @@
 <?php
 
-namespace MediaTest;
+namespace PagesTest;
 
 use Zend\Loader\AutoloaderFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\ServiceManager\ServiceManager;
+
 use RuntimeException;
 
 error_reporting(E_ALL | E_STRICT);
@@ -15,10 +16,11 @@ chdir(__DIR__);
  */
 class Bootstrap
 {
+
     protected static $serviceManager;
 
     /**
-     * init
+     *  init
      */
     public static function init()
     {
@@ -34,6 +36,7 @@ class Bootstrap
 
         static::initAutoloader();
 
+
         // use ModuleManager to load this module and it's dependencies
         $config = array(
             'module_listener_options' => array(
@@ -43,8 +46,8 @@ class Bootstrap
                 ),
             ),
             'modules' => array(
-                'Media'
-            )
+                'Pages'
+            ),
         );
 
         $serviceManager = new ServiceManager(new ServiceManagerConfig());
@@ -53,17 +56,27 @@ class Bootstrap
         static::$serviceManager = $serviceManager;
     }
 
-    public static function chroot()
+    /**
+     * @param $path
+     * @return bool|string
+     */
+    protected static function findParentPath($path)
     {
-        $rootPath = dirname(static::findParentPath('module'));
-        chdir($rootPath);
+        $dir = __DIR__;
+        $previousDir = '.';
+        while (!is_dir($dir . '/' . $path)) {
+            $dir = dirname($dir);
+            if ($previousDir === $dir) {
+                return false;
+            }
+            $previousDir = $dir;
+        }
+        return $dir . '/' . $path;
     }
 
-    public static function getServiceManager()
-    {
-        return static::$serviceManager;
-    }
-
+    /**
+     *
+     */
     protected static function initAutoloader()
     {
         $vendorPath = static::findParentPath('vendor');
@@ -103,18 +116,21 @@ class Bootstrap
         );
     }
 
-    protected static function findParentPath($path)
+    /**
+     *
+     */
+    public static function chroot()
     {
-        $dir = __DIR__;
-        $previousDir = '.';
-        while (!is_dir($dir . '/' . $path)) {
-            $dir = dirname($dir);
-            if ($previousDir === $dir) {
-                return false;
-            }
-            $previousDir = $dir;
-        }
-        return $dir . '/' . $path;
+        $rootPath = dirname(static::findParentPath('module'));
+        chdir($rootPath);
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getServiceManager()
+    {
+        return static::$serviceManager;
     }
 }
 
