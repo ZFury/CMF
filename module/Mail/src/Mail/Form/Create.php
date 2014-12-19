@@ -1,6 +1,6 @@
 <?php
 
-namespace Pages\Form;
+namespace Mail\Form;
 
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
@@ -12,7 +12,7 @@ use Zend\Stdlib\Hydrator\ClassMethods;
 
 /**
  * Class Create
- * @package Pages\Form\Create
+ * @package Mail\Form
  */
 class Create extends Form
 {
@@ -30,6 +30,7 @@ class Create extends Form
         $this->setHydrator(new ClassMethods(false));
 
         parent::__construct($name);
+
         $this->setAttribute('method', 'post');
         $this->setAttribute('class', 'form-horizontal');
         $this->setAttribute('role', 'form');
@@ -44,23 +45,6 @@ class Create extends Form
                     'class' => 'form-control'
                 ),
                 'options' => array(),
-            )
-        );
-
-        $this->add(
-            array(
-                'name' => 'title',
-                'attributes' => array(
-                    'type' => 'text',
-                    'id' => 'title',
-                    'class' => 'form-control'
-                ),
-                'options' => array(
-                    'label' => 'Title',
-                    'label_attributes' => array(
-                        'class' => 'col-sm-2 control-label'
-                    ),
-                ),
             )
         );
 
@@ -81,40 +65,11 @@ class Create extends Form
             )
         );
 
-        $redactor = new \Starter\Form\Element\Redactor();
-        $redactor->setName('content')
-            ->setAttributes(['id' => 'content',
-                'class' => 'form-control redactor-content'])
-            ->setOptions([
-                'label' => 'Content',
-                'label_attributes' => [
-                    'class' => 'col-sm-2 control-label'
-                ]
-            ]);
-        $this->add($redactor);
-
-        $this->add(
-            array(
-                'name' => 'keywords',
-                'type' => 'textarea',
-                'attributes' => array(
-                    'id' => 'keywords',
-                    'class' => 'form-control'
-                ),
-                'options' => array(
-                    'label' => 'Keywords',
-                    'label_attributes' => array(
-                        'class' => 'col-sm-2 control-label'
-                    ),
-                ),
-            )
-        );
-
         $this->add(
             array(
                 'name' => 'description',
-                'type' => 'textarea',
                 'attributes' => array(
+                    'type' => 'text',
                     'id' => 'description',
                     'class' => 'form-control'
                 ),
@@ -129,10 +84,90 @@ class Create extends Form
 
         $this->add(
             array(
-                'name' => 'authorId',
+                'name' => 'subject',
+                'attributes' => array(
+                    'type' => 'text',
+                    'id' => 'subject',
+                    'class' => 'form-control'
+                ),
+                'options' => array(
+                    'label' => 'Subject',
+                    'label_attributes' => array(
+                        'class' => 'col-sm-2 control-label'
+                    ),
+                ),
+            )
+        );
+
+        $this->add(
+            array(
+                'name' => 'fromEmail',
+                'attributes' => array(
+                    'type' => 'text',
+                    'id' => 'fromEmail',
+                    'class' => 'form-control'
+                ),
+                'options' => array(
+                    'label' => 'From email',
+                    'label_attributes' => array(
+                        'class' => 'col-sm-2 control-label'
+                    ),
+                ),
+            )
+        );
+
+        $this->add(
+            array(
+                'name' => 'fromName',
+                'attributes' => array(
+                    'type' => 'text',
+                    'id' => 'fromName',
+                    'class' => 'form-control'
+                ),
+                'options' => array(
+                    'label' => 'From name',
+                    'label_attributes' => array(
+                        'class' => 'col-sm-2 control-label'
+                    ),
+                ),
+            )
+        );
+
+        $redactor = new \Starter\Form\Element\Redactor();
+        $redactor->setName('bodyHtml')
+            ->setAttributes(['id' => 'bodyHtml',
+                'class' => 'form-control redactor-content'])
+            ->setOptions([
+                'label' => 'Body (html)',
+                'label_attributes' => [
+                    'class' => 'col-sm-2 control-label'
+                ]
+            ]);
+        $this->add($redactor);
+
+        $this->add(
+            array(
+                'name' => 'bodyText',
+                'type' => 'textarea',
+                'attributes' => array(
+                    'id' => 'bodyText',
+                    'class' => 'form-control'
+                ),
+                'options' => array(
+                    'label' => 'Body (text)',
+                    'label_attributes' => array(
+                        'class' => 'col-sm-2 control-label'
+                    ),
+                ),
+            )
+        );
+
+        $this->add(
+            array(
+                'name' => 'is_used',
                 'attributes' => array(
                     'type' => 'hidden',
-                    'id' => 'authorId',
+                    'id' => 'is_used',
                     'class' => 'form-control'
                 ),
                 'options' => array(),

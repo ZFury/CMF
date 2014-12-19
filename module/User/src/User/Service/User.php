@@ -101,8 +101,18 @@ class User
 
             $html = $this->getServiceLocator()->get('ControllerPluginManager')->get('forward')
                 ->dispatch('User\Controller\Mail', array('action' => 'signup', 'user' => $user));
-            $this->signupMail($user, $html);
 
+            //use module mail for user registration
+            $config = $this->getServiceLocator()->get('config');
+            if (isset($config['mailOptions'])) {
+                $mailOptions = $this->getServiceLocator()->get('config')['mailOptions'];
+            }
+            if (isset($mailOptions['useModuleMail']) && $mailOptions['useModuleMail'] = true) {
+                $mailService = $this->getServiceLocator()->get('Mail\Service\Mail');
+                $mailService->signUpMail($user);
+            } else {
+                $this->signupMail($user, $html);
+            }
             $objectManager->getConnection()->commit();
         } catch (\Exception $exception) {
             $objectManager->getConnection()->rollback();
