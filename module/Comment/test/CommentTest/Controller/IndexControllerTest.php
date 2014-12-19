@@ -61,8 +61,8 @@ class IndexControllerTest extends ControllerTestCase
         $entityType = array(
             'aliasEntity' =>'user',
             'entity' =>'User\Entity\User',
-	    'enabledEntity' => true, 
-	    'visibleEntity' => true,			
+            'enabledEntity' => true,
+            'visibleEntity' => true,
             'description' =>'description',
         );
         $this->entityType = $this->createEntityType($entityType);

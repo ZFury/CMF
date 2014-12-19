@@ -120,16 +120,16 @@ class Comment
 
         $entityComment = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment');
 
-            foreach ($comments as $comment) {
-                $arrayComments[$comment->getId()]['comment'] = $comment;
-                if ($entityComment->getVisibleComment()) {
+        foreach ($comments as $comment) {
+            $arrayComments[$comment->getId()]['comment'] = $comment;
+            if ($entityComment->getVisibleComment()) {
                     $data = [
                         'entityType' => 'comment',
                         'entityId' => $comment->getId()
                     ];
                     $arrayComments[$comment->getId()]['childs'] = self::getCommentsByEntityId($data);
-                }
             }
+        }
 
         return $arrayComments;
     }

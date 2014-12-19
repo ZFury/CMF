@@ -16,7 +16,6 @@ use Comment\Form\Filter;
 use DoctrineModule\Validator;
 use Comment\Entity;
 
-
 class CommentController extends AbstractActionController
 {
     /**
