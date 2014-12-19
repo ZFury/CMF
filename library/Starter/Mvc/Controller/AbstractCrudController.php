@@ -25,6 +25,7 @@ abstract class AbstractCrudController extends AbstractActionController
      */
     public function onDispatch(MvcEvent $e)
     {
+        $this->layout('layout/dashboard/dashboard');
         $routeMatch = $e->getRouteMatch();
         if (!$routeMatch) {
             /**

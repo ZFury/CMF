@@ -16,6 +16,8 @@ class File
     const PUBLIC_PATH = "public";
     const UPLOADS_PATH = "/uploads/";
     const GETPATH = true;
+    const FROM_PUBLIC = true;
+    const FROM_ROOT = false;
 
     protected $sm;
 
@@ -33,11 +35,13 @@ class File
     public static function prepareDir($path, $mode = 0775)
     {
         $destination = self::getDestination($path);
+
         if (!is_dir($destination)) {
             if (self::prepareDir(dirname($destination), $mode)) {
                 if (!is_writable(dirname($destination))) {
                     throw new \Exception('Directory ' . dirname($destination) . 'is not writable');
                 }
+
                 return mkdir($destination) && chmod($destination, $mode);
             }
         }
@@ -192,12 +196,22 @@ class File
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($file);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
 
+        if ($file->getType() == \Media\Entity\File::VIDEO_FILETYPE &&
+            $file->getExtension() !== \Media\Service\Video::MP4_EXT
+        ) {
+            $file = $this->sm->get('Media\Service\Video')->convertVideoToMp4($file);
+        } elseif ($file->getType() == \Media\Entity\File::AUDIO_FILETYPE &&
+            $file->getExtension() !== \Media\Service\Audio::MP3_EXT
+        ) {
+            $file = $this->sm->get('Media\Service\Audio')->convertAudioToMp3($file);
+        }
+
         return $file;
     }
 
     public function generateFileUploadForm($module, $filetype)
     {
-        echo $this->sm->get('ViewHelperManager')->get('Partial')->__invoke("layout/file-upload/file-upload-form.phtml", ['filetype' => $filetype]);
+        echo $this->sm->get('ViewHelperManager')->get('Partial')->__invoke("layout/default/partial/file-upload-form.phtml", ['filetype' => $filetype]);
         echo "<script>require(['" . $module . "']);</script>";
     }
 }

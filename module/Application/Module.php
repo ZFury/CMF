@@ -34,15 +34,16 @@ class Module
 
         // attach the JSON view strategy
         $app = $event->getTarget();
-        $locator = $app->getServiceManager();
-        $view = $locator->get('ZendViewView');
-        $strategy = $locator->get('ViewJsonStrategy');
+        $sm = $app->getServiceManager();
+        $view = $sm->get('ZendViewView');
+        $strategy = $sm->get('ViewJsonStrategy');
         $view->getEventManager()->attach($strategy, 100);
 
-        /** @var \Zend\Mvc\MvcEvent; $events */
+        /** @var \Zend\Mvc\MvcEvent $events */
         $events = $event->getTarget()->getEventManager();
         $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'onDispatch'), '-1000');
         $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onDispatchError'), '99999');
+        //$events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), '99999');
 
         set_error_handler(['Application\Module', 'errorHandler']);
     }
@@ -55,11 +56,25 @@ class Module
         if (!$this->isJson($event)) {
             return;
         }
-        $eventException = $event->getParam('exception');
+
+        $message = '';
+        $code = '';
+
+        if ($eventException = $event->getParam('exception')) {
+            $message = $eventException->getMessage();
+            $code = $eventException->getCode();
+        } elseif ($error = $event->getParam('error')) {
+            $message = $error;
+        }
+
         $result = array(
-            'exception' => array(
-                'message' => $eventException->getMessage(),
-                'code' => $eventException->getCode(),
+            'errors' => array(
+                'exception' => array(
+                    'message' => $message,
+                    'code' => $code,
+                ),
+            'params' => array(),
+            'options' => array()
             )
         );
 
@@ -76,7 +91,7 @@ class Module
         if (!$this->isJson($event)) {
             return;
         }
-
+        /** @var \Zend\Http\Request $response */
         $response = $event->getResponse();
         $response->getHeaders()->addHeaders(
             array(
@@ -192,7 +207,6 @@ class Module
         $result = array(
             'params' => array(),
             'errors' => array(),
-//            'form-errors' => array(),
             'options' => array()
         );
         foreach ($params as $param) {
@@ -207,7 +221,7 @@ class Module
                         }
                         $key = $formElement->getName();
                         $errors[$key] = $messages;
-                            //$formElement->getName() => array($formElement->getMessages())
+                        //$formElement->getName() => array($formElement->getMessages())
                     }
                 }
                 $result['errors'] = $errors;

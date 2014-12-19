@@ -11,6 +11,7 @@ namespace Media\Service;
 class Video extends File
 {
     const VIDEOS_PATH = "video/";
+    const MP4_EXT = 'mp4';
 
     public static function getDestination($path)
     {
@@ -20,18 +21,41 @@ class Video extends File
     /**
      * @param $id
      * @param $ext
-     * @param bool $onlyPath
+     * @param bool $from
      * @return string
      * @throws \Exception
      */
-    public static function videoPath($id, $ext, $onlyPath = false)//$onlyPath it's because we need another path when working with Original and when we are getting it
+    public static function videoPath($id, $ext, $from = \Media\Service\File::FROM_ROOT)//$onlyPath it's because we need another path when working with Original and when we are getting it
     {
-        if ($onlyPath == false) {
+        if ($from == \Media\Service\File::FROM_ROOT) {
             $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::VIDEOS_PATH;
         } else {
             $path = self::UPLOADS_PATH . self::VIDEOS_PATH;
         }
 
         return self::buildFilePath($id, $path, $ext);
+    }
+
+    public function convertVideoToMp4(\Media\Entity\File $videoEntity, $bitrate = 300)
+    {
+        //With libav avconv installed
+        $oldLocation = $videoEntity->getLocation();
+        $videoEntity->setExtension(self::MP4_EXT);
+        $this->sm->get('doctrine.entitymanager.orm_default')->persist($videoEntity);
+        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+        $newLocation = $videoEntity->getLocation();
+        $this->executeConversion($oldLocation, $newLocation, $bitrate);
+
+        return $videoEntity;
+    }
+
+    public function executeConversion($oldLocation, $newLocation, $bitrate = 300)
+    {
+        exec("avconv -i $oldLocation -strict experimental -b $bitrate" . "k -y $newLocation", $output, $return);
+        if (isset($return) && 0 === $return) {
+            return true;
+        }
+
+        return false;
     }
 }

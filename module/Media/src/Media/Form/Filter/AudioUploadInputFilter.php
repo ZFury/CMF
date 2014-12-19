@@ -39,17 +39,14 @@ class AudioUploadInputFilter implements InputFilterAwareInterface
                     array(
                         'name' => 'audio',
                         'required' => true,
-                        //'validators' => array(
-                            //array(
-                                //'name' => '\Zend\Validator\File\IsAudio',
-                                //'options' => array(
-                                    //'messages' => array(
-                                        //'fileIsAudioFalseType' => 'Please select a valid icon audio to upload.',
-                                        //'fileIsAudioNotDetected' => 'The icon audio is missing mime encoding, please verify you have saved the image with mime encoding.',
-                                    //),
-                                //),
-                            //),
-                        //)
+                        'validators' => array(
+                            array(
+                                'name' => '\Zend\Validator\File\MimeType',
+                                'options' => array(
+                                    'mimeType' => ['audio/mpeg', 'audio/x-flac', 'audio/mp4']
+                                ),
+                            ),
+                        )
                     )
                 )
             );

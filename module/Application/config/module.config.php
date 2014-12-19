@@ -93,7 +93,7 @@ return array(
         'not_found_template' => 'error/404',
         'exception_template' => 'error/index',
         'template_map' => array(
-            'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
+            'layout/layout' => __DIR__ . '/../view/layout/default/layout.phtml',
             'crud/create' => __DIR__ . '/../view/layout/crud/create.phtml',
             'crud/edit' => __DIR__ . '/../view/layout/crud/edit.phtml',
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',

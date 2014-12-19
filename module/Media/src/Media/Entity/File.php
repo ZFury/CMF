@@ -187,11 +187,11 @@ class File
 
         switch ($this->type) {
             case self::IMAGE_FILETYPE:
-                return \Media\Service\Image::imgPath(\Media\Service\Image::ORIGINAL, $this->id, $ext, true);
+                return \Media\Service\Image::imgPath(\Media\Service\Image::ORIGINAL, $this->id, $ext, \Media\Service\File::FROM_PUBLIC);
             case self::AUDIO_FILETYPE:
-                return \Media\Service\Audio::audioPath($this->id, $ext, true);
+                return \Media\Service\Audio::audioPath($this->id, $ext, \Media\Service\File::FROM_PUBLIC);
             case self::VIDEO_FILETYPE:
-                return \Media\Service\Video::videoPath($this->id, $ext, true);
+                return \Media\Service\Video::videoPath($this->id, $ext, \Media\Service\File::FROM_PUBLIC);
             default:
         }
 
@@ -199,18 +199,18 @@ class File
     }
 
     /**
-     * Returns the part of url
-     *
-     * @return string
+     * @param int $thumbSize
+     * @return null|string
+     * @throws \Exception
      */
-    public function getThumb()
+    public function getThumb($thumbSize = \Media\Service\Image::SMALL_THUMB)
     {
         switch ($this->type) {
             case self::IMAGE_FILETYPE:
                 $ext = $this->getExtension();
                 $imageId = $this->getId();
-                $urlPart = \Media\Service\Image::imgPath(\Media\Service\Image::SMALL_THUMB, $imageId, $ext);
-                if (!file_exists(\Media\Service\File::PUBLIC_PATH . $urlPart)) {
+                $urlPart = \Media\Service\Image::imgPath($thumbSize, $imageId, $ext, \Media\Service\File::FROM_PUBLIC);
+                if (!file_exists($urlPart)) {
                     $originalLocation = $this->getLocation();
                     $image = new \Imagick($originalLocation);
                     $image->cropThumbnailImage(\Media\Service\Image::S_THUMB_WIDTH, \Media\Service\Image::S_THUMB_HEIGHT);
@@ -220,13 +220,12 @@ class File
 
                 return $urlPart;
             case self::AUDIO_FILETYPE:
-                return \Media\Service\Audio::audioPath($this->id, $this->getExtension(), true);
+                return \Media\Service\Audio::audioPath($this->id, $this->getExtension(), \Media\Service\File::FROM_PUBLIC);
             case self::VIDEO_FILETYPE:
-                return \Media\Service\Video::videoPath($this->id, $this->getExtension(), true);
+                return \Media\Service\Video::videoPath($this->id, $this->getExtension(), \Media\Service\File::FROM_PUBLIC);
             default:
         }
 
         return null;
-
     }
 }
