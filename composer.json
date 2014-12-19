@@ -12,6 +12,8 @@
         "zendframework/zendframework": "2.3.*",
         "doctrine/common": "2.4.*",
         "doctrine/doctrine-orm-module": "0.8.*",
+        "doctrine/migrations": "dev-master",
+        "sundrique/doctrine-tools": ">=0.2",
         "bjyoungblood/bjy-authorize": "1.4.*",
         "facebook/php-sdk-v4": "4.0.*"
     },
