@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: babich
- * Date: 28.11.14
- * Time: 12:01
- */
 
-namespace Media;
+namespace MediaTest;
 
 use Zend\Loader\AutoloaderFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;
