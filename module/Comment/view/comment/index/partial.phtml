@@ -4,7 +4,7 @@
             <h4 class="media-heading">
                 <?php echo $this->escapeHtml($this->comment->getUser()->getDisplayName()); ?>
                 <?php
-                if ($this->comment->getUserId()===$this->identity()->getUserId()) : ?>
+                if ($this->comment->getUserId()===$this->identity()->getUserId() || $this->identity()->getUser()->getRole()===User\Entity\User::ROLE_ADMIN) : ?>
                     <a class="edit-comment" href='#' data-href="<?php echo $this->url('comment/default', array('controller'=>'index', 'action' => 'edit', 'id' => $this->comment->getId())); ?>">
                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                     </a>
