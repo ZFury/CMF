@@ -11,6 +11,7 @@ namespace Media\Service;
 class Audio extends File
 {
     const AUDIOS_PATH = "audio/";
+    const MP3_EXT = 'mp3';
 
     public static function getDestination($path)
     {
@@ -33,5 +34,18 @@ class Audio extends File
         }
 
         return self::buildFilePath($id, $path, $ext);
+    }
+
+    public function convertAudioToMp3(\Media\Entity\File $audioEntity)
+    {
+        //With libav avconv installed
+        $oldLocation = $audioEntity->getLocation();
+        $audioEntity->setExtension(self::MP3_EXT);
+        $this->sm->get('doctrine.entitymanager.orm_default')->persist($audioEntity);
+        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
+        $newLocation = $audioEntity->getLocation();
+        exec("avconv -i $oldLocation -c:a libmp3lame -b:a 320k $newLocation");
+
+        return $audioEntity;
     }
 }
