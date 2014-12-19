@@ -5,11 +5,12 @@ $form = $this->form;
 $requireScript = '';
 ?>
 <div class="container form-container">
-    <input type="hidden" id="id" value="<?= $this->fileUpload['id'] ? $this->fileUpload['id'] : ''; ?>">
-
+    <input type="hidden" id="entityId" value="<?= $this->fileUpload['id'] ? $this->fileUpload['id'] : ''; ?>">
+    <br>
     <div class="col-md-9 form-center">
-        <h1 class="create-label"><?= !$this->title ? 'Create' : $this->escapeHtml($this->title); ?></h1>
-
+        <?php if (!$this->ajax): ?>
+            <h1 class="create-label"><?= !$this->title ? 'Create' : $this->escapeHtml($this->title); ?></h1>
+        <?php endif; ?>
         <form action="" method="post" class="form-horizontal" id="crudForm">
             <?php foreach ($form->getElements() as $element) : ?>
                 <?php
@@ -40,7 +41,7 @@ $requireScript = '';
                 ?>
                 <?php $element->getAttributes()['type'] == 'submit' ? $submit = true : $submit = false; ?>
                 <div class="form-group">
-                    <?php if ($element->getAttributes()['type'] !== 'submit'): ?>
+                    <?php if ($element->getAttributes()['type'] !== 'submit' && !$this->ajax): ?>
                         <?php if ($element->getAttributes()['type'] !== 'hidden'): ?>
                             <label for="<?= $element->getName(); ?>" class="col-sm-1 control-label">
                                 <?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?>
@@ -52,10 +53,12 @@ $requireScript = '';
                     <div class="col-sm-10">
                         <?= $formElement; ?>
                     </div>
-                    <?= $this->formElementErrors($element); ?>
+                    <div class="col-sm-10 col-md-offset-1 error-field error-form-message">
+                        <?= $this->formElementErrors($element); ?>
+                    </div>
                 </div>
             <?php endforeach; ?>
-            <?php if (!$submit): ?>
+            <?php if (!$submit && !$this->ajax): ?>
                 <div class="form-group">
                     <div class="col-sm-10 col-md-offset-1">
                         <input type="submit" name="submit" class="form-control col-md-6 btn btn-success"

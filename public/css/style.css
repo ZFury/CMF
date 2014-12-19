@@ -90,3 +90,11 @@ div.container a.brand {
 .form-center {
     margin: 0 auto;
 }
+
+.error-form-field {
+    border-color: #ac2925;
+}
+
+.error-form-message {
+    color: #ac2925;
+}

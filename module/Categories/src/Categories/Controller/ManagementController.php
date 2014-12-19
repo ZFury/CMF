@@ -111,14 +111,16 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
 
                         return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
                     } else {
-                        return true;
+                        return;
                     }
+                } else {
+                    $form->get('alias')->setMessages(
+                        array(
+                            'errorMessageKey' => 'Alias must be unique in it\'s category!'
+                        )
+                    );
                 }
-                $form->get('alias')->setMessages(
-                    array(
-                        'errorMessageKey' => 'Alias must be unique in it\'s category!'
-                    )
-                );
+
             }
         } else {
             $categoriesService->clearImages();
@@ -128,6 +130,7 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
 
         $viewModel = $this->prepareViewModel(
             $form,
+            $this->getRequest()->isXmlHttpRequest(),
             null,
             null,
             [
@@ -137,11 +140,10 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                 'id' => null
             ]
         );
-//        var_dump($this->getRequest()->isXmlHttpRequest());die();
         if ($this->getRequest()->isXmlHttpRequest()) {
             $viewModel->setTerminal(true);
         }
-//        var_dump($viewModel->getVariables());
+
         return $viewModel;
     }
 
@@ -175,13 +177,20 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                     $this->getServiceLocator()->get('Categories\Service\Categories')->updateChildrenPath($form->getData());
                     $this->flashMessenger()->addSuccessMessage('Category has been successfully edited!');
 
-                    return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
+                    if (!$this->getRequest()->isXmlHttpRequest()) {
+                        $this->flashMessenger()->addSuccessMessage('Category has been successfully added!');
+
+                        return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
+                    } else {
+                        return;
+                    }
+                } else {
+                    $form->get('alias')->setMessages(
+                        array(
+                            'errorMessageKey' => 'Alias must be unique in its category!'
+                        )
+                    );
                 }
-                $form->get('alias')->setMessages(
-                    array(
-                        'errorMessageKey' => 'Alias must be unique in its category!'
-                    )
-                );
             }
         }
 
@@ -189,6 +198,7 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
 
         $viewModel = $this->prepareViewModel(
             $form,
+            $this->getRequest()->isXmlHttpRequest(),
             null,
             null,
             [

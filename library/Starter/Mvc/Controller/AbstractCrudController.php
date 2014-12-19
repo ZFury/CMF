@@ -175,6 +175,7 @@ abstract class AbstractCrudController extends AbstractActionController
      * Gets CRUD view model and sets require parameters.
      *
      * @param $form
+     * @param $ajax boolean Flag that determines using of ajax.
      * @param array $variables Variables that will be used in view.
      * <code>
      * 'variables' => array(
@@ -200,10 +201,11 @@ abstract class AbstractCrudController extends AbstractActionController
      * </code>
      * @return ViewModel
      */
-    protected function prepareViewModel($form, array $variables = null, array $scripts = null, array $fileUpload = null)
+    protected function prepareViewModel($form, $ajax = false, array $variables = null, array $scripts = null, array $fileUpload = null)
     {
         return $this->viewModel->setVariables([
             'form' => $form,
+            'ajax' => $ajax,
             'variables' => $variables,
             'scripts' => $scripts,
             'fileUpload' => $fileUpload

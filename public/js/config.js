@@ -42,7 +42,8 @@ require.config({
         "image": './modules/test/image',
         "audio": './modules/test/audio',
         "video": './modules/test/video',
-        'redactorContent': '../redactor/redactorContent'
+        'redactorContent': '../redactor/redactorContent',
+        'form': './form'
     },
     shim: {
         angular: {
