@@ -57,7 +57,7 @@ class Comment extends EntityBase
 
     /**
      * @Annotation\Required(true)
-     * @ORM\ManyToOne(targetEntity="Comment\Entity\EntityType", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="Comment\Entity\EntityType")
      * @ORM\JoinColumn(name="entityTypeId", referencedColumnName="id", onDelete="cascade")
      */
     protected $entityType;
@@ -310,12 +310,12 @@ class Comment extends EntityBase
                 "id" => $this->getId(),
                 "comment" => $this->getComment(),
                 "entityType" => $this->getEntityType(),
+                "entityTypeId" => $this->getEntityTypeId(),
                 "entityId" => $this->getEntityId(),
                 "user" => $this->getUser(),
                 "created" => $this->getCreated(),
                 "updated" => $this->getUpdated(),
             );
-
             return $result;
         }
     }

@@ -34,33 +34,6 @@ return array(
     'router' => array(
         'routes' => array(
             'comment' => array(
-//                'type' => 'Segment',
-//                'options' => array(
-//                    'route' => '/comment[/:action[/:id]]',
-//                    'constraints' => array(
-//                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-//                        'id' => '[0-9]+',
-//                    ),
-//                    'defaults' => array(
-//                        'controller' => 'Comment\Controller\Index',
-//                    )
-//                ),
-//                'may_terminate' => true,
-//                'child_routes' => array(
-//                    'default' => array(
-//                        'type'    => 'Segment',
-//                        'options' => array(
-//                            'route'    => '/[:controller[/:action[/:id]]]',
-//                            'constraints' => array(
-//                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-//                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-//                            ),
-//                            'defaults' => array(
-//
-//                            ),
-//                        ),
-//                    ),
-//                ),
                 'type'    => 'Literal',
                 'options' => array(
                     'route'    => '/comment',
@@ -102,10 +75,6 @@ return array(
         ),
     ),
     'service_manager' => array(
-        /*'entityTypes' => array(
-            'User',
-            'Example'
-        ),*/
         'factories' => array(
             'Comment\Service\EntityType' => function ($sm) {
                 return new Comment\Service\EntityType($sm);
@@ -146,5 +115,4 @@ return array(
             )
         )
     )
-
 );

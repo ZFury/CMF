@@ -65,8 +65,7 @@ class ManagementController extends AbstractCrudController
                 $this->redirect()->toRoute(null, ['controller' => 'management']);
             }
         }
-        $viewModel = $this->getViewModel();
-
+        $viewModel = new ViewModel();
         return $viewModel->setVariables(['form' => $form]);
     }
 
@@ -112,8 +111,7 @@ class ManagementController extends AbstractCrudController
 
             }
         }
-        $viewModel = $this->getViewModel();
-
+        $viewModel = new ViewModel();
         return $viewModel->setVariables(['form' => $form]);
     }
 

@@ -20,7 +20,8 @@ require.config({
         redactor: './../redactor/redactor',
         //"redactor-fullscreen": './../redactor/plugins/fullscreen'
         dashboard: './../module/dashboard/js/dashboard',
-        comment: '../module/comment/js/management',
+        comment: '../module/comment/js/index',
+        commentManagement: '../module/comment/js/management',
         categories: '../module/categories/js/management',
         test: '../module/test/js/comment',
         //BLUEIMP BEGIN

@@ -5,6 +5,7 @@ namespace Comment\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Starter\DBAL\Entity\EntityBase;
 use Zend\Form\Annotation;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  *
@@ -58,6 +59,26 @@ class EntityType extends EntityBase
     protected $description;
 
     /**
+     * @var boolean
+     * @Annotation\Type("Zend\Form\Element\Checkbox")
+     * @Annotation\Required(false)
+     * @Annotation\Options({"label":"Visibility of comments:"})
+     * @Annotation\Attributes({"class":"form-control"})
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $visibleComment;
+
+    /**
+     * @var boolean
+     * @Annotation\Type("Zend\Form\Element\Checkbox")
+     * @Annotation\Required(false)
+     * @Annotation\Options({"label":"Possible to comment:"})
+     * @Annotation\Attributes({"class":"form-control"})
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $enabledComment;
+
+    /**
      * @var created
      * @Annotation\Exclude
      * @ORM\Column(type="datetime")
@@ -70,6 +91,28 @@ class EntityType extends EntityBase
      * @ORM\Column(type="datetime")
      */
     protected $updated;
+
+    /**
+     * @Annotation\Exclude
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="entityType", cascade={"remove"})
+     */
+    protected $comments;
+
+    /**
+     * Initialies the comments variable.
+     */
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
 
     /**
      * Now we tell doctrine that before we persist or update we call the updatedTimestamps() function.
@@ -175,6 +218,50 @@ class EntityType extends EntityBase
     }
 
     /**
+     * Set visibleComment.
+     *
+     * @param int $visibleComment
+     *
+     * @return void
+     */
+    public function setVisibleComment($visibleComment)
+    {
+        $this->visibleComment = $visibleComment;
+    }
+
+    /**
+     * Get visibleComment.
+     *
+     * @return int
+     */
+    public function getVisibleComment()
+    {
+        return $this->visibleComment;
+    }
+
+    /**
+     * Set enabledComment.
+     *
+     * @param int $enabledComment
+     *
+     * @return void
+     */
+    public function setEnabledComment($enabledComment)
+    {
+        $this->enabledComment = $enabledComment;
+    }
+
+    /**
+     * Get enabledComment.
+     *
+     * @return int
+     */
+    public function getEnabledComment()
+    {
+        return $this->enabledComment;
+    }
+
+    /**
      * Set created.
      *
      * @param string $created
@@ -228,6 +315,8 @@ class EntityType extends EntityBase
                 "id" => $this->getId(),
                 "aliasEntity" => $this->getAliasEntity(),
                 "entity" => $this->getEntity(),
+                "VisibleComment" => $this->getVisibleComment(),
+                "enabledComment" =>$this->getEnabledComment(),
                 "description" => $this->getDescription(),
                 "created" => $this->getCreated(),
                 "updated" => $this->getUpdated(),

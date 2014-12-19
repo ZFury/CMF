@@ -7,6 +7,8 @@ $this->headTitle($title);
     <tr>
         <th>Alias entity</th>
         <th>Entity</th>
+        <th>Possible to comment</th>
+        <th>Visibility of comments</th>
         <th>Description</th>
         <th>&nbsp;</th>
     </tr>
@@ -17,12 +19,14 @@ $this->headTitle($title);
         <tr>
             <td><?php echo $this->escapeHtml($entity->getAliasEntity());?></td>
             <td><?php echo $this->escapeHtml($entity->getEntity());?></td>
+            <td><?php echo $this->escapeHtml($entity->getEnabledComment())?'Yes':"No";?></td>
+            <td><?php echo $this->escapeHtml($entity->getVisibleComment())?'Yes':"No";?></td>
             <td><?php echo $this->escapeHtml($entity->getDescription());?></td>
             <td>
                 <a href="<?php echo $this->url('comment/default', array('controller'=>'management', 'action' => 'edit', 'id' => $entity->getId())); ?>">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                 </a>
-                <a class="del" href="<?php echo $this->url('comment/default', array('controller'=>'management', 'action' => 'delete', 'id' => $entity->getId())); ?>">
+                <a class="del-entity" href="<?php echo $this->url('comment/default', array('controller'=>'management', 'action' => 'delete', 'id' => $entity->getId())); ?>">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </a>
             </td>
@@ -36,5 +40,5 @@ $this->headTitle($title);
 </p>
 
 <script>
-    require(['comment']);
+    require(['comment','commentManagement']);
 </script>

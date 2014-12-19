@@ -32,6 +32,8 @@ class ManagementControllerTest extends ControllerTestCase
     protected $entityData = array(
     'aliasEntity' => 'user',
     'entity' => 'User\Entity\User',
+    'enabledEntity' => true,
+    'visibleEntity' => true,
     'description' => 'another',
     );
 
@@ -88,6 +90,8 @@ class ManagementControllerTest extends ControllerTestCase
         $postData = array(
             'aliasEntity' => 'user',
             'entity' => 'User\Entity\User',
+            'enabledEntity' => true,
+            'visibleEntity' => true,
             'description' => 'another',
         );
         $this->dispatch('/comment/management/create', 'POST', $postData);
@@ -113,6 +117,8 @@ class ManagementControllerTest extends ControllerTestCase
         $postData = array(
             'aliasEntity' => 'userEdited',
             'entity' => 'User\Entity\User',
+            'enabledEntity' => true,
+            'visibleEntity' => true,
             'description' => 'another',
         );
         $this->dispatch('/comment/management/edit/' . $entity->getId(), 'POST', $postData);

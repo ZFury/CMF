@@ -10,7 +10,7 @@
     </div>
     <?php foreach ($this->data as $row) : ?>
         <div class="row entity" data-href="<?=
-        $this->url('comment/default', ['controller' => 'index', 'action' => 'index'],['query' => ['entity' => 'test','id' => $row->getId()]])
+        $this->url('comment/default', ['controller' => 'index', 'action' => 'index'],['query' => ['entity' => $this->aliasEntity,'id' => $row->getId()]])
         ?>">
             <div class="col-md-1">
                 <strong><?= $row->getId() ?></strong>
@@ -40,5 +40,5 @@
     </div>
 </div>
 <script>
-    require(['test']);
+    require(['test','comment']);
 </script>

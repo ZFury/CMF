@@ -9,24 +9,28 @@
 namespace Test\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Zend\View\Model\ViewModel;
 use Comment\Form;
 use Comment\Service;
 use Comment\Form\Filter;
 use DoctrineModule\Validator;
-use Zend\Mvc\Controller\Plugin\FlashMessenger;
+use Comment\Entity;
+
 
 class CommentController extends AbstractActionController
 {
     /**
      * @return array|ViewModel
+     * @throws \Exception
      */
     public function indexAction()
     {
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $entities = $objectManager->getRepository('Test\Entity\Test')->findAll();
-
-        return new ViewModel(array('data' => $entities));
+        /**
+         * @var /Comment\Entity\EntityType $entityTest
+         */
+        $entityTest = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityTypeByEntity('Test\\Entity\\Test');
+        return new ViewModel(array('data' => $entities, 'aliasEntity'=>$entityTest->getAliasEntity()));
     }
 }

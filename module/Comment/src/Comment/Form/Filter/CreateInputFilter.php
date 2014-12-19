@@ -27,17 +27,6 @@ class CreateInputFilter extends InputFilter
      */
     protected function aliasEntity()
     {
-        /*$recordExistsValidator = new NoObjectExists(
-            array(
-                'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')->getRepository('Comment\Entity\EntityType'),
-                'fields' => 'aliasEntity'
-            )
-        );
-        $recordExistsValidator->setMessage(
-            'Alias entity with this title already exists',
-            NoObjectExists::ERROR_OBJECT_FOUND
-        );*/
-
         $this->add(array(
             'name' => 'aliasEntity',
             'required' => true,
@@ -53,7 +42,6 @@ class CreateInputFilter extends InputFilter
                         'message' => 'Entity type contains invalid characters'
                     ),
                 ),
-                //$recordExistsValidator
             ),
         ));
 
@@ -65,26 +53,12 @@ class CreateInputFilter extends InputFilter
      */
     protected function entity()
     {
-        /*$recordExistsValidator = new NoObjectExists(
-            array(
-                'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')->getRepository('Comment\Entity\EntityType'),
-                'fields' => 'entity'
-            )
-        );
-        $recordExistsValidator->setMessage(
-            'Entity with this title already exists',
-            NoObjectExists::ERROR_OBJECT_FOUND
-        );*/
-
         $this->add(array(
             'name' => 'entity',
             'required' => true,
             'filters' => array(
                 array('name' => 'StripTags'),
                 array('name' => 'StringTrim'),
-            ),
-            'validators' => array(
-                //$recordExistsValidator
             ),
         ));
 

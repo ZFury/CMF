@@ -4,7 +4,6 @@ namespace Comment\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
 use Comment\Form;
 use Comment\Service;
 use Comment\Form\Filter;
