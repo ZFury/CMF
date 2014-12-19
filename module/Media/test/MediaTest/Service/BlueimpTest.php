@@ -12,7 +12,7 @@ use Zend\Stdlib;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
 /**
- * Class ImageTest
+ * Class BlueimpTest
  * @package MediaTest\Service
  */
 class BlueimpTest extends AbstractHttpControllerTestCase
@@ -21,6 +21,11 @@ class BlueimpTest extends AbstractHttpControllerTestCase
      * @var bool
      */
     protected $traceError=true;
+
+    /**
+     * @var \Media\Service\Blueimp
+     */
+    private $blueimpService;
 
     /**
      *  Migration up
@@ -46,15 +51,15 @@ class BlueimpTest extends AbstractHttpControllerTestCase
         $this->setApplicationConfig(include 'config/application.config.php');
         $this->setTraceError(true);
         parent::setUp();
+        $this->blueimpService = $this->getApplicationServiceLocator()->get('Media\Service\Blueimp');
     }
 
     public function testDeleteFileJson()
     {
-        $blueimpService = $this->getApplicationServiceLocator()->get('Media\Service\Blueimp');
-        $this->assertJson(json_encode($blueimpService->deleteFileJson(1)));
+        $this->assertJson(json_encode($this->blueimpService->deleteFileJson(1)));
     }
 
-    public function testdisplayUploadedFiles()
+    public function testDisplayUploadedFiles()
     {
         $entityManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         $files = $entityManager->getRepository('Media\Entity\File')->findByType('image');
@@ -62,7 +67,6 @@ class BlueimpTest extends AbstractHttpControllerTestCase
         foreach ($files as $file) {
             array_push($deleteUrls, ['id' => 0, 'deleteUrl' => 0]);
         }
-        $blueimpService = $this->getApplicationServiceLocator()->get('Media\Service\Blueimp');
-        $this->assertJson(json_encode($blueimpService->displayUploadedFiles($files, $deleteUrls)));
+        $this->assertJson(json_encode($this->blueimpService->displayUploadedFiles($files, $deleteUrls)));
     }
 }

@@ -51,8 +51,8 @@ class Audio extends File
 
     public function executeConversion($oldLocation, $newLocation)
     {
-        exec("avconv -i $oldLocation -c:a libmp3lame -b:a 320k $newLocation", $output, $return);
-        if (isset($return)) {
+        exec("avconv -i $oldLocation -c:a libmp3lame -b:a 320k -y $newLocation", $output, $return);
+        if (isset($return) && 0 === $return) {
             return true;
         }
 

@@ -13,7 +13,7 @@ use Zend\Stdlib;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
 /**
- * Class ImageTest
+ * Class VideoTest
  * @package MediaTest\Service
  */
 class VideoTest extends AbstractHttpControllerTestCase
@@ -30,6 +30,10 @@ class VideoTest extends AbstractHttpControllerTestCase
     const DIRECTORY_NAME = 'video';
     private $oldLocation = null;
     private $newLocation = null;
+    /**
+     * @var \Media\Service\Video
+     */
+    private $videoService;
     /**
      *  Migration up
      */
@@ -56,12 +60,12 @@ class VideoTest extends AbstractHttpControllerTestCase
         parent::setUp();
         $this->oldLocation = __DIR__ . '/../../testFiles/YoungKobe.flv';
         $this->newLocation = __DIR__ . '/../../testFiles/YoungKobe.mp4';
+        $this->videoService = $this->getApplicationServiceLocator()->get('Media\Service\Video');
     }
 
     public function testVideoPath()
     {
-        $videoService = $this->getApplicationServiceLocator()->get('Media\Service\Video');
-        $videoPath = $videoService->videoPath($this->videoId, $this->videoEntityData['extension']);
+        $videoPath = $this->videoService->videoPath($this->videoId, $this->videoEntityData['extension']);
         $this->assertRegExp(
             '/[a-zA-z]*\/[a-zA-z]*\/' .
             self::DIRECTORY_NAME .
@@ -72,8 +76,7 @@ class VideoTest extends AbstractHttpControllerTestCase
 
     public function testVideoPathOnlyPath()
     {
-        $videoService = $this->getApplicationServiceLocator()->get('Media\Service\Video');
-        $videoPath = $videoService->videoPath($this->videoId, $this->videoEntityData['extension'], \Media\Service\File::FROM_PUBLIC);
+        $videoPath = $this->videoService->videoPath($this->videoId, $this->videoEntityData['extension'], \Media\Service\File::FROM_PUBLIC);
         $this->assertRegExp(
             '/[a-zA-z]*\/' .
             self::DIRECTORY_NAME.
@@ -84,15 +87,13 @@ class VideoTest extends AbstractHttpControllerTestCase
 
     public function testPrepareDir()
     {
-        $videoService = $this->getApplicationServiceLocator()->get('Media\Service\Video');
-        $videoPath = $videoService->videoPath($this->videoId, $this->videoEntityData['extension']);
-        $this->assertTrue($videoService->prepareDir($videoPath));
+        $videoPath = $this->videoService->videoPath($this->videoId, $this->videoEntityData['extension']);
+        $this->assertTrue($this->videoService->prepareDir($videoPath));
     }
 
     public function testMoveVideo()
     {
-        $videoService = $this->getApplicationServiceLocator()->get('Media\Service\Video');
-        $videoPath = $videoService->videoPath($this->videoId, $this->videoEntityData['extension']);
+        $videoPath = $this->videoService->videoPath($this->videoId, $this->videoEntityData['extension']);
         $video = [
             'name' => 'MakeItWork.mp4',
             'type' => 'video/mp4',
@@ -101,12 +102,11 @@ class VideoTest extends AbstractHttpControllerTestCase
             'size' => '15288220'
         ];
         $this->setExpectedException('Zend\Filter\Exception\RuntimeException');
-        $videoService->moveFile($videoPath, $video);
+        $this->videoService->moveFile($videoPath, $video);
     }
 
     public function testVideoConversion()
     {
-        $videoService = $this->getApplicationServiceLocator()->get('Media\Service\Video');
-        $this->assertTrue($videoService->executeConversion($this->oldLocation, $this->newLocation));
+        $this->assertTrue($this->videoService->executeConversion($this->oldLocation, $this->newLocation));
     }
 }

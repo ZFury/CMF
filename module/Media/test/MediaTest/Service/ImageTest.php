@@ -23,6 +23,7 @@ class ImageTest extends AbstractHttpControllerTestCase
      * @var bool
      */
     protected $traceError;
+
     protected $imageEntityData = [
         'extension' => 'jpg',
         'type' => 'image',
@@ -30,6 +31,11 @@ class ImageTest extends AbstractHttpControllerTestCase
     protected $imageId = null; //it will be converted to 000
     const DIRECTORY_NAME = 'images';
     const SIZE_ORIGINAL = 'original';
+
+    /**
+     * @var \Media\Service\Image
+     */
+    private $imageService;
     /**
      *  Migration up
      */
@@ -54,12 +60,13 @@ class ImageTest extends AbstractHttpControllerTestCase
         $this->setApplicationConfig(include 'config/application.config.php');
         $this->setTraceError(true);
         parent::setUp();
+        $this->imageService = $this->getApplicationServiceLocator()->get('Media\Service\Image');
     }
 
     public function testImgPathOriginal()
     {
-        $imageService = $this->getApplicationServiceLocator()->get('Media\Service\Image');
-        $imgPath = $imageService->imgPath($imageService::ORIGINAL, $this->imageId, $this->imageEntityData['extension']);
+
+        $imgPath = $this->imageService->imgPath(\Media\Service\Image::ORIGINAL, $this->imageId, $this->imageEntityData['extension']);
         $this->assertRegExp(
             '/[a-zA-z]*\/[a-zA-z]*\/' .
             self::DIRECTORY_NAME .
@@ -72,8 +79,7 @@ class ImageTest extends AbstractHttpControllerTestCase
 
     public function testImgPathThumbLil()
     {
-        $imageService = $this->getApplicationServiceLocator()->get('Media\Service\Image');
-        $imgPath = $imageService->imgPath($imageService::SMALL_THUMB, $this->imageId, $this->imageEntityData['extension']);
+        $imgPath = $this->imageService->imgPath(\Media\Service\Image::SMALL_THUMB, $this->imageId, $this->imageEntityData['extension']);
         $this->assertRegExp(
             '/[a-zA-z]*\/[a-zA-z]*\/' .
             self::DIRECTORY_NAME.
@@ -88,8 +94,11 @@ class ImageTest extends AbstractHttpControllerTestCase
 
     public function testImgPathThumbBig()
     {
-        $imageService = $this->getApplicationServiceLocator()->get('Media\Service\Image');
-        $imgPath = $imageService->imgPath($imageService::BIG_THUMB, $this->imageId, $this->imageEntityData['extension']);
+        $imgPath = $this->imageService->imgPath(
+            \Media\Service\Image::BIG_THUMB,
+            $this->imageId,
+            $this->imageEntityData['extension']
+        );
         $this->assertRegExp(
             '/[a-zA-z]*\/[a-zA-z]*\/' .
             self::DIRECTORY_NAME.
@@ -104,8 +113,12 @@ class ImageTest extends AbstractHttpControllerTestCase
 
     public function testImgPathOnlyPathOriginal()
     {
-        $imageService = $this->getApplicationServiceLocator()->get('Media\Service\Image');
-        $imgPath = $imageService->imgPath($imageService::ORIGINAL, $this->imageId, $this->imageEntityData['extension'], \Media\Service\File::FROM_PUBLIC);
+        $imgPath = $this->imageService->imgPath(
+            \Media\Service\Image::ORIGINAL,
+            $this->imageId,
+            $this->imageEntityData['extension'],
+            \Media\Service\File::FROM_PUBLIC
+        );
         $this->assertRegExp(
             '/[a-zA-z]*\/' .
             self::DIRECTORY_NAME.
@@ -118,9 +131,8 @@ class ImageTest extends AbstractHttpControllerTestCase
 
     public function testImgPathOnlyPathThumbLil()
     {
-        $imageService = $this->getApplicationServiceLocator()->get('Media\Service\Image');
-        $imgPath = $imageService->imgPath(
-            $imageService::SMALL_THUMB,
+        $imgPath = $this->imageService->imgPath(
+            \Media\Service\Image::SMALL_THUMB,
             $this->imageId,
             $this->imageEntityData['extension'],
             \Media\Service\File::FROM_PUBLIC
@@ -139,9 +151,8 @@ class ImageTest extends AbstractHttpControllerTestCase
 
     public function testImgPathOnlyPathThumbBig()
     {
-        $imageService = $this->getApplicationServiceLocator()->get('Media\Service\Image');
-        $imgPath = $imageService->imgPath(
-            $imageService::BIG_THUMB,
+        $imgPath = $this->imageService->imgPath(
+            \Media\Service\Image::BIG_THUMB,
             $this->imageId,
             $this->imageEntityData['extension'],
             \Media\Service\File::FROM_PUBLIC
@@ -160,29 +171,41 @@ class ImageTest extends AbstractHttpControllerTestCase
 
     public function testPrepareDirOriginal()
     {
-        $imageService = $this->getApplicationServiceLocator()->get('Media\Service\Image');
-        $imgPath = $imageService->imgPath($imageService::ORIGINAL, $this->imageId, $this->imageEntityData['extension']);
-        $this->assertTrue($imageService->prepareDir($imgPath));
+        $imgPath = $this->imageService->imgPath(
+            \Media\Service\Image::ORIGINAL,
+            $this->imageId,
+            $this->imageEntityData['extension']
+        );
+        $this->assertTrue($this->imageService->prepareDir($imgPath));
     }
 
     public function testPrepareDirThumbLil()
     {
-        $imageService = $this->getApplicationServiceLocator()->get('Media\Service\Image');
-        $imgPath = $imageService->imgPath($imageService::SMALL_THUMB, $this->imageId, $this->imageEntityData['extension']);
-        $this->assertTrue($imageService->prepareDir($imgPath));
+        $imgPath = $this->imageService->imgPath(
+            \Media\Service\Image::SMALL_THUMB,
+            $this->imageId,
+            $this->imageEntityData['extension']
+        );
+        $this->assertTrue($this->imageService->prepareDir($imgPath));
     }
 
     public function testPrepareDirThumbBig()
     {
-        $imageService = $this->getApplicationServiceLocator()->get('Media\Service\Image');
-        $imgPath = $imageService->imgPath($imageService::BIG_THUMB, $this->imageId, $this->imageEntityData['extension']);
-        $this->assertTrue($imageService->prepareDir($imgPath));
+        $imgPath = $this->imageService->imgPath(
+            \Media\Service\Image::BIG_THUMB,
+            $this->imageId,
+            $this->imageEntityData['extension']
+        );
+        $this->assertTrue($this->imageService->prepareDir($imgPath));
     }
 
     public function testMoveImage()
     {
-        $imageService = $this->getApplicationServiceLocator()->get('Media\Service\Image');
-        $imgPath = $imageService->imgPath($imageService::ORIGINAL, $this->imageId, $this->imageEntityData['extension']);
+        $imgPath = $this->imageService->imgPath(
+            \Media\Service\Image::ORIGINAL,
+            $this->imageId,
+            $this->imageEntityData['extension']
+        );
         $image = [
             'name' => 'me.jpg',
             'type' => 'image/jpeg',
@@ -191,6 +214,6 @@ class ImageTest extends AbstractHttpControllerTestCase
             'size' => '29487'
         ];
         $this->setExpectedException('Zend\Filter\Exception\RuntimeException');
-        $imageService->moveFile($imgPath, $image);
+        $this->imageService->moveFile($imgPath, $image);
     }
 }
