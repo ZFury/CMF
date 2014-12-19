@@ -2,6 +2,7 @@
     var dependencies = [
         'angular',
         'angularSanitize',
+        'angularRoute',
         'modules/test/services/testService',
         'modules/test/controllers/testController'
     ];
@@ -9,6 +10,7 @@
     define(dependencies, function(
         angular,
         angularSanitize,
+        angularRoute,
         testService,
         testController
         ) {

@@ -50,6 +50,9 @@ abstract class AbstractCrudController extends AbstractActionController
      */
     public function createAction()
     {
+        /**
+         * @var $form \Zend\Form\Form
+         */
         $form = $this->getCreateForm();
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
@@ -60,9 +63,13 @@ abstract class AbstractCrudController extends AbstractActionController
                 $hydrator->hydrate($form->getData(), $entity);
                 $objectManager->persist($entity);
                 $objectManager->flush();
+                if (!$this->getRequest()->isXmlHttpRequest()) {
+                    //TODO: redirect where?
+                    return $this->redirect()->toRoute(null, ['controller' => 'management']);
+                } else {
+                    return true;
+                }
 
-                //TODO: redirect where?
-                return $this->redirect()->toRoute(null, ['controller' => 'management']);
             }
         }
         $viewModel = $this->getViewModel();

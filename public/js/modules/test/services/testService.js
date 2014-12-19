@@ -4,6 +4,7 @@
             var testFactory = {};
             testFactory.apiUrl = '/test/';
             testFactory.templatesUrl = '/templates/';
+            $http.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
             /**
              * Create
@@ -18,7 +19,24 @@
                     url: this.apiUrl + 'management/create',
                     method: "POST",
                     data: $.param({email: email, name: name}),
-                    contentType:'json',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                };
+                ajaxRequest(params, callback);
+            };
+
+            /**
+             * Edit
+             * @param email
+             * @param name
+             * @param callback
+             *
+             * Created by Maxim Mandryka maxim.mandryka@nixsolutions.com
+             */
+            testFactory.editTest = function(email, name, /*function*/ callback) {
+                var params = {
+                    url: this.apiUrl + 'management/edit',
+                    method: "POST",
+                    data: $.param({email: email, name: name}),
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 };
                 ajaxRequest(params, callback);
