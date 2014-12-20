@@ -2,12 +2,12 @@
 In order to use ajax (and modal window) in some of your controller's action, you should follow next steps:  
 ##Step 1:
 Add following attributes and data-attributes to your `<a>` or `<button>` element:
-- *class       = "dialog"*
+- *class       = "dialog"*  
 - *data-toggle = "modal"*  
-- *data-target = "#formModal"*
-- *data-id = "{id of your entity}"* __(not required)__
-- *data-url    = "{your action's url}"*
-- *data-action = "{header for modal window}"*
+- *data-target = "#formModal"*  
+- *data-id = "{id of your entity}"* __(not required)__  
+- *data-url    = "{your action's url}"*  
+- *data-action = "{header for modal window}"*  
 
 ###Example:
 ```
