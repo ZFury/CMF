@@ -87,13 +87,37 @@ class Mail
     }
 
     /**
+     * Send forgot password email
+     *
+     */
+    public function forgotPassword(User $user)
+    {
+        /** @var \Mail\Entity\Mail $template */
+        $template = $this->getTemplate('forgot-password');
+
+        //prepare forgot-password url
+        $hostUrl = $this->getServiceLocator()->get('ViewHelperManager')->get('ServerUrl')->setPort(80)->__invoke();
+        $url = $this->getServiceLocator()->get('ViewHelperManager')->get('Url')->__invoke(
+            'user/default',
+            ['controller' => 'auth', 'action' => 'recover-password']
+        );
+        $confirmUrl = $hostUrl . $url . '/' . $user->getConfirm();
+
+        //assign url to the template
+        $this->assign($template, 'reset-password-link', $confirmUrl);
+
+        $message = $this->prepareMessage($template, $user);
+
+        $this->send($message);
+    }
+
+    /**
      * @param \Mail\Entity\Mail $template
      * @param \User\Entity\User $user $user
      * @return \Zend\Mail\Message
      */
     public function prepareMessage($template, $user)
     {
-
         $message = $this->getServiceLocator()->get('mail.message');
         $message
             ->setFrom($template->getFromEmail(), $template->getFromName())
@@ -150,4 +174,24 @@ class Mail
 
         return $template;
     }
+
+    /**
+     * Send forget password Confirmation email
+     *
+     * @return bool
+     */
+//    public static function newPassword($aUser, $aPassword)
+//    {
+//        $table = new Mail_Model_Templates_Table();
+//        $template = $table->getModel('newPassword');
+//        $template->toEmail = $aUser->email;
+//        $template->toName  = $aUser->login;
+//
+//        $template->assign('password', $aPassword);
+//
+//        if ($template->signature) {
+//            self::assignLayout($template);
+//        }
+//        return $template->send();
+//    }
 }

@@ -80,6 +80,16 @@ return array(
                             ),
                         ),
                     ),
+                    'recover-password' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/auth/recover-password/:hash',
+                            'defaults' => array(
+                                'controller' => 'auth',
+                                'action' => 'recover-password',
+                            ),
+                        ),
+                    ),
                 ),
             ),
         )
@@ -156,9 +166,19 @@ return array(
                     'roles' => array('guest', 'user'),
                 ),
                 array(
+                    'controller' => 'User\Controller\Auth',
+                    'action' => array('recover-password'),
+                    'roles' => array('guest'),
+                ),
+                array(
                     'controller' => 'User\Controller\Signup',
                     'action' => array('index', 'confirm'),
                     'roles' => array('guest', 'user'),
+                ),
+                array(
+                    'controller' => 'User\Controller\Signup',
+                    'action' => array('forgot-password'),
+                    'roles' => array('guest'),
                 ),
                 array(
                     'controller' => 'User\Controller\Mail',
