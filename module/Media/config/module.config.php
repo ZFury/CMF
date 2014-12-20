@@ -15,6 +15,9 @@ return array(
             'Media\Service\Video' => function ($serviceManager) {
                 return new Media\Service\Video($serviceManager);
             },
+            'Media\Service\Image' => function ($serviceManager) {
+                return new Media\Service\Image($serviceManager);
+            },
             'Media\Service\Audio' => function ($serviceManager) {
                 return new Media\Service\Audio($serviceManager);
             },
