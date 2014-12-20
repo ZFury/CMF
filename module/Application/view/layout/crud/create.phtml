@@ -41,26 +41,26 @@ $requireScript = '';
                 ?>
                 <?php $element->getAttributes()['type'] == 'submit' ? $submit = true : $submit = false; ?>
                 <div class="form-group">
-                    <?php if ($element->getAttributes()['type'] !== 'submit' && !$this->ajax): ?>
+                    <?php if ($element->getAttributes()['type'] !== 'submit'): ?>
                         <?php if ($element->getAttributes()['type'] !== 'hidden'): ?>
-                            <label for="<?= $element->getName(); ?>" class="col-sm-1 control-label">
+                            <label for="<?= $element->getName(); ?>" class="col-sm-2 control-label">
                                 <?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?>
                             </label>
                         <?php endif; ?>
                     <?php else: ?>
-                        <div class="col-sm-1"></div>
+                        <div class="col-sm-2"></div>
                     <?php endif; ?>
-                    <div class="col-sm-10">
+                    <div class="col-sm-9">
                         <?= $formElement; ?>
                     </div>
-                    <div class="col-sm-10 col-md-offset-1 error-field error-form-message">
+                    <div class="col-sm-9 col-md-offset-2 error-field error-form-message">
                         <?= $this->formElementErrors($element); ?>
                     </div>
                 </div>
             <?php endforeach; ?>
             <?php if (!$submit && !$this->ajax): ?>
                 <div class="form-group">
-                    <div class="col-sm-10 col-md-offset-1">
+                    <div class="col-sm-9 col-md-offset-2">
                         <input type="submit" name="submit" class="form-control col-md-6 btn btn-success"
                                value="<?= $this->title == 'Edit' ? 'Save' : 'Create'; ?>">
                     </div>

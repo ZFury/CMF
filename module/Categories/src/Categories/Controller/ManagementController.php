@@ -140,9 +140,7 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                 'id' => null
             ]
         );
-        if ($this->getRequest()->isXmlHttpRequest()) {
-            $viewModel->setTerminal(true);
-        }
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
 
         return $viewModel;
     }
@@ -208,9 +206,7 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                 'id' => $this->params()->fromRoute('id')
             ]
         );
-        if ($this->getRequest()->isXmlHttpRequest()) {
-            $viewModel->setTerminal(true);
-        }
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
 
         return $viewModel;
     }

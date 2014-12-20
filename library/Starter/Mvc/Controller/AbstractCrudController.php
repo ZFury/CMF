@@ -72,9 +72,7 @@ abstract class AbstractCrudController extends AbstractActionController
             }
         }
         $viewModel = $this->getViewModel();
-        if ($this->getRequest()->isXmlHttpRequest()) {
-            $viewModel->setTerminal(true);
-        }
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
 
         return $viewModel->setVariables(['form' => $form]);
     }
@@ -106,9 +104,7 @@ abstract class AbstractCrudController extends AbstractActionController
             }
         }
         $viewModel = $this->getViewModel();
-        if ($this->getRequest()->isXmlHttpRequest()) {
-            $viewModel->setTerminal(true);
-        }
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
 
         return $viewModel->setVariables(['form' => $form]);
     }

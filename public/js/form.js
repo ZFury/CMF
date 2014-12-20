@@ -18,38 +18,40 @@ define(['jquery', 'tmpl',
                     $('#popupBody').html(data);
                 },
                 complete: function () {
-                    if (counter > 1) {
-                        'use strict';
-                        var idString = '';
-                        if (id)
-                            idString = '/' + id;
-                        // Initialize the jQuery File Upload widget:
-                        $('#fileupload').fileupload({
-                            url: 'categories/management/start-image-upload' + idString
-                        });
-                        // Enable iframe cross-domain access via redirect option:
-                        $('#fileupload').fileupload(
-                            'option',
-                            'redirect',
-                            window.location.href.replace(
-                                /\/[^\/]*$/,
-                                '/cors/result.html?%s'
-                            )
-                        );
-                        // Load existing files:
-                        $('#fileupload').addClass('fileupload-processing');
-                        $.ajax({
-                            url: $('#fileupload').fileupload('option', 'url'),
-                            dataType: 'json',
-                            context: $('#fileupload')[0]
-                        }).always(function () {
-                            $(this).removeClass('fileupload-processing');
-                        }).done(function (result) {
-                            $(this).fileupload('option', 'done')
-                                .call(this, $.Event('done'), {result: result});
-                        });
+                    if ($('#fileupload').length != 0) {
+                        if (counter > 1) {
+                            'use strict';
+                            var idString = '';
+                            if (id)
+                                idString = '/' + id;
+                            // Initialize the jQuery File Upload widget:
+                            $('#fileupload').fileupload({
+                                url: 'categories/management/start-image-upload' + idString
+                            });
+                            // Enable iframe cross-domain access via redirect option:
+                            $('#fileupload').fileupload(
+                                'option',
+                                'redirect',
+                                window.location.href.replace(
+                                    /\/[^\/]*$/,
+                                    '/cors/result.html?%s'
+                                )
+                            );
+                            // Load existing files:
+                            $('#fileupload').addClass('fileupload-processing');
+                            $.ajax({
+                                url: $('#fileupload').fileupload('option', 'url'),
+                                dataType: 'json',
+                                context: $('#fileupload')[0]
+                            }).always(function () {
+                                $(this).removeClass('fileupload-processing');
+                            }).done(function (result) {
+                                $(this).fileupload('option', 'done')
+                                    .call(this, $.Event('done'), {result: result});
+                            });
+                        }
+                        counter++;
                     }
-                    counter++;
                 }
             });
             event.preventDefault();
