@@ -1,7 +1,7 @@
 #Using ajax form and error form handler
 In order to use ajax (and modal window) in some of your controller's action, you should follow next steps:  
 ##Step 1:
-Add following attributes and data-attributes to your `<a>` or `<button>` element:
+Add following attributes and data-attributes to your `<a>` or `<button>` element:  
 - *class       = "dialog"*  
 - *data-toggle = "modal"*  
 - *data-target = "#formModal"*  
