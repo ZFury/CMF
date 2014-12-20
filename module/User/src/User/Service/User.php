@@ -73,7 +73,12 @@ class User
         return $transport->send($message);
     }
 
-    public  function forgotPasswordpMail(\User\Entity\User $user, $content)
+    /**
+     * @param Entity\User $user
+     * @param $content
+     * @return mixed
+     */
+    public function forgotPasswordpMail(\User\Entity\User $user, $content)
     {
         $transport = $this->getServiceLocator()->get('mail.transport');
 
@@ -177,7 +182,6 @@ class User
             $mailService = $this->getServiceLocator()->get('Mail\Service\Mail');
             $mailService->forgotPassword($user);
         } else {
-
             $html = $this->getServiceLocator()->get('ControllerPluginManager')->get('forward')
                 ->dispatch('User\Controller\Mail', array('action' => 'forgot-password', 'user' => $user));
 
