@@ -10,6 +10,7 @@ use Zend\InputFilter\InputFilter;
 use Zend\I18n\Validator;
 use Zend\Validator\Db;
 use Zend\Validator\Exception;
+use Starter\DBAL\Entity\EntityBase;
 
 /**
  * @ORM\Entity
@@ -18,7 +19,7 @@ use Zend\Validator\Exception;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @ORM\HasLifecycleCallbacks
  */
-class Pages
+class Pages extends EntityBase
 {
     /**
      * @var int
@@ -262,5 +263,29 @@ class Pages
     public function setAuthorId($authorId)
     {
         $this->authorId = $authorId;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+//        $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
+//        $jsonContent = $serializer->serialize($this, 'json');
+//        return $jsonContent;
+
+        $result = array(
+            "id" => $this->getId(),
+            "title" => $this->getTitle(),
+            "alias" => $this->getAlias(),
+            "content" => $this->getContent(),
+            "keywords" => $this->getKeywords(),
+            "description" => $this->getDescription(),
+            "created" => $this->getCreated(),
+            "updated" => $this->getUpdated(),
+            "authorId" => $this->getAuthorId(),
+        );
+
+        return $result;
     }
 }

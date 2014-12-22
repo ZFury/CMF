@@ -5,6 +5,8 @@ namespace Categories\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Starter\DBAL\Entity\EntityBase;
 
 /**
  * Categories\Entity\Categories
@@ -15,8 +17,10 @@ use Zend\Form\Annotation;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @ORM\HasLifecycleCallbacks
  */
-class Categories
+class Categories extends EntityBase
 {
+    use \Starter\Media\File;
+
     /**
      * @var integer
      * @Annotation\Type("Zend\Form\Element\Text")
@@ -88,6 +92,8 @@ class Categories
      * @ORM\Column(name="`order`", type="integer")
      */
     protected $order;
+
+    private $lifecycleArgs;
 
     /**
      *
@@ -315,5 +321,38 @@ class Categories
     public function setPath($path)
     {
         $this->path = $path;
+    }
+
+    /**
+     * @ORM\PostLoad
+     */
+    public function setLifecycleArgs(LifecycleEventArgs $args)
+    {
+        $this->lifecycleArgs = $args;
+    }
+
+    public function getEntityName()
+    {
+        return 'Categories';
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $result = array(
+            "id" => $this->getId(),
+            "name" => $this->getName(),
+            "alias" => $this->getAlias(),
+            "parentId" => $this->getParentId(),
+            "children" => $this->getChildren(),
+            "path" => $this->getPath(),
+            "created" => $this->getCreated(),
+            "updated" => $this->getUpdated(),
+            "order" => $this->getOrder(),
+        );
+
+        return $result;
     }
 }

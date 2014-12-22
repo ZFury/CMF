@@ -9,8 +9,20 @@
 return array(
     'service_manager' => [
         'factories' => [
+            'Media\Service\File' => function ($serviceManager) {
+                return new Media\Service\File($serviceManager);
+            },
+            'Media\Service\Video' => function ($serviceManager) {
+                return new Media\Service\Video($serviceManager);
+            },
             'Media\Service\Image' => function ($serviceManager) {
                 return new Media\Service\Image($serviceManager);
+            },
+            'Media\Service\Audio' => function ($serviceManager) {
+                return new Media\Service\Audio($serviceManager);
+            },
+            'Media\Service\Blueimp' => function ($serviceManager) {
+                return new Media\Service\Blueimp($serviceManager);
             },
         ]
     ],

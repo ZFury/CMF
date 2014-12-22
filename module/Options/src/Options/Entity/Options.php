@@ -10,6 +10,7 @@ use Zend\InputFilter\InputFilter;
 use Zend\I18n\Validator;
 use Zend\Validator\Db;
 use Zend\Validator\Exception;
+use Starter\DBAL\Entity\EntityBase;
 
 /**
  * Class Options
@@ -19,7 +20,7 @@ use Zend\Validator\Exception;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @ORM\HasLifecycleCallbacks
  */
-class Options
+class Options extends EntityBase
 {
     /**
      *  default namespace
@@ -200,5 +201,23 @@ class Options
     public function setUpdated($updated)
     {
         $this->updated = $updated;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $result = array(
+            "namespace" => $this->getNamespace(),
+            "key" => $this->getKey(),
+            "value" => $this->getValue(),
+            "description" => $this->getDescription(),
+            "created" => $this->getCreated(),
+            "updated" => $this->getUpdated(),
+
+        );
+
+        return $result;
     }
 }

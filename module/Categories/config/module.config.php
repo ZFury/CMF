@@ -89,7 +89,7 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array(
                     'controller' => 'Categories\Controller\Management',
-                    'action' => ['create', 'index', 'edit', 'order', 'delete'],
+                    'action' => ['create', 'index', 'edit', 'order', 'delete', 'start-image-upload', 'delete-image'],
                     'roles' => array('admin'),
                 ),
             ),
@@ -102,7 +102,7 @@ return array(
                 'controller' => 'category',
                 'pages' => array(
                     array(
-                        'label' => 'Create category',
+                        'label' => 'Create',
                         'controller' => 'management',
                         'action' => 'create',
                         'route' => 'categories/default',
@@ -110,7 +110,7 @@ return array(
                         'module' => 'Categories'
                     ),
                     array(
-                        'label' => 'All categories',
+                        'label' => 'All',
                         'controller' => 'management',
                         'action' => 'index',
                         'route' => 'categories/default',

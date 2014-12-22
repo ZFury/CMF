@@ -5,15 +5,35 @@ namespace Categories\Controller;
 use Starter\Mvc\Controller\AbstractCrudController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
+use Zend\Mvc\MvcEvent;
+use Zend\Form\Annotation\AnnotationBuilder;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Categories\Form\Filter;
-use Zend\Form\Annotation\AnnotationBuilder;
 use DoctrineModule\Validator;
 use Categories\Validators;
+use Media\Form\ImageUpload;
+use Media\Service\File;
+use Categories\Entity\Categories;
+use Media\Form\Filter\ImageUploadInputFilter;
 
-class ManagementController extends AbstractCrudController
+class ManagementController extends AbstractCrudController implements \Media\Interfce\ImageUploaderInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function onDispatch(MvcEvent $e)
+    {
+        parent::onDispatch($e);
+        $e->getApplication()
+            ->getServiceManager()
+            ->get('viewhelpermanager')
+            ->get('headLink')
+            ->appendStylesheet('module/categories/css/management.css');
+    }
 
+    /**
+     * @return array|ViewModel
+     */
     public function indexAction()
     {
         $entityManager = $this
@@ -26,7 +46,7 @@ class ManagementController extends AbstractCrudController
         if ($id = $this->params('id')) {
             $currentRootCategory = $entityManager->getRepository('Categories\Entity\Categories')->findOneBy(['parentId' => null, 'id' => $id]);
         }
-        $rootCategories = $entityManager->getRepository('Categories\Entity\Categories')->findBy(['parentId' => null]);
+        $rootCategories = $entityManager->getRepository('Categories\Entity\Categories')->findBy(['parentId' => null], ['id' => 'ASC']);
 
         if (!$currentRootCategory && !empty($rootCategories)) {
             $currentRootCategory = $rootCategories[0];
@@ -36,7 +56,6 @@ class ManagementController extends AbstractCrudController
         }
 
         return new ViewModel(['categories' => $categories, 'rootTree' => $rootCategories, 'currentRoot' => $currentRootCategory]);
-
     }
 
     /**
@@ -46,6 +65,8 @@ class ManagementController extends AbstractCrudController
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $repository = $entityManager->getRepository('Categories\Entity\Categories');
+        /** @var \Categories\Service\Categories $categoriesService */
+        $categoriesService = $this->getServiceLocator()->get('Categories\Service\Categories');
 
         $form = $this->getCreateForm();
 
@@ -71,18 +92,55 @@ class ManagementController extends AbstractCrudController
                     $hydrator->hydrate($form->getData(), $category);
                     $entityManager->persist($category);
                     $entityManager->flush();
-                    $this->flashMessenger()->addSuccessMessage('Category has been successfully added!');
 
-                    return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
+                    //Add image from session
+                    if ($categoriesService->ifImagesExist()) {
+                        $imageService = $this->getServiceLocator()->get('Media\Service\File');
+                        foreach ($categoriesService->getSession()->ids as $imageId) {
+                            $imageService->writeObjectFileEntity(
+                                $this->getServiceLocator()
+                                    ->get('Doctrine\ORM\EntityManager')
+                                    ->getRepository('Media\Entity\File')->find($imageId),
+                                $category
+                            );
+                        }
+                        $categoriesService->clearImages();
+                    }
+                    if (!$this->getRequest()->isXmlHttpRequest()) {
+                        $this->flashMessenger()->addSuccessMessage('Category has been successfully added!');
+
+                        return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
+                    } else {
+                        return;
+                    }
+                } else {
+                    $form->get('alias')->setMessages(
+                        array(
+                            'errorMessageKey' => 'Alias must be unique in it\'s category!'
+                        )
+                    );
                 }
-                $form->get('alias')->setMessages(
-                    array(
-                        'errorMessageKey' => 'Alias must be unique in it\'s category!'
-                    )
-                );
+
             }
+        } else {
+            $categoriesService->clearImages();
         }
-        $viewModel = new ViewModel(['form' => $form, 'title' => 'Create category']);
+
+        $imageService = new File($this->getServiceLocator());
+
+        $viewModel = $this->prepareViewModel(
+            $form,
+            $this->getRequest()->isXmlHttpRequest(),
+            null,
+            null,
+            [
+                'imageService' => $imageService,
+                'module' => 'image-categories',
+                'type' => \Media\Entity\File::IMAGE_FILETYPE,
+                'id' => null
+            ]
+        );
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
 
         return $viewModel;
     }
@@ -117,16 +175,38 @@ class ManagementController extends AbstractCrudController
                     $this->getServiceLocator()->get('Categories\Service\Categories')->updateChildrenPath($form->getData());
                     $this->flashMessenger()->addSuccessMessage('Category has been successfully edited!');
 
-                    return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
+                    if (!$this->getRequest()->isXmlHttpRequest()) {
+                        $this->flashMessenger()->addSuccessMessage('Category has been successfully added!');
+
+                        return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
+                    } else {
+                        return;
+                    }
+                } else {
+                    $form->get('alias')->setMessages(
+                        array(
+                            'errorMessageKey' => 'Alias must be unique in its category!'
+                        )
+                    );
                 }
-                $form->get('alias')->setMessages(
-                    array(
-                        'errorMessageKey' => 'Alias must be unique in its category!'
-                    )
-                );
             }
         }
-        $viewModel = new ViewModel(['form' => $form, 'title' => 'Edit category']);
+
+        $imageService = new File($this->getServiceLocator());
+
+        $viewModel = $this->prepareViewModel(
+            $form,
+            $this->getRequest()->isXmlHttpRequest(),
+            null,
+            null,
+            [
+                'imageService' => $imageService,
+                'module' => 'image-categories',
+                'type' => \Media\Entity\File::IMAGE_FILETYPE,
+                'id' => $this->params()->fromRoute('id')
+            ]
+        );
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
 
         return $viewModel;
     }
@@ -230,7 +310,7 @@ class ManagementController extends AbstractCrudController
      */
     protected function getEntity()
     {
-        return new \Categories\Entity\Categories();
+        return new Categories();
     }
 
     /**
@@ -259,5 +339,129 @@ class ManagementController extends AbstractCrudController
         }
 
         return $order;
+    }
+
+    /**
+     * Advanced avatar uploader Blueimp UI
+     */
+    public function startImageUploadAction()
+    {
+        $repository = $this->getServiceLocator()
+            ->get('Doctrine\ORM\EntityManager')
+            ->getRepository('Categories\Entity\Categories');
+        /** @var \Categories\Service\Categories $categoriesService */
+        $categoriesService = $this->getServiceLocator()->get('Categories\Service\Categories');
+
+        $id = $this->params()->fromRoute('id');
+        if ($id) {
+            $category = $repository->find($id);
+        }
+
+        $imageService = $this->getServiceLocator()->get('Media\Service\File');
+        $blueimpService = $this->getServiceLocator()->get('Media\Service\Blueimp');
+        if ($this->getRequest()->isPost()) {
+            $form = new ImageUpload('upload-image');
+            $inputFilter = new ImageUploadInputFilter();
+            $form->setInputFilter($inputFilter->getInputFilter());
+
+            $request = $this->getRequest();
+            $post = array_merge_recursive(
+                $request->getPost()->toArray(),
+                $request->getFiles()->toArray()
+            );
+            $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->beginTransaction();
+            $form->setData($post);
+
+            if ($form->isValid()) {
+                $data = $form->getData();
+                if (!$id) {
+                    $image = $imageService->writeFileEntity($data);
+                    $categoriesService->addImageToSession($image);
+                } else {
+                    $image = $imageService->createFile($data, $category);
+                }
+                $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
+                $dataForJson = $blueimpService->displayUploadedFile($image, $this->getDeleteImageUrl($image));
+            } else {
+                $messages = $form->getMessages();
+                $messages = array_shift($messages);
+                $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->rollBack();
+                $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->close();
+
+                $dataForJson = ['files' => [
+                    [
+                        'name' => $form->get('image')->getValue()['name'],
+                        'error' => array_shift($messages)
+                    ]
+                ]];
+            }
+        } else {
+            $images = [];
+            if ($id) {
+                $images = $category->getImages();
+            } else {
+                if ($categoriesService->ifImagesExist()) {
+                    foreach ($categoriesService->getSession()->ids as $imageId) {
+                        array_push(
+                            $images,
+                            $this->getServiceLocator()
+                                ->get('Doctrine\ORM\EntityManager')
+                                ->getRepository('Media\Entity\File')->find($imageId)
+                        );
+                    }
+                }
+            }
+            $dataForJson = $blueimpService->displayUploadedFiles(
+                $images,
+                $this->getDeleteImageUrls($images)
+            );
+        }
+
+        return new JsonModel($dataForJson);
+    }
+
+    public function deleteImageAction()
+    {
+        /** @var \Categories\Service\Categories $categoriesService */
+        $categoriesService = $this->getServiceLocator()->get('Categories\Service\Categories');
+        $idImageSes = array_search(
+            $this->getEvent()->getRouteMatch()->getParam('id'),
+            $categoriesService->getSession()->ids
+        );
+        if ($idImageSes !== false) {
+            unset($categoriesService->getSession()->ids[$idImageSes]);
+            $this->getServiceLocator()->get('Media\Service\File')
+                ->deleteFileEntity($this->getEvent()->getRouteMatch()->getParam('id'));
+        } else {
+            $this->getServiceLocator()->get('Media\Service\File')
+                ->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
+        }
+
+        return $this->getServiceLocator()->get('Media\Service\Blueimp')
+            ->deleteFileJson($this->getEvent()->getRouteMatch()->getParam('id'));
+    }
+
+    public function getDeleteImageUrl($image)
+    {
+        $url = $this->serviceLocator->get('ViewHelperManager')->get('url');
+        $imageService = $this->getServiceLocator()->get('Media\Service\File');
+        return $imageService->getFullUrl($url('categories/default', [
+            'controller' => 'management',
+            'action' => 'delete-image',
+            'id' => $image->getId()
+        ]));
+    }
+
+    public function getDeleteImageUrls($images)
+    {
+        $deleteUrls = [];
+        foreach ($images as $image) {
+            array_push($deleteUrls, [
+                'id' => $image->getId(),
+                'deleteUrl' => $this->getDeleteImageUrl($image)
+            ]);
+        }
+
+        return $deleteUrls;
     }
 }

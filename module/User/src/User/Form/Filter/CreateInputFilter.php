@@ -10,6 +10,7 @@ namespace User\Form\Filter;
 use Zend\InputFilter\InputFilter;
 use Zend\ServiceManager\ServiceManager;
 use DoctrineModule\Validator\NoObjectExists;
+use DoctrineModule\Validator\ObjectExists;
 
 class CreateInputFilter extends InputFilter
 {
@@ -122,6 +123,42 @@ class CreateInputFilter extends InputFilter
                     //                        'adapter' => $this->sm->get('Db\Adapter')
                     //                    ),
                     //                ),
+                ),
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+            )
+        );
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function emailExist()
+    {
+        $recordExistsValidator = new ObjectExists(
+            array(
+                'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')->getRepository('User\Entity\User'),
+                'fields' => 'email'
+            )
+        );
+        $recordExistsValidator->setMessage(
+            'User with this email are not exists',
+            ObjectExists::ERROR_NO_OBJECT_FOUND
+        );
+
+        $this->add(
+            array(
+                'name' => 'email',
+                'required' => true,
+                'validators' => array(
+                    array(
+                        'name' => 'EmailAddress'
+                    ),
+                    $recordExistsValidator
                 ),
                 'filters' => array(
                     array('name' => 'StripTags'),
