@@ -207,6 +207,9 @@ class File
 
     public function generateFileUploadForm($filetype)
     {
-        echo $this->sm->get('ViewHelperManager')->get('Partial')->__invoke("layout/default/partial/file-upload-form.phtml", ['filetype' => $filetype]);
+        echo $this->sm->get('ViewHelperManager')->get('Partial')->__invoke(
+            "layout/default/partial/file-upload-form.phtml",
+            ['filetype' => $filetype]
+        );
     }
 }
