@@ -211,7 +211,7 @@ class File
 
     public function generateFileUploadForm($module, $filetype)
     {
-        echo $this->sm->get('ViewHelperManager')->get('Partial')->__invoke("layout/partial/file-upload-form.phtml", ['filetype' => $filetype]);
+        echo $this->sm->get('ViewHelperManager')->get('Partial')->__invoke("layout/default/partial/file-upload-form.phtml", ['filetype' => $filetype]);
         echo "<script>require(['" . $module . "']);</script>";
     }
 }

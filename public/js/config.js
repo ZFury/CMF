@@ -46,7 +46,8 @@ require.config({
         "audio": '../module/test/js/audio',
         "video": '../module/test/js/video',
         'redactorContent': '../redactor/redactorContent',
-        'conversion': '../module/media/js/conversion'
+        'conversion': '../module/media/js/conversion',
+        'form': './form'
     },
     shim: {
         angular: {

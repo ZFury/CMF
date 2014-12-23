@@ -19,6 +19,9 @@ use User\Service\Auth;
 class AuthController extends AbstractActionController
 {
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     */
     public function loginAction()
     {
         $data = $this->getRequest()->getPost();
@@ -49,6 +52,9 @@ class AuthController extends AbstractActionController
         return new ViewModel(array('form' => $form));
     }
 
+    /**
+     * @return \Zend\Http\Response
+     */
     public function logoutAction()
     {
         if ($this->identity()) {
@@ -59,6 +65,9 @@ class AuthController extends AbstractActionController
         return $this->redirect()->toRoute('user/default', ['controller' => 'auth', 'action' => 'login']);
     }
 
+    /**
+     *  twitterAction
+     */
     public function twitterAction()
     {
         $config = $this->getServiceLocator()->get('config')['twitter'];
@@ -77,6 +86,9 @@ class AuthController extends AbstractActionController
         $consumer->redirect();
     }
 
+    /**
+     * @return \Zend\Http\Response
+     */
     public function twitterCallbackAction()
     {
         $config = $this->getServiceLocator()->get('config')['twitter'];
@@ -168,6 +180,9 @@ class AuthController extends AbstractActionController
         }
     }
 
+    /**
+     *  facebookAction
+     */
     public function facebookAction()
     {
         $config = $this->getServiceLocator()->get('config')['facebook'];
@@ -182,6 +197,10 @@ class AuthController extends AbstractActionController
 
     }
 
+    /**
+     * @return \Zend\Http\Response
+     * @throws \Facebook\FacebookRequestException
+     */
     public function facebookCallbackAction()
     {
         $config = $this->getServiceLocator()->get('config')['facebook'];
@@ -258,5 +277,44 @@ class AuthController extends AbstractActionController
             return $this->redirect()->toRoute('user/default', ['controller' => 'profile']);
         }
 
+    }
+
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     * @throws \Exception
+     */
+    public function recoverPasswordAction()
+    {
+        if (!$confirm = $this->params('hash')) {
+            $this->flashMessenger()->addErrorMessage('Invalid code!');
+            return $this->redirect()->toRoute('home');
+        }
+
+        $form = new Form\SetNewPasswordForm('set-new-password', ['serviceLocator' => $this->getServiceLocator()]);
+
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->getRequest()->getPost());
+            if ($form->isValid()) {
+                $userService = new \User\Service\User($this->getServiceLocator());
+                $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+                $user = $objectManager
+                    ->getRepository('User\Entity\User')
+                    ->findOneBy(array('confirm' => $confirm));
+                if (!$user) {
+                    throw new \Exception('Invalid confirmation code');
+                }
+
+                try {
+                    $userService->changePassword($user, $form);
+                    $this->flashMessenger()->addSuccessMessage('You have successfully changed your password!');
+
+                    return $this->redirect()->toRoute('home');
+                } catch (\Exception $exception) {
+                    throw $exception;
+                }
+            }
+        }
+
+        return new ViewModel(array('form' => $form));
     }
 }
