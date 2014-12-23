@@ -40,6 +40,34 @@ class SignupController extends AbstractActionController
     }
 
     /**
+     * @return ViewModel
+     * @throws \Exception
+     */
+    public function forgotPasswordAction()
+    {
+        $form = new Form\ForgotPasswordForm('forgot-password', ['serviceLocator' => $this->getServiceLocator()]);
+
+        if ($this->getRequest()->isPost()) {
+            $form->setData($this->getRequest()->getPost());
+            if ($form->isValid()) {
+                $userService = new Service\User($this->getServiceLocator());
+                try {
+                    $userService->forgotPassword($form);
+                    $this->flashMessenger()->addSuccessMessage(
+                        'The confirmation email to reset your password is sent. Please check your email.'
+                    );
+
+                    return $this->redirect()->toRoute('home');
+                } catch (\Exception $exception) {
+                    throw $exception;
+                }
+            }
+        }
+
+        return new ViewModel(['form' => $form]);
+    }
+
+    /**
      * Confirm email
      *
      * @return \Zend\Http\Response
