@@ -25,9 +25,9 @@ class Audio extends File
      * @return string
      * @throws \Exception
      */
-    public static function audioPath($id, $ext, $from = \Media\Service\File::FROM_ROOT)//$onlyPath it's because we need another path when working with Original and when we are getting it
+    public static function audioPath($id, $ext, $from = File::FROM_ROOT)//$onlyPath it's because we need another path when working with Original and when we are getting it
     {
-        if ($from == \Media\Service\File::FROM_ROOT) {
+        if ($from == File::FROM_ROOT) {
             $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::AUDIOS_PATH;
         } else {
             $path = self::UPLOADS_PATH . self::AUDIOS_PATH;
@@ -36,7 +36,7 @@ class Audio extends File
         return self::buildFilePath($id, $path, $ext);
     }
 
-    public function convertAudioToMp3(\Media\Entity\File $audioEntity)
+    public function convertAudioToMp3(File $audioEntity)
     {
         //With libav avconv installed
         $oldLocation = $audioEntity->getLocation();

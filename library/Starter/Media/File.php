@@ -16,6 +16,7 @@ trait File
 
     public abstract function setLifecycleArgs(LifecycleEventArgs $args);
 
+    public abstract function getId();
     /**
      * Returns an array of ids
      *

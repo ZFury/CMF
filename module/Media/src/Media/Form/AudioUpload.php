@@ -8,11 +8,11 @@
 
 namespace Media\Form;
 
+use Media\Entity\File;
 use Zend\InputFilter;
-use Zend\Form\Form;
 use Zend\Form\Element;
 
-class AudioUpload extends Form
+class AudioUpload extends FileUpload
 {
     public function __construct($name = null, $options = array())
     {
@@ -26,5 +26,10 @@ class AudioUpload extends Form
         $file->setLabel('Audio Upload')
             ->setAttribute('id', 'audio');
         $this->add($file);
+    }
+
+    public function getFileType()
+    {
+        return File::AUDIO_FILETYPE;
     }
 }

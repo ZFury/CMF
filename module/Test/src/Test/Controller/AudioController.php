@@ -8,7 +8,6 @@
 
 namespace Test\Controller;
 
-use Media\Service\Audio;
 use Media\Service\File;
 use Zend\View\Model\JsonModel;
 use Zend\Mvc\Controller\AbstractActionController;

@@ -25,9 +25,9 @@ class Video extends File
      * @return string
      * @throws \Exception
      */
-    public static function videoPath($id, $ext, $from = \Media\Service\File::FROM_ROOT)//$onlyPath it's because we need another path when working with Original and when we are getting it
+    public static function videoPath($id, $ext, $from = File::FROM_ROOT)//$onlyPath it's because we need another path when working with Original and when we are getting it
     {
-        if ($from == \Media\Service\File::FROM_ROOT) {
+        if ($from == File::FROM_ROOT) {
             $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::VIDEOS_PATH;
         } else {
             $path = self::UPLOADS_PATH . self::VIDEOS_PATH;
@@ -36,7 +36,7 @@ class Video extends File
         return self::buildFilePath($id, $path, $ext);
     }
 
-    public function convertVideoToMp4(\Media\Entity\File $videoEntity, $bitrate = 300)
+    public function convertVideoToMp4(File $videoEntity, $bitrate = 300)
     {
         //With libav avconv installed
         $oldLocation = $videoEntity->getLocation();
