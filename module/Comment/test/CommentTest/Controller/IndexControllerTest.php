@@ -166,6 +166,7 @@ class IndexControllerTest extends ControllerTestCase
      * @param $commentText
      * @return \Comment\Entity\Comment
      * @throws \Doctrine\DBAL\ConnectionException
+     * @throws \Exception
      */
     public function createComment($commentText)
     {
@@ -181,12 +182,17 @@ class IndexControllerTest extends ControllerTestCase
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         $comment = new \Comment\Entity\Comment();
         $objectManager->getConnection()->beginTransaction();
-        $hydrator = new DoctrineHydrator($objectManager);
-        $hydrator->hydrate($commentData, $comment);
-        $objectManager->persist($comment);
-        $objectManager->flush();
-        $objectManager->getConnection()->commit();
-        $objectManager->clear();
+        try {
+            $hydrator = new DoctrineHydrator($objectManager);
+            $hydrator->hydrate($commentData, $comment);
+            $objectManager->persist($comment);
+            $objectManager->flush();
+            $objectManager->getConnection()->commit();
+            $objectManager->clear();
+        } catch (\Exception $e) {
+            $objectManager->getConnection()->rollback();
+            throw $e;
+        }
 
         return $comment;
     }
@@ -206,17 +212,22 @@ class IndexControllerTest extends ControllerTestCase
     }
 
     /**
-     * Truncate table comment
+     * @throws \Exception
      */
     public function dropComments()
     {
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         $sql = 'TRUNCATE TABLE comment';
         $objectManager->getConnection()->beginTransaction();
-        $connection = $objectManager->getConnection();
-        $stmt = $connection->prepare($sql);
-        $stmt->execute();
-        $objectManager->getConnection()->commit();
-        $objectManager->clear();
+        try {
+            $connection = $objectManager->getConnection();
+            $stmt = $connection->prepare($sql);
+            $stmt->execute();
+            $objectManager->getConnection()->commit();
+            $objectManager->clear();
+        } catch (\Exception $e) {
+            $objectManager->getConnection()->rollback();
+            throw $e;
+        }
     }
 }

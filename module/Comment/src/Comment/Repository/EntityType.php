@@ -20,6 +20,7 @@ class EntityType extends EntityRepository
             }
             $entities[$m->getName()] = $m->getName();
         }
+
         return $entities;
     }
 

@@ -30,20 +30,22 @@ class EntityType
     /**
      * @param $aliasEntity
      * @param $entityId
-     * @return bool
+     * @return \Comment\Entity\EntityType
+     * @throws \Exception
      */
-    public function get($aliasEntity, $entityId)
+    public function checkEntity($aliasEntity, $entityId)
     {
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
 
-        $match = $objectManager->getRepository('Comment\Entity\EntityType')->findOneBy(array('aliasEntity' => $aliasEntity));
-        if (count($match)==0) {
-            return false;
+        if (!$entityType = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType($aliasEntity)) {
+            throw new \Exception('Unknown entity type');
         }
-        $entity = $objectManager->getRepository($match->getEntity())->find($entityId);
+
+        $entity = $objectManager->getRepository($entityType->getEntity())->find($entityId);
         if (count($entity)==0) {
-            return false;
+            throw new \Exception('Unknown entity');
         }
-        return true;
+
+        return $entityType;
     }
 }

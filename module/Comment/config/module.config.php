@@ -76,6 +76,14 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
+            'Db\Adapter' => function ($serviceManager) {
+                $adapterFactory = new Zend\Db\Adapter\AdapterServiceFactory();
+                $adapter = $adapterFactory->createService($serviceManager);
+
+                \Zend\Db\TableGateway\Feature\GlobalAdapterFeature::setStaticAdapter($adapter);
+
+                return $adapter;
+            },
             'Comment\Service\EntityType' => function ($sm) {
                 return new Comment\Service\EntityType($sm);
             },

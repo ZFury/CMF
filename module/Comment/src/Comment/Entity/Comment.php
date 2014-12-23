@@ -41,7 +41,6 @@ class Comment extends EntityBase
     protected $comment;
 
     /**
-     * @Annotation\Required(true)
      * @ORM\ManyToOne(targetEntity="User\Entity\User")
      * @ORM\JoinColumn(name="userId", referencedColumnName="id", onDelete="cascade")
      */
@@ -49,7 +48,6 @@ class Comment extends EntityBase
 
     /**
      * @var int
-     *
      * @Annotation\Type("Zend\Form\Element\Text")
      * @ORM\Column(type="integer", options={"unsigned"=true})
      */
@@ -95,7 +93,7 @@ class Comment extends EntityBase
      * @param LifecycleEventArgs $args
      * @throws \Exception
      */
-    public function deleteChild(LifecycleEventArgs $args)
+    public function deleteChildren(LifecycleEventArgs $args)
     {
         $objectManager = $args->getObjectManager();
         $entityType = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment');

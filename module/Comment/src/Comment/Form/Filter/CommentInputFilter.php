@@ -4,9 +4,8 @@ namespace Comment\Form\Filter;
 
 use Zend\InputFilter\InputFilter;
 use Zend\ServiceManager\ServiceManager;
-use DoctrineModule\Validator\NoObjectExists;
 
-class CreateInputFilter extends InputFilter
+class CommentInputFilter extends InputFilter
 {
     /** @var  ServiceManager */
     protected $sm;
@@ -17,18 +16,18 @@ class CreateInputFilter extends InputFilter
     public function __construct(ServiceManager $sm)
     {
         $this->sm = $sm;
-        $this->aliasEntity();
         $this->entity();
-        $this->description();
+        $this->comment();
+        $this->entityId();
     }
 
     /**
      * @return $this
      */
-    protected function aliasEntity()
+    protected function entity()
     {
         $this->add(array(
-            'name' => 'aliasEntity',
+            'name' => 'entity',
             'required' => true,
             'filters' => array(
                 array('name' => 'StripTags'),
@@ -51,10 +50,10 @@ class CreateInputFilter extends InputFilter
     /**
      * @return $this
      */
-    protected function entity()
+    protected function comment()
     {
         $this->add(array(
-            'name' => 'entity',
+            'name' => 'comment',
             'required' => true,
             'filters' => array(
                 array('name' => 'StripTags'),
@@ -68,25 +67,14 @@ class CreateInputFilter extends InputFilter
     /**
      * @return $this
      */
-    protected function description()
+    protected function entityId()
     {
         $this->add(array(
-            'name' => 'description',
+            'name' => 'entityId',
             'required' => true,
             'filters' => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
+                array('name' => 'Int'),
             ),
-            'validators' => array(
-                array(
-                    'name' => 'StringLength',
-                    'options' => array(
-                        'min' => 5,
-                        'max' => 50,
-                    ),
-                ),
-            ),
-
         ));
 
         return $this;

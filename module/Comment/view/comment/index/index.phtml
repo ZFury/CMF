@@ -1,8 +1,8 @@
 <?php
 $title = 'Comments';
 $this->headTitle($title);
-if(isset($comments)) {
-    echo $this->comment('comment/index/partial.phtml', $comments);
+if (isset($comments)) {
+    echo $this->comment('comment/index/Comment/partial.phtml', $comments);
 }
 ?>
 <script>

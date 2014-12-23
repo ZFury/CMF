@@ -6,6 +6,7 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Zend\Http\Response;
 use Zend\Stdlib;
 use Starter\Test\Controller\ControllerTestCase;
+use \Comment\Entity\EntityType;
 
 /**
  * Class ManagementControllerTest
@@ -150,17 +151,23 @@ class ManagementControllerTest extends ControllerTestCase
     /**
      * @param $entityData
      * @return \Comment\Entity\EntityType
+     * @throws \Exception
      */
     public function createEntityType($entityData)
     {
-        $entity = new \Comment\Entity\EntityType();
+        $entity = new EntityType();
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         $objectManager->getConnection()->beginTransaction();
-        $hydrator = new DoctrineHydrator($objectManager);
-        $hydrator->hydrate($entityData, $entity);
-        $objectManager->persist($entity);
-        $objectManager->flush();
-        $objectManager->getConnection()->commit();
+        try {
+            $hydrator = new DoctrineHydrator($objectManager);
+            $hydrator->hydrate($entityData, $entity);
+            $objectManager->persist($entity);
+            $objectManager->flush();
+            $objectManager->getConnection()->commit();
+        } catch (\Exception $e) {
+            $objectManager->getConnection()->rollback();
+            throw $e;
+        }
 
         return $entity;
     }
@@ -168,7 +175,7 @@ class ManagementControllerTest extends ControllerTestCase
     /**
      * @param \Comment\Entity\EntityType $detachedEntity
      */
-    public function removeEntityType(\Comment\Entity\EntityType $detachedEntity)
+    public function removeEntityType(EntityType $detachedEntity)
     {
         /**
          * @var \Doctrine\ORM\EntityManager $objectManager

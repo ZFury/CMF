@@ -35,25 +35,25 @@ class ManagementController extends AbstractCrudController
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-                $entityValid = new Validators\NoObjectExists($objectManager->getRepository('Comment\Entity\EntityType'));
-                if (!$entityValid->isValid(['aliasEntity' => $form->get('aliasEntity')->getValue()], $this->params()->fromRoute('id'))) {
-                    $form->get('aliasEntity')->setMessages(
-                        array(
-                            'errorMessageKey' => 'AliasEntity must be unique in its category!'
-                        )
-                    );
-                    $viewModel = $this->getViewModel();
-                    return $viewModel->setVariables(['form' => $form]);
-                }
-                if (!$entityValid->isValid(['entity' => $form->get('entity')->getValue()], $this->params()->fromRoute('id'))) {
-                    $form->get('entity')->setMessages(
-                        array(
-                            'errorMessageKey' => 'Entity must be unique in its category!'
-                        )
-                    );
-                    $viewModel = $this->getViewModel();
-                    return $viewModel->setVariables(['form' => $form]);
-                }
+//                $entityValid = new Validators\NoObjectExists($objectManager->getRepository('Comment\Entity\EntityType'));
+//                if (!$entityValid->isValid(['aliasEntity' => $form->get('aliasEntity')->getValue()], $this->params()->fromRoute('id'))) {
+//                    $form->get('aliasEntity')->setMessages(
+//                        array(
+//                            'errorMessageKey' => 'AliasEntity must be unique in its category!'
+//                        )
+//                    );
+//                    $viewModel = $this->getViewModel();
+//                    return $viewModel->setVariables(['form' => $form]);
+//                }
+//                if (!$entityValid->isValid(['entity' => $form->get('entity')->getValue()], $this->params()->fromRoute('id'))) {
+//                    $form->get('entity')->setMessages(
+//                        array(
+//                            'errorMessageKey' => 'Entity must be unique in its category!'
+//                        )
+//                    );
+//                    $viewModel = $this->getViewModel();
+//                    return $viewModel->setVariables(['form' => $form]);
+//                }
 
                 $entity = $this->getEntity();
                 $hydrator = new DoctrineHydrator($objectManager);
@@ -83,25 +83,25 @@ class ManagementController extends AbstractCrudController
             $form->setData($this->getRequest()->getPost());
            // $form->setBindOnValidate(Form::BIND_MANUAL);
             if ($form->isValid()) {
-                $entityValid = new Validators\NoObjectExists($objectManager->getRepository('Comment\Entity\EntityType'));
-                if (!$entityValid->isValid(['aliasEntity' => $form->get('aliasEntity')->getValue()], $this->params()->fromRoute('id'))) {
-                    $form->get('aliasEntity')->setMessages(
-                        array(
-                            'errorMessageKey' => 'AliasEntity must be unique in its category!'
-                        )
-                    );
-                    $viewModel = $this->getViewModel();
-                    return $viewModel->setVariables(['form' => $form]);
-                }
-                if (!$entityValid->isValid(['entity' => $form->get('entity')->getValue()], $this->params()->fromRoute('id'))) {
-                    $form->get('entity')->setMessages(
-                        array(
-                            'errorMessageKey' => 'Entity must be unique in its category!'
-                        )
-                    );
-                    $viewModel = $this->getViewModel();
-                    return $viewModel->setVariables(['form' => $form]);
-                }
+//                $entityValid = new Validators\NoObjectExists($objectManager->getRepository('Comment\Entity\EntityType'));
+//                if (!$entityValid->isValid(['aliasEntity' => $form->get('aliasEntity')->getValue()], $this->params()->fromRoute('id'))) {
+//                    $form->get('aliasEntity')->setMessages(
+//                        array(
+//                            'errorMessageKey' => 'AliasEntity must be unique in its category!'
+//                        )
+//                    );
+//                    $viewModel = $this->getViewModel();
+//                    return $viewModel->setVariables(['form' => $form]);
+//                }
+//                if (!$entityValid->isValid(['entity' => $form->get('entity')->getValue()], $this->params()->fromRoute('id'))) {
+//                    $form->get('entity')->setMessages(
+//                        array(
+//                            'errorMessageKey' => 'Entity must be unique in its category!'
+//                        )
+//                    );
+//                    $viewModel = $this->getViewModel();
+//                    return $viewModel->setVariables(['form' => $form]);
+//                }
 
                     $objectManager->persist($entity);
                     $objectManager->flush();
@@ -129,7 +129,7 @@ class ManagementController extends AbstractCrudController
         $select = $form->getElements()['entity'];
         $select->setValueOptions($options);
         $select->setOptions(array('empty_option' => 'Please choose entity'));
-        $form->setInputFilter(new Filter\CreateInputFilter($this->getServiceLocator()));
+        $form->setInputFilter(new Filter\EntityTypeInputFilter($this->getServiceLocator()));
         return $form;
     }
 
@@ -148,7 +148,7 @@ class ManagementController extends AbstractCrudController
         $form->setHydrator(new DoctrineHydrator($entityManager));
         $form->bind($entityType);
 
-        $form->setInputFilter(new Filter\CreateInputFilter($this->getServiceLocator()));
+        $form->setInputFilter(new Filter\EntityTypeInputFilter($this->getServiceLocator()));
 
         return $form;
     }

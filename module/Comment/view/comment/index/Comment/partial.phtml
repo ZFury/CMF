@@ -19,8 +19,8 @@
                    class="add-comment"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New comment</a>
             </p>
             <?php
-            if (count($this->childs) > 0) : ?>
-                <?php echo $this->comment('comment/index/partial.phtml', $this->childs); ?>
+            if (count($this->children) > 0) : ?>
+                <?php echo $this->comment('comment/index/partial.phtml', $this->children); ?>
             <?php endif; ?>
         </div>
     </li>

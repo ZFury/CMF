@@ -18,7 +18,6 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
-
         // for POST data
         if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost()->toArray();
@@ -27,17 +26,17 @@ class IndexController extends AbstractActionController
         // for GET (or query string) data
         if ($this->getRequest()->getQuery()->entity && $entityId = intval($this->getRequest()->getQuery()->id)) {
             $data = array();
-            $data['entityType'] = $this->getRequest()->getQuery()->entity;
+            $data['entity'] = $this->getRequest()->getQuery()->entity;
             $data['entityId'] = $this->getRequest()->getQuery()->id;
         }
 
-        if (!isset($data['entityType']) || !isset($data['entityId'])) {
+        if (!isset($data['entity']) || !isset($data['entityId'])) {
             return $this->notFoundAction();
         }
 
         $comments = $this->getServiceLocator()
             ->get('Comment\Service\Comment')
-            ->getCommentsByEntityId($data);
+            ->lisComments($data);
 
         $viewModel = new ViewModel(array('comments' => $comments));
 
@@ -60,7 +59,7 @@ class IndexController extends AbstractActionController
 
         $result = $this->getServiceLocator()
             ->get('Comment\Service\Comment')
-            ->deleteCommentById($id);
+            ->delete($id);
 
         if ($result) {
             $this->flashMessenger()->addSuccessMessage('Comment deleted');
@@ -81,19 +80,22 @@ class IndexController extends AbstractActionController
             throw new \Exception('Bad Request');
         }
 
+        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $comment = $objectManager->getRepository('\Comment\Entity\Comment')->findOneBy(['id' => $id]);
+
         $form = $this->getServiceLocator()
-            ->get('Comment\Service\Comment')->createEditForm($id);
+            ->get('Comment\Service\Comment')->createForm($comment);
 
         if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost();
             $data = $data->toArray();
 
-            $comment = $this->getServiceLocator()
+            $commentEdited = $this->getServiceLocator()
                 ->get('Comment\Service\Comment')
-                ->editCommentById($form, $data);
+                ->edit($form, $comment, $data);
 
             $flashMessenger = new FlashMessenger();
-            if ($comment) {
+            if ($commentEdited) {
                 $flashMessenger->addSuccessMessage('Comment edited');
                 $url = $this->getRequest()->getHeader('Referer')->getUri();
                 return $this->redirect()->toUrl($url);
@@ -119,22 +121,23 @@ class IndexController extends AbstractActionController
         $form = $this->getServiceLocator()
             ->get('Comment\Service\Comment')->createForm();
 
+        // for POST data
         if ($this->getRequest()->isPost()) {
-            $data = $this->getRequest()->getPost();  // for POST data
+            $data = $this->getRequest()->getPost();
 
             // for GET (or query string) data
             if ($this->getRequest()->getQuery()->entity && $entityId = intval($this->getRequest()->getQuery()->id)) {
-                $data->set('entityType', $this->getRequest()->getQuery()->entity);
+                $data->set('entity', $this->getRequest()->getQuery()->entity);
                 $data->set('entityId', $this->getRequest()->getQuery()->id);
             }
 
             $data = $data->toArray();
-            if (!isset($data['entityType']) || !isset($data['entityId'])) {
+            if (!isset($data['entity']) || !isset($data['entityId'])) {
                 return $this->notFoundAction();
             }
             $comment = $this->getServiceLocator()
                 ->get('Comment\Service\Comment')
-                ->addComment($form, $data);
+                ->add($form, $data);
 
             $flashMessenger = new FlashMessenger();
             if ($comment) {
