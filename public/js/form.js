@@ -5,7 +5,6 @@ define(['jquery', 'tmpl',
     'iframe-transport',
     'fileupload-ui'], function ($) {
     var actionUrl;
-    var counter = 1;
     $('body')
         .on('click.ajax', '.dialog', function (event) {
             $('#formModalLabel').html($(this).data('action'));
@@ -16,42 +15,7 @@ define(['jquery', 'tmpl',
                 dataType: 'html',
                 success: function (data) {
                     $('#popupBody').html(data);
-                },
-                complete: function () {
-                    if ($('#fileupload').length != 0) {
-                        if (counter > 1) {
-                            'use strict';
-                            var idString = '';
-                            if (id)
-                                idString = '/' + id;
-                            // Initialize the jQuery File Upload widget:
-                            $('#fileupload').fileupload({
-                                url: 'categories/management/start-image-upload' + idString
-                            });
-                            // Enable iframe cross-domain access via redirect option:
-                            $('#fileupload').fileupload(
-                                'option',
-                                'redirect',
-                                window.location.href.replace(
-                                    /\/[^\/]*$/,
-                                    '/cors/result.html?%s'
-                                )
-                            );
-                            // Load existing files:
-                            $('#fileupload').addClass('fileupload-processing');
-                            $.ajax({
-                                url: $('#fileupload').fileupload('option', 'url'),
-                                dataType: 'json',
-                                context: $('#fileupload')[0]
-                            }).always(function () {
-                                $(this).removeClass('fileupload-processing');
-                            }).done(function (result) {
-                                $(this).fileupload('option', 'done')
-                                    .call(this, $.Event('done'), {result: result});
-                            });
-                        }
-                        counter++;
-                    }
+                    $('body').trigger('modal.loaded', []);
                 }
             });
             event.preventDefault();

@@ -16,33 +16,26 @@ define([
     'iframe-transport',
     'fileupload-ui'
 ], function ($) {
-    $(function () {
-        'use strict';
-        var id;
-        var idString = '';
-        if (id = $('#entityId').val())
-            idString = '/' + id;
+    'use strict';
+    $(function() {
+        if ($('#fileupload').length) {
+            init();
+        }
+        $('body').on('modal.loaded', function() {
+            init();
+        });
+    });
+
+    function init() {
+        console.log('aaaa');
+        var id = $('#entityId').val();
         // Initialize the jQuery File Upload widget:
         $('#fileupload').fileupload({
-            // Uncomment the following to send cross-domain cookies:
-            //xhrFields: {withCredentials: true},
-            url: 'categories/management/start-image-upload' + idString
+            url: 'categories/management/start-image-upload' + (id ? "/" + id : "")
         });
-
-        // Enable iframe cross-domain access via redirect option:
-        $('#fileupload').fileupload(
-            'option',
-            'redirect',
-            window.location.href.replace(
-                /\/[^\/]*$/,
-                '/cors/result.html?%s'
-            )
-        );
         // Load existing files:
         $('#fileupload').addClass('fileupload-processing');
         $.ajax({
-            // Uncomment the following to send cross-domain cookies:
-            //xhrFields: {withCredentials: true},
             url: $('#fileupload').fileupload('option', 'url'),
             dataType: 'json',
             context: $('#fileupload')[0]
@@ -52,6 +45,5 @@ define([
             $(this).fileupload('option', 'done')
                 .call(this, $.Event('done'), {result: result});
         });
-
-    })
+    };
 });
