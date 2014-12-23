@@ -50,7 +50,7 @@ class VideoController extends AbstractActionController implements VideoUploaderI
                 $data = $form->getData();
                 $video = $fileService->createFile($data, $this->identity()->getUser());
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
-                $dataForJson = $blueimpService->displayUploadedFile($video, $this->getDeleteVideoUrl($video));
+                $dataForJson = $blueimpService->displayUploadedFile($video, '/test/video/delete-video/');
             } else {
                 $messages = $form->getMessages();
                 $messages = array_shift($messages);
@@ -66,7 +66,7 @@ class VideoController extends AbstractActionController implements VideoUploaderI
         } else {
             $dataForJson = $blueimpService->displayUploadedFiles(
                 $user->getVideos(),
-                $this->getDeleteVideoUrls($user->getVideos())
+                '/test/video/delete-video/'
             );
         }
 
@@ -79,29 +79,5 @@ class VideoController extends AbstractActionController implements VideoUploaderI
             ->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
         return $this->getServiceLocator()->get('Media\Service\Blueimp')
             ->deleteFileJson($this->getEvent()->getRouteMatch()->getParam('id'));
-    }
-
-    public function getDeleteVideoUrl($video)
-    {
-        $url = $this->serviceLocator->get('ViewHelperManager')->get('url');
-        $fileService = $this->getServiceLocator()->get('Media\Service\File');
-        return $fileService->getFullUrl($url('test/default', [
-            'controller' => 'video',
-            'action' => 'delete-video',
-            'id' => $video->getId()
-        ]));
-    }
-
-    public function getDeleteVideoUrls($videos)
-    {
-        $deleteUrls = [];
-        foreach ($videos as $video) {
-            array_push($deleteUrls, [
-                'id' => $video->getId(),
-                'deleteUrl' => $this->getDeleteVideoUrl($video)
-            ]);
-        }
-
-        return $deleteUrls;
     }
 }

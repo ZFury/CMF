@@ -49,7 +49,7 @@ class AudioController extends AbstractActionController implements AudioUploaderI
                 $data = $form->getData();
                 $audio = $fileService->createFile($data, $this->identity()->getUser());
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
-                $dataForJson = $blueimpService->displayUploadedFile($audio, $this->getDeleteAudioUrl($audio));
+                $dataForJson = $blueimpService->displayUploadedFile($audio, '/test/audio/delete-audio/');
             } else {
                 $messages = $form->getMessages();
                 $messages = array_shift($messages);
@@ -66,7 +66,7 @@ class AudioController extends AbstractActionController implements AudioUploaderI
         } else {
             $dataForJson = $blueimpService->displayUploadedFiles(
                 $user->getAudios(),
-                $this->getDeleteAudioUrls($user->getAudios())
+                '/test/audio/delete-audio/'
             );
         }
 
@@ -79,29 +79,5 @@ class AudioController extends AbstractActionController implements AudioUploaderI
             ->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
         return $this->getServiceLocator()->get('Media\Service\Blueimp')
             ->deleteFileJson($this->getEvent()->getRouteMatch()->getParam('id'));
-    }
-
-    public function getDeleteAudioUrl($audio)
-    {
-        $url = $this->serviceLocator->get('ViewHelperManager')->get('url');
-        $fileService = $this->getServiceLocator()->get('Media\Service\File');
-        return $fileService->getFullUrl($url('test/default', [
-            'controller' => 'audio',
-            'action' => 'delete-audio',
-            'id' => $audio->getId()
-        ]));
-    }
-
-    public function getDeleteAudioUrls($audios)
-    {
-        $deleteUrls = [];
-        foreach ($audios as $audio) {
-            array_push($deleteUrls, [
-                'id' => $audio->getId(),
-                'deleteUrl' => $this->getDeleteAudioUrl($audio)
-            ]);
-        }
-
-        return $deleteUrls;
     }
 }
