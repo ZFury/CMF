@@ -8,6 +8,7 @@
 namespace Media\Service;
 
 use Zend\View\Model\JsonModel;
+use Media\Entity\File;
 
 class Blueimp
 {
@@ -19,21 +20,21 @@ class Blueimp
     }
 
     /**
-     * @param $file
+     * @param File $file
      * @param $deleteUrl
      * @return array
      */
-    public function getFileJson($file, $deleteUrl)
+    public function getFileJson(File $file, $deleteUrl)
     {
         $fileService = $this->sm->get('Media\Service\File');
         $thumbnailUrl = null;
         $type = null;
         switch ($file->getType()) {
-            case \Media\Entity\File::IMAGE_FILETYPE:
+            case File::IMAGE_FILETYPE:
                 $thumbnailUrl = $fileService->getFullUrl($file->getThumb());
                 $type = 'image/jpeg';
                 break;
-            case \Media\Entity\File::AUDIO_FILETYPE:
+            case File::AUDIO_FILETYPE:
                 $thumbnailUrl = $fileService->getFullUrl($file->getUrlPart());
                 $type = 'audio/mp3';
                 break;
@@ -52,19 +53,18 @@ class Blueimp
     }
 
     /**
-     * @param $file
-     * @param $deleteUrl
+     * @param File $file
+     * @param string $deleteUrl
      * @return array
      */
-    public function displayUploadedFile($file, $deleteUrl)
+    public function displayUploadedFile(File $file, $deleteUrl)
     {
         return ['files' => [ $this->getFileJson($file, $deleteUrl) ]];
     }
 
-
     /**
-     * @param $files
-     * @param $deleteUrls
+     * @param array $files
+     * @param array $deleteUrls
      * @return array
      */
     public function displayUploadedFiles($files, $deleteUrls)
@@ -82,13 +82,13 @@ class Blueimp
     }
 
     /**
-     * @param $fileId
+     * @param integer $fileId
      * @return JsonModel
      */
     public function deleteFileJson($fileId)
     {
         return new JsonModel([
-            'files' =>[ $fileId => 'true' ]
+            'files' => []
         ]);
     }
 }

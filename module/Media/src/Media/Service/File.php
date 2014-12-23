@@ -9,6 +9,7 @@
 namespace Media\Service;
 
 use Media\Entity\ObjectFile;
+use Media\Entity\File as FileEntity;
 use Zend\Filter\File\RenameUpload;
 
 class File
@@ -160,7 +161,7 @@ class File
     public function writeFileEntity($data)
     {
         //Creating new image to get ID for building its path
-        $file = new \Media\Entity\File();
+        $file = new FileEntity();
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($file);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
         //Building path and creating directory. Then - moving
@@ -168,24 +169,24 @@ class File
         $destination = null;
         $type = null;
         switch (array_keys($data)[0]) {
-            case \Media\Entity\File::AUDIO_FILETYPE:
+            case FileEntity::AUDIO_FILETYPE:
                 $ext = $this->getExt($data[\Media\Entity\File::AUDIO_FILETYPE]['name']);
                 $destination = \Media\Service\Audio::audioPath($file->getId(), $ext);
-                $type = \Media\Entity\File::AUDIO_FILETYPE;
-                $this->moveFile($destination, $data[\Media\Entity\File::AUDIO_FILETYPE]);
+                $type = FileEntity::AUDIO_FILETYPE;
+                $this->moveFile($destination, $data[FileEntity::AUDIO_FILETYPE]);
                 break;
-            case \Media\Entity\File::VIDEO_FILETYPE:
+            case FileEntity::VIDEO_FILETYPE:
                 $ext = $this->getExt($data[\Media\Entity\File::VIDEO_FILETYPE]['name']);
-                $destination = \Media\Service\Video::videoPath($file->getId(), $ext);
-                $type = \Media\Entity\File::VIDEO_FILETYPE;
-                $this->moveFile($destination, $data[\Media\Entity\File::VIDEO_FILETYPE]);
+                $destination = Video::videoPath($file->getId(), $ext);
+                $type = FileEntity::VIDEO_FILETYPE;
+                $this->moveFile($destination, $data[FileEntity::VIDEO_FILETYPE]);
                 break;
-            case \Media\Entity\File::IMAGE_FILETYPE:
+            case FileEntity::IMAGE_FILETYPE:
                 $ext = $this->getExt($data[\Media\Entity\File::IMAGE_FILETYPE]['name']);
-                $destination = \Media\Service\Image::imgPath(\Media\Service\Image::ORIGINAL, $file->getId(), $ext);
+                $destination = \Media\Service\Image::imgPath(Image::ORIGINAL, $file->getId(), $ext);
 
                 $type = \Media\Entity\File::IMAGE_FILETYPE;
-                $this->moveFile($destination, $data[\Media\Entity\File::IMAGE_FILETYPE]);
+                $this->moveFile($destination, $data[FileEntity::IMAGE_FILETYPE]);
                 break;
             default:
                 break;

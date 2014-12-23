@@ -1,0 +1,62 @@
+<?php
+$title = 'Database connection';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<?php
+$configsForm->setAttribute('action', $this->url('install', ['controller' => 'index', 'action' => 'database']));
+$configsForm->prepare();
+?>
+
+<form role="form" class="form-horizontal" method="post">
+
+    <div class="form-group">
+        <label for="inputHost" class="col-md-2 control-label"><?= $configsForm->get('host')->getLabel(); ?></label>
+        <div class="col-md-4">
+            <input type="text" class="form-control" id="inputHost" name="<?= $configsForm->get('host')->getName(); ?>" value="<?= $configsForm->get('host')->getValue(); ?>" placeholder="<?= $configsForm->get('host')->getLabel(); ?>">
+            <?= $this->formElementErrors($configsForm->get('host')); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="inputPort" class="col-md-2 control-label"><?= $configsForm->get('port')->getLabel(); ?></label>
+        <div class="col-md-4">
+            <input type="text" class="form-control" id="inputPort" name="<?= $configsForm->get('port')->getName(); ?>" value="<?= $configsForm->get('port')->getValue(); ?>" placeholder="<?= $configsForm->get('port')->getLabel(); ?>">
+            <?= $this->formElementErrors($configsForm->get('port')); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="inputUser" class="col-md-2 control-label"><?= $configsForm->get('user')->getLabel(); ?></label>
+        <div class="col-md-4">
+            <input type="text" class="form-control" id="inputUser" name="<?= $configsForm->get('user')->getName(); ?>" value="<?= $configsForm->get('user')->getValue(); ?>" placeholder="<?= $configsForm->get('user')->getLabel(); ?>">
+            <?= $this->formElementErrors($configsForm->get('user')); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="inputPassword" class="col-md-2 control-label"><?= $configsForm->get('password')->getLabel(); ?></label>
+        <div class="col-md-4">
+            <input type="password" class="form-control" id="inputPassword" name="<?= $configsForm->get('password')->getName(); ?>" value="<?= $configsForm->get('password')->getValue(); ?>" placeholder="<?= $configsForm->get('password')->getLabel(); ?>">
+            <?= $this->formElementErrors($configsForm->get('password')); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="inputDbName" class="col-md-2 control-label"><?= $configsForm->get('dbname')->getLabel(); ?></label>
+        <div class="col-md-4">
+            <input type="text" class="form-control" id="inputDbName" name="<?= $configsForm->get('dbname')->getName(); ?>" value="<?= $configsForm->get('dbname')->getValue(); ?>" placeholder="<?= $configsForm->get('dbname')->getLabel(); ?>">
+            <?= $this->formElementErrors($configsForm->get('dbname')); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-sm-3">
+            <button class="btn btn-primary"><a href="<?=$this->url('install', ['controller' => 'index', 'action' => 'requirements'])?>">Previous</a></button>
+        </div>
+        <div class="col-sm-2">
+            <button class="btn btn-primary" type="submit">Next</button>
+        </div>
+    </div>
+
+</form>

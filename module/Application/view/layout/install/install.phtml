@@ -1,27 +1,19 @@
-<?php echo $this->doctype(); ?>
+<?php echo $this->doctype();?>
 <html lang="en">
 <head>
     <?= $this->partial('layout/default/partial/header.phtml'); ?>
     <!-- CSS -->
-    <link href="module/dashboard/css/sb-admin.css" rel="stylesheet">
+    <link href="module/install/css/style.css" rel="stylesheet">
 </head>
-<body class="dashboard-body">
-<div id="wrapper">
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <?= $this->partial('layout/dashboard/partial/nav-bar.phtml') ?>
-    </nav>
+<body class="install-body">
+    <?= $this->partial('layout/install/partial/progress-bar.phtml') ?>
     <div id="page-wrapper">
         <?= $this->partial('layout/default/partial/flashmessenger.phtml') ?>
-        <h1 class="page-header">
-            Dashboard
-        </h1>
-        <div class="container-fluid">
-            <?php // echo $this->partial('layout/partial/dashboard/breadcrumbs.phtml)' ?>
+        <div class="container">
             <?= $this->content ?>
+            <?= $this->partial('layout/default/partial/footer.phtml') ?>
         </div>
-        <?= $this->partial('layout/default/partial/footer.phtml') ?>
     </div>
     <?php echo $this->inlineScript() ?>
-</div>
 </body>
 </html>
