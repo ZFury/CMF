@@ -14,14 +14,13 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Media\Form\ImageUpload;
 use Media\Form\Filter\ImageUploadInputFilter;
-use Media\Interfce\ImageUploaderInterface;
 
 class ImageController extends AbstractActionController
 {
     public function uploadImageAction()
     {
         $imageService = $this->getServiceLocator()->get('Media\Service\File');
-        return new ViewModel(['imageService' => $imageService, 'module'=> 'image', 'type' => File::IMAGE_FILETYPE]);
+        return new ViewModel(['imageService' => $imageService, 'type' => File::IMAGE_FILETYPE]);
     }
 
     /**

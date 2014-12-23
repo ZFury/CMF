@@ -15,14 +15,13 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Media\Form\VideoUpload;
 use Media\Form\Filter\VideoUploadInputFilter;
-use Media\Interfce\VideoUploaderInterface;
 
-class VideoController extends AbstractActionController implements VideoUploaderInterface
+class VideoController extends AbstractActionController
 {
     public function uploadVideoAction()
     {
         $fileService = new File($this->getServiceLocator());
-        return new ViewModel(['fileService' => $fileService, 'module'=> 'video', 'type' => \Media\Entity\File::VIDEO_FILETYPE]);
+        return new ViewModel(['fileService' => $fileService, 'type' => \Media\Entity\File::VIDEO_FILETYPE]);
     }
 
     /**
@@ -47,8 +46,7 @@ class VideoController extends AbstractActionController implements VideoUploaderI
             $form->setData($post);
 
             if ($form->isValid()) {
-                $data = $form->getData();
-                $video = $fileService->createFile($data, $this->identity()->getUser());
+                $video = $fileService->createFile($form, $this->identity()->getUser());
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
                 $dataForJson = $blueimpService->displayUploadedFile($video, '/test/video/delete-video/');
             } else {

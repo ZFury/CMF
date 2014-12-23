@@ -14,14 +14,13 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Media\Form\AudioUpload;
 use Media\Form\Filter\AudioUploadInputFilter;
-use Media\Interfce\AudioUploaderInterface;
 
-class AudioController extends AbstractActionController implements AudioUploaderInterface
+class AudioController extends AbstractActionController
 {
     public function uploadAudioAction()
     {
         $fileService = new File($this->getServiceLocator());
-        return new ViewModel(['fileService' => $fileService, 'module'=> 'audio', 'type' => \Media\Entity\File::AUDIO_FILETYPE]);
+        return new ViewModel(['fileService' => $fileService, 'type' => \Media\Entity\File::AUDIO_FILETYPE]);
     }
 
     /**
@@ -46,8 +45,7 @@ class AudioController extends AbstractActionController implements AudioUploaderI
             $form->setData($post);
 
             if ($form->isValid()) {
-                $data = $form->getData();
-                $audio = $fileService->createFile($data, $this->identity()->getUser());
+                $audio = $fileService->createFile($form, $this->identity()->getUser());
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
                 $dataForJson = $blueimpService->displayUploadedFile($audio, '/test/audio/delete-audio/');
             } else {
