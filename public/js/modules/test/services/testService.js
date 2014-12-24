@@ -43,6 +43,21 @@
             };
 
             /**
+             * Get test
+             * @param callback
+             *
+             * Created by Maxim Mandryka maxim.mandryka@nixsolutions.com
+             */
+            testFactory.getTest = function(/*function*/ callback) {
+                var params = {
+                    url: this.apiUrl + 'management/edit-with-angular',
+                    method: "GET",
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                };
+                ajaxRequest(params, callback);
+            };
+
+            /**
              * Base function to send ajax request
              * @param params
              * @param callback

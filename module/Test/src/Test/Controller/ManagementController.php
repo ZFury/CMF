@@ -5,6 +5,7 @@ namespace Test\Controller;
 use Starter\Mvc\Controller\AbstractCrudController;
 use Test\Form;
 use Test\Entity;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 
@@ -32,9 +33,26 @@ class ManagementController extends AbstractCrudController
         return new ViewModel(['data' => $repository->findAll()]);
     }
 
+    public function angularAction()
+    {
+        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $repository = $objectManager->getRepository('Test\Entity\Test');
+        return new ViewModel(['data' => $repository->findAll()]);
+    }
+
+
+
     public function createWithAngularAction()
     {
         return new ViewModel();
+    }
+
+    public function editWithAngularAction()
+    {
+        $id = $this->params()->fromRoute('id');
+//        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+//        $model = $objectManager->getRepository(get_class($this->getEntity()))->find($id);
+        return new ViewModel(['id' => $id]);
     }
 
     public function testAction()
