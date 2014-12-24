@@ -7,8 +7,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 abstract class AbstractGrid
 {
-    const ORDER_ASC = 'ASC';
-    const ORDER_DESC = 'DESC';
+    const ORDER_ASC = 'asc';
+    const ORDER_DESC = 'desc';
 
     /**
      *
@@ -25,31 +25,57 @@ abstract class AbstractGrid
      * Params array
      * @var array
      */
-    protected $params = array();
+    protected $params = [];
 
     /**
      * Page
      * @var int
      */
-    protected $page;
+    protected $page = 1;
 
     /**
      * Limit per page
      * @var int
      */
-    protected $limit;
+    protected $limit = 10;
 
     /**
-     * Orders
-     * @var array
+     * Default limit per page
+     * @var int
      */
-    protected $orders = array();
+    protected $defaultLimit = 10;
 
     /**
-     * Filters
+     * Order
+     * [
+     *  'field' => 'order'
+     * ]
      * @var array
      */
-    protected $filters = array();
+    protected $order = [];
+
+    protected $allowedOrders = [];
+
+    /**
+     * Filter
+     * @var array
+     */
+    protected $filter = [];
+
+    protected $allowedFilters = [];
+
+    /**
+     * Alias of the entity in Doctrine Query
+     * @var string
+     */
+    protected $entityAlias = '';
+
+    /**
+     * Current grid request url
+     *
+     * @var string
+     */
+    private $url;
 
     /**
      * Service locator
@@ -60,42 +86,90 @@ abstract class AbstractGrid
     /**
      * __construct
      *
-     * @param ServiceLocatorInterface $serviseManager
+     * @param ServiceLocatorInterface $serviceManager
      * @return AbstractGrid
      */
-    public function __construct(ServiceLocatorInterface $serviseManager)
+    public function __construct(ServiceLocatorInterface $serviceManager)
     {
-        $this->sm = $serviseManager;
+        $this->sm = $serviceManager;
+        $this->init();
+        $this->processRequest();
+        $this->process();
     }
 
     /**
      * Abstract function init
      */
-    abstract public function init();
+    abstract protected function init();
 
     /**
-     *  Get data
+     * Get data
      *
      * @return array
      */
     public function getData()
     {
+        return $this->data;
+    }
+
+    protected function processRequest()
+    {
+        /** @var \Zend\Http\PhpEnvironment\Request $request */
+        $request = $this->sm->get('Request');
+        $url = explode('?', $request->getRequestUri());
+        $this->url = $url[0];
+        $params = $request->getQuery();
+        if ($params->get('page')) {
+            //set page
+            $this->setPage((int)$params->get('page'));
+        }
+
+        if ($params->get('limit')) {
+            //set limit
+            $this->setLimit((int)$params->get('limit'));
+        }
+
+        foreach ($this->allowedOrders as $column) {
+            $order = $params->get('order-' . $column);
+            if ($order) {
+                $this->setOrder([
+                    $column => $order
+                ]);
+            }
+        }
+
+        foreach ($this->allowedFilters as $column) {
+            $filter = $params->get('filter-' . $column);
+            if ($filter) {
+                $this->setFilter([
+                    'filterField' => $column,
+                    'searchString' => $filter,
+                ]);
+            }
+        }
+    }
+
+    protected function process()
+    {
         $source = $this->getSource();
         $limit = $this->getLimit();
-        $offset = $limit * ($this->getPage());
-        $order = $this->getOrder();
-        $filter = $this->getFilter();
-        $data = $source
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
-            ->orderBy($order['field'], $order['order'])
-            ->where(
-                $source->expr()->orX()
-                ->add($source->expr()->like($filter['filterField'], $source->expr()->literal('%' . $filter['searchString'] . '%')))
-            )
-            ->getQuery();
+        $source->setMaxResults($limit);
+        $offset = $limit * ($this->getPage() - 1);
+        $source->setFirstResult($offset);
+        if ($order = $this->getOrder()) {
+            $source->orderBy($this->getDoctrineField(key($order)), current($order));
+        }
+        if ($filter = $this->getFilter()) {
+            $source->where(
+                $source->expr()->orX()->add(
+                    $source->expr()->like($this->getDoctrineField($filter['filterField']),
+                        $source->expr()->literal('%' . $filter['searchString'] . '%'))
+                )
+            );
+        }
+        $data = $source->getQuery();
 
-        return $data->getArrayResult();
+        $this->data = $data->getArrayResult();
     }
 
     /**
@@ -117,6 +191,20 @@ abstract class AbstractGrid
     public function setSource($source)
     {
         $this->source = $source;
+
+        return $this;
+    }
+
+    public function getEntityAlias()
+    {
+        return $this->entityAlias;
+    }
+
+    public function setEntityAlias($alias)
+    {
+        $this->entityAlias = $alias;
+
+        return $this;
     }
 
     /**
@@ -126,7 +214,7 @@ abstract class AbstractGrid
      */
     public function getSettings()
     {
-        $settings = array();
+        $settings = [];
         $settings['page'] = $this->getPage();
         $settings['limit'] = $this->getLimit();
         $settings['orders'] = $this->getOrder();
@@ -139,9 +227,10 @@ abstract class AbstractGrid
      * @param array $params
      * @return AbstractGrid
      */
-    public function setSettings(array $params)
+    public function setParams(array $params)
     {
         $this->params = $params;
+
         return $this;
     }
 
@@ -154,6 +243,7 @@ abstract class AbstractGrid
     public function setPage($page)
     {
         $this->page = $page;
+
         return $this;
     }
 
@@ -168,6 +258,29 @@ abstract class AbstractGrid
     }
 
     /**
+     * Set default limit
+     *
+     * @param $limit
+     * @return $this
+     */
+    public function setDefaultLimit($limit)
+    {
+        $this->defaultLimit = $limit;
+
+        return $this;
+    }
+
+    /**
+     * Get default limit
+     *
+     * @return int
+     */
+    public function getDefaultLimit()
+    {
+        return $this->defaultLimit;
+    }
+
+    /**
      * Set limit
      *
      * @param int $limit
@@ -176,6 +289,7 @@ abstract class AbstractGrid
     public function setLimit($limit)
     {
         $this->limit = $limit;
+
         return $this;
     }
 
@@ -197,7 +311,8 @@ abstract class AbstractGrid
      */
     public function setOrder($order)
     {
-        $this->orders = $order;
+        $this->order = $order;
+
         return $this;
     }
 
@@ -208,18 +323,41 @@ abstract class AbstractGrid
      */
     public function getOrder()
     {
-        return $this->orders;
+        return $this->order;
+    }
+
+    /**
+     * Set allowed orders for grid
+     *
+     * @param array $orders
+     * @return $this
+     */
+    public function setAllowedOrders(array $orders)
+    {
+        $this->allowedOrders = $orders;
+
+        return $this;
+    }
+
+    /**
+     * Get allowed orders
+     *
+     * @return array
+     */
+    public function getAllowedOrders()
+    {
+        return $this->allowedOrders;
     }
 
     /**
      * Set filter
      *
-     * @param array $filters
+     * @param array $filter
      * @return AbstractGrid
      */
-    public function setFilter($filters)
+    public function setFilter($filter)
     {
-        $this->filters = $filters;
+        $this->filter = $filter;
 
         return $this;
     }
@@ -231,6 +369,142 @@ abstract class AbstractGrid
      */
     public function getFilter()
     {
-        return $this->filters;
+        return $this->filter;
+    }
+
+    /**
+     * Set fields allowed for filtering by
+     *
+     * @param array $filters
+     * @return $this
+     */
+    public function setAllowedFilters(array $filters)
+    {
+        $this->allowedFilters = $filters;
+
+        return $this;
+    }
+
+    /**
+     * Get fields allowed for filtering by
+     *
+     * @return array
+     */
+    public function getAllowedFilters()
+    {
+        return $this->allowedFilters;
+    }
+
+    public function getTotal()
+    {
+        $source = $this->getSource();
+        $from = $this->getDoctrineField(key(current($this->getData())));
+        $source->resetDQLPart('select')->setFirstResult(0)->select('count(' . $from . ')');
+        return (int)current(current($source->getQuery()->getArrayResult()));
+    }
+
+    public function totalPages()
+    {
+        return ceil($this->getTotal() / $this->getLimit());
+    }
+
+    public function getParams(array $rewrite = [])
+    {
+        $params = $this->params;
+        //set page
+        if (isset($rewrite['page'])) {
+            if ($rewrite['page'] > 1) {
+                $params['page'] = $rewrite['page'];
+            } else {
+                unset($params['page']);
+            }
+        } else {
+            if ($this->page > 1) {
+                $params['page'] = $this->page;
+            }
+        }
+
+        //set limit
+        if (isset($rewrite['limit'])) {
+            unset($params['page']);
+            if ($rewrite['limit'] != $this->defaultLimit) {
+                $params['limit'] = $rewrite['limit'];
+            }
+        } else {
+            if ($this->limit != $this->defaultLimit) {
+                $params['limit'] = $this->limit;
+            }
+        }
+
+        //set order
+
+        $orders = array_intersect_key($rewrite, array_flip(preg_grep('/order-.+/i', array_keys($rewrite))));
+
+        if (!empty($orders)) {
+            foreach ($orders as $field => $order) {
+                if (in_array(str_replace('order-', '', $field), $this->allowedOrders)) {
+                    $params[$field] = $order;
+                    break;
+                }
+            }
+        } else {
+            if (!empty($this->order)) {
+                $params['order-' . key($this->order)] = current($this->order);
+            }
+        }
+
+        return $params;
+    }
+
+    public function prev()
+    {
+        if ($this->page == 1) {
+            return null;
+        }
+
+        return $this->page - 1;
+    }
+
+    public function next()
+    {
+        if ($this->page == $this->totalPages()) {
+            return null;
+        }
+
+        return $this->page + 1;
+    }
+
+    protected function getDoctrineField($field)
+    {
+        return $this->entityAlias . '.' . $field;
+    }
+
+    public function getUrl(array $params = [])
+    {
+        $params = $this->getParams($params);
+        $constructedUrl = $this->url;
+        if (count($params)) {
+            $constructedUrl .= '?';
+            foreach ($params as $key => $val) {
+                $constructedUrl .= $key . '=' . $val . '&';
+            }
+            $constructedUrl = substr($constructedUrl, 0, -1);
+        }
+        return $constructedUrl;
+    }
+
+    public function order($column)
+    {
+        if (!in_array($column, $this->allowedOrders)) {
+            return $this->getUrl();
+        }
+
+        if (isset($this->order[$column])) {
+            $order = strtolower($this->order[$column]) == self::ORDER_ASC ? self::ORDER_DESC : self::ORDER_ASC;
+        } else {
+            $order = self::ORDER_ASC;
+        }
+
+        return $this->getUrl(['order-' . $column => $order]);
     }
 }
