@@ -15,12 +15,36 @@ require.config({
         'angularRoute': './libs/angular-route',
         respond: './libs/respond.min',
         html5shiv: './libs/html5shiv',
-        "jquery-ui": './jquery-ui',
-        "jquery-nestedSortable": './jquery.mjs.nestedSortable',
+        "jquery-ui": './libs/jquery-ui',
+        "jquery-nestedSortable": './libs/jquery.mjs.nestedSortable',
         redactor: './../redactor/redactor',
         //"redactor-fullscreen": './../redactor/plugins/fullscreen'
-        dashboard:'./../module/dashboard/js/dashboard',
-        categories: '../module/categories/js/management'
+        dashboard: './../module/dashboard/js/dashboard',
+        categories: '../module/categories/js/management',
+        //BLUEIMP BEGIN
+        "load-image": './libs/jQuery-File-Upload-master/load-image',
+        "load-image-meta": './libs/jQuery-File-Upload-master/load-image-meta',
+        "load-image-exif": './libs/jQuery-File-Upload-master/load-image-exif',
+        "load-image-ios": './libs/jQuery-File-Upload-master/load-image-ios',
+        "jquery.ui.widget": './libs/jQuery-File-Upload-master/vendor/jquery.ui.widget',
+        "canvas-to-blob": './libs/jQuery-File-Upload-master/canvas-to-blob.min',
+        "fileupload": './libs/jQuery-File-Upload-master/jquery.fileupload',
+        "fileupload-process": './libs/jQuery-File-Upload-master/jquery.fileupload-process',
+        "fileupload-image": './libs/jQuery-File-Upload-master/jquery.fileupload-image',
+        "fileupload-audio": './libs/jQuery-File-Upload-master/jquery.fileupload-audio',
+        "fileupload-video": './libs/jQuery-File-Upload-master/jquery.fileupload-video',
+        "fileupload-validate": './libs/jQuery-File-Upload-master/jquery.fileupload-validate',
+        "tmpl": './libs/jQuery-File-Upload-master/tmpl.min',
+        "iframe-transport": './libs/jQuery-File-Upload-master/jquery.iframe-transport',
+        "fileupload-ui": './libs/jQuery-File-Upload-master/jquery.fileupload-ui',
+        //BLUEIMP END
+        "image-categories": './modules/categories/image',
+        "image": '../module/test/js/image',
+        "audio": '../module/test/js/audio',
+        "video": '../module/test/js/video',
+        'redactorContent': '../redactor/redactorContent',
+        'conversion': '../module/media/js/conversion',
+        'form': './form'
     },
     shim: {
         angular: {
@@ -54,6 +78,12 @@ require.config({
             deps: ['jquery'],
             exports: '$.fn.redactor'
         },
+        frontend: {
+            deps: ['bootstrap']
+        },
+        backend: {
+            deps: ['angularRoute', 'angularSanitize']
+        }
         //'redactor-fullscreen': {
         //    deps: ['jquery', 'redactor'],
         //    exports: '$.fn.redactor'
@@ -61,5 +91,3 @@ require.config({
     },
     enforceDefine: true
 });
-
-require(['bootstrap']);

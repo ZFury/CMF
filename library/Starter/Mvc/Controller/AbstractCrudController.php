@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityNotFoundException;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Mvc\Exception;
+use Zend\Mvc\MvcEvent;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 
 /**
@@ -15,8 +16,39 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 abstract class AbstractCrudController extends AbstractActionController
 {
     /**
+     * @var ViewModel
+     */
+    protected $viewModel;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function onDispatch(MvcEvent $e)
+    {
+        $this->layout('layout/dashboard/dashboard');
+        $routeMatch = $e->getRouteMatch();
+        if (!$routeMatch) {
+            /**
+             * @todo Determine requirements for when route match is missing.
+             *       Potentially allow pulling directly from request metadata?
+             */
+            throw new Exception\DomainException('Missing route matches; unsure how to retrieve action');
+        }
+        $action = $routeMatch->getParam('action', 'not-found');
+
+        $this->viewModel = new ViewModel();
+        if ($action == 'create' || $action == 'edit') {
+            $this->viewModel->setTemplate('crud/' . $action);
+        }
+
+        parent::onDispatch($e);
+        $this->layout('layout/dashboard/dashboard');
+    }
+
+    /**
      * Create entity
-     * @return ViewModel
+     *
+     * @return \Zend\Http\Response|ViewModel
      */
     public function createAction()
     {
@@ -32,16 +64,24 @@ abstract class AbstractCrudController extends AbstractActionController
                 $objectManager->flush();
 
                 //TODO: redirect where?
-                $this->redirect()->toRoute(null, ['controller' => 'management']);
+                if (!$this->getRequest()->isXmlHttpRequest()) {
+                    return $this->redirect()->toRoute(null, ['controller' => 'management']);
+                } else {
+                    return;
+                }
             }
         }
+        $viewModel = $this->getViewModel();
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
 
-        return new ViewModel(['form' => $form]);
+        return $viewModel->setVariables(['form' => $form]);
     }
 
     /**
      * Edit entity
-     * @return ViewModel
+     *
+     * @return \Zend\Http\Response|ViewModel
+     * @throws EntityNotFoundException
      */
     public function editAction()
     {
@@ -56,16 +96,24 @@ abstract class AbstractCrudController extends AbstractActionController
                 $objectManager->flush();
 
                 //TODO: redirect where?
-                $this->redirect()->toRoute(null, ['controller' => 'management']);
+                if (!$this->getRequest()->isXmlHttpRequest()) {
+                    return $this->redirect()->toRoute(null, ['controller' => 'management']);
+                } else {
+                    return;
+                }
             }
         }
+        $viewModel = $this->getViewModel();
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
 
-        return new ViewModel(['form' => $form]);
+        return $viewModel->setVariables(['form' => $form]);
     }
 
     /**
      * Delete entity
-     * @return void
+     *
+     * @return \Zend\Http\Response
+     * @throws EntityNotFoundException
      */
     public function deleteAction()
     {
@@ -76,7 +124,7 @@ abstract class AbstractCrudController extends AbstractActionController
         $objectManager->flush();
 
         //TODO: redirect where?
-        $this->redirect()->toRoute(null, ['controller' => 'management']);
+        return $this->redirect()->toRoute(null, ['controller' => 'management']);
     }
 
     /**
@@ -117,4 +165,55 @@ abstract class AbstractCrudController extends AbstractActionController
      * @return mixed
      */
     abstract protected function getEntity();
+
+    /**
+     * Return CRUD view model.
+     *
+     * @return ViewModel
+     */
+    protected function getViewModel()
+    {
+        return $this->viewModel;
+    }
+
+    /**
+     * Gets CRUD view model and sets require parameters.
+     *
+     * @param $form
+     * @param $ajax boolean Flag that determines using of ajax.
+     * @param array $variables Variables that will be used in view.
+     * <code>
+     * 'variables' => array(
+     *      '[variable name]' => [variable value]
+     * )
+     * </code>
+     * @param array $scripts Scripts for require that will be used in view.
+     * <code>
+     * 'scripts' => array(
+     *      '[require js module name1],
+     *      '[require js module name2],
+     *      ...
+     * )
+     * </code>
+     * @param array $fileUpload Set that parameter if you want to use file upload form in your view.
+     * <code>
+     * 'fileUpload' => array(
+     *     'imageService' => [file service instance],
+     *     'module' => [upload js name],
+     *     'type' => [file type],
+     *      'id' => [entity id]
+     * )
+     * </code>
+     * @return ViewModel
+     */
+    protected function prepareViewModel($form, $ajax = false, array $variables = null, array $scripts = null, array $fileUpload = null)
+    {
+        return $this->viewModel->setVariables([
+            'form' => $form,
+            'ajax' => $ajax,
+            'variables' => $variables,
+            'scripts' => $scripts,
+            'fileUpload' => $fileUpload
+        ]);
+    }
 }

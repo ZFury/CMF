@@ -6,7 +6,8 @@ use Starter\Mvc\Grid\AbstractGrid;
 
 class Grid extends AbstractGrid
 {
-    public function init() {
+    public function init()
+    {
         $params = array();
         $page = 1;
         $limit = 3;
