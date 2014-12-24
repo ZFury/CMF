@@ -9,7 +9,9 @@ use Comment\Form\Filter;
 use Zend\Form\Annotation\AnnotationBuilder;
 use DoctrineModule\Validator;
 use Comment\Validators;
-use Zend\Form\Form;
+use Zend\Form;
+use Zend\Mvc\Controller\Plugin\FlashMessenger;
+use Comment\Entity\EntityType;
 
 class ManagementController extends AbstractCrudController
 {
@@ -35,26 +37,6 @@ class ManagementController extends AbstractCrudController
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-//                $entityValid = new Validators\NoObjectExists($objectManager->getRepository('Comment\Entity\EntityType'));
-//                if (!$entityValid->isValid(['aliasEntity' => $form->get('aliasEntity')->getValue()], $this->params()->fromRoute('id'))) {
-//                    $form->get('aliasEntity')->setMessages(
-//                        array(
-//                            'errorMessageKey' => 'AliasEntity must be unique in its category!'
-//                        )
-//                    );
-//                    $viewModel = $this->getViewModel();
-//                    return $viewModel->setVariables(['form' => $form]);
-//                }
-//                if (!$entityValid->isValid(['entity' => $form->get('entity')->getValue()], $this->params()->fromRoute('id'))) {
-//                    $form->get('entity')->setMessages(
-//                        array(
-//                            'errorMessageKey' => 'Entity must be unique in its category!'
-//                        )
-//                    );
-//                    $viewModel = $this->getViewModel();
-//                    return $viewModel->setVariables(['form' => $form]);
-//                }
-
                 $entity = $this->getEntity();
                 $hydrator = new DoctrineHydrator($objectManager);
                 $hydrator->hydrate($form->getData(), $entity);
@@ -66,52 +48,45 @@ class ManagementController extends AbstractCrudController
             }
         }
         $viewModel = new ViewModel();
+
         return $viewModel->setVariables(['form' => $form]);
     }
 
     /**
-     * Edit entity
-     * @return ViewModel
+     * @return \Zend\Http\Response|ViewModel
+     * @throws \Exception
      */
     public function editAction()
     {
+        if (!$id = $this->params()->fromRoute('id')) {
+            throw new \Exception('Bad Request');
+        }
+
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $entityType = $objectManager->getRepository('\Comment\Entity\EntityType')->findOneBy(['id' => $id]);
+
         $form = $this->getEditForm();
-        $entity = $this->loadEntity();
-        $form->bind($entity);
+        $form->bind($entityType);
+
         if ($this->getRequest()->isPost()) {
-            $form->setData($this->getRequest()->getPost());
-           // $form->setBindOnValidate(Form::BIND_MANUAL);
+            $data = $this->getRequest()->getPost()->toArray();
+
+            $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+            $hydrator = new DoctrineHydrator($entityManager);
+            $hydrator->hydrate($data, $entityType);
+            $flashMessenger = new FlashMessenger();
             if ($form->isValid()) {
-//                $entityValid = new Validators\NoObjectExists($objectManager->getRepository('Comment\Entity\EntityType'));
-//                if (!$entityValid->isValid(['aliasEntity' => $form->get('aliasEntity')->getValue()], $this->params()->fromRoute('id'))) {
-//                    $form->get('aliasEntity')->setMessages(
-//                        array(
-//                            'errorMessageKey' => 'AliasEntity must be unique in its category!'
-//                        )
-//                    );
-//                    $viewModel = $this->getViewModel();
-//                    return $viewModel->setVariables(['form' => $form]);
-//                }
-//                if (!$entityValid->isValid(['entity' => $form->get('entity')->getValue()], $this->params()->fromRoute('id'))) {
-//                    $form->get('entity')->setMessages(
-//                        array(
-//                            'errorMessageKey' => 'Entity must be unique in its category!'
-//                        )
-//                    );
-//                    $viewModel = $this->getViewModel();
-//                    return $viewModel->setVariables(['form' => $form]);
-//                }
-
-                    $objectManager->persist($entity);
-                    $objectManager->flush();
-                    $this->flashMessenger()->addSuccessMessage('Category has been successfully edited!');
-                    //TODO: redirect where?
-                    return $this->redirect()->toRoute(null, ['controller' => 'management']);
-
+                $entityManager->persist($entityType);
+                $entityManager->flush();
+                $this->flashMessenger()->addSuccessMessage('Entity type has been successfully edited!');
+                //TODO: redirect where?
+                return $this->redirect()->toRoute(null, ['controller' => 'management']);
+            } else {
+                $flashMessenger->addErrorMessage('Entity type is not changed');
             }
         }
         $viewModel = new ViewModel();
+
         return $viewModel->setVariables(['form' => $form]);
     }
 
@@ -130,6 +105,7 @@ class ManagementController extends AbstractCrudController
         $select->setValueOptions($options);
         $select->setOptions(array('empty_option' => 'Please choose entity'));
         $form->setInputFilter(new Filter\EntityTypeInputFilter($this->getServiceLocator()));
+
         return $form;
     }
 
@@ -148,8 +124,6 @@ class ManagementController extends AbstractCrudController
         $form->setHydrator(new DoctrineHydrator($entityManager));
         $form->bind($entityType);
 
-        $form->setInputFilter(new Filter\EntityTypeInputFilter($this->getServiceLocator()));
-
         return $form;
     }
 
@@ -158,6 +132,6 @@ class ManagementController extends AbstractCrudController
      */
     protected function getEntity()
     {
-        return new \Comment\Entity\EntityType();
+        return new EntityType();
     }
 }

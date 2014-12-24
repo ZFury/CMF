@@ -147,18 +147,23 @@ class IndexControllerTest extends ControllerTestCase
     /**
      * @param $entityData
      * @return \Comment\Entity\EntityType
+     * @throws \Exception
      */
     public function createEntityType($entityData)
     {
         $entity = new \Comment\Entity\EntityType();
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         $objectManager->getConnection()->beginTransaction();
-        $hydrator = new DoctrineHydrator($objectManager);
-        $hydrator->hydrate($entityData, $entity);
-        $objectManager->persist($entity);
-        $objectManager->flush();
-        $objectManager->getConnection()->commit();
-
+        try {
+            $hydrator = new DoctrineHydrator($objectManager);
+            $hydrator->hydrate($entityData, $entity);
+            $objectManager->persist($entity);
+            $objectManager->flush();
+            $objectManager->getConnection()->commit();
+        } catch (\Exception $e) {
+            $objectManager->getConnection()->rollback();
+            throw $e;
+        }
         return $entity;
     }
 

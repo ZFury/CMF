@@ -15,6 +15,9 @@ $form->prepare();
                 <div class="col-sm-4">
                     <?php echo $this->formTextarea($form->get('comment')); ?>
                 </div>
+                <div class="col-sm-9 col-md-offset-2 error-field error-form-message">
+                    <?= $this->formElementErrors($form->get('comment')); ?>
+                </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-1"></div>

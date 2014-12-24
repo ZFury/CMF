@@ -4,7 +4,6 @@ namespace Comment\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use User\Entity\User;
-use Comment\Entity\EntityType;
 use Zend\Form\Annotation;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Starter\DBAL\Entity\EntityBase;

@@ -20,8 +20,7 @@ class EntityType extends EntityBase
 {
     /**
      * @var int
-     * @Annotation\Type("Zend\Form\Element\Text")
-     * @Annotation\Exclude
+     * @Annotation\Type("Zend\Form\Element\Hidden")
      * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned"=true})
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -53,7 +52,6 @@ class EntityType extends EntityBase
      * @Annotation\Type("Zend\Form\Element\Textarea")
      * @Annotation\Required(true)
      * @Annotation\Options({"label":"Description:"})
-     * @Annotation\Attributes({"class":"form-control"})
      * @ORM\Column(type="text", nullable=false)
      */
     protected $description;
@@ -63,7 +61,6 @@ class EntityType extends EntityBase
      * @Annotation\Type("Zend\Form\Element\Checkbox")
      * @Annotation\Required(false)
      * @Annotation\Options({"label":"Visibility of comments:"})
-     * @Annotation\Attributes({"class":"form-control"})
      * @ORM\Column(type="boolean", nullable=true)
      */
     protected $visibleComment;
@@ -73,7 +70,6 @@ class EntityType extends EntityBase
      * @Annotation\Type("Zend\Form\Element\Checkbox")
      * @Annotation\Required(false)
      * @Annotation\Options({"label":"Possible to comment:"})
-     * @Annotation\Attributes({"class":"form-control"})
      * @ORM\Column(type="boolean", nullable=true)
      */
     protected $enabledComment;
@@ -198,7 +194,7 @@ class EntityType extends EntityBase
     /**
      * Set entity.
      *
-     * @param int $entity
+     * @param $entity
      *
      * @return void
      */

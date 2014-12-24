@@ -1,6 +1,5 @@
 <ul class="media">
-    <li class="media">
-        <div class="media-body">
+    <li class="media-body">
             <h4 class="media-heading">
                 <?php echo $this->escapeHtml($this->comment->getUser()->getDisplayName()); ?>
                 <?php
@@ -20,8 +19,7 @@
             </p>
             <?php
             if (count($this->children) > 0) : ?>
-                <?php echo $this->comment('comment/index/partial.phtml', $this->children); ?>
+                <?php echo $this->comment('comment/index/comment/partial.phtml', $this->children); ?>
             <?php endif; ?>
-        </div>
     </li>
 </ul>

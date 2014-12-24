@@ -4,13 +4,16 @@ namespace Comment\Form\Filter;
 
 use Zend\InputFilter\InputFilter;
 use Zend\ServiceManager\ServiceManager;
-use DoctrineModule\Validator\NoObjectExists;
+use DoctrineModule\Validator\UniqueObject;
 use Zend\Db\Adapter;
 
 class EntityTypeInputFilter extends InputFilter
 {
     /** @var  ServiceManager */
     protected $sm;
+
+    /** @var \Comment\Entity\EntityType */
+    protected $entityType;
 
     /**
      * @param ServiceManager $sm
@@ -28,15 +31,15 @@ class EntityTypeInputFilter extends InputFilter
      */
     protected function aliasEntity()
     {
-        $recordExistsValidator = new NoObjectExists(
+        $recordExistsValidator = new UniqueObject(
             array(
                 'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')->getRepository('Comment\Entity\EntityType'),
-                'fields' => 'aliasEntity'
+                'fields' => array('aliasEntity'),
+                'object_manager' =>$this->sm->get('Doctrine\ORM\EntityManager'),
             )
         );
         $recordExistsValidator->setMessage(
-            'Entity type with this alias already exists',
-            NoObjectExists::ERROR_OBJECT_FOUND
+            'Entity type with this alias already exists'
         );
 
         $this->add(array(
@@ -66,15 +69,15 @@ class EntityTypeInputFilter extends InputFilter
      */
     protected function entity()
     {
-        $recordExistsValidator = new NoObjectExists(
+        $recordExistsValidator = new UniqueObject(
             array(
                 'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')->getRepository('Comment\Entity\EntityType'),
-                'fields' => 'entity'
+                'fields' => array('entity'),
+                'object_manager' =>$this->sm->get('Doctrine\ORM\EntityManager'),
             )
         );
         $recordExistsValidator->setMessage(
-            'Entity type with this entity already exists',
-            NoObjectExists::ERROR_OBJECT_FOUND
+            'Entity type with this entity already exists'
         );
 
         $this->add(array(
@@ -85,15 +88,7 @@ class EntityTypeInputFilter extends InputFilter
                 array('name' => 'StringTrim'),
             ),
             'validators' => array(
-                //$recordExistsValidator
-                                array(
-                                    'name' => 'Db\NoRecordExists',
-                                    'options' => array(
-                                        'table' => $this->sm->get('Doctrine\ORM\EntityManager')->getClassMetadata('Comment\Entity\EntityType')->getTableName(),
-                                        'field' => 'entity',
-                                        'adapter' => $this->sm->get('Db\Adapter'),
-                                    ),
-                                ),
+                $recordExistsValidator
             ),
         ));
 

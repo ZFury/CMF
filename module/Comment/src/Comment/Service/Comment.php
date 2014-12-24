@@ -174,7 +174,6 @@ class Comment
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $hydrator = new DoctrineHydrator($entityManager);
         $hydrator->hydrate($data, $comment);
-        $form->setInputFilter(new Filter\CommentEditInputFilter($this->getServiceLocator()));
         if ($form->isValid()) {
             $entityManager->persist($comment);
             $entityManager->flush();
