@@ -11,6 +11,7 @@ use Zend\Form\Annotation\AnnotationBuilder;
 use DoctrineModule\Validator;
 use Zend\Stdlib\Hydrator;
 use Comment\Entity;
+use User\Entity\User;
 
 class Comment
 {
@@ -33,6 +34,15 @@ class Comment
     public function __construct(ServiceManager $sm)
     {
         $this->serviceManager = $sm;
+    }
+
+    public function commentOwner($comment)
+    {
+        $identity = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity();
+        if ($comment->getUserId()===$identity->getUserId() || $identity->getUser()->getRole()===User::ROLE_ADMIN) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -146,6 +156,10 @@ class Comment
             throw new \Exception('Comment does not exist');
         }
 
+        if (!$this->commentOwner($comment)) {
+            throw new \Exception('You are not authorized for this operation');
+        }
+
         if (!$this->checkOwner($comment->getEntityType()->getAliasEntity())) {
             throw new \Exception('Comment can not be deleted');
         }
@@ -166,11 +180,16 @@ class Comment
     /**
      * @param \Zend\Form\Form $form
      * @param Entity\Comment $comment
-     * @param array $data
-     * @return mixed
+     * @param $data
+     * @return Entity\Comment
+     * @throws \Exception
      */
     public function edit(\Zend\Form\Form $form, Entity\Comment $comment, $data)
     {
+        if (!$this->commentOwner($comment)) {
+            throw new \Exception('You are not authorized for this operation');
+        }
+
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $hydrator = new DoctrineHydrator($entityManager);
         $hydrator->hydrate($data, $comment);
