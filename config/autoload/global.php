@@ -17,5 +17,11 @@ return array(
         'error_reporting' => E_ALL,
         'display_errors' => true,
         'display_startup_errors' => true
+    ),
+    // Service config for memcached
+    'service_manager' => array(
+        'abstract_factories' => array(
+            'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
+        )
     )
 );
