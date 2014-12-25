@@ -5,6 +5,7 @@ namespace Test\Controller;
 use Starter\Mvc\Controller\AbstractCrudController;
 use Test\Form;
 use Test\Entity;
+use Test\Grid\Grid;
 use Zend\View\Model\ViewModel;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 
@@ -27,9 +28,11 @@ class ManagementController extends AbstractCrudController
 
     public function indexAction()
     {
-        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $repository = $objectManager->getRepository('Test\Entity\Test');
-        return new ViewModel(['data' => $repository->findAll()]);
+        $sm = $this->getServiceLocator();
+        $grid = new Grid($sm);
+        $viewModel = new ViewModel(['grid' => $grid]);
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
+        return $viewModel;
     }
 
     public function testAction()
