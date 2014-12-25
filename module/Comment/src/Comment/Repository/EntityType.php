@@ -15,7 +15,7 @@ class EntityType extends EntityRepository
         $entities = array();
         $meta = $entityManager->getMetadataFactory()->getAllMetadata();
         foreach ($meta as $m) {
-            if ($m->getName()==="Comment\\Entity\\EntityType") {
+            if ($m->getName() === "Comment\\Entity\\EntityType") {
                 continue;
             }
             $entities[$m->getName()] = $m->getName();

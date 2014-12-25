@@ -42,7 +42,7 @@ class EntityType
         }
 
         $entity = $objectManager->getRepository($entityType->getEntity())->find($entityId);
-        if (count($entity)==0) {
+        if (!count($entity)) {
             throw new \Exception('Unknown entity');
         }
 

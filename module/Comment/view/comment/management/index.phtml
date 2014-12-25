@@ -12,33 +12,31 @@ $this->headTitle($title);
         <th>Description</th>
         <th>&nbsp;</th>
     </tr>
-    <?php
-    if (isset($entities)) :
-        foreach($entities as $entity) :
-    ?>
-        <tr>
-            <td><?php echo $this->escapeHtml($entity->getAliasEntity());?></td>
-            <td><?php echo $this->escapeHtml($entity->getEntity());?></td>
-            <td><?php echo $this->escapeHtml($entity->getEnabledComment())?'Yes':"No";?></td>
-            <td><?php echo $this->escapeHtml($entity->getVisibleComment())?'Yes':"No";?></td>
-            <td><?php echo $this->escapeHtml($entity->getDescription());?></td>
-            <td>
-                <a href="<?php echo $this->url('comment/default', array('controller'=>'management', 'action' => 'edit', 'id' => $entity->getId())); ?>">
-                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                </a>
-                <a class="del-entity" href="<?php echo $this->url('comment/default', array('controller'=>'management', 'action' => 'delete', 'id' => $entity->getId())); ?>">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                </a>
-            </td>
-        </tr>
-        <?php endforeach;
-    endif; ?>
+    <?php if (isset($entities)) : ?>
+        <?php foreach($entities as $entity) : ?>
+            <tr>
+                <td><?php echo $this->escapeHtml($entity->getAliasEntity());?></td>
+                <td><?php echo $this->escapeHtml($entity->getEntity());?></td>
+                <td><?php echo $this->escapeHtml($entity->getEnabledComment())?'Yes':"No";?></td>
+                <td><?php echo $this->escapeHtml($entity->getVisibleComment())?'Yes':"No";?></td>
+                <td><?php echo $this->escapeHtml($entity->getDescription());?></td>
+                <td>
+                    <a href="<?php echo $this->url('comment/default', array('controller'=>'management', 'action' => 'edit', 'id' => $entity->getId())); ?>">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                    </a>
+                    <a class="del-entity"
+                       href="<?php echo $this->url('comment/default', array('controller'=>'management', 'action' => 'delete', 'id' => $entity->getId())); ?>">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </table>
-
 <p>
-    <a href="<?php echo $this->url('comment/default', array('controller' => 'management', 'action' => 'create'));?>" class="btn btn-success">Create</a>
+    <a class="btn btn-success"
+       href="<?php echo $this->url('comment/default', array('controller' => 'management', 'action' => 'create')); ?>" >Create</a>
 </p>
-
 <script>
     require(['comment','commentManagement']);
 </script>

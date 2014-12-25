@@ -115,14 +115,9 @@ class ManagementController extends AbstractCrudController
     protected function getEditForm()
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $builder = new AnnotationBuilder($entityManager);
-
-
-        $form = $this->getCreateForm();//$builder->createForm($this->getEntity());
-
-        $entityType = $this->loadEntity();
+        $form = $this->getCreateForm();
         $form->setHydrator(new DoctrineHydrator($entityManager));
-        $form->bind($entityType);
+        $form->bind($this->loadEntity());
 
         return $form;
     }

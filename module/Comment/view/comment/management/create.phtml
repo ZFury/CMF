@@ -14,7 +14,9 @@ $form->prepare();
         <form action="" method="post" class="form-horizontal" id="newCategory">
             <input type="hidden" value="" name="id"/>
             <div class="form-group">
-                <label for="aliasEntity" class="col-sm-2 control-label"><?= $form->get('aliasEntity')->getLabel(); ?></label>
+                <label for="aliasEntity" class="col-sm-2 control-label">
+                    <?= $form->get('aliasEntity')->getLabel(); ?>
+                </label>
                 <div class="col-sm-4">
                     <?php echo $this->formInput($form->get('aliasEntity')); ?>
                 </div>
@@ -23,7 +25,9 @@ $form->prepare();
                 </div>
             </div>
             <div class="form-group">
-                <label for="entity" class="col-sm-2 control-label"><?= $form->get('entity')->getLabel(); ?></label>
+                <label for="entity" class="col-sm-2 control-label">
+                    <?= $form->get('entity')->getLabel(); ?>
+                </label>
                 <div class="col-sm-4">
                     <?php echo $this->formSelect($form->get('entity')); ?>
                 </div>
@@ -32,7 +36,9 @@ $form->prepare();
                 </div>
             </div>
             <div class="form-group">
-                <label for="enabledComment" class="col-sm-2 control-label"><?= $form->get('enabledComment')->getLabel(); ?></label>
+                <label for="enabledComment" class="col-sm-2 control-label">
+                    <?= $form->get('enabledComment')->getLabel(); ?>
+                </label>
 
                 <div class="col-sm-2">
                     <?php echo $this->formCheckbox($form->get('enabledComment')); ?>
@@ -42,7 +48,9 @@ $form->prepare();
                 </div>
             </div>
             <div class="form-group">
-                <label for="visibleComment" class="col-sm-2 control-label"><?= $form->get('visibleComment')->getLabel(); ?></label>
+                <label for="visibleComment" class="col-sm-2 control-label">
+                    <?= $form->get('visibleComment')->getLabel(); ?>
+                </label>
 
                 <div class="col-sm-2">
                     <?php echo $this->formCheckbox($form->get('visibleComment')); ?>
@@ -52,7 +60,9 @@ $form->prepare();
                 </div>
             </div>
             <div class="form-group">
-                <label for="description" class="col-sm-2 control-label"><?= $form->get('description')->getLabel(); ?></label>
+                <label for="description" class="col-sm-2 control-label">
+                    <?= $form->get('description')->getLabel(); ?>
+                </label>
                 <div class="col-sm-4">
                     <?php echo $this->formTextarea($form->get('description')); ?>
                 </div>
