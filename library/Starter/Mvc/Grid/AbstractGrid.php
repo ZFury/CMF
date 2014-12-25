@@ -77,6 +77,10 @@ abstract class AbstractGrid
      */
     private $url;
 
+    protected $columns = array();
+
+    protected $total = 0;
+
     /**
      * Service locator
      * @var ServiceLocatorInterface
@@ -141,10 +145,7 @@ abstract class AbstractGrid
         foreach ($this->allowedFilters as $column) {
             $filter = $params->get('filter-' . $column);
             if ($filter) {
-                $this->setFilter([
-                    'filterField' => $column,
-                    'searchString' => $filter,
-                ]);
+                $this->setFilter([$column => $filter]);
             }
         }
     }
@@ -162,14 +163,15 @@ abstract class AbstractGrid
         if ($filter = $this->getFilter()) {
             $source->where(
                 $source->expr()->orX()->add(
-                    $source->expr()->like($this->getDoctrineField($filter['filterField']),
-                        $source->expr()->literal('%' . $filter['searchString'] . '%'))
+                    $source->expr()->like($this->getDoctrineField(key($filter)),
+                        $source->expr()->literal('%' . current($filter) . '%'))
                 )
             );
         }
         $data = $source->getQuery();
 
         $this->data = $data->getArrayResult();
+        $this->total = $this->getTotalRows();
     }
 
     /**
@@ -395,17 +397,24 @@ abstract class AbstractGrid
         return $this->allowedFilters;
     }
 
-    public function getTotal()
+    protected  function getTotalRows()
     {
         $source = $this->getSource();
-        $from = $this->getDoctrineField(key(current($this->getData())));
+        /** @var \Doctrine\ORM\Query\Expr\Select $select */
+        $select = current($source->getDQLPart('select'));
+        $from = current($select->getParts());
         $source->resetDQLPart('select')->setFirstResult(0)->select('count(' . $from . ')');
-        return (int)current(current($source->getQuery()->getArrayResult()));
+        return (int) current($source->getQuery()->getSingleResult());
+    }
+
+    public function getTotal()
+    {
+        return $this->total;
     }
 
     public function totalPages()
     {
-        return ceil($this->getTotal() / $this->getLimit());
+        return ceil($this->total / $this->limit);
     }
 
     public function getParams(array $rewrite = [])
@@ -437,7 +446,6 @@ abstract class AbstractGrid
         }
 
         //set order
-
         $orders = array_intersect_key($rewrite, array_flip(preg_grep('/order-.+/i', array_keys($rewrite))));
 
         if (!empty($orders)) {
@@ -450,6 +458,22 @@ abstract class AbstractGrid
         } else {
             if (!empty($this->order)) {
                 $params['order-' . key($this->order)] = current($this->order);
+            }
+        }
+
+        //set filter
+        $filters = array_intersect_key($rewrite, array_flip(preg_grep('/filter-.+/i', array_keys($rewrite))));
+
+        if (!empty($filters)) {
+            foreach ($filters as $field => $filter) {
+                if (in_array(str_replace('filter-', '', $field), $this->allowedFilters)) {
+                    $params[$field] = $filter;
+                    break;
+                }
+            }
+        } else {
+            if (!empty($this->filter)) {
+                $params['filter-' . key($this->filter)] = current($this->filter);
             }
         }
 
@@ -496,7 +520,7 @@ abstract class AbstractGrid
     public function order($column)
     {
         if (!in_array($column, $this->allowedOrders)) {
-            return $this->getUrl();
+            return null;
         }
 
         if (isset($this->order[$column])) {
@@ -506,5 +530,23 @@ abstract class AbstractGrid
         }
 
         return $this->getUrl(['order-' . $column => $order]);
+    }
+
+    public function setColumns(array $columns = [])
+    {
+        $this->columns = $columns;
+
+        return $this;
+    }
+
+    public function getColumns()
+    {
+        if (empty($this->columns) && !empty($this->data)) {
+            //parse columns from data
+            $tmp = array_keys(current($this->data));
+            return array_combine($tmp, $tmp);
+        }
+
+        return $this->columns;
     }
 }
