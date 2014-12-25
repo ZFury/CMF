@@ -7,7 +7,7 @@
             $scope.reverse = true;
 
             /**
-             * Create test
+             * Edit test
              * */
             $scope.editTest = function () {
                 testService.editTest($scope.test.email, $scope.test.name, $scope.test.id, function(response) {
@@ -19,7 +19,7 @@
             };
 
             /**
-             * Create test
+             * Get test
              * */
             $scope.getTest = function () {
                 var urlParams = (window.location.pathname).split('/');

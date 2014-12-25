@@ -8,11 +8,9 @@
              * */
             $scope.createTest = function () {
                 testService.createTest($scope.newTest.email, $scope.newTest.name, function(response) {
-                    if (typeof(response.errors) !== 'undefined') {
-                        $scope.testError = response.errors;
-                        if ($scope.testError.length < 1) {
-                            window.location = testService.apiUrl + "management/angular";
-                        }
+                    $scope.testError = response.errors;
+                    if ($scope.testError.length < 1) {
+                        window.location = testService.apiUrl + "management/angular";
                     }
                 });
             };

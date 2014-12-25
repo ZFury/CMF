@@ -60,18 +60,18 @@
             /**
              * get data fo page
              */
-            $scope.getPage = function(flag) {
-                if (flag == 'next') {
+            $scope.getPage = function(direction) {
+                if (direction == 'next') {
                     $scope.page++;
                 }
-                if (flag == 'prev') {
+                if (direction == 'prev') {
                     $scope.page--;
                 }
                 $scope.getTests();
             };
 
             /**
-             * Search users
+             * Search test
              * */
             $scope.search = function () {
                 $scope.page = 1;
