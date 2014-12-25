@@ -8,6 +8,7 @@ use Test\Entity;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
+use Test\Grid\Grid;
 
 class ManagementController extends AbstractCrudController
 {
@@ -35,12 +36,29 @@ class ManagementController extends AbstractCrudController
 
     public function angularAction()
     {
-        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $repository = $objectManager->getRepository('Test\Entity\Test');
-        return new ViewModel(['data' => $repository->findAll()]);
+        /* @var \Zend\Http\Request $request */
+        $request = $this->getRequest();
+        $count = null;
+        $searchString = '';
+        if ($request->isXmlHttpRequest()) {
+            $sm = $this->getServiceLocator();
+            $grid = new Grid($sm);
+            $grid->init();
+            $data = $grid->getData();
+            $em = $sm->get('Doctrine\ORM\EntityManager');
+            /* @var \Test\Repository\Test $usersManager */
+            $usersManager = $em->getRepository('Test\Entity\Test');
+            $params = $request->getPost('data');
+            $searchString = $params['searchString'];
+            $count = $usersManager->countSearchTests($searchString);
+            return new JsonModel(array(
+                'data' => $data,
+                'count' => $count
+            ));
+        } else {
+            return new ViewModel();
+        }
     }
-
-
 
     public function createWithAngularAction()
     {
@@ -49,10 +67,18 @@ class ManagementController extends AbstractCrudController
 
     public function editWithAngularAction()
     {
-        $id = $this->params()->fromRoute('id');
-//        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-//        $model = $objectManager->getRepository(get_class($this->getEntity()))->find($id);
-        return new ViewModel(['id' => $id]);
+        return new ViewModel();
+    }
+
+    public function getTestAction()
+    {
+        $model = $this->loadEntity();
+        $test = array(
+            'email' => $model->getEmail(),
+            'name' => $model->getName(),
+            'id' => $model->getId(),
+        );
+        return new JsonModel(['data' => $test]);
     }
 
     public function testAction()

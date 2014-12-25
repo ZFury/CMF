@@ -1,7 +1,7 @@
 <script>
     require(['jquery', 'bootstrap', 'modules/test/testApp']);
 </script>
-<div ng-controller="testController">
+<div ng-controller="createTestController">
     <div ng-bind-html="testError.exception.message" class="alert-danger"></div>
     <form name="createTestForm" ng-submit="createTest()" role="form" class="form-tiny">
         <div class="form-group">

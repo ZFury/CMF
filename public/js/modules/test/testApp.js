@@ -4,7 +4,9 @@
         'angularSanitize',
         'angularRoute',
         'modules/test/services/testService',
-        'modules/test/controllers/testController'
+        'modules/test/controllers/testController',
+        'modules/test/controllers/editTestController',
+        'modules/test/controllers/createTestController'
     ];
 
     define(dependencies, function(
@@ -12,13 +14,17 @@
         angularSanitize,
         angularRoute,
         testService,
-        testController
+        testController,
+        editTestController,
+        createTestController
         ) {
 
         var app = angular.module('zfstarter', ['ngSanitize']);
         app
             .factory('testService', testService)
-            .controller('testController', testController);
+            .controller('testController', testController)
+            .controller('createTestController', createTestController)
+            .controller('editTestController', editTestController);
 
         angular.element(document).ready(function () {
             var promise = new Promise(function(resolve, reject) {

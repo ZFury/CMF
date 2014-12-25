@@ -28,15 +28,33 @@
              * Edit
              * @param email
              * @param name
+             * @param id
              * @param callback
              *
              * Created by Maxim Mandryka maxim.mandryka@nixsolutions.com
              */
-            testFactory.editTest = function(email, name, /*function*/ callback) {
+            testFactory.editTest = function(email, name, id, /*function*/ callback) {
                 var params = {
                     url: this.apiUrl + 'management/edit',
                     method: "POST",
-                    data: $.param({email: email, name: name}),
+                    data: $.param({email: email, name: name, id: id}),
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                };
+                ajaxRequest(params, callback);
+            };
+
+            /**
+             * Get searched users
+             * @param allParams
+             * @param callback
+             *
+             * Created by Maxim Mandryka maxim.mandryka@nixsolutions.com
+             */
+            testFactory.getTests = function(allParams, /*function*/ callback) {
+                var params = {
+                    url: this.apiUrl + 'management/angular',
+                    method: "POST",
+                    data: $.param({data: allParams}),
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 };
                 ajaxRequest(params, callback);
@@ -44,14 +62,16 @@
 
             /**
              * Get test
+             * @param id
              * @param callback
              *
              * Created by Maxim Mandryka maxim.mandryka@nixsolutions.com
              */
-            testFactory.getTest = function(/*function*/ callback) {
+            testFactory.getTest = function(id, /*function*/ callback) {
                 var params = {
-                    url: this.apiUrl + 'management/edit-with-angular',
-                    method: "GET",
+                    url: this.apiUrl + 'management/get-test',
+                    method: "POST",
+                    data: $.param({id: id}),
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 };
                 ajaxRequest(params, callback);
