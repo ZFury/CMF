@@ -247,3 +247,7 @@ ul.alert-dropdown {
     background-image: linear-gradient(to right, #222 0, #707070 100%);
     background-repeat: repeat-x;
 }
+
+.pagination .active>a {
+    background-image: none;
+}
