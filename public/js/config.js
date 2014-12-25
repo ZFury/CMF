@@ -20,7 +20,10 @@ require.config({
         redactor: './../redactor/redactor',
         //"redactor-fullscreen": './../redactor/plugins/fullscreen'
         dashboard: './../module/dashboard/js/dashboard',
+        comment: '../module/comment/js/index',
+        commentManagement: '../module/comment/js/management',
         categories: '../module/categories/js/management',
+        test: '../module/test/js/comment',
         //BLUEIMP BEGIN
         "load-image": './libs/jQuery-File-Upload-master/load-image',
         "load-image-meta": './libs/jQuery-File-Upload-master/load-image-meta',
