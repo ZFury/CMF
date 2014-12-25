@@ -91,7 +91,11 @@ abstract class AbstractCrudController extends AbstractActionController
         $entity = $this->loadEntity();
         $form->bind($entity);
         if ($this->getRequest()->isPost()) {
-            $form->setData($this->getRequest()->getPost());
+//            $form->setData($this->getRequest()->getPost());
+            $data = $this->getRequest()->getPost()->toArray();
+            $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+            $hydrator = new DoctrineHydrator($entityManager);
+            $hydrator->hydrate($data, $entity);
             if ($form->isValid()) {
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
                 $objectManager->persist($entity);
