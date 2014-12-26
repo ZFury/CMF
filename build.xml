@@ -96,6 +96,7 @@
         <mkdir dir="${logsDir}/coverage/options"/>
         <mkdir dir="${logsDir}/coverage/pages"/>
         <mkdir dir="${logsDir}/coverage/categories"/>
+        <mkdir dir="${logsDir}/coverage/media"/>
         <property name="junit" value="${logsDir}/tests-report.xml" />
 
         <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix" output="${logsDir}/phpunit.log">
