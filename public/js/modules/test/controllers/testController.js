@@ -8,11 +8,11 @@
             $scope.testError = {};
             $scope.params = {};
             $scope.params.limit = 5;
-            $scope.params.page = 0;
-            $scope.params.searchString = '';
-            $scope.params.searchField = 'email';
             $scope.page = 1;
+            $scope.currentPage = 1;
             $scope.reverse = true;
+            $scope.defaultOrder = 'email';
+            $scope.defaultFilter = 'email';
 
             /**
              * Create test
@@ -31,42 +31,64 @@
             /**
              * Get test data
              * */
-            $scope.getTests = function () {
-                $scope.params.page = $scope.page - 1;
-                testService.getTests($scope.params, function(response) {
+            $scope.getTests = function (num) {
+                $scope.currentPage = $scope.page;
+                if (typeof(num) !== 'undefined') {
+                    $scope.page = num + 1;
+                }
+                if (typeof($scope.orderField) === 'undefined') {
+                    $scope.orderField = $scope.defaultOrder;
+                }
+                if (typeof($scope.filterField) === 'undefined') {
+                    $scope.filterField = $scope.defaultFilter;
+                }
+                testService.getTests($scope.page, $scope.orderField, $scope.order, $scope.filterField, $scope.searchString, function(response) {
                     $scope.testGrid = [];
                     angular.forEach(response.data,function(item) {
                         $scope.testGrid.push(item);
                     });
+                    $scope.allowedFilters = response.allowedFilters;
+                    $scope.totalPages = response.totalPages;
+                    $scope.allowedOrders = response.allowedOrders;
+                    $scope.defaultLimit = response.defaultLimit;
+                    $scope.urlPrev = response.urlPrev;
+                    $scope.urlNext = response.urlNext;
                     $scope.gridPages = Math.ceil(response.count/$scope.params.limit);
                 });
+            };
+
+            $scope.getTimes=function(n){
+                return new Array(n);
             };
 
             /**
              * Set orders params
              * */
-            $scope.setOrder = function (field) {
-                $scope.params.field = field;
+            $scope.setOrder = function (order) {
+                $scope.orderField = order;
                 $scope.reverse = !$scope.reverse;
                 if ($scope.reverse) {
-                    $scope.params.reverse = ORDER_ASC;
+                    $scope.order = ORDER_ASC;
                 } else {
-                    $scope.params.reverse = ORDER_DESC;
+                    $scope.order = ORDER_DESC;
                 }
                 $scope.page = 1;
                 $scope.getTests();
             };
 
             /**
-             * get data fo page
+             * get prev page
              */
-            $scope.getPage = function(direction) {
-                if (direction == 'next') {
-                    $scope.page++;
-                }
-                if (direction == 'prev') {
-                    $scope.page--;
-                }
+            $scope.prev = function() {
+                $scope.page--;
+                $scope.getTests();
+            };
+
+            /**
+             * get next page
+             */
+            $scope.next = function() {
+                $scope.page++;
                 $scope.getTests();
             };
 
