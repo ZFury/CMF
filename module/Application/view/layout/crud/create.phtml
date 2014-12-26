@@ -34,6 +34,9 @@ $requireScript = '';
                     case $element instanceof Zend\Form\Element\Hidden :
                         $formElement = $this->formHidden($element);
                         break;
+                    case $element instanceof Zend\Form\Element\Checkbox :
+                        $formElement = $this->formCheckbox($element);
+                        break;
                     default :
                         $formElement = $this->formInput($element);
                         break;
