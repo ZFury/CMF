@@ -29,10 +29,10 @@ class Image extends File
      * @return string
      * @throws \Exception
      */
-    public static function imgPath($type, $id, $ext, $from = \Media\Service\File::FROM_ROOT)//$onlyPath it's because we need another path when working with Original and when we are getting it
+    public static function imgPath($type, $id, $ext, $from = File::FROM_ROOT)//$onlyPath it's because we need another path when working with Original and when we are getting it
     {
         if (self::ORIGINAL == $type) {
-            if ($from == \Media\Service\File::FROM_ROOT) {
+            if ($from == File::FROM_ROOT) {
                 $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::IMAGES_PATH . "original/";
             } else {
                 $path = self::UPLOADS_PATH . self::IMAGES_PATH . "original/";
@@ -44,9 +44,9 @@ class Image extends File
             if (empty($size)) {
                 throw new \Exception('Unsupported size');
             }
-            if ($from == \Media\Service\File::FROM_ROOT) {
+            if ($from == File::FROM_ROOT) {
                 $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::IMAGES_PATH . $size['width'] . 'x' . $size['height'];
-            } elseif ($from == \Media\Service\File::FROM_PUBLIC) {
+            } elseif ($from == File::FROM_PUBLIC) {
                 $path = self::UPLOADS_PATH . self::IMAGES_PATH . $size['width'] . 'x' . $size['height'];
             }
         }
