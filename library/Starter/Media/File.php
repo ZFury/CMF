@@ -14,8 +14,9 @@ trait File
 {
     public abstract function getEntityName();
 
-    public abstract function setLifecycleArgs(LifecycleEventArgs $args);
+    public abstract function setEntityManager(LifecycleEventArgs $args);
 
+    public abstract function getId();
     /**
      * Returns an array of ids
      *
@@ -23,8 +24,8 @@ trait File
      */
     public function getImages()
     {
-        $qb = $this->lifecycleArgs->getEntityManager()->createQueryBuilder();
-        $subQb = $this->lifecycleArgs->getEntityManager()->createQueryBuilder();
+        $qb = $this->entityManager->createQueryBuilder();
+        $subQb = $this->entityManager->createQueryBuilder();
         $subQb->select('oi.fileId')
             ->from('Media\Entity\ObjectFile', 'oi')
             ->where('oi.entityName=:name')
@@ -60,8 +61,8 @@ trait File
      */
     public function getAudios()
     {
-        $qb = $this->lifecycleArgs->getEntityManager()->createQueryBuilder();
-        $subQb = $this->lifecycleArgs->getEntityManager()->createQueryBuilder();
+        $qb = $this->entityManager->createQueryBuilder();
+        $subQb = $this->entityManager->createQueryBuilder();
         $subQb->select('oi.fileId')
             ->from('Media\Entity\ObjectFile', 'oi')
             ->where('oi.entityName=:name')
@@ -98,8 +99,8 @@ trait File
      */
     public function getVideos()
     {
-        $qb = $this->lifecycleArgs->getEntityManager()->createQueryBuilder();
-        $subQb = $this->lifecycleArgs->getEntityManager()->createQueryBuilder();
+        $qb = $this->entityManager->createQueryBuilder();
+        $subQb = $this->entityManager->createQueryBuilder();
         $subQb->select('oi.fileId')
             ->from('Media\Entity\ObjectFile', 'oi')
             ->where('oi.entityName=:name')
