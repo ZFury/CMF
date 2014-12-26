@@ -66,9 +66,9 @@ class User
      * @var string
      * @Annotation\Type("Zend\Form\Element\Select")
      * @Annotation\Required(false)
-     * @Annotation\Options({"label":"Role:", "value_options":{"1":"Member", "2":"Admin"}})
+     * @Annotation\Options({"label":"Role:", "value_options":{"member":"Member", "admin":"Admin"}})
      * @Annotation\Attributes({"class":"form-control"})
-     * @ORM\Column(type="string", length=128, options={"default" = "Member"})
+     * @ORM\Column(type="string", length=128, options={"default" = "member"})
      */
     protected $role;
 
@@ -81,7 +81,8 @@ class User
 
     /**
      * @var string
-     * @Annotation\Type("Zend\Form\Element\Select")     *
+     * @Annotation\Type("Zend\Form\Element\Select")
+     * @Annotation\Required(true)
      * @Annotation\Options({"label":"Satus:", "value_options":{"active" : "active", "inactive" : "inactive", "unconfirmed" : "unconfirmed"}})
      * @Annotation\Attributes({"class":"form-control"})
      * @ORM\Column(type="enumstatus", nullable=false, options={"default" = "unconfirmed"})
