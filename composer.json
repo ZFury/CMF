@@ -13,7 +13,9 @@
         "doctrine/common": "2.4.*",
         "doctrine/doctrine-orm-module": "0.8.*",
         "bjyoungblood/bjy-authorize": "1.4.*",
-        "facebook/php-sdk-v4": "4.0.*"
+        "facebook/php-sdk-v4": "4.0.*",
+        "doctrine/migrations": "dev-master",
+        "sundrique/doctrine-tools": ">=0.2"
     },
     "require-dev": {
         "mayflower/php-codebrowser": "1.1.1",

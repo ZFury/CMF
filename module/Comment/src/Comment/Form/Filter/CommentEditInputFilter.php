@@ -2,14 +2,10 @@
 
 namespace Comment\Form\Filter;
 
-use Zend\InputFilter\InputFilter;
 use Zend\ServiceManager\ServiceManager;
 
-class CommentEditInputFilter extends InputFilter
+class CommentEditInputFilter extends CommentInputFilter
 {
-    /** @var  ServiceManager */
-    protected $sm;
-
     /**
      * @param ServiceManager $sm
      */
@@ -17,22 +13,5 @@ class CommentEditInputFilter extends InputFilter
     {
         $this->sm = $sm;
         $this->comment();
-    }
-
-    /**
-     * @return $this
-     */
-    protected function comment()
-    {
-        $this->add(array(
-            'name' => 'comment',
-            'required' => true,
-            'filters' => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
-            ),
-        ));
-
-        return $this;
     }
 }

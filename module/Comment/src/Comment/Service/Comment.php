@@ -39,7 +39,7 @@ class Comment
     public function commentOwner($comment)
     {
         $identity = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity();
-        if ($comment->getUserId()===$identity->getUserId() || $identity->getUser()->getRole()===User::ROLE_ADMIN) {
+        if ($comment->getUserId() === $identity->getUserId() || $identity->getUser()->getRole() === User::ROLE_ADMIN) {
             return true;
         }
         return false;
@@ -50,10 +50,10 @@ class Comment
      * @return bool
      * @throws \Exception
      */
-    public function checkOwner($aliasEntity)
+    public function enabledComment($aliasEntity)
     {
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
-        !$entityType = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType($aliasEntity);
+        $entityType = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType($aliasEntity);
         if (!$entityType->getEnabledComment()) {
             throw new \Exception('Comment on this entity can not be');
         }
@@ -69,17 +69,21 @@ class Comment
      */
     public function add(\Zend\Form\Form $form, array $data)
     {
-        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $serviceLocator = $this->getServiceLocator();
+        $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
         $form->setData($data);
         if ($form->isValid()) {
-            if ($this->checkOwner($data['entity'])) {
+            if ($this->enabledComment($data['entity'])) {
                 $data = $form->getData();
-                $serviceEntityType = $this->getServiceLocator()->get('Comment\Service\EntityType');
-                $entityType = $serviceEntityType->checkEntity($data['entity'], $data['entityId']);
+                $serviceEntityType = $serviceLocator->get('Comment\Service\EntityType');
+                $entityType = $serviceEntityType->getEntity($data['entity'], $data['entityId']);
+                if (!$this->enabledComment($data['entity'])) {
+                    throw new \Exception('Prohibited add comments for this entity');
+                }
 
                 $comment = new Entity\Comment();
                 $comment->setEntityType($entityType);
-                $user = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity()->getUser();
+                $user = $serviceLocator->get('Zend\Authentication\AuthenticationService')->getIdentity()->getUser();
                 $comment->setUser($user);
                 $comment->setComment($data['comment']);
 
@@ -111,30 +115,29 @@ class Comment
     public function lisComments(array $data)
     {
         if (!isset($data['entity']) || !isset($data['entityId'])) {
-            return $this->notFoundAction();
+            throw new \Exception('Bad request');
         }
 
         $serviceEntityType = $this->getServiceLocator()->get('Comment\Service\EntityType');
-        $entityType = $serviceEntityType->checkEntity($data['entity'], $data['entityId']);
-
-        if (!$this->checkOwner($data['entity']) || !$entityType->getVisibleComment()) {
-            throw new \Exception('Comments for this entity is prohibited to display');
-        }
+        $entityType = $serviceEntityType->getEntity($data['entity'], $data['entityId']);
 
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
-        $comments = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => $entityType, 'entityId' => $data['entityId']));
+        $commentRepository = $objectManager->getRepository('Comment\Entity\Comment');
+        $comments = $commentRepository->findBy(array('entityType' => $entityType, 'entityId' => $data['entityId']));
         $arrayComments = array();
 
-        $entityComment = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment');
+        $identity = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity();
+        if ($entityType->getVisibleComment() || $identity->getUser()->getRole() === User::ROLE_ADMIN) {
+            $entityComment = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType($data['entity']);
+            $enabledCommentByComment = $entityComment->getEnabledComment();
 
-        foreach ($comments as $comment) {
-            $arrayComments[$comment->getId()]['comment'] = $comment;
-            if ($entityComment->getVisibleComment()) {
-                    $data = [
-                        'entity' => 'comment',
-                        'entityId' => $comment->getId()
-                    ];
-                    $arrayComments[$comment->getId()]['children'] = self::lisComments($data);
+            foreach ($comments as $comment) {
+                $arrayComments[$comment->getId()]['comment'] = $comment;
+                if ($entityComment->getVisibleComment()) {
+                    $data = ['entity' => 'comment', 'entityId' => $comment->getId()];
+                    $arrayComments[$comment->getId()]['children'] = $this->lisComments($data);
+                }
+                $arrayComments[$comment->getId()]['enabledCommentByComment'] = $enabledCommentByComment;
             }
         }
 
@@ -149,18 +152,15 @@ class Comment
     public function delete($id)
     {
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
-
         $comment = $objectManager->getRepository('\Comment\Entity\Comment')->findOneBy(['id' => $id]);
 
         if (!$comment) {
             throw new \Exception('Comment does not exist');
         }
-
         if (!$this->commentOwner($comment)) {
-            throw new \Exception('You are not authorized for this operation');
+            throw new \Exception('You do not have permission for this operation');
         }
-
-        if (!$this->checkOwner($comment->getEntityType()->getAliasEntity())) {
+        if (!$this->enabledComment($comment->getEntityType()->getAliasEntity())) {
             throw new \Exception('Comment can not be deleted');
         }
 
@@ -187,9 +187,11 @@ class Comment
     public function edit(\Zend\Form\Form $form, Entity\Comment $comment, $data)
     {
         if (!$this->commentOwner($comment)) {
-            throw new \Exception('You are not authorized for this operation');
+            throw new \Exception('You do not have permission for this operation');
         }
-
+        if (!$this->enabledComment($comment->getEntityType()->getAliasEntity())) {
+            throw new \Exception('Comment can not be edited');
+        }
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $hydrator = new DoctrineHydrator($entityManager);
         $hydrator->hydrate($data, $comment);
@@ -213,9 +215,7 @@ class Comment
         $form = $builder->createForm(new Entity\Comment());
         $form->setInputFilter(new Filter\CommentInputFilter($this->getServiceLocator()));
         if ($comment) {
-            if (!$this->checkOwner($comment->getEntityType()->getAliasEntity())) {
-                throw new \Exception('Comment can not be edited');
-            }
+            $form->setInputFilter(new Filter\CommentEditInputFilter($this->getServiceLocator()));
             $form->setHydrator(new DoctrineHydrator($entityManager));
             $form->bind($comment);
         }
