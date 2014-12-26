@@ -23,8 +23,8 @@ class IndexController extends AbstractActionController
     public function databaseAction()
     {
         $this->layout('layout/install/install');
-        $session = new Container('progress_tracker');
-        $session->offsetSet('db', self::TODO);
+        $sessionProgress = new Container('progress_tracker');
+        $sessionProgress->offsetSet('db', self::TODO);
         $this->setProgress();
 
         if ($this->getRequest()->isPost()) {
@@ -36,8 +36,8 @@ class IndexController extends AbstractActionController
                 $sessionForms->offsetSet('dbForm', $dbForm);
             }
 
-            $session = new Container('progress_tracker');
-            $session->offsetSet('db', self::DONE);
+            $sessionProgress = new Container('progress_tracker');
+            $sessionProgress->offsetSet('db', self::DONE);
 
             return $this->redirect()->toRoute(
                 'install/default',
@@ -58,8 +58,8 @@ class IndexController extends AbstractActionController
     public function modulesAction()
     {
         $this->layout('layout/install/install');
-        $session = new Container('progress_tracker');
-        $session->offsetSet('modules', self::TODO);
+        $sessionProgress = new Container('progress_tracker');
+        $sessionProgress->offsetSet('modules', self::TODO);
         $this->setProgress();
 
         if ($this->getRequest()->isPost()) {
@@ -70,8 +70,8 @@ class IndexController extends AbstractActionController
                 $sessionForms->offsetSet('modulesForm', $modulesForm);
             }
 
-            $session = new Container('progress_tracker');
-            $session->offsetSet('modules', self::DONE);
+            $sessionProgress = new Container('progress_tracker');
+            $sessionProgress->offsetSet('modules', self::DONE);
 
             return $this->redirect()->toRoute(
                 'install/default',
@@ -92,8 +92,8 @@ class IndexController extends AbstractActionController
     public function requirementsAction()
     {
         $this->layout('layout/install/install');
-        $session = new Container('progress_tracker');
-        $session->offsetSet('requirements', self::TODO);
+        $sessionProgress = new Container('progress_tracker');
+        $sessionProgress->offsetSet('requirements', self::TODO);
         $this->setProgress();
 
         if ($this->getRequest()->isPost()) {
@@ -104,8 +104,8 @@ class IndexController extends AbstractActionController
                 $sessionForms = new Container('forms');
                 $sessionForms->offsetSet('dbForm', $dbForm);
             }
-            $session = new Container('progress_tracker');
-            $session->offsetSet('requirements', self::DONE);
+            $sessionProgress = new Container('progress_tracker');
+            $sessionProgress->offsetSet('requirements', self::DONE);
 
             return $this->redirect()->toRoute(
                 'install/default',
@@ -126,13 +126,13 @@ class IndexController extends AbstractActionController
     public function configsAction()
     {
         $this->layout('layout/install/install');
-        $session = new Container('progress_tracker');
-        $session->offsetSet('configs', self::TODO);
+        $sessionProgress = new Container('progress_tracker');
+        $sessionProgress->offsetSet('configs', self::TODO);
         $this->setProgress();
 
         if ($this->getRequest()->isPost()) {
-            $session = new Container('progress_tracker');
-            $session->offsetSet('configs', self::DONE);
+            $sessionProgress = new Container('progress_tracker');
+            $sessionProgress->offsetSet('configs', self::DONE);
 
             return $this->redirect()->toRoute(
                 'install/default',
@@ -153,9 +153,12 @@ class IndexController extends AbstractActionController
     public function finishAction()
     {
         $this->layout('layout/install/install');
-        $session = new Container('progress_tracker');
-        $session->offsetSet('finish', self::DONE);
+        $sessionProgress = new Container('progress_tracker');
+        $sessionProgress->offsetSet('finish', self::DONE);
         $this->setProgress();
+        $sessionProgress->getManager()->getStorage()->clear('progress_tracker');
+
+
 
         return new ViewModel();
     }
