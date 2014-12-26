@@ -37,7 +37,7 @@ class Image extends File
             if ($from == File::FROM_ROOT) {
                 $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::IMAGES_PATH . "original/";
             } else {
-                $path = self::UPLOADS_PATH . self::IMAGES_PATH . "original/";
+                $path = DIRECTORY_SEPARATOR . self::UPLOADS_PATH . self::IMAGES_PATH . "original/";
             }
 
 
@@ -54,7 +54,7 @@ class Image extends File
                     'x' .
                     $size['height'];
             } elseif ($from == File::FROM_PUBLIC) {
-                $path = self::UPLOADS_PATH . self::IMAGES_PATH . $size['width'] . 'x' . $size['height'];
+                $path = DIRECTORY_SEPARATOR . self::UPLOADS_PATH . self::IMAGES_PATH . $size['width'] . 'x' . $size['height'];
             }
         }
 

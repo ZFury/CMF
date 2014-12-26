@@ -30,7 +30,7 @@ class Video extends File
         if ($from == File::FROM_ROOT) {
             $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::VIDEOS_PATH;
         } else {
-            $path = self::UPLOADS_PATH . self::VIDEOS_PATH;
+            $path = DIRECTORY_SEPARATOR . self::UPLOADS_PATH . self::VIDEOS_PATH;
         }
 
         return self::buildFilePath($id, $path, $ext);

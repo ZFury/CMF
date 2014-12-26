@@ -34,7 +34,7 @@ class Audio extends File
         if ($from == File::FROM_ROOT) {
             $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::AUDIOS_PATH;
         } else {
-            $path = self::UPLOADS_PATH . self::AUDIOS_PATH;
+            $path = DIRECTORY_SEPARATOR . self::UPLOADS_PATH . self::AUDIOS_PATH;
         }
 
         return self::buildFilePath($id, $path, $ext);
