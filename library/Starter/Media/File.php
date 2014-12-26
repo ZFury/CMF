@@ -8,13 +8,17 @@
 
 namespace Starter\Media;
 
+use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Query\Expr\Join;
 
 trait File
 {
     public abstract function getEntityName();
 
-    public abstract function setLifecycleArgs(LifecycleEventArgs $args);
+    public abstract function setEntityManager(LifecycleEventArgs $args);
+
+    public abstract function getId();
 
     /**
      * Returns an array of ids
@@ -23,34 +27,18 @@ trait File
      */
     public function getImages()
     {
-        $qb = $this->lifecycleArgs->getEntityManager()->createQueryBuilder();
-        $subQb = $this->lifecycleArgs->getEntityManager()->createQueryBuilder();
-        $subQb->select('oi.fileId')
-            ->from('Media\Entity\ObjectFile', 'oi')
-            ->where('oi.entityName=:name')
-            ->andWhere('oi.objectId=:id')
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('f')
+            ->from('\Media\Entity\File', 'f')
+            ->innerJoin('\Media\Entity\ObjectFile', 'obf', Join::WITH, 'f.id = obf.fileId')
+            ->where('f.type = :type')
+            ->andWhere('obf.entityName = :name')
+            ->andWhere('obf.objectId = :id')
+            ->setParameter('type', \Media\Entity\File::IMAGE_FILETYPE)
             ->setParameter('name', $this->getEntityName())
-            ->setParameter('id', $this->id);
-        $results = $subQb->getQuery()->getResult();
+            ->setParameter('id', $this->getId());
 
-        if (!$results) {
-            return [];
-        }
-
-        foreach ($results as $result) {
-            array_push($results, $result['fileId']);
-            array_shift($results);
-        }
-
-        $qb->select('i')
-            ->from('Media\Entity\File', 'i')
-            ->where($qb->expr()->in('i.id', $results))
-            ->andWhere('i.type=:type')
-            ->setParameter('type', \Media\Entity\File::IMAGE_FILETYPE);
-
-        $result = $qb->getQuery()->getResult();
-
-        return $result;
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -60,35 +48,18 @@ trait File
      */
     public function getAudios()
     {
-        $qb = $this->lifecycleArgs->getEntityManager()->createQueryBuilder();
-        $subQb = $this->lifecycleArgs->getEntityManager()->createQueryBuilder();
-        $subQb->select('oi.fileId')
-            ->from('Media\Entity\ObjectFile', 'oi')
-            ->where('oi.entityName=:name')
-            ->andWhere('oi.objectId=:id')
-            ->setParameter('name', $this->getEntityName())
-            ->setParameter('id', $this->id);
-        $results = $subQb->getQuery()->getResult();
-
-        if (!$results) {
-            return [];
-        }
-
-        foreach ($results as $result) {
-            array_push($results, $result['fileId']);
-            array_shift($results);
-        }
-
-        $qb->select('i')
-            ->from('Media\Entity\File', 'i')
-            ->where($qb->expr()->in('i.id', $results))
-            ->andWhere('i.type=:type')
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('f')
+            ->from('\Media\Entity\File', 'f')
+            ->innerJoin('\Media\Entity\ObjectFile', 'obf', Join::WITH, 'f.id = obf.fileId')
+            ->where('f.type = :type')
+            ->andWhere('obf.entityName = :name')
+            ->andWhere('obf.objectId = :id')
             ->setParameter('type', \Media\Entity\File::AUDIO_FILETYPE)
-        ;
+            ->setParameter('name', $this->getEntityName())
+            ->setParameter('id', $this->getId());
 
-        $result = $qb->getQuery()->getResult();
-
-        return $result;
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -98,34 +69,17 @@ trait File
      */
     public function getVideos()
     {
-        $qb = $this->lifecycleArgs->getEntityManager()->createQueryBuilder();
-        $subQb = $this->lifecycleArgs->getEntityManager()->createQueryBuilder();
-        $subQb->select('oi.fileId')
-            ->from('Media\Entity\ObjectFile', 'oi')
-            ->where('oi.entityName=:name')
-            ->andWhere('oi.objectId=:id')
-            ->setParameter('name', $this->getEntityName())
-            ->setParameter('id', $this->id);
-        $results = $subQb->getQuery()->getResult();
-
-        if (!$results) {
-            return [];
-        }
-
-        foreach ($results as $result) {
-            array_push($results, $result['fileId']);
-            array_shift($results);
-        }
-
-        $qb->select('i')
-            ->from('Media\Entity\File', 'i')
-            ->where($qb->expr()->in('i.id', $results))
-            ->andWhere('i.type=:type')
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('f')
+            ->from('\Media\Entity\File', 'f')
+            ->innerJoin('\Media\Entity\ObjectFile', 'obf', Join::WITH, 'f.id = obf.fileId')
+            ->where('f.type = :type')
+            ->andWhere('obf.entityName = :name')
+            ->andWhere('obf.objectId = :id')
             ->setParameter('type', \Media\Entity\File::VIDEO_FILETYPE)
-        ;
+            ->setParameter('name', $this->getEntityName())
+            ->setParameter('id', $this->getId());
 
-        $result = $qb->getQuery()->getResult();
-
-        return $result;
+        return $qb->getQuery()->getResult();
     }
 }

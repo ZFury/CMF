@@ -20,7 +20,6 @@ use Zend\Form\Annotation;
  */
 class ObjectFile
 {
-
     /**
      * @var string
      *

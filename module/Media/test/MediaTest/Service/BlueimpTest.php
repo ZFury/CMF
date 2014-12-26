@@ -56,17 +56,14 @@ class BlueimpTest extends AbstractHttpControllerTestCase
 
     public function testDeleteFileJson()
     {
-        $this->assertJson(json_encode($this->blueimpService->deleteFileJson(1)));
+        $this->assertJson(json_encode($this->blueimpService->deleteFileJson()));
     }
 
     public function testDisplayUploadedFiles()
     {
         $entityManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         $files = $entityManager->getRepository('Media\Entity\File')->findByType('image');
-        $deleteUrls = [];
-        foreach ($files as $file) {
-            array_push($deleteUrls, ['id' => 0, 'deleteUrl' => 0]);
-        }
-        $this->assertJson(json_encode($this->blueimpService->displayUploadedFiles($files, $deleteUrls)));
+        $mask = '/mask/mask/';
+        $this->assertJson(json_encode($this->blueimpService->displayUploadedFiles($files, $mask)));
     }
 }

@@ -6,23 +6,18 @@
  * Time: 12:06
  */
 ?>
-<div class="well well-sm"> <?= $this->escapeHtml(($this->node->getName())) ?>
+<div class="well well-sm">
+    <img src="<?= $this->node->getImageUrl(); ?>">
+    <?= $this->escapeHtml(($this->node->getName())) ?>
     <div class="pull-right">
-        <a href="#"
+        <a href="<?= $this->url('categories/create', array('parentId' => $this->node->getId())) ?>"
            class="btn btn-xs btn-success dialog"
-           data-toggle="modal"
-           data-target="#formModal"
-           data-url="<?= $this->url('categories/create', array('parentId' => $this->node->getId())) ?>"
-           data-action="Create category">
+           data-title="Create category">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         </a>
-        <a href="#"
+        <a href="<?= $this->url('categories/default', array('controller' => 'management', 'action' => 'edit', 'id' => $this->node->getId())) ?>"
            class="btn btn-primary btn-xs dialog"
-           data-toggle="modal"
-           data-target="#formModal"
-           data-id="<?= $this->node->getId(); ?>"
-           data-url="<?= $this->url('categories/default', array('controller' => 'management', 'action' => 'edit', 'id' => $this->node->getId())) ?>"
-           data-action="Edit category">
+           data-title="Edit category">
             <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
         </a>
         <a href="<?= $this->url('categories/default', array('controller' => 'management', 'action' => 'delete', 'id' => $this->node->getId())) ?>"

@@ -25,22 +25,28 @@ class Video extends File
      * @return string
      * @throws \Exception
      */
-    public static function videoPath($id, $ext, $from = \Media\Service\File::FROM_ROOT)//$onlyPath it's because we need another path when working with Original and when we are getting it
-    {
-        if ($from == \Media\Service\File::FROM_ROOT) {
+    public static function videoPath($id, $ext, $from = File::FROM_ROOT)//$onlyPath it's because we need another path
+    {//when working with Original and when we are getting it
+        if ($from == File::FROM_ROOT) {
             $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::VIDEOS_PATH;
         } else {
-            $path = self::UPLOADS_PATH . self::VIDEOS_PATH;
+            $path = DIRECTORY_SEPARATOR . self::UPLOADS_PATH . self::VIDEOS_PATH;
         }
 
         return self::buildFilePath($id, $path, $ext);
     }
 
-    public function convertVideoToMp4(\Media\Entity\File $videoEntity, $bitrate = 300)
+    /**
+     * @param File $videoEntity
+     * @param string $newExtension
+     * @param int $bitrate
+     * @return File
+     */
+    public function convertVideo(File $videoEntity, $newExtension = self::MP4_EXT, $bitrate = 300)
     {
         //With libav avconv installed
         $oldLocation = $videoEntity->getLocation();
-        $videoEntity->setExtension(self::MP4_EXT);
+        $videoEntity->setExtension($newExtension);
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($videoEntity);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
         $newLocation = $videoEntity->getLocation();
@@ -49,9 +55,15 @@ class Video extends File
         return $videoEntity;
     }
 
+    /**
+     * @param $oldLocation
+     * @param $newLocation
+     * @param int $bitrate
+     * @return bool
+     */
     public function executeConversion($oldLocation, $newLocation, $bitrate = 300)
     {
-        exec("avconv -i $oldLocation -strict experimental -b $bitrate" . "k -y $newLocation", $output, $return);
+        exec("avconv -i $oldLocation -strict experimental -r ntsc-film -b $bitrate" . "k -y $newLocation", $output, $return);
         if (isset($return) && 0 === $return) {
             return true;
         }

@@ -10,6 +10,10 @@ namespace Media\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Media\Service\Audio;
+use Media\Service\Image;
+use Media\Service\Video;
+use Media\Service\File as FileService;
 use Zend\Form\Annotation;
 
 /**
@@ -146,11 +150,20 @@ class File
         return $this->id;
     }
 
+    /**
+     * Get type
+     *
+     * @return string
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * @param $type
+     * @return $this
+     */
     public function setType($type)
     {
         $this->type = $type;
@@ -159,7 +172,8 @@ class File
     }
 
     /**
-     * @return mixed
+     * @return string
+     * @throws \Exception
      */
     public function getLocation()
     {
@@ -167,19 +181,19 @@ class File
 
         switch ($this->type) {
             case self::IMAGE_FILETYPE:
-                return \Media\Service\Image::imgPath(\Media\Service\Image::ORIGINAL, $this->id, $ext);
+                return Image::imgPath(Image::ORIGINAL, $this->id, $ext);
             case self::AUDIO_FILETYPE:
-                return \Media\Service\Audio::audioPath($this->id, $ext);
+                return Audio::audioPath($this->id, $ext);
             case self::VIDEO_FILETYPE:
-                return \Media\Service\Video::videoPath($this->id, $ext);
+                return Video::videoPath($this->id, $ext);
             default:
+                return '';
         }
-
-
     }
 
     /**
-     * @return string
+     * @return null|string
+     * @throws \Exception
      */
     public function getUrlPart()
     {
@@ -187,11 +201,11 @@ class File
 
         switch ($this->type) {
             case self::IMAGE_FILETYPE:
-                return \Media\Service\Image::imgPath(\Media\Service\Image::ORIGINAL, $this->id, $ext, \Media\Service\File::FROM_PUBLIC);
+                return Image::imgPath(Image::ORIGINAL, $this->id, $ext, FileService::FROM_PUBLIC);
             case self::AUDIO_FILETYPE:
-                return \Media\Service\Audio::audioPath($this->id, $ext, \Media\Service\File::FROM_PUBLIC);
+                return Audio::audioPath($this->id, $ext, FileService::FROM_PUBLIC);
             case self::VIDEO_FILETYPE:
-                return \Media\Service\Video::videoPath($this->id, $ext, \Media\Service\File::FROM_PUBLIC);
+                return Video::videoPath($this->id, $ext, FileService::FROM_PUBLIC);
             default:
         }
 
@@ -203,26 +217,27 @@ class File
      * @return null|string
      * @throws \Exception
      */
-    public function getThumb($thumbSize = \Media\Service\Image::SMALL_THUMB)
+    public function getThumb($thumbSize = Image::SMALL_THUMB)
     {
         switch ($this->type) {
             case self::IMAGE_FILETYPE:
                 $ext = $this->getExtension();
                 $imageId = $this->getId();
-                $urlPart = \Media\Service\Image::imgPath($thumbSize, $imageId, $ext, \Media\Service\File::FROM_PUBLIC);
+                $urlPart = Image::imgPath($thumbSize, $imageId, $ext, FileService::FROM_PUBLIC);
                 if (!file_exists($urlPart)) {
                     $originalLocation = $this->getLocation();
                     $image = new \Imagick($originalLocation);
-                    $image->cropThumbnailImage(\Media\Service\Image::S_THUMB_WIDTH, \Media\Service\Image::S_THUMB_HEIGHT);
-                    \Media\Service\File::prepareDir(\Media\Service\File::PUBLIC_PATH . $urlPart);
-                    $image->writeimage(\Media\Service\File::PUBLIC_PATH . $urlPart);
+                    $size = Image::sizeByType($thumbSize);
+                    $image->cropThumbnailImage($size['width'], $size['height']);
+                    FileService::prepareDir(FileService::PUBLIC_PATH . $urlPart);
+                    $image->writeimage(FileService::PUBLIC_PATH . $urlPart);
                 }
 
                 return $urlPart;
             case self::AUDIO_FILETYPE:
-                return \Media\Service\Audio::audioPath($this->id, $this->getExtension(), \Media\Service\File::FROM_PUBLIC);
+                return Audio::audioPath($this->id, $this->getExtension(), FileService::FROM_PUBLIC);
             case self::VIDEO_FILETYPE:
-                return \Media\Service\Video::videoPath($this->id, $this->getExtension(), \Media\Service\File::FROM_PUBLIC);
+                return Video::videoPath($this->id, $this->getExtension(), FileService::FROM_PUBLIC);
             default:
         }
 

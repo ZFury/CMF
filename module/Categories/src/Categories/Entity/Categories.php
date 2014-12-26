@@ -93,7 +93,7 @@ class Categories extends EntityBase
      */
     protected $order;
 
-    private $lifecycleArgs;
+    private $entityManager;
 
     /**
      *
@@ -326,9 +326,9 @@ class Categories extends EntityBase
     /**
      * @ORM\PostLoad
      */
-    public function setLifecycleArgs(LifecycleEventArgs $args)
+    public function setEntityManager(LifecycleEventArgs $args)
     {
-        $this->lifecycleArgs = $args;
+        $this->entityManager = $args->getEntityManager();
     }
 
     public function getEntityName()
@@ -354,5 +354,15 @@ class Categories extends EntityBase
         );
 
         return $result;
+    }
+
+    public function getImageUrl()
+    {
+        if ($images = $this->getImages()) {
+            return $images[count($images) - 1]->getThumb(\Media\Service\Image::EXTRA_SMALL_THUMB);
+        } else {
+            return '/img/default_category.png';
+        }
+
     }
 }
