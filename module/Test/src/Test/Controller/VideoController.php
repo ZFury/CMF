@@ -17,6 +17,9 @@ use Media\Form\Filter\VideoUploadInputFilter;
 
 class VideoController extends AbstractActionController
 {
+    /**
+     * @return ViewModel
+     */
     public function uploadVideoAction()
     {
         $fileService = new File($this->getServiceLocator());
@@ -70,6 +73,9 @@ class VideoController extends AbstractActionController
         return new JsonModel($dataForJson);
     }
 
+    /**
+     * @return mixed
+     */
     public function deleteVideoAction()
     {
         $this->getServiceLocator()->get('Media\Service\File')

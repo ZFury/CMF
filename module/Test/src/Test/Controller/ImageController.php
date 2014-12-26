@@ -17,6 +17,9 @@ use Media\Form\Filter\ImageUploadInputFilter;
 
 class ImageController extends AbstractActionController
 {
+    /**
+     * @return ViewModel
+     */
     public function uploadImageAction()
     {
         $imageService = $this->getServiceLocator()->get('Media\Service\File');
@@ -72,6 +75,9 @@ class ImageController extends AbstractActionController
         return new JsonModel($dataForJson);
     }
 
+    /**
+     * @return mixed
+     */
     public function deleteImageAction()
     {
         $this->getServiceLocator()->get('Media\Service\File')

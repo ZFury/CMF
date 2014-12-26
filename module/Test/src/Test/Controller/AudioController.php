@@ -17,6 +17,9 @@ use Media\Form\Filter\AudioUploadInputFilter;
 
 class AudioController extends AbstractActionController
 {
+    /**
+     * @return ViewModel
+     */
     public function uploadAudioAction()
     {
         $fileService = new File($this->getServiceLocator());
@@ -71,6 +74,9 @@ class AudioController extends AbstractActionController
         return new JsonModel($dataForJson);
     }
 
+    /**
+     * @return mixed
+     */
     public function deleteAudioAction()
     {
         $this->getServiceLocator()->get('Media\Service\File')
