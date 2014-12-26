@@ -194,12 +194,14 @@ abstract class AbstractGrid
         }
         if ($filter = $this->getFilter()) {
             $source->where(
-                $source->expr()->orX()->add(
-                    $source->expr()->like(
-                        $this->getDoctrineField(key($filter)),
-                        $source->expr()->literal('%' . current($filter) . '%')
+                $source->expr()->orX()
+                    ->add(
+                        $source->expr()
+                            ->like(
+                                $this->getDoctrineField(key($filter)),
+                                $source->expr()->literal('%' . current($filter) . '%')
+                            )
                     )
-                )
             );
         }
         $data = $source->getQuery();
