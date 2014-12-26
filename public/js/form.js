@@ -1,57 +1,69 @@
 /**
  * Created by babich on 12/19/14.
  */
-define(['jquery', 'tmpl',
-    'iframe-transport',
-    'fileupload-ui'], function ($) {
+define(['jquery', 'notify'], function ($, notify) {
+    var modals = [];
+    var createModal = function (content, title) {
+
+        var $div = $('<div>', {'class': 'modal fade', 'id': 'formModal'});
+        var $divDialog = $('<div>', {'class': 'modal-dialog modal-lg'});
+        var $divContent = $('<div>', {'class': 'modal-content'});
+        var $divBody = $('<div>', {'class': 'modal-body', 'id': 'popupBody'});
+        var $divHeader = $('<div>', {'class': 'modal-header'});
+        var $divFooter = $('<div>', {'class': 'modal-footer'});
+        var $saveButton = $('<button>', {
+            'class': 'btn btn-primary',
+            'type': 'button',
+            'id': 'submit-form-button'
+        });
+        var $closeButton = $('<button>', {
+            'class': 'btn btn-default',
+            'type': 'button',
+            'id': 'close-form-button',
+            'data-dismiss': 'modal'
+        });
+        $divBody.append(content);
+        $divHeader.html('<button type="button" class="close" data-dismiss="modal">'
+            + '<span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>'
+            + '<h4 class="modal-title" id="formModalLabel">' + title + '</h4>'
+        );
+        $saveButton.html('Save');
+        $closeButton.html('Close');
+        $divFooter.html($saveButton);
+        $divFooter.append($closeButton);
+
+        $divContent.html($divHeader);
+        $divContent.append($divBody);
+        $divContent.append($divFooter);
+        $divDialog.append($divContent);
+        $div.append($divDialog);
+        $div.modal();
+
+        modals.push($div);
+
+        return $div;
+    };
+    var closeModals = function () {
+        for (var i = 0; i < modals.length; i++) {
+            modals[i].modal('hide');
+            modals[i].data('modal', null);
+        }
+        modals = [];
+    };
+
     var actionUrl;
-    var counter = 1;
     $('body')
         .on('click.ajax', '.dialog', function (event) {
-            $('#formModalLabel').html($(this).data('action'));
-            var id = $(this).data('id');
-            actionUrl = $(this).data('url');
+            var title = $(this).data('title');
+            if (!title) {
+                title = 'Create/edit';
+            }
+            actionUrl = $(this).attr('href');
             $.ajax({
                 url: actionUrl,
-                dataType: 'html',
                 success: function (data) {
-                    $('#popupBody').html(data);
-                },
-                complete: function () {
-                    if ($('#fileupload').length != 0) {
-                        if (counter > 1) {
-                            'use strict';
-                            var idString = '';
-                            if (id)
-                                idString = '/' + id;
-                            // Initialize the jQuery File Upload widget:
-                            $('#fileupload').fileupload({
-                                url: 'categories/management/start-image-upload' + idString
-                            });
-                            // Enable iframe cross-domain access via redirect option:
-                            $('#fileupload').fileupload(
-                                'option',
-                                'redirect',
-                                window.location.href.replace(
-                                    /\/[^\/]*$/,
-                                    '/cors/result.html?%s'
-                                )
-                            );
-                            // Load existing files:
-                            $('#fileupload').addClass('fileupload-processing');
-                            $.ajax({
-                                url: $('#fileupload').fileupload('option', 'url'),
-                                dataType: 'json',
-                                context: $('#fileupload')[0]
-                            }).always(function () {
-                                $(this).removeClass('fileupload-processing');
-                            }).done(function (result) {
-                                $(this).fileupload('option', 'done')
-                                    .call(this, $.Event('done'), {result: result});
-                            });
-                        }
-                        counter++;
-                    }
+                    createModal(data, title);
+                    $('body').trigger('modal.loaded', []);
                 }
             });
             event.preventDefault();
@@ -78,12 +90,21 @@ define(['jquery', 'tmpl',
                         }
                     } else {
                         $('#close-form-button').trigger('click');
-                        location.reload();
+                        jsonData.success.forEach(function (entry) {
+                            notify.addSuccess(entry);
+                        });
                     }
                 },
                 data: formData,
                 dataType: 'json'
             });
             event.preventDefault();
+        })
+        .on('hidden.bs.modal', function () {
+            $('.container-fluid').load(location.pathname, function () {
+                $('body').trigger('form.success', []);
+                closeModals();
+                $('.modal').remove();
+            });
         });
 });

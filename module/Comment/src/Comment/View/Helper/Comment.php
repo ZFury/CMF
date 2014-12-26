@@ -5,7 +5,6 @@ namespace Comment\View\Helper;
 use Zend\View\Helper\HelperInterface;
 use Zend\View\Renderer\RendererInterface as Renderer;
 
-
 class Comment implements HelperInterface
 {
     private $view;
@@ -22,6 +21,6 @@ class Comment implements HelperInterface
 
     public function __invoke($partial, $comments)
     {
-       return $this->view->partialLoop($partial, $comments);
+        return $this->view->partialLoop($partial, $comments);
     }
 }

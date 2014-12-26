@@ -163,8 +163,10 @@ abstract class AbstractGrid
         if ($filter = $this->getFilter()) {
             $source->where(
                 $source->expr()->orX()->add(
-                    $source->expr()->like($this->getDoctrineField(key($filter)),
-                        $source->expr()->literal('%' . current($filter) . '%'))
+                    $source->expr()->like(
+                        $this->getDoctrineField(key($filter)),
+                        $source->expr()->literal('%' . current($filter) . '%')
+                    )
                 )
             );
         }
@@ -397,14 +399,14 @@ abstract class AbstractGrid
         return $this->allowedFilters;
     }
 
-    protected  function getTotalRows()
+    protected function getTotalRows()
     {
         $source = $this->getSource();
         /** @var \Doctrine\ORM\Query\Expr\Select $select */
         $select = current($source->getDQLPart('select'));
         $from = current($select->getParts());
         $source->resetDQLPart('select')->setFirstResult(0)->select('count(' . $from . ')');
-        return (int) current($source->getQuery()->getSingleResult());
+        return (int)current($source->getQuery()->getSingleResult());
     }
 
     public function getTotal()
