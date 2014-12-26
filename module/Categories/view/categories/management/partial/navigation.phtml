@@ -6,7 +6,9 @@
  * Time: 12:06
  */
 ?>
-<div class="well well-sm"> <?= $this->escapeHtml(($this->node->getName())) ?>
+<div class="well well-sm">
+    <img src="<?= $this->node->getImageUrl(); ?>">
+    <?= $this->escapeHtml(($this->node->getName())) ?>
     <div class="pull-right">
         <a href="<?= $this->url('categories/create', array('parentId' => $this->node->getId())) ?>"
            class="btn btn-xs btn-success dialog"
