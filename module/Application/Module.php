@@ -73,8 +73,8 @@ class Module
                     'message' => $message,
                     'code' => $code,
                 ),
-                'params' => array(),
-                'options' => array()
+            'data' => array(),
+            'options' => array()
             )
         );
 
@@ -201,23 +201,23 @@ class Module
             return;
         }
 
-        $childrens = $event->getViewModel()->getChildren();
-        if ($childrens) {
-            foreach ($childrens as $children) {
-                $params = $children->getVariables();
+        $children = $event->getViewModel()->getChildren();
+        if ($children) {
+            foreach ($children as $child) {
+                $params = $child->getVariables();
             }
         } else {
             $params = $event->getViewModel()->getVariables();
         }
 
         $result = array(
-            'params' => array(),
+            'data' => array(),
             'errors' => array(),
             'options' => array()
         );
         foreach ($params as $param) {
             if (method_exists($param, 'toArray')) {
-                $result['params'][] = $param->toArray();
+                $result['data'][] = $param->toArray();
             } elseif ($param instanceof \Zend\Form\Form) {
                 foreach ($param->getElements() as $formElement) {
                     $messages = array();
@@ -231,10 +231,12 @@ class Module
                     }
                 }
                 $result['errors'] = $errors;
-                $result['params'] = $param->getData();
+                $result['data'][] = $param->getData();
                 $result['options'] = array(
                     'method' => $param->getAttribute('method')
                 );
+            } else {
+                $result['data'][] = $param;
             }
         }
         $result['success'] = $flashmessenger->getCurrentSuccessMessages();
