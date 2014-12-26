@@ -8,7 +8,9 @@
 
 namespace Media\Service;
 
+use Media\Entity\File as FileEntity;
 use Media\Entity\ObjectFile;
+use Media\Form\FileUpload;
 use Zend\Filter\File\RenameUpload;
 
 class File
@@ -121,33 +123,49 @@ class File
      */
     public function deleteFile($fileId)
     {
-        $this->deleteObjectFileEntity($fileId);
-        $this->deleteFileEntity($fileId);
+        $file = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\File')->find($fileId);
+        $this->deleteObjectFileEntity($file);
+        $this->deleteFileEntity($file);
     }
 
-    public function deleteFileEntity($fileId)
+    /**
+     * @param FileEntity $file
+     */
+    public function deleteFileEntity(FileEntity $file)
     {
-        $file = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\File')->findOneById($fileId);
         $this->sm->get('doctrine.entitymanager.orm_default')->remove($file);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
     }
 
-    public function deleteObjectFileEntity($fileId)
+    /**
+     * @param FileEntity $file
+     */
+    public function deleteObjectFileEntity(FileEntity $file)
     {
-        $objectFile = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\ObjectFile')->findOneByFileId($fileId);
+        $objectFile = $this->sm->get('doctrine.entitymanager.orm_default')
+            ->getRepository('Media\Entity\ObjectFile')->findOneByFileId($file->getId());
         $this->sm->get('doctrine.entitymanager.orm_default')->remove($objectFile);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
     }
 
-    public function createFile($data, $object)
+    /**
+     * @param FileUpload $form
+     * @param $object
+     * @return FileEntity
+     */
+    public function createFile(FileUpload $form, $object)
     {
-        $file = $this->writeFileEntity($data);
-        $this->writeObjectFileEntity($file, $object);
+        $file = $this->writeFile($form);
+        $this->associateFileWithObject($file, $object);
 
         return $file;
     }
 
-    public function writeObjectFileEntity($file, $object)
+    /**
+     * @param FileEntity $file
+     * @param $object
+     */
+    public function associateFileWithObject(FileEntity $file, $object)
     {
         $objectFile = new ObjectFile();
         $objectFile->setFile($file);
@@ -157,51 +175,54 @@ class File
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
     }
 
-    public function writeFileEntity($data)
+    /**
+     * @param FileUpload $form
+     * @return FileEntity
+     * @throws \Exception
+     */
+    public function writeFile(FileUpload $form)
     {
         //Creating new image to get ID for building its path
-        $file = new \Media\Entity\File();
+        $file = new FileEntity();
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($file);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
         //Building path and creating directory. Then - moving
-        $ext = null;
+        $ext = $this->getExt($form->getData()[$form->getFileType()]['name']);
         $destination = null;
-        $type = null;
-        switch (array_keys($data)[0]) {
-            case \Media\Entity\File::AUDIO_FILETYPE:
-                $ext = $this->getExt($data[\Media\Entity\File::AUDIO_FILETYPE]['name']);
-                $destination = \Media\Service\Audio::audioPath($file->getId(), $ext);
-                $type = \Media\Entity\File::AUDIO_FILETYPE;
-                $this->moveFile($destination, $data[\Media\Entity\File::AUDIO_FILETYPE]);
+        $type = $form->getFileType();
+        switch ($type) {
+            case FileEntity::AUDIO_FILETYPE:
+                $destination = Audio::audioPath($file->getId(), $ext);
                 break;
-            case \Media\Entity\File::VIDEO_FILETYPE:
-                $ext = $this->getExt($data[\Media\Entity\File::VIDEO_FILETYPE]['name']);
-                $destination = \Media\Service\Video::videoPath($file->getId(), $ext);
-                $type = \Media\Entity\File::VIDEO_FILETYPE;
-                $this->moveFile($destination, $data[\Media\Entity\File::VIDEO_FILETYPE]);
+            case FileEntity::VIDEO_FILETYPE:
+                $destination = Video::videoPath($file->getId(), $ext);
                 break;
-            case \Media\Entity\File::IMAGE_FILETYPE:
-                $ext = $this->getExt($data[\Media\Entity\File::IMAGE_FILETYPE]['name']);
-                $destination = \Media\Service\Image::imgPath(\Media\Service\Image::ORIGINAL, $file->getId(), $ext);
-
-                $type = \Media\Entity\File::IMAGE_FILETYPE;
-                $this->moveFile($destination, $data[\Media\Entity\File::IMAGE_FILETYPE]);
+            case FileEntity::IMAGE_FILETYPE:
+                $destination = Image::imgPath(Image::ORIGINAL, $file->getId(), $ext);
                 break;
             default:
-                break;
         }
-
+        $this->moveFile($destination, $form->getData()[$form->getFileType()]);
         $file->setExtension($ext);
         $file->setType($type);
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($file);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
 
-        if ($file->getType() == \Media\Entity\File::VIDEO_FILETYPE &&
-            $file->getExtension() !== \Media\Service\Video::MP4_EXT
+        return $file;
+    }
+
+    /**
+     * @param FileEntity $file
+     * @return FileEntity
+     */
+    public function convertFile(FileEntity $file)
+    {
+        if ($file->getType() == FileEntity::VIDEO_FILETYPE &&
+            $file->getExtension() !== Video::MP4_EXT
         ) {
             $file = $this->sm->get('Media\Service\Video')->convertVideoToMp4($file);
-        } elseif ($file->getType() == \Media\Entity\File::AUDIO_FILETYPE &&
-            $file->getExtension() !== \Media\Service\Audio::MP3_EXT
+        } elseif ($file->getType() == FileEntity::AUDIO_FILETYPE &&
+            $file->getExtension() !== Audio::MP3_EXT
         ) {
             $file = $this->sm->get('Media\Service\Audio')->convertAudioToMp3($file);
         }
@@ -209,9 +230,14 @@ class File
         return $file;
     }
 
-    public function generateFileUploadForm($module, $filetype)
+    /**
+     * @param $filetype
+     */
+    public function generateFileUploadForm($filetype)
     {
-        echo $this->sm->get('ViewHelperManager')->get('Partial')->__invoke("layout/default/partial/file-upload-form.phtml", ['filetype' => $filetype]);
-//        echo "<script>require(['" . $module . "']);</script>";
+        echo $this->sm->get('ViewHelperManager')->get('Partial')->__invoke(
+            "layout/default/partial/file-upload-form.phtml",
+            ['filetype' => $filetype]
+        );
     }
 }

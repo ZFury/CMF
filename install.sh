@@ -18,8 +18,7 @@ mkdir -p data/DoctrineORMModule/Proxy
 mkdir -p data/DoctrineORMModule/Migrations
 mkdir -p public/uploads
 chmod -R 0777 data/*
-chown -R www-data public/uploads
-chmod -R 0775 public/uploads
+chmod -R 0777 public/uploads
 
 echo "Enabling git-flow"
 git flow init -d

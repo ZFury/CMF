@@ -93,7 +93,7 @@ class Categories extends EntityBase
      */
     protected $order;
 
-    private $lifecycleArgs;
+    private $entityManager;
 
     /**
      *
@@ -326,9 +326,9 @@ class Categories extends EntityBase
     /**
      * @ORM\PostLoad
      */
-    public function setLifecycleArgs(LifecycleEventArgs $args)
+    public function setEntityManager(LifecycleEventArgs $args)
     {
-        $this->lifecycleArgs = $args;
+        $this->entityManager = $args->getEntityManager();
     }
 
     public function getEntityName()

@@ -8,20 +8,22 @@
 
 namespace Test\Controller;
 
-use Media\Service\File;
+use Media\Entity\File;
 use Zend\View\Model\JsonModel;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Media\Form\ImageUpload;
 use Media\Form\Filter\ImageUploadInputFilter;
-use Media\Interfce\ImageUploaderInterface;
 
-class ImageController extends AbstractActionController implements ImageUploaderInterface
+class ImageController extends AbstractActionController
 {
+    /**
+     * @return ViewModel
+     */
     public function uploadImageAction()
     {
-        $imageService = new File($this->getServiceLocator());
-        return new ViewModel(['imageService' => $imageService, 'module'=> 'image', 'type' => \Media\Entity\File::IMAGE_FILETYPE]);
+        $imageService = $this->getServiceLocator()->get('Media\Service\File');
+        return new ViewModel(['imageService' => $imageService, 'type' => File::IMAGE_FILETYPE]);
     }
 
     /**
@@ -47,10 +49,9 @@ class ImageController extends AbstractActionController implements ImageUploaderI
             $form->setData($post);
 
             if ($form->isValid()) {
-                $data = $form->getData();
-                $image = $imageService->createFile($data, $this->identity()->getUser());
+                $image = $imageService->createFile($form, $this->identity()->getUser());
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
-                $dataForJson = $blueimpService->displayUploadedFile($image, $this->getDeleteImageUrl($image));
+                $dataForJson = $blueimpService->displayUploadedFile($image, '/test/image/delete-image/');
             } else {
                 $messages = $form->getMessages();
                 $messages = array_shift($messages);
@@ -67,42 +68,21 @@ class ImageController extends AbstractActionController implements ImageUploaderI
         } else {
             $dataForJson = $blueimpService->displayUploadedFiles(
                 $user->getImages(),
-                $this->getDeleteImageUrls($user->getImages())
+                '/test/image/delete-image/'
             );
         }
 
         return new JsonModel($dataForJson);
     }
 
+    /**
+     * @return mixed
+     */
     public function deleteImageAction()
     {
         $this->getServiceLocator()->get('Media\Service\File')
             ->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
         return $this->getServiceLocator()->get('Media\Service\Blueimp')
             ->deleteFileJson($this->getEvent()->getRouteMatch()->getParam('id'));
-    }
-
-    public function getDeleteImageUrl($image)
-    {
-        $url = $this->serviceLocator->get('ViewHelperManager')->get('url');
-        $fileService = $this->getServiceLocator()->get('Media\Service\File');
-        return $fileService->getFullUrl($url('test/default', [
-            'controller' => 'image',
-            'action' => 'delete-image',
-            'id' => $image->getId()
-        ]));
-    }
-
-    public function getDeleteImageUrls($images)
-    {
-        $deleteUrls = [];
-        foreach ($images as $image) {
-            array_push($deleteUrls, [
-                'id' => $image->getId(),
-                'deleteUrl' => $this->getDeleteImageUrl($image)
-            ]);
-        }
-
-        return $deleteUrls;
     }
 }

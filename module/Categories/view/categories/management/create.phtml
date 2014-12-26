@@ -72,10 +72,7 @@ $ajax = $this->ajax ? $this->ajax : false;
         <div class="col-sm-10 col-sm-offset-2">
             <?php if ($this->fileUpload): ?>
                 <?php
-                echo $this->fileUpload['imageService']->generateFileUploadForm(
-                    $this->fileUpload['module'],
-                    $this->fileUpload['type']
-                );
+                echo $this->fileUpload['imageService']->generateFileUploadForm($this->fileUpload['type']);
                 ?>
             <?php endif; ?>
         </div>

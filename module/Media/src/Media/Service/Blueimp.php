@@ -8,6 +8,7 @@
 namespace Media\Service;
 
 use Zend\View\Model\JsonModel;
+use Media\Entity\File as FileEntity;
 
 class Blueimp
 {
@@ -19,21 +20,21 @@ class Blueimp
     }
 
     /**
-     * @param $file
+     * @param FileEntity $file
      * @param $deleteUrl
      * @return array
      */
-    public function getFileJson($file, $deleteUrl)
+    public function getFileJson(FileEntity $file, $deleteUrl)
     {
         $fileService = $this->sm->get('Media\Service\File');
         $thumbnailUrl = null;
         $type = null;
         switch ($file->getType()) {
-            case \Media\Entity\File::IMAGE_FILETYPE:
+            case FileEntity::IMAGE_FILETYPE:
                 $thumbnailUrl = $fileService->getFullUrl($file->getThumb());
                 $type = 'image/jpeg';
                 break;
-            case \Media\Entity\File::AUDIO_FILETYPE:
+            case FileEntity::AUDIO_FILETYPE:
                 $thumbnailUrl = $fileService->getFullUrl($file->getUrlPart());
                 $type = 'audio/mp3';
                 break;
@@ -53,42 +54,52 @@ class Blueimp
 
     /**
      * @param $file
-     * @param $deleteUrl
+     * @param $mask
      * @return array
      */
-    public function displayUploadedFile($file, $deleteUrl)
+    public function displayUploadedFile(FileEntity $file, $mask)
     {
-        return ['files' => [ $this->getFileJson($file, $deleteUrl) ]];
+        return ['files' => [
+            $this->getFileJson(
+                $file,
+                $this->sm->get('ViewHelperManager')->get('ServerUrl')->setPort(80)
+                ->__invoke() . $mask . $file->getId()
+            )
+        ]];
     }
 
 
     /**
-     * @param $files
-     * @param $deleteUrls
+     * @param array $files
+     * @param $mask
      * @return array
      */
-    public function displayUploadedFiles($files, $deleteUrls)
+    public function displayUploadedFiles(array $files, $mask)
     {
         $filesJson = array();
         foreach ($files as $file) {
-            foreach ($deleteUrls as $deleteUrl) {
-                if ($deleteUrl['id'] == $file->getId()) {
-                    array_push($filesJson, $this->getFileJson($file, $deleteUrl['deleteUrl']));
-                }
-            }
+            array_push(
+                $filesJson,
+                $this->getFileJson(
+                    $file,
+                    $this->sm->get('ViewHelperManager')->get('ServerUrl')->setPort(80)
+                        ->__invoke() . $mask . $file->getId()
+                )
+            );
+
         }
 
         return [ 'files' =>  $filesJson ];
     }
 
     /**
-     * @param $fileId
+     *
      * @return JsonModel
      */
-    public function deleteFileJson($fileId)
+    public function deleteFileJson()
     {
         return new JsonModel([
-            'files' =>[ $fileId => 'true' ]
+            'files' =>[]
         ]);
     }
 }
