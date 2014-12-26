@@ -58,8 +58,8 @@ class VideoTest extends AbstractHttpControllerTestCase
         $this->setApplicationConfig(include 'config/application.config.php');
         $this->setTraceError(true);
         parent::setUp();
-        $this->oldLocation = __DIR__ . '/../../testFiles/YoungKobe.flv';
-        $this->newLocation = __DIR__ . '/../../testFiles/YoungKobe.mp4';
+        $this->oldLocation = __DIR__ . '/../../testFiles/test.mov';
+        $this->newLocation = __DIR__ . '/../../testFiles/test.mp4';
         $this->videoService = $this->getApplicationServiceLocator()->get('Media\Service\Video');
     }
 
@@ -95,9 +95,9 @@ class VideoTest extends AbstractHttpControllerTestCase
     {
         $videoPath = $this->videoService->videoPath($this->videoId, $this->videoEntityData['extension']);
         $video = [
-            'name' => 'MakeItWork.mp4',
+            'name' => 'test.mp4',
             'type' => 'video/mp4',
-            'tmp_name' => __DIR__ . '/../../testFiles/MakeItWork.mp4',
+            'tmp_name' => __DIR__ . '/../../testFiles/test.mp4',
             'error' => '0',
             'size' => '15288220'
         ];

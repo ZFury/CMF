@@ -17,6 +17,7 @@ trait File
     public abstract function setEntityManager(LifecycleEventArgs $args);
 
     public abstract function getId();
+
     /**
      * Returns an array of ids
      *
