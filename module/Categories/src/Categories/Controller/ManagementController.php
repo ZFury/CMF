@@ -2,6 +2,7 @@
 
 namespace Categories\Controller;
 
+use Doctrine\DBAL\Schema\View;
 use Starter\Mvc\Controller\AbstractCrudController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
@@ -54,8 +55,10 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
         if ($currentRootCategory) {
             $categories = $repository->findBy(['parentId' => $currentRootCategory->getId()], ['order' => 'ASC']);
         }
+        $viewModel = new ViewModel(['categories' => $categories, 'rootTree' => $rootCategories, 'currentRoot' => $currentRootCategory]);
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
 
-        return new ViewModel(['categories' => $categories, 'rootTree' => $rootCategories, 'currentRoot' => $currentRootCategory]);
+        return $viewModel;
     }
 
     /**
@@ -127,19 +130,19 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
         }
 
         $imageService = new File($this->getServiceLocator());
-
-        $viewModel = $this->prepareViewModel(
-            $form,
-            $this->getRequest()->isXmlHttpRequest(),
-            null,
-            null,
-            [
-                'imageService' => $imageService,
-                'module' => 'image-categories',
-                'type' => \Media\Entity\File::IMAGE_FILETYPE,
-                'id' => null
-            ]
-        );
+        $viewModel = new ViewModel();
+        $viewModel->setVariables([
+            'form' => $form,
+            'ajax' => $this->getRequest()->isXmlHttpRequest(),
+            'scripts' => null,
+            'fileUpload' =>
+                [
+                    'imageService' => $imageService,
+                    'module' => 'image-categories',
+                    'type' => \Media\Entity\File::IMAGE_FILETYPE,
+                    'id' => null
+                ]
+        ]);
         $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
 
         return $viewModel;
@@ -193,19 +196,19 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
         }
 
         $imageService = new File($this->getServiceLocator());
-
-        $viewModel = $this->prepareViewModel(
-            $form,
-            $this->getRequest()->isXmlHttpRequest(),
-            null,
-            null,
-            [
-                'imageService' => $imageService,
-                'module' => 'image-categories',
-                'type' => \Media\Entity\File::IMAGE_FILETYPE,
-                'id' => $this->params()->fromRoute('id')
-            ]
-        );
+        $viewModel = new ViewModel();
+        $viewModel->setVariables([
+            'form' => $form,
+            'ajax' => $this->getRequest()->isXmlHttpRequest(),
+            'scripts' => ['image-categories'],
+            'fileUpload' =>
+                [
+                    'imageService' => $imageService,
+                    'module' => 'image-categories',
+                    'type' => \Media\Entity\File::IMAGE_FILETYPE,
+                    'id' => $this->params()->fromRoute('id')
+                ]
+        ]);
         $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
 
         return $viewModel;
@@ -263,10 +266,10 @@ class ManagementController extends AbstractCrudController implements \Media\Inte
                     }
                 }
                 $entityManager->getConnection()->commit();
-                $returnJson = new JsonModel(['success' => true]);
+                $returnJson = new JsonModel(['success' => ['Order has been successfully saved!']]);
             } catch (\Exception $e) {
                 $entityManager->getConnection()->rollback();
-                $returnJson = new JsonModel(['success' => false]);
+                $returnJson = new JsonModel(['error' => ['Order has been failed!']]);
             }
             return $returnJson;
         }

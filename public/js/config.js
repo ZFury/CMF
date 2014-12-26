@@ -38,13 +38,14 @@ require.config({
         "iframe-transport": './libs/jQuery-File-Upload-master/jquery.iframe-transport',
         "fileupload-ui": './libs/jQuery-File-Upload-master/jquery.fileupload-ui',
         //BLUEIMP END
-        "image-categories": './modules/categories/image',
+        "image-categories": '../module/categories/js/image',
         "image": '../module/test/js/image',
         "audio": '../module/test/js/audio',
         "video": '../module/test/js/video',
         'redactorContent': '../redactor/redactorContent',
         'conversion': '../module/media/js/conversion',
-        'form': './form'
+        'form': './form',
+        'notify': './notify'
     },
     shim: {
         angular: {
@@ -77,12 +78,6 @@ require.config({
         redactor: {
             deps: ['jquery'],
             exports: '$.fn.redactor'
-        },
-        frontend: {
-            deps: ['bootstrap']
-        },
-        backend: {
-            deps: ['angularRoute', 'angularSanitize']
         }
         //'redactor-fullscreen': {
         //    deps: ['jquery', 'redactor'],

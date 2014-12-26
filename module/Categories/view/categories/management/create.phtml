@@ -6,9 +6,10 @@ $scripts = $this->scripts ? $this->scripts : [];
 $ajax = $this->ajax ? $this->ajax : false;
 ?>
 <div class="container form-container">
+    <input type="hidden" id="entityId" value="<?= $this->fileUpload['id'] ? $this->fileUpload['id'] : ''; ?>">
     <br>
 
-    <div class="col-md-9 form-center">
+    <div class="col-md-8 form-center col-md-offset-4">
         <?php if (!$ajax): ?>
             <h1 class="create-label"><?= !$this->title ? 'Create' : $this->escapeHtml($this->title); ?></h1>
         <?php endif; ?>
@@ -35,9 +36,6 @@ $ajax = $this->ajax ? $this->ajax : false;
                     case $element instanceof Zend\Form\Element\Hidden :
                         $formElement = $this->formHidden($element);
                         break;
-                    case $element instanceof Zend\Form\Element\Checkbox :
-                        $formElement = $this->formCheckbox($element);
-                        break;
                     default :
                         $formElement = $this->formInput($element);
                         break;
@@ -57,25 +55,35 @@ $ajax = $this->ajax ? $this->ajax : false;
                     <div class="col-sm-9">
                         <?= $formElement; ?>
                     </div>
-                    <div class="col-sm-9 col-md-offset-2 error-field error-form-message">
+                    <div class="col-sm-9 col-sm-offset-2 error-field error-form-message">
                         <?= $this->formElementErrors($element); ?>
                     </div>
                 </div>
             <?php endforeach; ?>
             <?php if (!$submit && !$ajax): ?>
                 <div class="form-group">
-                    <div class="col-sm-9 col-md-offset-2">
+                    <div class="col-sm-9 col-sm-offset-2">
                         <input type="submit" name="submit" class="form-control col-md-6 btn btn-success"
                                value="<?= $this->title == 'Edit' ? 'Save' : 'Create'; ?>">
                     </div>
                 </div>
             <?php endif; ?>
         </form>
+        <div class="col-sm-10 col-sm-offset-2">
+            <?php if ($this->fileUpload): ?>
+                <?php
+                echo $this->fileUpload['imageService']->generateFileUploadForm(
+                    $this->fileUpload['module'],
+                    $this->fileUpload['type']
+                );
+                ?>
+            <?php endif; ?>
+        </div>
     </div>
+
 </div>
 <script>
     require([
-        'frontend',
         <?= implode(',', array_map(function($a) { return "'$a'"; }, $scripts));?>
     ]);
 </script>

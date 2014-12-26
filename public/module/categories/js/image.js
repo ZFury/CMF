@@ -17,18 +17,25 @@ define([
     'fileupload-ui'
 ], function ($) {
     'use strict';
-    $(function() {
+    $(function () {
         if ($('#fileupload').length) {
             init();
         }
-        $('body').on('modal.loaded', function() {
-            init();
-        });
+        $('body')
+            //.on('modal.loaded', function () {
+            //    console.log('loaded modal');
+            //    init();
+            //})
+            .on('shown.bs.modal', function () {
+                console.log('loaded modal');
+                init();
+            });
     });
 
+
     function init() {
-        console.log('aaaa');
         var id = $('#entityId').val();
+        console.log($('#entityId'));
         // Initialize the jQuery File Upload widget:
         $('#fileupload').fileupload({
             url: 'categories/management/start-image-upload' + (id ? "/" + id : "")
@@ -37,7 +44,7 @@ define([
         $('#fileupload').addClass('fileupload-processing');
         $.ajax({
             url: $('#fileupload').fileupload('option', 'url'),
-            dataType: 'json',
+            //dataType: 'json',
             context: $('#fileupload')[0]
         }).always(function () {
             $(this).removeClass('fileupload-processing');

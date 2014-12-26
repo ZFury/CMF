@@ -73,8 +73,8 @@ class Module
                     'message' => $message,
                     'code' => $code,
                 ),
-            'params' => array(),
-            'options' => array()
+                'params' => array(),
+                'options' => array()
             )
         );
 
@@ -190,6 +190,12 @@ class Module
      */
     public function jsonHandler(MvcEvent $event)
     {
+        /** @var \Zend\Mvc\Controller\Plugin\FlashMessenger $flashmessenger */
+        $flashmessenger = $event->getApplication()
+            ->getServiceManager()
+            ->get('viewhelpermanager')
+            ->get('flashMessenger');
+
         $view = $event->getViewModel();
         if ($view instanceof JsonModel) {
             return;
@@ -231,6 +237,8 @@ class Module
                 );
             }
         }
+        $result['success'] = $flashmessenger->getCurrentSuccessMessages();
+        $flashmessenger->clearCurrentMessagesFromContainer();
 
         $model = new JsonModel($result);
         $event->setViewModel($model);
