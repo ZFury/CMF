@@ -179,5 +179,4 @@ abstract class AbstractCrudController extends AbstractActionController
     {
         return $this->viewModel;
     }
-
 }
