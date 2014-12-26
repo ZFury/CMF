@@ -355,4 +355,14 @@ class Categories extends EntityBase
 
         return $result;
     }
+
+    public function getImageUrl()
+    {
+        if ($images = $this->getImages()) {
+            return $images[count($images) - 1]->getThumb();
+        } else {
+            return '/img/default_category.png';
+        }
+
+    }
 }
