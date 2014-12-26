@@ -208,7 +208,7 @@ return array(
                 array(
                     'controller' => 'User\Controller\Management',
                     'action' => array('index'),
-                    'roles' => array('user'),
+                    'roles' => array('admin'),
                 ),
             ),
         ),

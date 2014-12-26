@@ -8,6 +8,7 @@
 namespace User\Controller;
 
 use SebastianBergmann\Exporter\Exception;
+use Starter\Mvc\Controller\AbstractCrudController;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use User\Service;
@@ -18,39 +19,71 @@ use Zend\Form\Annotation\AnnotationBuilder;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Zend\View\Model\JsonModel;
 
-class ManagementController extends AbstractActionController
+class ManagementController extends AbstractCrudController
 {
 
-    //    public function indexAction()
-    //    {
-    //
-    //    }
+    public function indexAction()
+    {
+        $sm = $this->getServiceLocator();
+        $grid = new Grid($sm);
+        $viewModel = new ViewModel(['grid' => $grid]);
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
+        return $viewModel;
+    }
 
-    //    public function createAction()
-    //    {
-    //        not implemented yet
-    //        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-    //        $user = new Entity\User();
-    //        $builder = new AnnotationBuilder($entityManager);
-    //
-    //        $form = $builder->createForm($user);
-    //        $form->setHydrator(new DoctrineHydrator($entityManager));
-    //        $form->bind($user);
-    //        if ($this->getRequest()->isPost()) {
-    //            //$form->setInputFilter(new Form\CreateInputFilter($this->getServiceLocator()));
-    //            $form->setData($this->getRequest()->getPost());
-    //            if ($form->isValid()) {
-    //                $salt = md5(microtime(false) . rand(11111, 99999));
-    //                $user->setSalt($salt);
-    //                $user->setPassword(Service\User::encrypt($user, $user->getPassword()));
-    //                $entityManager->persist($user);
-    //                $entityManager->flush();
-    //            }
-    //        }
-    //
-    //        return new ViewModel([
-    //            'form' => $form
-    //        ]);
+    public function createAction()
+    {
+//      not implemented yet
+        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $user = new Entity\User();
+        $builder = new AnnotationBuilder($entityManager);
+
+        $form = $builder->createForm($user);
+        $form->setHydrator(new DoctrineHydrator($entityManager));
+        $form->bind($user);
+        if ($this->getRequest()->isPost()) {
+            //$form->setInputFilter(new Form\CreateInputFilter($this->getServiceLocator()));
+            $form->setData($this->getRequest()->getPost());
+            if ($form->isValid()) {
+                $salt = md5(microtime(false) . rand(11111, 99999));
+                $user->setSalt($salt);
+                $user->setPassword(Service\User::encrypt($user, $user->getPassword()));
+                $entityManager->persist($user);
+                $entityManager->flush();
+            }
+        }
+
+        return new ViewModel([
+            'form' => $form
+        ]);
+    }
+
+
+    public function editAction()
+    {
+        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $user = new Entity\User();
+        $builder = new AnnotationBuilder($entityManager);
+
+        $form = $builder->createForm($user);
+        $form->setHydrator(new DoctrineHydrator($entityManager));
+        $form->bind($user);
+        if ($this->getRequest()->isPost()) {
+            //$form->setInputFilter(new Form\CreateInputFilter($this->getServiceLocator()));
+            $form->setData($this->getRequest()->getPost());
+            if ($form->isValid()) {
+                $salt = md5(microtime(false) . rand(11111, 99999));
+                $user->setSalt($salt);
+                $user->setPassword(Service\User::encrypt($user, $user->getPassword()));
+                $entityManager->persist($user);
+                $entityManager->flush();
+            }
+        }
+
+        return new ViewModel([
+            'form' => $form
+        ]);
+    }
 
     /**
      * Grid action
@@ -83,4 +116,21 @@ class ManagementController extends AbstractActionController
         }
 
     }
+
+    public function getEntity()
+    {
+        return null;
+    }
+
+    public function getCreateForm()
+    {
+        return null;
+    }
+
+    public function getEditForm()
+    {
+        return null;
+    }
+
+
 }
