@@ -150,11 +150,20 @@ class File
         return $this->id;
     }
 
+    /**
+     * Get type
+     *
+     * @return string
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * @param $type
+     * @return $this
+     */
     public function setType($type)
     {
         $this->type = $type;
@@ -163,7 +172,8 @@ class File
     }
 
     /**
-     * @return mixed
+     * @return string
+     * @throws \Exception
      */
     public function getLocation()
     {
@@ -177,13 +187,13 @@ class File
             case self::VIDEO_FILETYPE:
                 return Video::videoPath($this->id, $ext);
             default:
+                return '';
         }
-
-
     }
 
     /**
-     * @return string
+     * @return null|string
+     * @throws \Exception
      */
     public function getUrlPart()
     {

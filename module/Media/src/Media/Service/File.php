@@ -128,19 +128,31 @@ class File
         $this->deleteFileEntity($file);
     }
 
+    /**
+     * @param FileEntity $file
+     */
     public function deleteFileEntity(FileEntity $file)
     {
         $this->sm->get('doctrine.entitymanager.orm_default')->remove($file);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
     }
 
+    /**
+     * @param FileEntity $file
+     */
     public function deleteObjectFileEntity(FileEntity $file)
     {
-        $objectFile = $this->sm->get('doctrine.entitymanager.orm_default')->getRepository('Media\Entity\ObjectFile')->findOneByFileId($file->getId());
+        $objectFile = $this->sm->get('doctrine.entitymanager.orm_default')
+            ->getRepository('Media\Entity\ObjectFile')->findOneByFileId($file->getId());
         $this->sm->get('doctrine.entitymanager.orm_default')->remove($objectFile);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
     }
 
+    /**
+     * @param FileUpload $form
+     * @param $object
+     * @return FileEntity
+     */
     public function createFile(FileUpload $form, $object)
     {
         $file = $this->writeFile($form);
@@ -149,7 +161,11 @@ class File
         return $file;
     }
 
-    public function associateFileWithObject($file, $object)
+    /**
+     * @param FileEntity $file
+     * @param $object
+     */
+    public function associateFileWithObject(FileEntity $file, $object)
     {
         $objectFile = new ObjectFile();
         $objectFile->setFile($file);
@@ -159,6 +175,11 @@ class File
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
     }
 
+    /**
+     * @param FileUpload $form
+     * @return FileEntity
+     * @throws \Exception
+     */
     public function writeFile(FileUpload $form)
     {
         //Creating new image to get ID for building its path
@@ -190,6 +211,10 @@ class File
         return $file;
     }
 
+    /**
+     * @param FileEntity $file
+     * @return FileEntity
+     */
     public function convertFile(FileEntity $file)
     {
         if ($file->getType() == FileEntity::VIDEO_FILETYPE &&
@@ -205,6 +230,9 @@ class File
         return $file;
     }
 
+    /**
+     * @param $filetype
+     */
     public function generateFileUploadForm($filetype)
     {
         echo $this->sm->get('ViewHelperManager')->get('Partial')->__invoke(
