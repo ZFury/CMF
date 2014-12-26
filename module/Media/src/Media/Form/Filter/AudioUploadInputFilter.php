@@ -43,7 +43,7 @@ class AudioUploadInputFilter implements InputFilterAwareInterface
                             array(
                                 'name' => '\Zend\Validator\File\MimeType',
                                 'options' => array(
-                                    'mimeType' => ['audio/mpeg', 'audio/x-flac']
+                                    'mimeType' => ['audio/mpeg']
                                 ),
                             ),
                         )
