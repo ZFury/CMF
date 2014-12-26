@@ -10,7 +10,6 @@ use Zend\Form\Annotation\AnnotationBuilder;
 use DoctrineModule\Validator;
 use Comment\Validators;
 use Zend\Form;
-use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use Comment\Entity\EntityType;
 use Comment\Grid\EntityType\Grid;
 

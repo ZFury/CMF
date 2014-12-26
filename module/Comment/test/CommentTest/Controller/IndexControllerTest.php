@@ -77,17 +77,6 @@ class IndexControllerTest extends ControllerTestCase
         $this->removeEntityType($this->entityType);
     }
 
-    public function testIndexActionCanBeAccessed()
-    {
-        $this->dispatch('/comment/index/index');
-        $this->assertResponseStatusCode(404);
-
-        $this->assertModuleName('Comment');
-        $this->assertControllerName('Comment\Controller\Index');
-        $this->assertControllerClass('IndexController');
-        $this->assertMatchedRouteName('comment/default');
-    }
-
     public function testAddActionCanBeAccessed()
     {
         $this->dispatch('/comment/index/add');

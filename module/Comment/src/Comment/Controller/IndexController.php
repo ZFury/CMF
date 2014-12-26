@@ -10,6 +10,8 @@ use Comment\Form\Filter;
 use DoctrineModule\Validator;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use Zend;
+use Comment\Grid\Comment\Grid;
+use Zend\Mvc\Exception;
 
 class IndexController extends AbstractActionController
 {
@@ -45,6 +47,20 @@ class IndexController extends AbstractActionController
             $viewModel->setTerminal(true);
         }
 
+        return $viewModel;
+    }
+
+    /**
+     * @return array|ViewModel
+     * @throws \Exception
+     */
+    public function gridAction()
+    {
+        $this->layout('layout/dashboard/dashboard');
+        $sm = $this->getServiceLocator();
+        $grid = new Grid($sm);
+        $viewModel = new ViewModel(['grid' => $grid]);
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
         return $viewModel;
     }
 

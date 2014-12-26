@@ -76,7 +76,10 @@ class Comment
             if ($this->enabledComment($data['entity'])) {
                 $data = $form->getData();
                 $serviceEntityType = $serviceLocator->get('Comment\Service\EntityType');
-                $entityType = $serviceEntityType->checkEntity($data['entity'], $data['entityId']);
+                $entityType = $serviceEntityType->getEntity($data['entity'], $data['entityId']);
+                if (!$this->enabledComment($data['entity'])) {
+                    throw new \Exception('Prohibited add comments for this entity');
+                }
 
                 $comment = new Entity\Comment();
                 $comment->setEntityType($entityType);
@@ -116,27 +119,25 @@ class Comment
         }
 
         $serviceEntityType = $this->getServiceLocator()->get('Comment\Service\EntityType');
-        $entityType = $serviceEntityType->checkEntity($data['entity'], $data['entityId']);
-
-        if (!$this->enabledComment($data['entity']) || !$entityType->getVisibleComment()) {
-            throw new \Exception('Comments for this entity is prohibited to display');
-        }
+        $entityType = $serviceEntityType->getEntity($data['entity'], $data['entityId']);
 
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
         $commentRepository = $objectManager->getRepository('Comment\Entity\Comment');
         $comments = $commentRepository->findBy(array('entityType' => $entityType, 'entityId' => $data['entityId']));
         $arrayComments = array();
 
-        $entityComment = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment');
+        $identity = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity();
+        if ($entityType->getVisibleComment() || $identity->getUser()->getRole() === User::ROLE_ADMIN) {
+            $entityComment = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType($data['entity']);
+            $enabledCommentByComment = $entityComment->getEnabledComment();
 
-        foreach ($comments as $comment) {
-            $arrayComments[$comment->getId()]['comment'] = $comment;
-            if ($entityComment->getVisibleComment()) {
-                    $data = [
-                        'entity' => 'comment',
-                        'entityId' => $comment->getId()
-                    ];
+            foreach ($comments as $comment) {
+                $arrayComments[$comment->getId()]['comment'] = $comment;
+                if ($entityComment->getVisibleComment()) {
+                    $data = ['entity' => 'comment', 'entityId' => $comment->getId()];
                     $arrayComments[$comment->getId()]['children'] = $this->lisComments($data);
+                }
+                $arrayComments[$comment->getId()]['enabledCommentByComment'] = $enabledCommentByComment;
             }
         }
 

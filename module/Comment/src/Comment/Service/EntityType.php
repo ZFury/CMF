@@ -33,7 +33,7 @@ class EntityType
      * @return \Comment\Entity\EntityType
      * @throws \Exception
      */
-    public function checkEntity($aliasEntity, $entityId)
+    public function getEntity($aliasEntity, $entityId)
     {
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
 

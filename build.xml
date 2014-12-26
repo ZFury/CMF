@@ -122,10 +122,19 @@
             <arg line="--coverage-html '${logsDir}/coverage/categories'"/>
         </exec>
 
+        <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix" output="${logsDir}/phpunit.log">
+            <env key="APP_ENV" value="testing"/>
+            <arg line="-c ${moduleDir}/Comment/test/phpunit.xml"/>
+            <arg line="--log-junit '${logsDir}/tests-report.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.xml'"/>
+            <arg line="--coverage-html '${logsDir}/coverage/comment'"/>
+        </exec>
+
         <zip destfile="${logsDir}/coverage.zip" basedir="${logsDir}/coverage"/>
         <zip destfile="${logsDir}/coverage_options.zip" basedir="${logsDir}/coverage/options"/>
         <zip destfile="${logsDir}/coverage_pages.zip" basedir="${logsDir}/coverage/pages"/>
         <zip destfile="${logsDir}/coverage_categories.zip" basedir="${logsDir}/coverage/categories"/>
+        <zip destfile="${logsDir}/coverage_comment.zip" basedir="${logsDir}/coverage/comment"/>
         <antcall target="publish" />
     </target>
 

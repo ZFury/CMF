@@ -21,7 +21,13 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array(
                     'controller' => 'Comment\Controller\Index',
-                    'roles' => array('user'),
+                    'action' => ['add', 'index', 'edit', 'delete'],
+                    'roles' => array('user', 'admin'),
+                ),
+                array(
+                    'controller' => 'Comment\Controller\Index',
+                    'action' => ['grid'],
+                    'roles' => array('admin'),
                 ),
                 array(
                     'controller' => 'Comment\Controller\Management',
@@ -106,6 +112,14 @@ return array(
                         'action' => 'index',
                         'route' => 'comment/default',
                         'controller_namespace' => 'Comment\Controller\Management',
+                        'module' => 'Comment'
+                    ),
+                    array(
+                        'label' => 'All comments',
+                        'controller' => 'index',
+                        'action' => 'grid',
+                        'route' => 'comment/default',
+                        'controller_namespace' => 'Comment\Controller\Index',
                         'module' => 'Comment'
                     )
                 )
