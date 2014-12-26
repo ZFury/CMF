@@ -11,8 +11,7 @@ class Grid extends AbstractGrid
         $em = $this->sm->get('Doctrine\ORM\EntityManager');
         $source = $em->createQueryBuilder()->select(['test.id', 'test.email', 'test.name'])
             ->from('\Test\Entity\Test', 'test');
-        $this->setSource($source)->setEntityAlias('test')
-            ->setColumns(['id' => 'id', 'Email' => 'email', 'Imya' => 'name'])
+        $this->setSource($source)->setColumns(['id' => 'id', 'Email' => 'email', 'Name' => 'name'])
             ->setAllowedFilters(['email', 'name'])->setAllowedOrders(['id', 'name']);
     }
 }
