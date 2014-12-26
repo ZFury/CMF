@@ -23,6 +23,7 @@ class ImageController extends AbstractActionController
     public function uploadImageAction()
     {
         $imageService = $this->getServiceLocator()->get('Media\Service\File');
+        $this->layout('layout/dashboard/dashboard');
         return new ViewModel(['imageService' => $imageService, 'type' => File::IMAGE_FILETYPE]);
     }
 
