@@ -108,9 +108,7 @@ class User
      */
     private $auths;
 
-    //private $alias;
-
-    private $lifecycleArgs;
+    private $entityManager;
 
     /**
      * Initialies the auths variable.
@@ -118,8 +116,6 @@ class User
     public function __construct()
     {
         $this->auths = new ArrayCollection();
-        $this->lifecycleArgs = new ArrayCollection();
-        //$this->alias = 'User';
     }
 
     /**
@@ -354,9 +350,9 @@ class User
     /**
      * @ORM\PostLoad
      */
-    public function setLifecycleArgs(LifecycleEventArgs $args)
+    public function setEntityManager(LifecycleEventArgs $args)
     {
-        $this->lifecycleArgs = $args;
+        $this->entityManager = $args->getEntityManager();
     }
 
     public function getEntityName()

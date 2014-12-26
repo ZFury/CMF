@@ -8,21 +8,22 @@
 
 namespace Test\Controller;
 
-use Media\Service\Video;
 use Media\Service\File;
 use Zend\View\Model\JsonModel;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Media\Form\VideoUpload;
 use Media\Form\Filter\VideoUploadInputFilter;
-use Media\Interfce\VideoUploaderInterface;
 
-class VideoController extends AbstractActionController implements VideoUploaderInterface
+class VideoController extends AbstractActionController
 {
+    /**
+     * @return ViewModel
+     */
     public function uploadVideoAction()
     {
         $fileService = new File($this->getServiceLocator());
-        return new ViewModel(['fileService' => $fileService, 'module'=> 'video', 'type' => \Media\Entity\File::VIDEO_FILETYPE]);
+        return new ViewModel(['fileService' => $fileService, 'type' => \Media\Entity\File::VIDEO_FILETYPE]);
     }
 
     /**
@@ -47,10 +48,9 @@ class VideoController extends AbstractActionController implements VideoUploaderI
             $form->setData($post);
 
             if ($form->isValid()) {
-                $data = $form->getData();
-                $video = $fileService->createFile($data, $this->identity()->getUser());
+                $video = $fileService->createFile($form, $this->identity()->getUser());
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
-                $dataForJson = $blueimpService->displayUploadedFile($video, $this->getDeleteVideoUrl($video));
+                $dataForJson = $blueimpService->displayUploadedFile($video, '/test/video/delete-video/');
             } else {
                 $messages = $form->getMessages();
                 $messages = array_shift($messages);
@@ -66,42 +66,21 @@ class VideoController extends AbstractActionController implements VideoUploaderI
         } else {
             $dataForJson = $blueimpService->displayUploadedFiles(
                 $user->getVideos(),
-                $this->getDeleteVideoUrls($user->getVideos())
+                '/test/video/delete-video/'
             );
         }
 
         return new JsonModel($dataForJson);
     }
 
+    /**
+     * @return mixed
+     */
     public function deleteVideoAction()
     {
         $this->getServiceLocator()->get('Media\Service\File')
             ->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
         return $this->getServiceLocator()->get('Media\Service\Blueimp')
             ->deleteFileJson($this->getEvent()->getRouteMatch()->getParam('id'));
-    }
-
-    public function getDeleteVideoUrl($video)
-    {
-        $url = $this->serviceLocator->get('ViewHelperManager')->get('url');
-        $fileService = $this->getServiceLocator()->get('Media\Service\File');
-        return $fileService->getFullUrl($url('test/default', [
-            'controller' => 'video',
-            'action' => 'delete-video',
-            'id' => $video->getId()
-        ]));
-    }
-
-    public function getDeleteVideoUrls($videos)
-    {
-        $deleteUrls = [];
-        foreach ($videos as $video) {
-            array_push($deleteUrls, [
-                'id' => $video->getId(),
-                'deleteUrl' => $this->getDeleteVideoUrl($video)
-            ]);
-        }
-
-        return $deleteUrls;
     }
 }

@@ -21,4 +21,14 @@ class MailController extends AbstractActionController
 
         return $html;
     }
+
+    public function forgotPasswordAction()
+    {
+        $user = $this->params('user');
+        $model = new ViewModel(['user' => $user]);
+        $model->setTemplate('user/mail/forgot-password');
+        $html = $this->getServiceLocator()->get('ViewRenderer')->render($model);
+
+        return $html;
+    }
 }

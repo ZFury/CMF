@@ -53,6 +53,7 @@ return [
             'Test\Controller\Image' => 'Test\Controller\ImageController',
             'Test\Controller\Audio' => 'Test\Controller\AudioController',
             'Test\Controller\Video' => 'Test\Controller\VideoController',
+            'Test\Controller\Comment' => 'Test\Controller\CommentController',
         ],
     ],
     'view_manager' => array(
@@ -80,6 +81,10 @@ return [
                 ],
                 [
                     'controller' => 'Test\Controller\Video',
+                    'roles' => ['user'],
+                ],
+                [
+                    'controller' => 'Test\Controller\Comment',
                     'roles' => ['user'],
                 ],
             ],
@@ -121,6 +126,14 @@ return [
                         'action' => 'index',
                         'route' => 'test/default',
                         'controller_namespace' => 'Test\Controller\Management',
+                        'module' => 'Test'
+                    ],
+                    [
+                        'label' => 'Comments',
+                        'controller' => 'comment',
+                        'action' => 'index',
+                        'route' => 'test/default',
+                        'controller_namespace' => 'Test\Controller\Comment',
                         'module' => 'Test'
                     ]
                 ]

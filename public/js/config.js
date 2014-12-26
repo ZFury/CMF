@@ -20,7 +20,10 @@ require.config({
         redactor: './../redactor/redactor',
         //"redactor-fullscreen": './../redactor/plugins/fullscreen'
         dashboard: './../module/dashboard/js/dashboard',
+        comment: '../module/comment/js/index',
+        commentManagement: '../module/comment/js/management',
         categories: '../module/categories/js/management',
+        test: '../module/test/js/comment',
         //BLUEIMP BEGIN
         "load-image": './libs/jQuery-File-Upload-master/load-image',
         "load-image-meta": './libs/jQuery-File-Upload-master/load-image-meta',
@@ -43,7 +46,8 @@ require.config({
         "audio": '../module/test/js/audio',
         "video": '../module/test/js/video',
         'redactorContent': '../redactor/redactorContent',
-        'conversion': '../module/media/js/conversion'
+        'conversion': '../module/media/js/conversion',
+        'form': './form'
     },
     shim: {
         angular: {
