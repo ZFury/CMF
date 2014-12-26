@@ -96,6 +96,8 @@
         <mkdir dir="${logsDir}/coverage/options"/>
         <mkdir dir="${logsDir}/coverage/pages"/>
         <mkdir dir="${logsDir}/coverage/categories"/>
+        <mkdir dir="${logsDir}/coverage/comment"/>
+        <mkdir dir="${logsDir}/coverage/media"/>
         <property name="junit" value="${logsDir}/tests-report.xml" />
 
         <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix" output="${logsDir}/phpunit.log">
@@ -124,6 +126,14 @@
 
         <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix" output="${logsDir}/phpunit.log">
             <env key="APP_ENV" value="testing"/>
+            <arg line="-c ${moduleDir}/Media/test/phpunit.xml"/>
+            <arg line="--log-junit '${logsDir}/tests-report.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.xml'"/>
+            <arg line="--coverage-html '${logsDir}/coverage/media'"/>
+        </exec>
+
+        <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix" output="${logsDir}/phpunit.log">
+            <env key="APP_ENV" value="testing"/>
             <arg line="-c ${moduleDir}/Comment/test/phpunit.xml"/>
             <arg line="--log-junit '${logsDir}/tests-report.xml'"/>
             <arg line="--coverage-clover '${logsDir}/phpunit.clover.xml'"/>
@@ -134,6 +144,7 @@
         <zip destfile="${logsDir}/coverage_options.zip" basedir="${logsDir}/coverage/options"/>
         <zip destfile="${logsDir}/coverage_pages.zip" basedir="${logsDir}/coverage/pages"/>
         <zip destfile="${logsDir}/coverage_categories.zip" basedir="${logsDir}/coverage/categories"/>
+        <zip destfile="${logsDir}/coverage_media.zip" basedir="${logsDir}/coverage/media"/>
         <zip destfile="${logsDir}/coverage_comment.zip" basedir="${logsDir}/coverage/comment"/>
         <antcall target="publish" />
     </target>

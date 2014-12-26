@@ -8,11 +8,11 @@
 
 namespace Media\Form;
 
+use Media\Entity\File;
 use Zend\InputFilter;
-use Zend\Form\Form;
 use Zend\Form\Element;
 
-class ImageUpload extends Form
+class ImageUpload extends FileUpload
 {
     public function __construct($name = null, $options = array())
     {
@@ -26,5 +26,10 @@ class ImageUpload extends Form
         $file->setLabel('Image Upload')
             ->setAttribute('id', 'image');
         $this->add($file);
+    }
+
+    public function getFileType()
+    {
+        return File::IMAGE_FILETYPE;
     }
 }
