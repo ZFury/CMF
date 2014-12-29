@@ -120,11 +120,14 @@ class Comment
 
         $serviceEntityType = $this->getServiceLocator()->get('Comment\Service\EntityType');
         $entityType = $serviceEntityType->getEntity($data['entity'], $data['entityId']);
+        $arrayComments = array();
+        if (!$entityType) {
+            return $arrayComments;
+        }
 
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
         $commentRepository = $objectManager->getRepository('Comment\Entity\Comment');
         $comments = $commentRepository->findBy(array('entityType' => $entityType, 'entityId' => $data['entityId']));
-        $arrayComments = array();
 
         $identity = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity();
         if ($entityType->getVisibleComment() || $identity->getUser()->getRole() === User::ROLE_ADMIN) {
@@ -134,8 +137,13 @@ class Comment
             foreach ($comments as $comment) {
                 $arrayComments[$comment->getId()]['comment'] = $comment;
                 if ($entityComment->getVisibleComment()) {
-                    $data = ['entity' => 'comment', 'entityId' => $comment->getId()];
-                    $arrayComments[$comment->getId()]['children'] = $this->lisComments($data);
+                    $entity = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment');
+                    if ($entity) {
+                        $data = ['entity' => 'comment', 'entityId' => $comment->getId()];
+                        $arrayComments[$comment->getId()]['children'] = $this->lisComments($data);
+                    } else {
+                        $arrayComments[$comment->getId()]['children'] = array();
+                    }
                 }
                 $arrayComments[$comment->getId()]['enabledCommentByComment'] = $enabledCommentByComment;
             }
