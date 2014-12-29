@@ -9,6 +9,9 @@ php composer.phar install
 echo "Doctrine setup"
 ./vendor/bin/doctrine-module orm:schema-tool:update --force
 
+echo "Update migrations"
+vendor/doctrine/doctrine-module/bin/doctrine-module migrations:migrate --dry-run
+
 echo "Creating .htaccess"
 cp ./public/.htaccess.sample ./public/.htaccess
 

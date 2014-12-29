@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "506bfbfc408690cc5159c465e304890e",
+    "hash": "56cb1483a45bab7ef202b290735e4c3d",
     "packages": [
         {
             "name": "bjyoungblood/bjy-authorize",
@@ -849,16 +849,16 @@
         },
         {
             "name": "facebook/php-sdk-v4",
-            "version": "4.0.13",
+            "version": "4.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/facebook-php-sdk-v4.git",
-                "reference": "ba732909485ae25484584a11202927ef2c70acd3"
+                "reference": "0683838b6966446b2cbef841f01f1d447ae7a5f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/facebook-php-sdk-v4/zipball/ba732909485ae25484584a11202927ef2c70acd3",
-                "reference": "ba732909485ae25484584a11202927ef2c70acd3",
+                "url": "https://api.github.com/repos/facebook/facebook-php-sdk-v4/zipball/0683838b6966446b2cbef841f01f1d447ae7a5f9",
+                "reference": "0683838b6966446b2cbef841f01f1d447ae7a5f9",
                 "shasum": ""
             },
             "require": {
@@ -894,7 +894,7 @@
                 "facebook",
                 "sdk"
             ],
-            "time": "2014-12-12 19:49:23"
+            "time": "2014-10-30 23:02:36"
         },
         {
             "name": "sundrique/doctrine-tools",
@@ -1343,16 +1343,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "2.0.13",
+            "version": "2.0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "0e7d2eec5554f869fa7a4ec2d21e4b37af943ea5"
+                "reference": "ca158276c1200cc27f5409a5e338486bc0b4fc94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/0e7d2eec5554f869fa7a4ec2d21e4b37af943ea5",
-                "reference": "0e7d2eec5554f869fa7a4ec2d21e4b37af943ea5",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ca158276c1200cc27f5409a5e338486bc0b4fc94",
+                "reference": "ca158276c1200cc27f5409a5e338486bc0b4fc94",
                 "shasum": ""
             },
             "require": {
@@ -1404,7 +1404,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-12-03 06:41:44"
+            "time": "2014-12-26 13:28:33"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2263,7 +2263,6 @@
         "zendframework/zftool": 20
     },
     "prefer-stable": false,
-    "prefer-lowest": false,
     "platform": {
         "php": ">=5.3.3"
     },
