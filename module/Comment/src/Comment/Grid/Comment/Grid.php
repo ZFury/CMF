@@ -2,7 +2,7 @@
 
 namespace Comment\Grid\Comment;
 
-use Starter\Mvc\Grid\AbstractGrid;
+use Starter\Grid\AbstractGrid;
 
 class Grid extends AbstractGrid
 {
