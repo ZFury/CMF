@@ -45,7 +45,7 @@ class ForgotPasswordForm extends Form
                 'name' => 'submit',
                 'type' => 'Submit',
                 'attributes' => array(
-                    'value' => 'Sign Up',
+                    'value' => 'Recovery',
                     'id' => 'submitbutton',
                     'class' => 'btn btn-lg btn-primary btn-block'
                 ),

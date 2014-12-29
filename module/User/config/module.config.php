@@ -163,12 +163,18 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array(
                     'controller' => 'User\Controller\Auth',
+                    'action' => array('twitter', 'twitter-callback', 'facebook', 'facebook-callback'),
                     'roles' => array('guest', 'user'),
                 ),
                 array(
                     'controller' => 'User\Controller\Auth',
-                    'action' => array('recover-password'),
+                    'action' => array('login', 'recover-password'),
                     'roles' => array('guest'),
+                ),
+                array(
+                    'controller' => 'User\Controller\Auth',
+                    'action' => array('logout'),
+                    'roles' => array('user'),
                 ),
                 array(
                     'controller' => 'User\Controller\Signup',
