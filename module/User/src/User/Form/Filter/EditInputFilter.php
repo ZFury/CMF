@@ -99,17 +99,6 @@ class EditInputFilter extends \Zend\InputFilter\InputFilter
         );
         $uniqueObjectValidator->setMessage('Email is already taken', UniqueObject::ERROR_OBJECT_NOT_UNIQUE);
 
-        /*$recordExistsValidator = new NoObjectExists(
-            array(
-                'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')->getRepository('User\Entity\User'),
-                'fields' => 'email'
-            )
-        );
-        $recordExistsValidator->setMessage(
-            'User with this email already exists',
-            NoObjectExists::ERROR_OBJECT_FOUND
-        );*/
-
         $this->add(
             array(
                 'name' => 'email',
