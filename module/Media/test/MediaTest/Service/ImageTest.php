@@ -207,9 +207,9 @@ class ImageTest extends AbstractHttpControllerTestCase
             $this->imageEntityData['extension']
         );
         $image = [
-            'name' => 'me.jpg',
+            'name' => 'test.jpg',
             'type' => 'image/jpeg',
-            'tmp_name' => __DIR__ . '/../../testFiles/me.jpg',
+            'tmp_name' => __DIR__ . '/../../testFiles/test.jpg',
             'error' => '0',
             'size' => '29487'
         ];

@@ -8,40 +8,20 @@ class Grid extends AbstractGrid
 {
     public function init()
     {
-        $params = array();
-        $page = 1;
-        $limit = 3;
-        $field = 'user.id';
-        $order = $this::ORDER_ASC;
-        $searchField = 'user.email';
-        $searchString = '';
-        /* @var \Doctrine\ORM\EntityManager $em */
         $em = $this->sm->get('Doctrine\ORM\EntityManager');
-        /* @var \Zend\Http\Request $request */
-        $request = $this->sm->get('Request');
-        $source = $em->createQueryBuilder()->select(array("user.id, user.email"))
+        $source = $em->createQueryBuilder()
+            ->select(['user.id', 'user.email', 'user.displayName', 'user.role', 'user.status', 'user.created'])
             ->from('\User\Entity\User', 'user');
-        $this->setSource($source);
-        if ($request->getPost('data')) {
-            $params = $request->getPost('data');
-        }
-        if (isset($params['page'])) {
-            $page = $params['page'];
-        }
-        if (isset($params['limit'])) {
-            $limit = $params['limit'];
-        }
-        if (isset($params['field']) && isset($params['reverse'])) {
-            $field = 'user.' . $params['field'];
-            $order = $params['reverse'];
-        }
-        if (isset($params['searchString']) && isset($params['searchField'])) {
-            $searchField = 'user.' . $params['searchField'];
-            $searchString = $params['searchString'];
-        }
-        $this->setPage($page);
-        $this->setLimit($limit);
-        $this->setOrder(['field' => $field, 'order' => $order]);
-        $this->setFilter(['filterField' => $searchField, 'searchString' => $searchString]);
+        $this->setSource($source)->setColumns(
+            [
+                'Id' => 'id',
+                'Email' => 'email',
+                'Name' => 'displayName',
+                'Role' => 'role',
+                'Status' => 'status',
+                'Created' => 'created'
+            ]
+        )->setAllowedFilters(['email', 'displayName'])
+            ->setAllowedOrders(['id', 'email', 'displayName', 'role', 'status', 'created']);
     }
 }

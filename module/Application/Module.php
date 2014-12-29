@@ -73,12 +73,12 @@ class Module
                     'message' => $message,
                     'code' => $code,
                 ),
-            'params' => array(),
+            'data' => array(),
             'options' => array()
             )
         );
 
-        $model = new JsonModel(array($result));
+        $model = new JsonModel($result);
         $event->setViewModel($model);
         $event->stopPropagation(true);
     }
@@ -190,28 +190,34 @@ class Module
      */
     public function jsonHandler(MvcEvent $event)
     {
+        /** @var \Zend\Mvc\Controller\Plugin\FlashMessenger $flashmessenger */
+        $flashmessenger = $event->getApplication()
+            ->getServiceManager()
+            ->get('viewhelpermanager')
+            ->get('flashMessenger');
+
         $view = $event->getViewModel();
         if ($view instanceof JsonModel) {
             return;
         }
 
-        $childrens = $event->getViewModel()->getChildren();
-        if ($childrens) {
-            foreach ($childrens as $children) {
-                $params = $children->getVariables();
+        $children = $event->getViewModel()->getChildren();
+        if ($children) {
+            foreach ($children as $child) {
+                $params = $child->getVariables();
             }
         } else {
             $params = $event->getViewModel()->getVariables();
         }
 
         $result = array(
-            'params' => array(),
+            'data' => array(),
             'errors' => array(),
             'options' => array()
         );
         foreach ($params as $param) {
             if (method_exists($param, 'toArray')) {
-                $result['params'][] = $param->toArray();
+                $result['data'][] = $param->toArray();
             } elseif ($param instanceof \Zend\Form\Form) {
                 foreach ($param->getElements() as $formElement) {
                     $messages = array();
@@ -225,12 +231,16 @@ class Module
                     }
                 }
                 $result['errors'] = $errors;
-                $result['params'] = $param->getData();
+                $result['data'][] = $param->getData();
                 $result['options'] = array(
                     'method' => $param->getAttribute('method')
                 );
+            } else {
+                $result['data'][] = $param;
             }
         }
+        $result['success'] = $flashmessenger->getCurrentSuccessMessages();
+        $flashmessenger->clearCurrentMessagesFromContainer();
 
         $model = new JsonModel($result);
         $event->setViewModel($model);

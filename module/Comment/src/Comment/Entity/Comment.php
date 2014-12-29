@@ -96,7 +96,8 @@ class Comment extends EntityBase
     {
         $objectManager = $args->getObjectManager();
         $entityType = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment');
-        $comments = $objectManager->getRepository('Comment\Entity\Comment')->findBy(array('entityType' => $entityType, 'entityId' => $this->getId()));
+        $commentRepository = $objectManager->getRepository('Comment\Entity\Comment');
+        $comments = $commentRepository->findBy(array('entityType' => $entityType, 'entityId' => $this->getId()));
         foreach ($comments as $comment) {
             $objectManager->remove($comment);
         }

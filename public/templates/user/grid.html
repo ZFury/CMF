@@ -19,6 +19,8 @@
                                 <tr>
                                     <th class="col-md-1"><a ng-click="setOrder('id')">№</a></th>
                                     <th class="col-md-3"><a ng-click="setOrder('email')">Email</a></th>
+                                    <th class="col-md-1">Edit</th>
+                                    <th class="col-md-1">Delete</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -28,6 +30,16 @@
                                     </td>
                                     <td>
                                         <span ng-bind="user.email"></span>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary btn-xs">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a class="confirm btn btn-xs btn-danger ajax">
+                                            <i class="fa fa-trash-o"></i>
+                                        </a>
                                     </td>
                                 </tr>
                                 </tbody>

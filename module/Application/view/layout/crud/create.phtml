@@ -2,13 +2,14 @@
 <?php
 /**@var $form Zend\Form\Form */
 $form = $this->form;
-$requireScript = '';
+$scripts = $this->scripts ? $this->scripts : [];
+$ajax = $this->ajax ? $this->ajax : false;
 ?>
 <div class="container form-container">
-    <input type="hidden" id="entityId" value="<?= $this->fileUpload['id'] ? $this->fileUpload['id'] : ''; ?>">
     <br>
+
     <div class="col-md-9 form-center">
-        <?php if (!$this->ajax): ?>
+        <?php if (!$ajax): ?>
             <h1 class="create-label"><?= !$this->title ? 'Create' : $this->escapeHtml($this->title); ?></h1>
         <?php endif; ?>
         <form action="" method="post" class="form-horizontal" id="crudForm">
@@ -25,7 +26,7 @@ $requireScript = '';
                         $formElement = $this->formPassword($element);
                         break;
                     case $element instanceof \Starter\Form\Element\Redactor :
-                        $requireScript = 'redactorContent';
+                        array_push($scripts, 'redactorContent');
                         $formElement = $this->formTextarea($element);
                         break;
                     case $element instanceof Zend\Form\Element\Textarea :
@@ -33,6 +34,9 @@ $requireScript = '';
                         break;
                     case $element instanceof Zend\Form\Element\Hidden :
                         $formElement = $this->formHidden($element);
+                        break;
+                    case $element instanceof Zend\Form\Element\Checkbox :
+                        $formElement = $this->formCheckbox($element);
                         break;
                     default :
                         $formElement = $this->formInput($element);
@@ -58,7 +62,7 @@ $requireScript = '';
                     </div>
                 </div>
             <?php endforeach; ?>
-            <?php if (!$submit && !$this->ajax): ?>
+            <?php if (!$submit && !$ajax): ?>
                 <div class="form-group">
                     <div class="col-sm-9 col-md-offset-2">
                         <input type="submit" name="submit" class="form-control col-md-6 btn btn-success"
@@ -68,28 +72,10 @@ $requireScript = '';
             <?php endif; ?>
         </form>
     </div>
-    <div class="col-md-7 col-md-offset-1">
-        <?php if ($this->fileUpload): ?>
-            <?php
-            echo $this->fileUpload['imageService']->generateFileUploadForm(
-                $this->fileUpload['module'],
-                $this->fileUpload['type']
-            );
-            ?>
-        <?php endif; ?>
-    </div>
 </div>
-
 <script>
     require([
-        'frontend'
-        <?= $requireScript?",'$requireScript'":null; ?>
-        <?php
-        if ($this->scripts) {
-            foreach ($this->scripts as $script) {
-                echo ",'$script'";
-            }
-        }
-        ?>
+        'frontend',
+        <?= implode(',', array_map(function($a) { return "'$a'"; }, $scripts));?>
     ]);
 </script>

@@ -31,14 +31,15 @@ class EntityTypeInputFilter extends InputFilter
      */
     protected function aliasEntity()
     {
-        $recordExistsValidator = new UniqueObject(
+        $recordUniqueValidator = new UniqueObject(
             array(
-                'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')->getRepository('Comment\Entity\EntityType'),
+                'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')
+                    ->getRepository('Comment\Entity\EntityType'),
                 'fields' => array('aliasEntity'),
-                'object_manager' =>$this->sm->get('Doctrine\ORM\EntityManager'),
+                'object_manager' => $this->sm->get('Doctrine\ORM\EntityManager'),
             )
         );
-        $recordExistsValidator->setMessage(
+        $recordUniqueValidator->setMessage(
             'Entity type with this alias already exists'
         );
 
@@ -57,7 +58,7 @@ class EntityTypeInputFilter extends InputFilter
                         'message' => 'Entity type contains invalid characters'
                     ),
                 ),
-                $recordExistsValidator
+                $recordUniqueValidator
             ),
         ));
 
@@ -69,14 +70,15 @@ class EntityTypeInputFilter extends InputFilter
      */
     protected function entity()
     {
-        $recordExistsValidator = new UniqueObject(
+        $recordUniqueValidator = new UniqueObject(
             array(
-                'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')->getRepository('Comment\Entity\EntityType'),
+                'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')
+                    ->getRepository('Comment\Entity\EntityType'),
                 'fields' => array('entity'),
-                'object_manager' =>$this->sm->get('Doctrine\ORM\EntityManager'),
+                'object_manager' => $this->sm->get('Doctrine\ORM\EntityManager'),
             )
         );
-        $recordExistsValidator->setMessage(
+        $recordUniqueValidator->setMessage(
             'Entity type with this entity already exists'
         );
 
@@ -88,7 +90,7 @@ class EntityTypeInputFilter extends InputFilter
                 array('name' => 'StringTrim'),
             ),
             'validators' => array(
-                $recordExistsValidator
+                $recordUniqueValidator
             ),
         ));
 

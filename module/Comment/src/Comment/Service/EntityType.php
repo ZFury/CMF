@@ -33,7 +33,7 @@ class EntityType
      * @return \Comment\Entity\EntityType
      * @throws \Exception
      */
-    public function checkEntity($aliasEntity, $entityId)
+    public function getEntity($aliasEntity, $entityId)
     {
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
 
@@ -42,7 +42,7 @@ class EntityType
         }
 
         $entity = $objectManager->getRepository($entityType->getEntity())->find($entityId);
-        if (count($entity)==0) {
+        if (!count($entity)) {
             throw new \Exception('Unknown entity');
         }
 
