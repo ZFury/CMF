@@ -12,22 +12,28 @@ use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
+use Media\Entity\File;
 
 class VideoUploadInputFilter implements InputFilterAwareInterface
 {
-    public $videoUpload;
+    /**
+     * @var InputFilter|InputFilterInterface
+     */
     protected $inputFilter;
 
-    public function exchangeArray($data)
-    {
-        $this->videoUpload = (isset($data['video-upload'])) ? $data['video-upload'] : null;
-    }
-
+    /**
+     * @param InputFilterInterface $inputFilter
+     * @return void|InputFilterAwareInterface
+     * @throws \Exception
+     */
     public function setInputFilter(InputFilterInterface $inputFilter)
     {
         throw new \Exception("Not used");
     }
 
+    /**
+     * @return InputFilter|InputFilterInterface
+     */
     public function getInputFilter()
     {
         if (!$this->inputFilter) {
@@ -37,7 +43,7 @@ class VideoUploadInputFilter implements InputFilterAwareInterface
             $inputFilter->add(
                 $factory->createInput(
                     array(
-                        'name' => 'video',
+                        'name' => File::VIDEO_FILETYPE,
                         'required' => true,
                         'validators' => array(
                             array(
