@@ -51,7 +51,7 @@
 
             function ajaxError (status) {
                 if (status !== 0) {
-                    alert('Произошла ошибка! Перезагрузите страницу и повторите.');
+                    alert('Reload page.');
                 }
             }
 

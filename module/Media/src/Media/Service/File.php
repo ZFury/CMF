@@ -15,8 +15,8 @@ use Zend\Filter\File\RenameUpload;
 
 class File
 {
-    const PUBLIC_PATH = "public";
-    const UPLOADS_PATH = "/uploads/";
+    const PUBLIC_PATH = "public/";
+    const UPLOADS_PATH = "uploads/";
     const GETPATH = true;
     const FROM_PUBLIC = true;
     const FROM_ROOT = false;

@@ -30,7 +30,7 @@ class Video extends File
         if ($from == File::FROM_ROOT) {
             $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::VIDEOS_PATH;
         } else {
-            $path = self::UPLOADS_PATH . self::VIDEOS_PATH;
+            $path = DIRECTORY_SEPARATOR . self::UPLOADS_PATH . self::VIDEOS_PATH;
         }
 
         return self::buildFilePath($id, $path, $ext);
@@ -63,7 +63,7 @@ class Video extends File
      */
     public function executeConversion($oldLocation, $newLocation, $bitrate = 300)
     {
-        exec("avconv -i $oldLocation -strict experimental -b $bitrate" . "k -y $newLocation", $output, $return);
+        exec("avconv -i $oldLocation -strict experimental -r ntsc-film -b $bitrate" . "k -y $newLocation", $output, $return);
         if (isset($return) && 0 === $return) {
             return true;
         }
