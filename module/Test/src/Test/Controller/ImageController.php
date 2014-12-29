@@ -23,6 +23,7 @@ class ImageController extends AbstractActionController
     public function uploadImageAction()
     {
         $imageService = $this->getServiceLocator()->get('Media\Service\File');
+        $this->layout('layout/dashboard/dashboard');
         return new ViewModel(['imageService' => $imageService, 'type' => File::IMAGE_FILETYPE]);
     }
 
@@ -36,7 +37,7 @@ class ImageController extends AbstractActionController
         $imageService = $this->getServiceLocator()->get('Media\Service\File');
         $blueimpService = $this->getServiceLocator()->get('Media\Service\Blueimp');
         if ($this->getRequest()->isPost()) {
-            $form = new ImageUpload('upload-image');
+            $form = new ImageUpload();
             $inputFilter = new ImageUploadInputFilter();
             $form->setInputFilter($inputFilter->getInputFilter());
 

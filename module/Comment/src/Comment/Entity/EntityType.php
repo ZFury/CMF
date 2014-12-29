@@ -95,7 +95,7 @@ class EntityType extends EntityBase
     protected $comments;
 
     /**
-     * Initialies the comments variable.
+     * Initialize the comments variable.
      */
     public function __construct()
     {
