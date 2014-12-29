@@ -25,8 +25,7 @@ class CreateInputFilter extends InputFilter
     public function __construct(ServiceManager $sm)
     {
         $this->sm = $sm;
-        //$this->username();
-        $this->email();
+        $this->password()->repeatPassword()->email();
     }
 
     /**

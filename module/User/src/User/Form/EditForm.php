@@ -4,12 +4,19 @@ namespace User\Form;
 
 use Zend\Form\Form;
 
-class CreateForm extends Form
+class EditForm extends Form
 {
     public function __construct($name = null, $options = [])
     {
         parent::__construct($name, $options);
         $this->setAttribute('method', 'post');
+
+        $this->add(
+            [
+                'name' => 'id',
+                'type' => 'hidden'
+            ]
+        );
 
         $this->add(
             [
@@ -51,8 +58,7 @@ class CreateForm extends Form
                     'max' => 25
                 ],
                 'attributes' => [
-                    'class' => 'form-control',
-                    'required' => 'true',
+                    'class' => 'form-control'
                 ]
             ]
         );
@@ -67,8 +73,7 @@ class CreateForm extends Form
                     'label' => 'Repeat password'
                 ],
                 'attributes' => [
-                    'class' => 'form-control',
-                    'required' => 'true',
+                    'class' => 'form-control'
                 ]
             ]
         );

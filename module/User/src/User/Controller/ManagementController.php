@@ -34,11 +34,12 @@ class ManagementController extends AbstractCrudController
     public function createAction()
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $user = new Entity\User();
-        $form = new Form\CreateForm();
+        $user = $this->getEntity();
+        $form = $this->getCreateForm();
         $form->setHydrator(new DoctrineHydrator($entityManager));
         $form->bind($user);
         if ($this->getRequest()->isPost()) {
+            $form->setInputFilter(new Form\Filter\CreateInputFilter($this->getServiceLocator()));
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
                 $entityManager->persist($user);
@@ -59,21 +60,22 @@ class ManagementController extends AbstractCrudController
     public function editAction()
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $user = new Entity\User();
-        $builder = new AnnotationBuilder($entityManager);
-
-        $form = $builder->createForm($user);
+        $user = $this->loadEntity();
+        $form = $this->getEditForm();
         $form->setHydrator(new DoctrineHydrator($entityManager));
         $form->bind($user);
         if ($this->getRequest()->isPost()) {
-            //$form->setInputFilter(new Form\CreateInputFilter($this->getServiceLocator()));
+            $form->setInputFilter(new Form\Filter\EditInputFilter($this->getServiceLocator()));
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
-                $salt = md5(microtime(false) . rand(11111, 99999));
-                $user->setSalt($salt);
-                $user->setPassword(Service\User::encrypt($user, $user->getPassword()));
                 $entityManager->persist($user);
                 $entityManager->flush();
+                $authService = new Service\Auth($this->getServiceLocator());
+                if ($form->get('password')->getValue()) {
+                    $authService->generateEquals($user, $form->get('password')->getValue());
+                }
+
+                return $this->redirect()->toRoute(null, ['controller' => 'management']);
             }
         }
 
@@ -116,16 +118,16 @@ class ManagementController extends AbstractCrudController
 
     public function getEntity()
     {
-        return null;
+        return new Entity\User();
     }
 
     public function getCreateForm()
     {
-        return null;
+        return new Form\CreateForm();
     }
 
     public function getEditForm()
     {
-        return null;
+        return new Form\EditForm();
     }
 }
