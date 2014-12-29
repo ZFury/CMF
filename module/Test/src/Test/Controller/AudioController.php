@@ -36,7 +36,7 @@ class AudioController extends AbstractActionController
         $fileService = $this->getServiceLocator()->get('Media\Service\File');
         $blueimpService = $this->getServiceLocator()->get('Media\Service\Blueimp');
         if ($this->getRequest()->isPost()) {
-            $form = new AudioUpload('upload-audio');
+            $form = new AudioUpload();
             $inputFilter = new AudioUploadInputFilter();
             $form->setInputFilter($inputFilter->getInputFilter());
 
