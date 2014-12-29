@@ -78,7 +78,7 @@ class Module
             )
         );
 
-        $model = new JsonModel(array($result));
+        $model = new JsonModel($result);
         $event->setViewModel($model);
         $event->stopPropagation(true);
     }

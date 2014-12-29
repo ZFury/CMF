@@ -131,6 +131,4 @@ class ManagementController extends AbstractCrudController
     {
         return null;
     }
-
-
 }
