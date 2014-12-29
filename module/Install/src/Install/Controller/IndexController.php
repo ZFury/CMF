@@ -43,7 +43,7 @@ class IndexController extends AbstractActionController
                 'install/default',
                 [
                     'controller' => 'index',
-                    'action' => 'modules'
+                    'action' => 'mail'
                 ]
             );
         } else {
@@ -51,6 +51,41 @@ class IndexController extends AbstractActionController
 
             return new ViewModel([
                 'dbForm' => $dbForm,
+            ]);
+        }
+    }
+
+    public function mailAction()
+    {
+        $this->layout('layout/install/install');
+        $sessionProgress = new Container('progress_tracker');
+        $sessionProgress->offsetSet('mail', self::TODO);
+        $this->setProgress();
+
+        if ($this->getRequest()->isPost()) {
+            $mailForm = new MailConfig();
+            $mailForm->setInputFilter(new \Install\Form\Filter\DbConnectionInputFilter($this->getServiceLocator()));
+            $mailForm->setData($this->getRequest()->getPost());
+            if ($mailForm->isValid()) {
+                $sessionForms = new Container('forms');
+                $sessionForms->offsetSet('mailForm', $mailForm);
+            }
+
+            $sessionProgress = new Container('progress_tracker');
+            $sessionProgress->offsetSet('mail', self::DONE);
+
+            return $this->redirect()->toRoute(
+                'install/default',
+                [
+                    'controller' => 'index',
+                    'action' => 'modules'
+                ]
+            );
+        } else {
+            $mailForm = new MailConfig();
+
+            return new ViewModel([
+                'mailForm' => $mailForm,
             ]);
         }
     }
@@ -119,33 +154,6 @@ class IndexController extends AbstractActionController
 
             return new ViewModel([
                 'requirementsForm' => $requirementsForm
-            ]);
-        }
-    }
-
-    public function configsAction()
-    {
-        $this->layout('layout/install/install');
-        $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('configs', self::TODO);
-        $this->setProgress();
-
-        if ($this->getRequest()->isPost()) {
-            $sessionProgress = new Container('progress_tracker');
-            $sessionProgress->offsetSet('configs', self::DONE);
-
-            return $this->redirect()->toRoute(
-                'install/default',
-                [
-                    'controller' => 'index',
-                    'action' => 'finish'
-                ]
-            );
-        } else {
-            $configsForm = new DbConnection();
-
-            return new ViewModel([
-                'configsForm' => $configsForm
             ]);
         }
     }
