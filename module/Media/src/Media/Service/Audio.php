@@ -13,6 +13,10 @@ class Audio extends File
     const AUDIOS_PATH = "audio/";
     const MP3_EXT = 'mp3';
 
+    /**
+     * @param $path
+     * @return mixed
+     */
     public static function getDestination($path)
     {
         return preg_replace('/.[0-9]*\.((mp3))$/', '', $path);
@@ -21,31 +25,51 @@ class Audio extends File
     /**
      * @param $id
      * @param $ext
-     * @param bool $onlyPath
+     * @param bool $from
      * @return string
      * @throws \Exception
      */
-    public static function audioPath($id, $ext, $onlyPath = false)//$onlyPath it's because we need another path when working with Original and when we are getting it
-    {
-        if ($onlyPath == false) {
+    public static function audioPath($id, $ext, $from = File::FROM_ROOT)//$onlyPath it's because we need another path
+    {//when working with Original and when we are getting it
+        if ($from == File::FROM_ROOT) {
             $path = self::PUBLIC_PATH . self::UPLOADS_PATH . self::AUDIOS_PATH;
         } else {
-            $path = self::UPLOADS_PATH . self::AUDIOS_PATH;
+            $path = DIRECTORY_SEPARATOR . self::UPLOADS_PATH . self::AUDIOS_PATH;
         }
 
         return self::buildFilePath($id, $path, $ext);
     }
 
-    public function convertAudioToMp3(\Media\Entity\File $audioEntity)
+    /**
+     * @param File $audioEntity
+     * @param string $newExtension
+     * @return File
+     */
+    public function convertAudio(File $audioEntity, $newExtension = self::MP3_EXT)
     {
         //With libav avconv installed
         $oldLocation = $audioEntity->getLocation();
-        $audioEntity->setExtension(self::MP3_EXT);
+        $audioEntity->setExtension($newExtension);
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($audioEntity);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
         $newLocation = $audioEntity->getLocation();
-        exec("avconv -i $oldLocation -c:a libmp3lame -b:a 320k $newLocation");
+        $this->executeConversion($oldLocation, $newLocation);
 
         return $audioEntity;
+    }
+
+    /**
+     * @param $oldLocation
+     * @param $newLocation
+     * @return bool
+     */
+    public function executeConversion($oldLocation, $newLocation)
+    {
+        exec("avconv -i $oldLocation -c:a libmp3lame -b:a 320k -y $newLocation", $output, $return);
+        if (isset($return) && 0 === $return) {
+            return true;
+        }
+
+        return false;
     }
 }

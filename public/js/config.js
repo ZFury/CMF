@@ -20,7 +20,10 @@ require.config({
         redactor: './../redactor/redactor',
         //"redactor-fullscreen": './../redactor/plugins/fullscreen'
         dashboard: './../module/dashboard/js/dashboard',
+        comment: '../module/comment/js/index',
+        commentManagement: '../module/comment/js/management',
         categories: '../module/categories/js/management',
+        test: '../module/test/js/comment',
         //BLUEIMP BEGIN
         "load-image": './libs/jQuery-File-Upload-master/load-image',
         "load-image-meta": './libs/jQuery-File-Upload-master/load-image-meta',
@@ -38,11 +41,14 @@ require.config({
         "iframe-transport": './libs/jQuery-File-Upload-master/jquery.iframe-transport',
         "fileupload-ui": './libs/jQuery-File-Upload-master/jquery.fileupload-ui',
         //BLUEIMP END
-        "image-categories": './modules/categories/image',
-        "image": './modules/test/image',
-        "audio": './modules/test/audio',
-        "video": './modules/test/video',
-        'redactorContent': '../redactor/redactorContent'
+        "image-categories": '../module/categories/js/image',
+        "image": '../module/test/js/image',
+        "audio": '../module/test/js/audio',
+        "video": '../module/test/js/video',
+        'redactorContent': '../redactor/redactorContent',
+        'conversion': '../module/media/js/conversion',
+        'form': './form',
+        'notify': './notify'
     },
     shim: {
         angular: {
@@ -75,12 +81,6 @@ require.config({
         redactor: {
             deps: ['jquery'],
             exports: '$.fn.redactor'
-        },
-        frontend: {
-            deps: ['bootstrap']
-        },
-        backend: {
-            deps: ['angularRoute', 'angularSanitize']
         }
         //'redactor-fullscreen': {
         //    deps: ['jquery', 'redactor'],

@@ -21,8 +21,8 @@ class Module
         );
     }
 
-    public function onBootstrap(MvcEvent $e)
-    {
+//    public function onBootstrap(MvcEvent $e)
+//    {
 //        $em = $e->getApplication()->getEventManager();
 //
 //        $em->attach(
@@ -37,5 +37,5 @@ class Module
 //                }
 //            }
 //        );
-    }
+//    }
 }

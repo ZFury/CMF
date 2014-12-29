@@ -1,7 +1,6 @@
 <?php
 
 $env = getenv('APP_ENV') ?: 'production';
-
 $config =  array(
     // This should be an array of module namespaces used in the application.
     'modules' => array(
@@ -9,14 +8,16 @@ $config =  array(
         'DoctrineModule',
         'DoctrineORMModule',
         'BjyAuthorize',
-        'Options',
         'User',
         'Test',
+        'Options',
+        'Comment',
         'Dashboard',
         'Categories',
         'Media',
         'Pages',
-        'Mail'
+        'Mail',
+        'DoctrineTools',
     ),
 
     // These are various options for the listeners attached to the ModuleManager

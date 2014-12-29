@@ -1,0 +1,10 @@
+<?php
+$title = 'Comments';
+$this->headTitle($title);
+if (isset($comments)) {
+    echo $this->comment('comment/index/partial/comment.phtml', $comments);
+}
+?>
+<script>
+    require(['comment']);
+</script>

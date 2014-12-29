@@ -20,7 +20,6 @@ use Zend\Form\Annotation;
  */
 class ObjectFile
 {
-
     /**
      * @var string
      *
@@ -60,7 +59,7 @@ class ObjectFile
 
     /**
      * @ORM\ManyToOne(targetEntity="File", inversedBy="objectsFiles")
-     * @ORM\JoinColumn(name="file_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="file_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $file;
 
