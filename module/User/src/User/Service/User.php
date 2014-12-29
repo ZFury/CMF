@@ -135,11 +135,7 @@ class User
             $authService->generateEquals($user, $data['password']);
 
             //use module mail for user registration
-            $config = $this->getServiceLocator()->get('config');
-            if (isset($config['mailOptions'])) {
-                $mailOptions = $this->getServiceLocator()->get('config')['mailOptions'];
-            }
-            if (isset($mailOptions['useModuleMail']) && $mailOptions['useModuleMail'] = true) {
+            if ($this->useModuleMail()) {
                 $mailService = $this->getServiceLocator()->get('Mail\Service\Mail');
                 $mailService->signUpMail($user);
             } else {
@@ -173,11 +169,7 @@ class User
         $objectManager->flush();
 
         //use module mail for user registration
-        $config = $this->getServiceLocator()->get('config');
-        if (isset($config['mailOptions'])) {
-            $mailOptions = $this->getServiceLocator()->get('config')['mailOptions'];
-        }
-        if (isset($mailOptions['useModuleMail']) && $mailOptions['useModuleMail'] = true) {
+        if ($this->useModuleMail()) {
             /** @var \Mail\Service\Mail $mailService */
             $mailService = $this->getServiceLocator()->get('Mail\Service\Mail');
             $mailService->forgotPassword($user);
@@ -187,6 +179,22 @@ class User
 
             $this->forgotPasswordpMail($user, $html);
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function useModuleMail()
+    {
+        $config = $this->getServiceLocator()->get('config');
+        if (isset($config['mailOptions'])) {
+            $mailOptions = $this->getServiceLocator()->get('config')['mailOptions'];
+        }
+        if (isset($mailOptions['useModuleMail']) && $mailOptions['useModuleMail'] === true) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

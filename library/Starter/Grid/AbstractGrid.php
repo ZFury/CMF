@@ -1,6 +1,6 @@
 <?php
 
-namespace Starter\Mvc\Grid;
+namespace Starter\Grid;
 
 use Doctrine\ORM\QueryBuilder;
 use Zend\ServiceManager\ServiceLocatorInterface;

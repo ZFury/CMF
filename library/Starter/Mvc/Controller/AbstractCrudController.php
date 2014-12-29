@@ -145,21 +145,14 @@ abstract class AbstractCrudController extends AbstractActionController
      */
     protected function loadEntity()
     {
-//        if ($this->getRequest()->isPost()) {
-//            if (!$id = $this->params()->fromPost('id')) {
-//                throw new EntityNotFoundException('Bad Request');
-//            }
-//        }
-//        if ($this->getRequest()->isGet()) {
-            if (!$id = $this->params()->fromRoute('id')) {
-                //TODO: fix exception
-                throw new EntityNotFoundException('Bad Request');
-            }
-//        }
+        $params = array_merge($this->params()->fromPost(), $this->params()->fromRoute());
+        if (empty($params['id'])) {
+            throw new EntityNotFoundException('Bad Request');
+        }
 
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
-        if (!$model = $objectManager->getRepository(get_class($this->getEntity()))->find($id)) {
+        if (!$model = $objectManager->getRepository(get_class($this->getEntity()))->find($params['id'])) {
             throw new EntityNotFoundException('Entity not found');
         }
         return $model;

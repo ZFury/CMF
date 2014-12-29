@@ -1,6 +1,6 @@
 <?php
 
-namespace Pages\Grid;
+namespace Mail\Grid;
 
 use Starter\Grid\AbstractGrid;
 
@@ -10,17 +10,17 @@ class Grid extends AbstractGrid
     {
         $em = $this->sm->get('Doctrine\ORM\EntityManager');
         $source = $em->createQueryBuilder()
-            ->select(['pages.id', 'pages.title', 'pages.description', 'pages.created', 'pages.updated'])
-            ->from('\Pages\Entity\Pages', 'pages');
+            ->select(['mail.id', 'mail.alias', 'mail.description', 'mail.created', 'mail.updated'])
+            ->from('\Mail\Entity\Mail', 'mail');
         $this->setSource($source)->setColumns(
             [
                 'Id' => 'id',
-                'Title' => 'title',
+                'Alias' => 'alias',
                 'Description' => 'description',
                 'Created' => 'created',
                 'Updated' => 'updated'
             ]
-        )->setAllowedFilters(['title', 'description'])
-            ->setAllowedOrders(['id', 'title', 'description', 'created', 'updated']);
+        )->setAllowedFilters(['alias', 'description'])
+            ->setAllowedOrders(['id', 'alias', 'description', 'created', 'updated']);
     }
 }
