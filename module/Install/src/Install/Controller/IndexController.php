@@ -9,10 +9,13 @@
 namespace Install\Controller;
 
 use Install\Form\DbConnection;
+use Install\Form\Filter\DbConnectionInputFilter;
+use Install\Form\Filter\MailConfigInputFilter;
 use Install\Form\Modules;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
+use Install\Form\MailConfig;
 
 class IndexController extends AbstractActionController
 {
@@ -29,7 +32,7 @@ class IndexController extends AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             $dbForm = new DbConnection();
-            $dbForm->setInputFilter(new \Install\Form\Filter\DbConnectionInputFilter($this->getServiceLocator()));
+            $dbForm->setInputFilter(new DbConnectionInputFilter($this->getServiceLocator()));
             $dbForm->setData($this->getRequest()->getPost());
             if ($dbForm->isValid()) {
                 $sessionForms = new Container('forms');
@@ -64,7 +67,7 @@ class IndexController extends AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             $mailForm = new MailConfig();
-            $mailForm->setInputFilter(new \Install\Form\Filter\DbConnectionInputFilter($this->getServiceLocator()));
+            $mailForm->setInputFilter(new MailConfigInputFilter($this->getServiceLocator()));
             $mailForm->setData($this->getRequest()->getPost());
             if ($mailForm->isValid()) {
                 $sessionForms = new Container('forms');
@@ -132,29 +135,18 @@ class IndexController extends AbstractActionController
         $this->setProgress();
 
         if ($this->getRequest()->isPost()) {
-            $dbForm = new DbConnection();
-            $dbForm->setInputFilter(new \Install\Form\Filter\DbConnectionInputFilter($this->getServiceLocator()));
-            $dbForm->setData($this->getRequest()->getPost());
-            if ($dbForm->isValid()) {
-                $sessionForms = new Container('forms');
-                $sessionForms->offsetSet('dbForm', $dbForm);
-            }
-            $sessionProgress = new Container('progress_tracker');
             $sessionProgress->offsetSet('requirements', self::DONE);
 
             return $this->redirect()->toRoute(
                 'install/default',
                 [
                     'controller' => 'index',
-                    'action' => 'configs'
+                    'action' => 'finish'
                 ]
             );
         } else {
-            $requirementsForm = new DbConnection();
-
-            return new ViewModel([
-                'requirementsForm' => $requirementsForm
-            ]);
+            $requirements = $this->getServiceLocator()->get('Config')['requirements'];
+            return new ViewModel(['requirements' => $requirements]);
         }
     }
 
@@ -165,8 +157,6 @@ class IndexController extends AbstractActionController
         $sessionProgress->offsetSet('finish', self::DONE);
         $this->setProgress();
         $sessionProgress->getManager()->getStorage()->clear('progress_tracker');
-
-
 
         return new ViewModel();
     }
@@ -200,6 +190,6 @@ class IndexController extends AbstractActionController
 
     public static function getSteps()
     {
-        return [ 'db', 'modules', 'requirements', 'configs', 'finish' ];
+        return [ 'db', 'modules', 'requirements', 'mail', 'finish' ];
     }
 }

@@ -1,61 +1,84 @@
 <?php
-$title = 'Database connection';
+$title = 'Mail config';
 $this->headTitle($title);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 <?php
-$configsForm->setAttribute('action', $this->url('install', ['controller' => 'index', 'action' => 'database']));
-$configsForm->prepare();
+$mailForm->setAttribute('action', $this->url('install', ['controller' => 'index', 'action' => 'database']));
+$mailForm->prepare();
 ?>
 
 <form role="form" class="form-horizontal" method="post">
 
-    <div class="form-group">
-        <label for="inputHost" class="col-md-2 control-label"><?= $configsForm->get('host')->getLabel(); ?></label>
-        <div class="col-md-4">
-            <input type="text" class="form-control" id="inputHost" name="<?= $configsForm->get('host')->getName(); ?>" value="<?= $configsForm->get('host')->getValue(); ?>" placeholder="<?= $configsForm->get('host')->getLabel(); ?>">
-            <?= $this->formElementErrors($configsForm->get('host')); ?>
-        </div>
-    </div>
 
-    <div class="form-group">
-        <label for="inputPort" class="col-md-2 control-label"><?= $configsForm->get('port')->getLabel(); ?></label>
-        <div class="col-md-4">
-            <input type="text" class="form-control" id="inputPort" name="<?= $configsForm->get('port')->getName(); ?>" value="<?= $configsForm->get('port')->getValue(); ?>" placeholder="<?= $configsForm->get('port')->getLabel(); ?>">
-            <?= $this->formElementErrors($configsForm->get('port')); ?>
-        </div>
-    </div>
+    <ul><h2>Transport</h2>
+        <li>
+            <div class="form-group">
+                <label for="inputHost" class="col-md-2 control-label"><?= $mailForm->get('host')->getLabel(); ?></label>
+                <div class="col-md-2">
+                    <input type="text" class="form-control" id="inputHost" name="<?= $mailForm->get('host')->getName(); ?>" value="<?= $mailForm->get('host')->getValue(); ?>" placeholder="<?= $mailForm->get('host')->getLabel(); ?>">
+                    <?= $this->formElementErrors($mailForm->get('host')); ?>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="form-group">
+                <label for="inputPort" class="col-md-2 control-label"><?= $mailForm->get('port')->getLabel(); ?></label>
+                <div class="col-md-2">
+                    <input type="text" class="form-control" id="inputPort" name="<?= $mailForm->get('port')->getName(); ?>" value="<?= $mailForm->get('port')->getValue(); ?>" placeholder="<?= $mailForm->get('port')->getLabel(); ?>">
+                    <?= $this->formElementErrors($mailForm->get('port')); ?>
+                </div>
+            </div>
+        </li>
+    </ul>
 
-    <div class="form-group">
-        <label for="inputUser" class="col-md-2 control-label"><?= $configsForm->get('user')->getLabel(); ?></label>
-        <div class="col-md-4">
-            <input type="text" class="form-control" id="inputUser" name="<?= $configsForm->get('user')->getName(); ?>" value="<?= $configsForm->get('user')->getValue(); ?>" placeholder="<?= $configsForm->get('user')->getLabel(); ?>">
-            <?= $this->formElementErrors($configsForm->get('user')); ?>
-        </div>
-    </div>
 
-    <div class="form-group">
-        <label for="inputPassword" class="col-md-2 control-label"><?= $configsForm->get('password')->getLabel(); ?></label>
-        <div class="col-md-4">
-            <input type="password" class="form-control" id="inputPassword" name="<?= $configsForm->get('password')->getName(); ?>" value="<?= $configsForm->get('password')->getValue(); ?>" placeholder="<?= $configsForm->get('password')->getLabel(); ?>">
-            <?= $this->formElementErrors($configsForm->get('password')); ?>
-        </div>
-    </div>
+    <ul><h2>Message</h2>
+        <li>
 
-    <div class="form-group">
-        <label for="inputDbName" class="col-md-2 control-label"><?= $configsForm->get('dbname')->getLabel(); ?></label>
-        <div class="col-md-4">
-            <input type="text" class="form-control" id="inputDbName" name="<?= $configsForm->get('dbname')->getName(); ?>" value="<?= $configsForm->get('dbname')->getValue(); ?>" placeholder="<?= $configsForm->get('dbname')->getLabel(); ?>">
-            <?= $this->formElementErrors($configsForm->get('dbname')); ?>
-        </div>
-    </div>
+            <ul><h4>Headers</h4>
+                <li>
+                    <div class="form-group">
+                        <label for="inputProject" class="col-md-2 control-label"><?= $mailForm->get('project')->getLabel(); ?></label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="inputProject" name="<?= $mailForm->get('project')->getName(); ?>" value="<?= $mailForm->get('project')->getValue(); ?>" placeholder="<?= $mailForm->get('project')->getLabel(); ?>">
+                            <?= $this->formElementErrors($mailForm->get('project')); ?>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="form-group">
+                        <label for="inputEmails" class="col-md-2 control-label"><?= $mailForm->get('emails')->getLabel(); ?></label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="inputEmails" name="<?= $mailForm->get('emails')->getName(); ?>" value="<?= $mailForm->get('emails')->getValue(); ?>" placeholder="<?= $mailForm->get('emails')->getLabel(); ?>">
+                            <?= $this->formElementErrors($mailForm->get('emails')); ?>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <li>
+
+            <ul><h4>From</h4>
+                <li>
+                    <div class="form-group">
+                        <label for="inputFrom" class="col-md-2 control-label"><?= $mailForm->get('from')->getLabel(); ?></label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="inputFrom" name="<?= $mailForm->get('from')->getName(); ?>" value="<?= $mailForm->get('from')->getValue(); ?>" placeholder="<?= $mailForm->get('from')->getLabel(); ?>">
+                            <?= $this->formElementErrors($mailForm->get('from')); ?>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    </ul>
 
     <div class="form-group">
         <div class="col-md-offset-2 col-sm-3">
-            <button class="btn btn-primary"><a href="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'requirements'])?>">Previous</a></button>
+            <div class="btn btn-primary"><a href="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'database'])?>">Previous</a></div>
         </div>
         <div class="col-sm-2">
-            <button class="btn btn-primary" type="submit">Save</button>
+            <button class="btn btn-primary" type="submit">Next</button>
         </div>
     </div>
 

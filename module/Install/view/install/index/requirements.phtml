@@ -1,62 +1,33 @@
 <?php
-$title = 'Database connection';
+$title = 'Requirements';
 $this->headTitle($title);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
-<?php
-$requirementsForm->setAttribute('action', $this->url('install', ['controller' => 'index', 'action' => 'database']));
-$requirementsForm->prepare();
-?>
 
-<form role="form" class="form-horizontal" method="post">
-
-    <div class="form-group">
-        <label for="inputHost" class="col-md-2 control-label"><?= $requirementsForm->get('host')->getLabel(); ?></label>
-        <div class="col-md-4">
-            <input type="text" class="form-control" id="inputHost" name="<?= $requirementsForm->get('host')->getName(); ?>" value="<?= $requirementsForm->get('host')->getValue(); ?>" placeholder="<?= $requirementsForm->get('host')->getLabel(); ?>">
-            <?= $this->formElementErrors($requirementsForm->get('host')); ?>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="inputPort" class="col-md-2 control-label"><?= $requirementsForm->get('port')->getLabel(); ?></label>
-        <div class="col-md-4">
-            <input type="text" class="form-control" id="inputPort" name="<?= $requirementsForm->get('port')->getName(); ?>" value="<?= $requirementsForm->get('port')->getValue(); ?>" placeholder="<?= $requirementsForm->get('port')->getLabel(); ?>">
-            <?= $this->formElementErrors($requirementsForm->get('port')); ?>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="inputUser" class="col-md-2 control-label"><?= $requirementsForm->get('user')->getLabel(); ?></label>
-        <div class="col-md-4">
-            <input type="text" class="form-control" id="inputUser" name="<?= $requirementsForm->get('user')->getName(); ?>" value="<?= $requirementsForm->get('user')->getValue(); ?>" placeholder="<?= $requirementsForm->get('user')->getLabel(); ?>">
-            <?= $this->formElementErrors($requirementsForm->get('user')); ?>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="inputPassword" class="col-md-2 control-label"><?= $requirementsForm->get('password')->getLabel(); ?></label>
-        <div class="col-md-4">
-            <input type="password" class="form-control" id="inputPassword" name="<?= $requirementsForm->get('password')->getName(); ?>" value="<?= $requirementsForm->get('password')->getValue(); ?>" placeholder="<?= $requirementsForm->get('password')->getLabel(); ?>">
-            <?= $this->formElementErrors($requirementsForm->get('password')); ?>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="inputDbName" class="col-md-2 control-label"><?= $requirementsForm->get('dbname')->getLabel(); ?></label>
-        <div class="col-md-4">
-            <input type="text" class="form-control" id="inputDbName" name="<?= $requirementsForm->get('dbname')->getName(); ?>" value="<?= $requirementsForm->get('dbname')->getValue(); ?>" placeholder="<?= $requirementsForm->get('dbname')->getLabel(); ?>">
-            <?= $this->formElementErrors($requirementsForm->get('dbname')); ?>
-        </div>
-    </div>
-
+<form role="form" action="<?=$this->url('install', ['controller' => 'index', 'action' => 'requirements'])?>" class="form-horizontal" method="post">
+    <?php
+    if (isset($requirements)) {
+    ?>
+    <ul>
+    <?php  foreach (array_keys($requirements) as $moduleName) {?>
+        <li>
+            <h4>For module <?=$moduleName?></h4>
+            <dl class="dl-horizontal">
+                <?php for ($i=0; $i<count($requirements[$moduleName]); $i++) {?>
+                <dt><?=array_keys($requirements[$moduleName])[$i]?></dt>
+                <dd><?=array_values($requirements[$moduleName])[$i]?></dd>
+                <?php } ?>
+            </dl>
+        </li>
+    <?php } ?>
+    </ul>
+    <?php } ?>
     <div class="form-group">
         <div class="col-md-offset-2 col-sm-3">
-            <button class="btn btn-primary"><a href="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'modules'])?>">Previous</a></button>
+            <div class="btn btn-primary"><a href="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'modules'])?>">Previous</a></div>
         </div>
         <div class="col-sm-2">
-            <button class="btn btn-primary" type="submit">Next</button>
+            <button class="btn btn-primary" type="submit">Save</button>
         </div>
     </div>
-
 </form>

@@ -64,3 +64,12 @@ ol.progress-tracker li.progress-tracker-todo:before {
     font-size: 1.5em;
     bottom: -1.6em;
 }
+
+li {
+    list-style-type: none;
+}
+
+div.btn > a {
+    text-decoration: none;
+    color: #BFE4FF;
+}

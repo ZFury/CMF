@@ -39,4 +39,11 @@ return array(
             ],
         ],
     ],
+    'requirements' => [
+        'Media' => [
+            'libav-tools' => 'audio/video converter',
+            'libavcodec-extra-53' => 'special codec',
+            'Create dir uploads/' => 'Writing access recursively for it'
+        ]
+    ]
 );

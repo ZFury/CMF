@@ -20,7 +20,7 @@ class Modules extends Form
             'type' => 'Zend\Form\Element\Checkbox',
             'name' => 'checkbox_media',
             'options' => [
-                'label' => 'Media checkbox',
+                'label' => 'Media (image, audio, video upload)',
                 'use_hidden_element' =>true,
                 'checked_value' => 'good',
                 'unchecked_value' => 'bad'
@@ -31,7 +31,7 @@ class Modules extends Form
             'type' => 'Zend\Form\Element\Checkbox',
             'name' => 'checkbox_categories',
             'options' => [
-                'label' => 'Categories checkbox',
+                'label' => 'Categories',
                 'use_hidden_element' =>true,
                 'checked_value' => 'good',
                 'unchecked_value' => 'bad'
@@ -42,7 +42,7 @@ class Modules extends Form
             'type' => 'Zend\Form\Element\Checkbox',
             'name' => 'checkbox_comments',
             'options' => [
-                'label' => 'Comments checkbox',
+                'label' => 'Comments',
                 'use_hidden_element' =>true,
                 'checked_value' => 'good',
                 'unchecked_value' => 'bad'
@@ -53,7 +53,7 @@ class Modules extends Form
             'type' => 'Zend\Form\Element\Checkbox',
             'name' => 'checkbox_dashboard',
             'options' => [
-                'label' => 'Dashboard checkbox',
+                'label' => 'Dashboard',
                 'use_hidden_element' =>true,
                 'checked_value' => 'good',
                 'unchecked_value' => 'bad'
@@ -64,7 +64,7 @@ class Modules extends Form
             'type' => 'Zend\Form\Element\Checkbox',
             'name' => 'checkbox_mail',
             'options' => [
-                'label' => 'Mail checkbox',
+                'label' => 'Mail',
                 'use_hidden_element' =>true,
                 'checked_value' => 'good',
                 'unchecked_value' => 'bad'
@@ -75,7 +75,7 @@ class Modules extends Form
             'type' => 'Zend\Form\Element\Checkbox',
             'name' => 'checkbox_options',
             'options' => [
-                'label' => 'Options checkbox',
+                'label' => 'Options',
                 'use_hidden_element' =>true,
                 'checked_value' => 'good',
                 'unchecked_value' => 'bad'
@@ -86,7 +86,7 @@ class Modules extends Form
             'type' => 'Zend\Form\Element\Checkbox',
             'name' => 'checkbox_pages',
             'options' => [
-                'label' => 'Pages checkbox',
+                'label' => 'Pages',
                 'use_hidden_element' =>true,
                 'checked_value' => 'good',
                 'unchecked_value' => 'bad'
@@ -97,7 +97,7 @@ class Modules extends Form
             'type' => 'Zend\Form\Element\Checkbox',
             'name' => 'checkbox_test',
             'options' => [
-                'label' => 'Test checkbox',
+                'label' => 'Test (Controllers that test another modules)',
                 'use_hidden_element' =>true,
                 'checked_value' => 'good',
                 'unchecked_value' => 'bad'

@@ -3,7 +3,7 @@ $stepsArray = [
     'db' => null,
     'modules' => null,
     'requirements' => null,
-    'configs' => null,
+    'mail' => null,
     'finish' => null,
 ];
 if ($this->done_steps) {
@@ -20,8 +20,8 @@ if ($this->done_steps) {
 
 <ol class="progress-tracker" data-progress-tracker-steps="<?=\Install\Controller\IndexController::STEPS_NUMBER?>">
     <li class="<?= !$stepsArray['db'] ? 'progress-tracker-todo' : $this->db?>">DB connection</li><!--
+ --><li class="<?= !$stepsArray['mail'] ? 'progress-tracker-todo' : $this->mail?>">Mail configuration</li><!--
  --><li class="<?= !$stepsArray['modules'] ? 'progress-tracker-todo' : $this->modules?>">Needed modules</li><!--
  --><li class="<?= !$stepsArray['requirements'] ? 'progress-tracker-todo' : $this->requirements?>">Installing requirements</li><!--
- --><li class="<?= !$stepsArray['configs'] ? 'progress-tracker-todo' : $this->configs?>">Modules configuration</li><!--
  --><li class="<?= !$stepsArray['finish'] ? 'progress-tracker-todo' : $this->finish?>">Done</li>
 </ol>
