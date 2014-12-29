@@ -25,5 +25,9 @@
         "psr-0": {
             "": "library/"
         }
+    },
+    "suggest": {
+        "libav-tools": "to convert media files",
+        "libavcodec-extra-53": "to convert media files"
     }
 }
