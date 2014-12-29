@@ -15,8 +15,8 @@ use Zend\Filter\File\RenameUpload;
 
 class File
 {
-    const PUBLIC_PATH = "public";
-    const UPLOADS_PATH = "/uploads/";
+    const PUBLIC_PATH = "public/";
+    const UPLOADS_PATH = "uploads/";
     const GETPATH = true;
     const FROM_PUBLIC = true;
     const FROM_ROOT = false;
@@ -41,7 +41,7 @@ class File
         if (!is_dir($destination)) {
             if (self::prepareDir(dirname($destination), $mode)) {
                 if (!is_writable(dirname($destination))) {
-                    throw new \Exception('Directory ' . dirname($destination) . 'is not writable');
+                    throw new \Exception('Directory ' . dirname($destination) . ' is not writable');
                 }
 
                 return mkdir($destination) && chmod($destination, $mode);
@@ -182,14 +182,16 @@ class File
      */
     public function writeFile(FileUpload $form)
     {
+        $ext = $this->getExt($form->getData()[$form->getFileType()]['name']);
+        $type = $form->getFileType();
         //Creating new image to get ID for building its path
         $file = new FileEntity();
+        $file->setExtension($ext);
+        $file->setType($type);
         $this->sm->get('doctrine.entitymanager.orm_default')->persist($file);
         $this->sm->get('doctrine.entitymanager.orm_default')->flush();
         //Building path and creating directory. Then - moving
-        $ext = $this->getExt($form->getData()[$form->getFileType()]['name']);
         $destination = null;
-        $type = $form->getFileType();
         switch ($type) {
             case FileEntity::AUDIO_FILETYPE:
                 $destination = Audio::audioPath($file->getId(), $ext);
@@ -203,10 +205,6 @@ class File
             default:
         }
         $this->moveFile($destination, $form->getData()[$form->getFileType()]);
-        $file->setExtension($ext);
-        $file->setType($type);
-        $this->sm->get('doctrine.entitymanager.orm_default')->persist($file);
-        $this->sm->get('doctrine.entitymanager.orm_default')->flush();
 
         return $file;
     }

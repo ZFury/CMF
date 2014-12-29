@@ -25,7 +25,7 @@ abstract class AbstractCrudController extends AbstractActionController
      */
     public function onDispatch(MvcEvent $e)
     {
-        $this->layout('layout/dashboard/dashboard');
+//        $this->layout('layout/dashboard/dashboard');
         $routeMatch = $e->getRouteMatch();
         if (!$routeMatch) {
             /**
@@ -52,6 +52,9 @@ abstract class AbstractCrudController extends AbstractActionController
      */
     public function createAction()
     {
+        /**
+         * @var $form \Zend\Form\Form
+         */
         $form = $this->getCreateForm();
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
@@ -62,7 +65,6 @@ abstract class AbstractCrudController extends AbstractActionController
                 $hydrator->hydrate($form->getData(), $entity);
                 $objectManager->persist($entity);
                 $objectManager->flush();
-
                 //TODO: redirect where?
                 if (!$this->getRequest()->isXmlHttpRequest()) {
                     return $this->redirect()->toRoute(null, ['controller' => 'management']);
@@ -143,9 +145,16 @@ abstract class AbstractCrudController extends AbstractActionController
      */
     protected function loadEntity()
     {
-        if (!$id = $this->params()->fromRoute('id')) {
-            //TODO: fix exception
-            throw new EntityNotFoundException('Bad Request');
+        if ($this->getRequest()->isPost()) {
+            if (!$id = $this->params()->fromPost('id')) {
+                throw new EntityNotFoundException('Bad Request');
+            }
+        }
+        if ($this->getRequest()->isGet()) {
+            if (!$id = $this->params()->fromRoute('id')) {
+                //TODO: fix exception
+                throw new EntityNotFoundException('Bad Request');
+            }
         }
 
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');

@@ -9,6 +9,7 @@
 
 namespace Options\Controller;
 
+use Options\Grid\Grid;
 use Starter\Mvc\Controller\AbstractCrudController;
 use Zend\View\Model\ViewModel;
 use Options\Form\Create;
@@ -63,7 +64,9 @@ class ManagementController extends AbstractCrudController
 
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
-        if (!$model = $objectManager->getRepository(get_class($this->getEntity()))->find(['namespace' => $namespace, 'key' => $key])
+        if (
+        !$model = $objectManager
+            ->getRepository(get_class($this->getEntity()))->find(['namespace' => $namespace, 'key' => $key])
         ) {
             throw new EntityNotFoundException('Entity not found');
         }
@@ -75,14 +78,11 @@ class ManagementController extends AbstractCrudController
      */
     public function indexAction()
     {
-        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $options = $objectManager->getRepository('Options\Entity\Options')->findAll();
-
-        return new ViewModel(
-            array(
-                'options' => $options
-            )
-        );
+        $sm = $this->getServiceLocator();
+        $grid = new Grid($sm);
+        $viewModel = new ViewModel(['grid' => $grid]);
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
+        return $viewModel;
     }
 
     /**

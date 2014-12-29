@@ -16,7 +16,7 @@
         userGridController
         ) {
 
-        var app = angular.module('zfstarter', ['ngRoute']);
+        var app = angular.module('zfstarter', ['ngSanitize']);
         app
             .factory('userService', userService)
             .controller('userGridController', userGridController);

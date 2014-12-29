@@ -54,14 +54,27 @@ abstract class AbstractGrid
      */
     protected $order = [];
 
+    /**
+     * Fields that are allowed for ordering by
+     *
+     * @var array
+     */
     protected $allowedOrders = [];
 
     /**
      * Filter
+     * [
+     *  'field' => 'filter'
+     * ]
      * @var array
      */
     protected $filter = [];
 
+    /**
+     * Fields that are allowed for filtering by
+     *
+     * @var array
+     */
     protected $allowedFilters = [];
 
     /**
@@ -77,8 +90,18 @@ abstract class AbstractGrid
      */
     private $url;
 
+    /**
+     * Columns with aliases
+     *
+     * @var array
+     */
     protected $columns = array();
 
+    /**
+     * Total number of rows
+     *
+     * @var int
+     */
     protected $total = 0;
 
     /**
@@ -116,6 +139,9 @@ abstract class AbstractGrid
         return $this->data;
     }
 
+    /**
+     * Parses request and sets grid params
+     */
     protected function processRequest()
     {
         /** @var \Zend\Http\PhpEnvironment\Request $request */
@@ -150,9 +176,15 @@ abstract class AbstractGrid
         }
     }
 
+    /**
+     * Process
+     */
     protected function process()
     {
         $source = $this->getSource();
+        /** @var \Doctrine\ORM\Query\Expr\From $from */
+        $from = current($source->getDQLPart('from'));
+        $this->entityAlias = $from->getAlias();
         $limit = $this->getLimit();
         $source->setMaxResults($limit);
         $offset = $limit * ($this->getPage() - 1);
@@ -162,18 +194,20 @@ abstract class AbstractGrid
         }
         if ($filter = $this->getFilter()) {
             $source->where(
-                $source->expr()->orX()->add(
-                    $source->expr()->like(
-                        $this->getDoctrineField(key($filter)),
-                        $source->expr()->literal('%' . current($filter) . '%')
+                $source->expr()->orX()
+                    ->add(
+                        $source->expr()
+                            ->like(
+                                $this->getDoctrineField(key($filter)),
+                                $source->expr()->literal('%' . current($filter) . '%')
+                            )
                     )
-                )
             );
         }
         $data = $source->getQuery();
 
         $this->data = $data->getArrayResult();
-        $this->total = $this->getTotalRows();
+        $this->total = $this->countTotalRows();
     }
 
     /**
@@ -199,11 +233,22 @@ abstract class AbstractGrid
         return $this;
     }
 
+    /**
+     * Get entity alias
+     *
+     * @return string
+     */
     public function getEntityAlias()
     {
         return $this->entityAlias;
     }
 
+    /**
+     * Set entity alias
+     *
+     * @param $alias
+     * @return $this
+     */
     public function setEntityAlias($alias)
     {
         $this->entityAlias = $alias;
@@ -399,26 +444,46 @@ abstract class AbstractGrid
         return $this->allowedFilters;
     }
 
-    protected function getTotalRows()
+    /**
+     * Get total rows in result ignoring limit
+     *
+     * @return int
+     */
+    protected function countTotalRows()
     {
         $source = $this->getSource();
         /** @var \Doctrine\ORM\Query\Expr\Select $select */
-        $select = current($source->getDQLPart('select'));
-        $from = current($select->getParts());
-        $source->resetDQLPart('select')->setFirstResult(0)->select('count(' . $from . ')');
-        return (int)current($source->getQuery()->getSingleResult());
+        $source->resetDQLPart('select')->setFirstResult(0)->select('count(' . $this->entityAlias . ')');
+        return (int)$source->getQuery()->getSingleScalarResult();
     }
 
+    /**
+     * Get total
+     *
+     * @return int
+     */
     public function getTotal()
     {
         return $this->total;
     }
 
+    /**
+     * Get number of pages
+     *
+     * @return int
+     */
     public function totalPages()
     {
         return ceil($this->total / $this->limit);
     }
 
+    /**
+     * Get all grid params
+     * Passing $rewrite allows you to change them
+     *
+     * @param array $rewrite
+     * @return array
+     */
     public function getParams(array $rewrite = [])
     {
         $params = $this->params;
@@ -482,6 +547,11 @@ abstract class AbstractGrid
         return $params;
     }
 
+    /**
+     * Number of the previous page
+     *
+     * @return int|null
+     */
     public function prev()
     {
         if ($this->page == 1) {
@@ -491,6 +561,11 @@ abstract class AbstractGrid
         return $this->page - 1;
     }
 
+    /**
+     * Number of the next page
+     *
+     * @return int|null
+     */
     public function next()
     {
         if ($this->page == $this->totalPages()) {
@@ -500,11 +575,23 @@ abstract class AbstractGrid
         return $this->page + 1;
     }
 
+    /**
+     * Adds entity alias to field
+     *
+     * @param $field
+     * @return string
+     */
     protected function getDoctrineField($field)
     {
         return $this->entityAlias . '.' . $field;
     }
 
+    /**
+     * Get url for grid according to passed $params
+     *
+     * @param array $params
+     * @return string
+     */
     public function getUrl(array $params = [])
     {
         $params = $this->getParams($params);
@@ -519,6 +606,12 @@ abstract class AbstractGrid
         return $constructedUrl;
     }
 
+    /**
+     * Get url for order by column name
+     *
+     * @param $column
+     * @return string
+     */
     public function order($column)
     {
         if (!in_array($column, $this->allowedOrders)) {
@@ -534,6 +627,12 @@ abstract class AbstractGrid
         return $this->getUrl(['order-' . $column => $order]);
     }
 
+    /**
+     * Set aliases for columns
+     *
+     * @param array $columns
+     * @return $this
+     */
     public function setColumns(array $columns = [])
     {
         $this->columns = $columns;
@@ -541,6 +640,11 @@ abstract class AbstractGrid
         return $this;
     }
 
+    /**
+     * Get columns
+     *
+     * @return array
+     */
     public function getColumns()
     {
         if (empty($this->columns) && !empty($this->data)) {
