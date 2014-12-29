@@ -12,22 +12,28 @@ use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
+use Media\Entity\File;
 
 class AudioUploadInputFilter implements InputFilterAwareInterface
 {
-    public $audioUpload;
+    /**
+     * @var InputFilter|InputFilterInterface
+     */
     protected $inputFilter;
 
-    public function exchangeArray($data)
-    {
-        $this->audioUpload = (isset($data['audio-upload'])) ? $data['audio-upload'] : null;
-    }
-
+    /**
+     * @param InputFilterInterface $inputFilter
+     * @return void|InputFilterAwareInterface
+     * @throws \Exception
+     */
     public function setInputFilter(InputFilterInterface $inputFilter)
     {
         throw new \Exception("Not used");
     }
 
+    /**
+     * @return InputFilter|InputFilterInterface
+     */
     public function getInputFilter()
     {
         if (!$this->inputFilter) {
@@ -37,7 +43,7 @@ class AudioUploadInputFilter implements InputFilterAwareInterface
             $inputFilter->add(
                 $factory->createInput(
                     array(
-                        'name' => 'audio',
+                        'name' => File::AUDIO_FILETYPE,
                         'required' => true,
                         'validators' => array(
                             array(

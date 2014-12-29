@@ -9,7 +9,7 @@ $form->prepare();
     <h1><?php echo $this->escapeHtml($this->title); ?></h1>
 
     <div class="row">
-        <form action="<?=$this->path?>" method="post" class="form-horizontal" id="newCategory">
+        <form action="<?= $this->path; ?>" method="post" class="form-horizontal" id="newCategory">
             <div class="form-group">
                 <label for="inputComment" class="col-sm-1 control-label"><?= $form->get('comment')->getLabel(); ?></label>
                 <div class="col-sm-4">

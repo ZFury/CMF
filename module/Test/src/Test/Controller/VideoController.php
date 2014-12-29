@@ -23,6 +23,7 @@ class VideoController extends AbstractActionController
     public function uploadVideoAction()
     {
         $fileService = new File($this->getServiceLocator());
+        $this->layout('layout/dashboard/dashboard');
         return new ViewModel(['fileService' => $fileService, 'type' => \Media\Entity\File::VIDEO_FILETYPE]);
     }
 
@@ -35,7 +36,7 @@ class VideoController extends AbstractActionController
         $fileService = $this->getServiceLocator()->get('Media\Service\File');
         $blueimpService = $this->getServiceLocator()->get('Media\Service\Blueimp');
         if ($this->getRequest()->isPost()) {
-            $form = new VideoUpload('upload-video');
+            $form = new VideoUpload();
             $inputFilter = new VideoUploadInputFilter();
             $form->setInputFilter($inputFilter->getInputFilter());
 
@@ -46,20 +47,24 @@ class VideoController extends AbstractActionController
             );
             $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->beginTransaction();
             $form->setData($post);
-
             if ($form->isValid()) {
                 $video = $fileService->createFile($form, $this->identity()->getUser());
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
                 $dataForJson = $blueimpService->displayUploadedFile($video, '/test/video/delete-video/');
             } else {
-                $messages = $form->getMessages();
-                $messages = array_shift($messages);
+                if (null == $post) {
+                    $messages = 'Server has not found file in Post request';
+                } else {
+                    $messages = $form->getMessages();
+                    $messages = array_shift($messages);
+                }
+
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->rollBack();
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->close();
                 $dataForJson = [ 'files' => [
                         [
                             'name' => $form->get('video')->getValue()['name'],
-                            'error' => array_shift($messages)
+                            'error' => $messages
                         ]
                 ]];
             }

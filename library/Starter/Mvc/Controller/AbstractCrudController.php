@@ -25,7 +25,7 @@ abstract class AbstractCrudController extends AbstractActionController
      */
     public function onDispatch(MvcEvent $e)
     {
-        $this->layout('layout/dashboard/dashboard');
+//        $this->layout('layout/dashboard/dashboard');
         $routeMatch = $e->getRouteMatch();
         if (!$routeMatch) {
             /**
@@ -52,6 +52,9 @@ abstract class AbstractCrudController extends AbstractActionController
      */
     public function createAction()
     {
+        /**
+         * @var $form \Zend\Form\Form
+         */
         $form = $this->getCreateForm();
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
@@ -62,7 +65,6 @@ abstract class AbstractCrudController extends AbstractActionController
                 $hydrator->hydrate($form->getData(), $entity);
                 $objectManager->persist($entity);
                 $objectManager->flush();
-
                 //TODO: redirect where?
                 if (!$this->getRequest()->isXmlHttpRequest()) {
                     return $this->redirect()->toRoute(null, ['controller' => 'management']);
@@ -128,7 +130,11 @@ abstract class AbstractCrudController extends AbstractActionController
         $objectManager->flush();
 
         //TODO: redirect where?
-        return $this->redirect()->toRoute(null, ['controller' => 'management']);
+        if (!$this->getRequest()->isXmlHttpRequest()) {
+            return $this->redirect()->toRoute(null, ['controller' => 'management']);
+        } else {
+            return;
+        }
     }
 
     /**
@@ -139,14 +145,14 @@ abstract class AbstractCrudController extends AbstractActionController
      */
     protected function loadEntity()
     {
-        if (!$id = $this->params()->fromRoute('id')) {
-            //TODO: fix exception
+        $params = array_merge($this->params()->fromPost(), $this->params()->fromRoute());
+        if (empty($params['id'])) {
             throw new EntityNotFoundException('Bad Request');
         }
 
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
-        if (!$model = $objectManager->getRepository(get_class($this->getEntity()))->find($id)) {
+        if (!$model = $objectManager->getRepository(get_class($this->getEntity()))->find($params['id'])) {
             throw new EntityNotFoundException('Entity not found');
         }
         return $model;
@@ -178,46 +184,5 @@ abstract class AbstractCrudController extends AbstractActionController
     protected function getViewModel()
     {
         return $this->viewModel;
-    }
-
-    /**
-     * Gets CRUD view model and sets require parameters.
-     *
-     * @param $form
-     * @param $ajax boolean Flag that determines using of ajax.
-     * @param array $variables Variables that will be used in view.
-     * <code>
-     * 'variables' => array(
-     *      '[variable name]' => [variable value]
-     * )
-     * </code>
-     * @param array $scripts Scripts for require that will be used in view.
-     * <code>
-     * 'scripts' => array(
-     *      '[require js module name1],
-     *      '[require js module name2],
-     *      ...
-     * )
-     * </code>
-     * @param array $fileUpload Set that parameter if you want to use file upload form in your view.
-     * <code>
-     * 'fileUpload' => array(
-     *     'imageService' => [file service instance],
-     *     'module' => [upload js name],
-     *     'type' => [file type],
-     *      'id' => [entity id]
-     * )
-     * </code>
-     * @return ViewModel
-     */
-    protected function prepareViewModel($form, $ajax = false, array $variables = null, array $scripts = null, array $fileUpload = null)
-    {
-        return $this->viewModel->setVariables([
-            'form' => $form,
-            'ajax' => $ajax,
-            'variables' => $variables,
-            'scripts' => $scripts,
-            'fileUpload' => $fileUpload
-        ]);
     }
 }

@@ -9,6 +9,7 @@
 
 namespace Mail\Controller;
 
+use Mail\Grid\Grid;
 use Starter\Mvc\Controller\AbstractCrudController;
 use Zend\View\Model\ViewModel;
 use Mail\Form\Create;
@@ -63,14 +64,11 @@ class ManagementController extends AbstractCrudController
      */
     public function indexAction()
     {
-        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $pages = $objectManager->getRepository('Mail\Entity\Mail')->findAll();
-
-        return new ViewModel(
-            array(
-                'pages' => $pages
-            )
-        );
+        $sm = $this->getServiceLocator();
+        $grid = new Grid($sm);
+        $viewModel = new ViewModel(['grid' => $grid]);
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
+        return $viewModel;
     }
 
     /**

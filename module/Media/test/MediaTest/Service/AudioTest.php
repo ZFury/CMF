@@ -63,8 +63,8 @@ class AudioTest extends AbstractHttpControllerTestCase
         );
         $this->setTraceError(true);
         parent::setUp();
-        $this->oldLocation = __DIR__ . '/../../testFiles/WhiteAmerica.flac';
-        $this->newLocation = __DIR__ . '/../../testFiles/WhiteAmerica.mp3';
+        $this->oldLocation = __DIR__ . '/../../testFiles/test.aac';
+        $this->newLocation = __DIR__ . '/../../testFiles/test.mp3';
         $this->audioService = $this->getApplicationServiceLocator()->get('Media\Service\Audio');
     }
 
@@ -95,9 +95,9 @@ class AudioTest extends AbstractHttpControllerTestCase
     {
         $audioPath = $this->audioService->audioPath($this->audioId, $this->audioEntityData['extension']);
         $audio = [
-            'name' => 'MakeItWork.mp3',
+            'name' => 'test.mp3',
             'type' => 'audio/mpeg',
-            'tmp_name' => __DIR__ . '/../../testFiles/MakeItWork.mp3',
+            'tmp_name' => __DIR__ . '/../../testFiles/test.mp3',
             'error' => '0',
             'size' => '7690060'
         ];

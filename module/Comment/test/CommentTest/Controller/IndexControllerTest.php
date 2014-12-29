@@ -6,6 +6,8 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Zend\Http\Response;
 use Zend\Stdlib;
 use Starter\Test\Controller\ControllerTestCase;
+use \Comment\Entity\EntityType;
+use \Comment\Entity\Comment;
 
 /**
  * Class ManagementControllerTest
@@ -75,17 +77,6 @@ class IndexControllerTest extends ControllerTestCase
         $this->removeEntityType($this->entityType);
     }
 
-    public function testIndexActionCanBeAccessed()
-    {
-        $this->dispatch('/comment/index/index');
-        $this->assertResponseStatusCode(404);
-
-        $this->assertModuleName('Comment');
-        $this->assertControllerName('Comment\Controller\Index');
-        $this->assertControllerClass('IndexController');
-        $this->assertMatchedRouteName('comment/default');
-    }
-
     public function testAddActionCanBeAccessed()
     {
         $this->dispatch('/comment/index/add');
@@ -151,7 +142,7 @@ class IndexControllerTest extends ControllerTestCase
      */
     public function createEntityType($entityData)
     {
-        $entity = new \Comment\Entity\EntityType();
+        $entity = new EntityType();
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         $objectManager->getConnection()->beginTransaction();
         try {
@@ -182,10 +173,11 @@ class IndexControllerTest extends ControllerTestCase
             'comment' => $commentText,
             'entityType' => $this->entityType,
             'entityId' => $this->user->getId(),
-            'user' => $this->getApplicationServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity()->getUser(),
+            'user' => $this->getApplicationServiceLocator()->get('Zend\Authentication\AuthenticationService')
+                ->getIdentity()->getUser(),
         );
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $comment = new \Comment\Entity\Comment();
+        $comment = new Comment();
         $objectManager->getConnection()->beginTransaction();
         try {
             $hydrator = new DoctrineHydrator($objectManager);
@@ -205,7 +197,7 @@ class IndexControllerTest extends ControllerTestCase
     /**
      * @param \Comment\Entity\EntityType $detachedEntity
      */
-    public function removeEntityType(\Comment\Entity\EntityType $detachedEntity)
+    public function removeEntityType(EntityType $detachedEntity)
     {
         /**
          * @var \Doctrine\ORM\EntityManager $objectManager

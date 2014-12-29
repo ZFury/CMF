@@ -89,6 +89,7 @@ div.container a.brand {
 
 .form-center {
     margin: 0 auto;
+    padding: 0 auto;
 }
 
 .error-form-field {
@@ -97,4 +98,27 @@ div.container a.brand {
 
 .error-form-message {
     color: #ac2925;
+}
+#notify {
+    z-index: 1100;
+    position: fixed;
+    left: 10px;
+    top: 55px;
+}
+
+/* Notification BS Element */
+#notify > div {
+    position: relative;
+    z-index: 9999;
+    margin: 5px 0;
+    min-width: 640px;
+}
+
+#loading {
+    z-index: 1100;
+    width: 180px;
+    height: 50px;
+    float: right;
+    background: url("../img/jQuery-File-Upload-master/loading.gif") 50% 50% no-repeat;
+    display: none;
 }

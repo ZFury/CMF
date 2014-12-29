@@ -9,6 +9,7 @@
 
 namespace Pages\Controller;
 
+use Pages\Grid\Grid;
 use Starter\Mvc\Controller\AbstractCrudController;
 use Zend\View\Model\ViewModel;
 use Pages\Form\Create;
@@ -67,14 +68,11 @@ class ManagementController extends AbstractCrudController
      */
     public function indexAction()
     {
-        $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $pages = $objectManager->getRepository('Pages\Entity\Pages')->findAll();
-
-        return new ViewModel(
-            array(
-                'pages' => $pages
-            )
-        );
+        $sm = $this->getServiceLocator();
+        $grid = new Grid($sm);
+        $viewModel = new ViewModel(['grid' => $grid]);
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
+        return $viewModel;
     }
 
     /**

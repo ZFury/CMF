@@ -15,7 +15,7 @@ class EntityType extends EntityRepository
         $entities = array();
         $meta = $entityManager->getMetadataFactory()->getAllMetadata();
         foreach ($meta as $m) {
-            if ($m->getName()==="Comment\\Entity\\EntityType") {
+            if ($m->getName() === "Comment\\Entity\\EntityType") {
                 continue;
             }
             $entities[$m->getName()] = $m->getName();
@@ -30,8 +30,8 @@ class EntityType extends EntityRepository
      */
     public function getEntityType($aliasEntity)
     {
-        $entities = $this->findOneBy(['aliasEntity' => $aliasEntity]);
-        return $entities;
+        $entity = $this->findOneBy(['aliasEntity' => $aliasEntity]);
+        return $entity;
     }
 
     /**

@@ -81,8 +81,12 @@ class Pages
      * @param  null $description
      * @throws \Exception
      */
-    public function setOption($key, $value, $namespace = \Options\Entity\Options::NAMESPACE_DEFAULT, $description = null)
-    {
+    public function setOption(
+        $key,
+        $value,
+        $namespace = \Options\Entity\Options::NAMESPACE_DEFAULT,
+        $description = null
+    ) {
         $data = array(
             'key' => $key,
             'namespace' => $namespace,

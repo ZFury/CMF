@@ -227,7 +227,8 @@ class File
                 if (!file_exists($urlPart)) {
                     $originalLocation = $this->getLocation();
                     $image = new \Imagick($originalLocation);
-                    $image->cropThumbnailImage(Image::S_THUMB_WIDTH, Image::S_THUMB_HEIGHT);
+                    $size = Image::sizeByType($thumbSize);
+                    $image->cropThumbnailImage($size['width'], $size['height']);
                     FileService::prepareDir(FileService::PUBLIC_PATH . $urlPart);
                     $image->writeimage(FileService::PUBLIC_PATH . $urlPart);
                 }
