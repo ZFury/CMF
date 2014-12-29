@@ -48,7 +48,8 @@ require.config({
         'redactorContent': '../redactor/redactorContent',
         'conversion': '../module/media/js/conversion',
         'form': './form',
-        'notify': './notify'
+        'notify': './notify',
+        'starter': './starter'
     },
     shim: {
         angular: {

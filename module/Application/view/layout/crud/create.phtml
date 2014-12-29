@@ -76,6 +76,7 @@ $ajax = $this->ajax ? $this->ajax : false;
 <script>
     require([
         'frontend',
+        'dashboard',
         <?= implode(',', array_map(function($a) { return "'$a'"; }, $scripts));?>
     ]);
 </script>
