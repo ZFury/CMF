@@ -12,22 +12,28 @@ use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
+use Media\Entity\File;
 
 class ImageUploadInputFilter implements InputFilterAwareInterface
 {
-    public $imageUpload;
+    /**
+     * @var InputFilter|InputFilterInterface
+     */
     protected $inputFilter;
 
-    public function exchangeArray($data)
-    {
-        $this->imageUpload = (isset($data['image-upload'])) ? $data['image-upload'] : null;
-    }
-
+    /**
+     * @param InputFilterInterface $inputFilter
+     * @return void|InputFilterAwareInterface
+     * @throws \Exception
+     */
     public function setInputFilter(InputFilterInterface $inputFilter)
     {
         throw new \Exception("Not used");
     }
 
+    /**
+     * @return InputFilter|InputFilterInterface
+     */
     public function getInputFilter()
     {
         if (!$this->inputFilter) {
@@ -37,7 +43,7 @@ class ImageUploadInputFilter implements InputFilterAwareInterface
             $inputFilter->add(
                 $factory->createInput(
                     array(
-                        'name' => 'image',
+                        'name' => File::IMAGE_FILETYPE,
                         'required' => true,
                         'validators' => array(
                             array(
@@ -45,7 +51,8 @@ class ImageUploadInputFilter implements InputFilterAwareInterface
                                 'options' => array(
                                     'messages' => array(
                                         'fileIsImageFalseType' => 'Please select a valid icon image to upload.',
-                                        'fileIsImageNotDetected' => 'The icon image is missing mime encoding, please verify you have saved the image with mime encoding.',
+                                        'fileIsImageNotDetected' => 'The icon image is missing mime encoding,
+                                        please verify you have saved the image with mime encoding.',
                                     ),
                                 ),
                             ),

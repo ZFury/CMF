@@ -25,8 +25,7 @@ class CreateInputFilter extends InputFilter
     public function __construct(ServiceManager $sm)
     {
         $this->sm = $sm;
-        //$this->username();
-        $this->email();
+        $this->password()->repeatPassword()->email();
     }
 
     /**
@@ -115,14 +114,6 @@ class CreateInputFilter extends InputFilter
                         'name' => 'EmailAddress'
                     ),
                     $recordExistsValidator
-                    //                array(
-                    //                    'name' => 'Db\NoRecordExists',
-                    //                    'options' => array(
-                    //                        'table' => $this->sm->get('Doctrine\ORM\EntityManager')->getClassMetadata('User\Entity\User')->getTableName(),
-                    //                        'field' => 'email',
-                    //                        'adapter' => $this->sm->get('Db\Adapter')
-                    //                    ),
-                    //                ),
                 ),
                 'filters' => array(
                     array('name' => 'StripTags'),

@@ -60,7 +60,7 @@ class SetNewPasswordForm extends Form
                 'name' => 'submit',
                 'type' => 'Submit',
                 'attributes' => array(
-                    'value' => 'Sign Up',
+                    'value' => 'Change',
                     'id' => 'submitbutton',
                     'class' => 'btn btn-lg btn-primary btn-block'
                 ),

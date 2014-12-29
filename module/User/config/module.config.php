@@ -62,7 +62,7 @@ return array(
                     'default' => array(
                         'type' => 'Segment',
                         'options' => array(
-                            'route' => '/[:controller[/:action]]',
+                            'route' => '/[:controller[/:action[/:id]]]',
                             'constraints' => array(
                                 'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
@@ -92,7 +92,7 @@ return array(
                     ),
                 ),
             ),
-        )
+        ),
     ),
     'controllers' => array(
         'invokables' => array(
@@ -163,12 +163,18 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array(
                     'controller' => 'User\Controller\Auth',
+                    'action' => array('twitter', 'twitter-callback', 'facebook', 'facebook-callback'),
                     'roles' => array('guest', 'user'),
                 ),
                 array(
                     'controller' => 'User\Controller\Auth',
-                    'action' => array('recover-password'),
+                    'action' => array('login', 'recover-password'),
                     'roles' => array('guest'),
+                ),
+                array(
+                    'controller' => 'User\Controller\Auth',
+                    'action' => array('logout'),
+                    'roles' => array('user'),
                 ),
                 array(
                     'controller' => 'User\Controller\Signup',
@@ -188,7 +194,7 @@ return array(
                 array(
                     'controller' => 'User\Controller\Management',
                     'action' => array('create'),
-                    'roles' => array('user'),
+                    'roles' => array('admin'),
                 ),
                 array(
                     'controller' => 'User\Controller\Management',
@@ -209,6 +215,16 @@ return array(
                     'controller' => 'User\Controller\Management',
                     'action' => array('index'),
                     'roles' => array('admin'),
+                ),
+                array(
+                    'controller' => 'User\Controller\Management',
+                    'action' => array('edit'),
+                    'roles' => array('admin')
+                ),
+                array(
+                    'controller' => 'User\Controller\Management',
+                    'action' => array('delete'),
+                    'roles' => array('admin')
                 ),
             ),
         ),

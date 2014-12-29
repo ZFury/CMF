@@ -1,6 +1,24 @@
 define(['jquery'], function ($) {
     "use strict";
     $(function () {
+        $('body').on('form.success', function () {
+            $('[data-spy="grid"]').each(function () {
+                var $grid = $(this);
+                $.ajax({
+                    url: $grid.data('url'),
+                    type: 'get',
+                    dataType: 'html',
+                    beforeSend: function () {
+                        $grid.find('a, .btn').addClass('disabled');
+                    },
+                    success: function (html) {
+                        $grid.find('a, .btn').removeClass('disabled');
+                        $grid.find('.grid').html($(html).find('.grid').children().unwrap());
+                    }
+                });
+                return false;
+            });
+        });
         $('[data-spy="grid"]').each(function () {
             var $grid = $(this);
             if (!$grid.data('url')) {
