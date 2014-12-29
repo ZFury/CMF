@@ -10,11 +10,14 @@ use Comment\Form\Filter;
 use DoctrineModule\Validator;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
 use Zend;
+use Comment\Grid\Comment\Grid;
+use Zend\Mvc\Exception;
 
 class IndexController extends AbstractActionController
 {
     /**
      * @return array|ViewModel
+     * @throws \Exception
      */
     public function indexAction()
     {
@@ -31,7 +34,7 @@ class IndexController extends AbstractActionController
         }
 
         if (!isset($data['entity']) || !isset($data['entityId'])) {
-            return $this->notFoundAction();
+            throw new \Exception('Bad request');
         }
 
         $comments = $this->getServiceLocator()
@@ -44,6 +47,20 @@ class IndexController extends AbstractActionController
             $viewModel->setTerminal(true);
         }
 
+        return $viewModel;
+    }
+
+    /**
+     * @return array|ViewModel
+     * @throws \Exception
+     */
+    public function gridAction()
+    {
+        $this->layout('layout/dashboard/dashboard');
+        $sm = $this->getServiceLocator();
+        $grid = new Grid($sm);
+        $viewModel = new ViewModel(['grid' => $grid]);
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
         return $viewModel;
     }
 
@@ -77,7 +94,7 @@ class IndexController extends AbstractActionController
     public function editAction()
     {
         if (!$id = $this->params()->fromRoute('id')) {
-            throw new \Exception('Bad Request');
+            throw new \Exception('Bad request');
         }
 
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -133,7 +150,7 @@ class IndexController extends AbstractActionController
 
             $data = $data->toArray();
             if (!isset($data['entity']) || !isset($data['entityId'])) {
-                return $this->notFoundAction();
+                throw new \Exception('Bad request');
             }
             $comment = $this->getServiceLocator()
                 ->get('Comment\Service\Comment')
@@ -150,7 +167,8 @@ class IndexController extends AbstractActionController
             }
         }
 
-        $viewModel = new ViewModel(['form' => $form, 'title' => 'Add comment', 'path' => $this->getRequest()->getUri()->getPath().'?'.$this->getRequest()->getUri()->getQuery()]);
+        $path = $this->getRequest()->getUri()->getPath().'?'.$this->getRequest()->getUri()->getQuery();
+        $viewModel = new ViewModel(['form' => $form, 'title' => 'Add comment', 'path' => $path]);
         if ($this->getRequest()->isXmlHttpRequest()) {
             $viewModel->setTerminal(true);
         }
