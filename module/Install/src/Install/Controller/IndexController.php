@@ -147,7 +147,6 @@ class IndexController extends AbstractActionController
                 $sessionForms->offsetSet('modulesForm', $modulesForm->getData());
                 $sessionProgress->offsetSet('modules', self::DONE);
 
-                //TODO: rename modules to .nameOfAModule
                 try {
                     $this->hideModules($modulesForm);
                     $this->flashMessenger()->addSuccessMessage('Unnecessary modules are hidden now!');
@@ -310,6 +309,6 @@ class IndexController extends AbstractActionController
 
     public function deleteFromApplicationConfig(Modules $modulesForm)
     {
-        //TODO: Parse application.config.php and delete unnecessary modules
+        //TODO: Parse application.config.php and COMMENT unnecessary modules
     }
 }
