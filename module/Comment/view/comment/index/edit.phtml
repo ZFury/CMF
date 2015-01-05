@@ -2,7 +2,8 @@
 echo $this->partial('comment/index/add.phtml',
     array(
         'form' => $this->form,
-        'title' => 'Edit comment'
+        'title' => 'Edit comment',
+        'ajax' => $this->ajax
     )
 );
 ?>

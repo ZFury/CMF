@@ -19,6 +19,14 @@ $form->prepare();
                     <?= $this->formElementErrors($form->get('comment')); ?>
                 </div>
             </div>
+            <?php if (!$this->ajax): ?>
+                <div class="form-group">
+                    <div class="col-sm-5 col-sm-offset-">
+                        <input type="submit" name="submit" class="form-control col-md-6 btn btn-success"
+                               value="<?= $this->title == 'Edit comment' ? 'Save' : 'Add'; ?>">
+                    </div>
+                </div>
+            <?php endif; ?>
         </form>
     </div>
 </div>
