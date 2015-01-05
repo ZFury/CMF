@@ -85,7 +85,6 @@ class IndexController extends AbstractActionController
                 $url = $this->getRequest()->getHeader('Referer')->getUri();
                 return $this->redirect()->toUrl($url);
             }
-            return;
         }
     }
 
@@ -120,15 +119,14 @@ class IndexController extends AbstractActionController
                     $url = $this->getRequest()->getHeader('Referer')->getUri();
                     return $this->redirect()->toUrl($url);
                 }
+
                 return;
             } else {
                 $flashMessenger->addErrorMessage('Comment is not changed');
             }
         }
-        $isXmlHttpRequest = $this->getRequest()->isXmlHttpRequest();
-        $viewModel = new ViewModel(['form' => $form, 'title' => 'Add comment', 'ajax' => $isXmlHttpRequest]);
-
-        if ($isXmlHttpRequest) {
+        $viewModel = new ViewModel(['form' => $form, 'title' => 'Add comment', 'ajax' => $this->getRequest()->isXmlHttpRequest()]);
+        if ($this->getRequest()->isXmlHttpRequest()) {
             $viewModel->setTerminal(true);
         }
 
@@ -168,16 +166,14 @@ class IndexController extends AbstractActionController
                     $url = $this->getRequest()->getHeader('Referer')->getUri();
                     return $this->redirect()->toUrl($url);
                 }
-                return;
 
+                return;
             } else {
                 $flashMessenger->addErrorMessage('Comment is not created');
             }
         }
-
-        $isXmlHttpRequest = $this->getRequest()->isXmlHttpRequest();
-        $viewModel = new ViewModel(['form' => $form, 'title' => 'Add comment', 'ajax' => $isXmlHttpRequest]);
-        if ($isXmlHttpRequest) {
+        $viewModel = new ViewModel(['form' => $form, 'title' => 'Add comment', 'ajax' => $this->getRequest()->isXmlHttpRequest()]);
+        if ($this->getRequest()->isXmlHttpRequest()) {
             $viewModel->setTerminal(true);
         }
 
