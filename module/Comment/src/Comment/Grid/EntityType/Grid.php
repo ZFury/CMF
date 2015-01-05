@@ -2,14 +2,21 @@
 
 namespace Comment\Grid\EntityType;
 
-use Starter\Mvc\Grid\AbstractGrid;
+use Starter\Grid\AbstractGrid;
 
 class Grid extends AbstractGrid
 {
     public function init()
     {
         $em = $this->sm->get('Doctrine\ORM\EntityManager');
-        $source = $em->createQueryBuilder()->select(['entity_type.id', 'entity_type.aliasEntity', 'entity_type.entity', 'entity_type.description', 'entity_type.visibleComment', 'entity_type.enabledComment'])
+        $source = $em->createQueryBuilder()->select([
+            'entity_type.id',
+            'entity_type.aliasEntity',
+            'entity_type.entity',
+            'entity_type.description',
+            'entity_type.visibleComment',
+            'entity_type.enabledComment'
+        ])
             ->from('\Comment\Entity\EntityType', 'entity_type');
         $this->setSource($source)->setEntityAlias('entity_type')
             ->setColumns([

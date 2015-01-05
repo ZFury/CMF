@@ -29,9 +29,15 @@ class CommentController extends AbstractActionController
         /**
          * @var /Comment\Entity\EntityType $entityTest
          */
-        if (!$entityTest = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityTypeByEntity('Test\\Entity\\Test')) {
+        if (!$entityTest = $objectManager->getRepository('Comment\Entity\EntityType')
+            ->getEntityTypeByEntity('Test\\Entity\\Test')
+        ) {
             throw new \Exception('Comment on this entity can not be');
         }
-        return new ViewModel(array('data' => $entities, 'aliasEntity' => $entityTest->getAliasEntity(), 'enabledComment' => $entityTest->getEnabledComment()));
+        return new ViewModel(array(
+            'data' => $entities,
+            'aliasEntity' => $entityTest->getAliasEntity(),
+            'enabledComment' => $entityTest->getEnabledComment()
+        ));
     }
 }

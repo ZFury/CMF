@@ -8,7 +8,7 @@
                 <div class="input-group">
                     <div class="input-group-btn grid-filter-search">
                         <button type="button" class="btn btn-default dropdown-toggle"
-                                data-toggle="dropdown"><?=ucfirst(current($this->grid->getAllowedFilters()))?>
+                                data-toggle="dropdown"><?= ucfirst(current($this->grid->getAllowedFilters())) ?>
                             <span class="caret"></span></button>
                         <ul class="dropdown-menu">
                             <?php foreach ($this->grid->getAllowedFilters() as $field) : ?>
@@ -94,5 +94,5 @@
     </div>
 </div>
 <script>
-    require(['starter.grid']);
+    require(['starter.grid', 'dashboard']);
 </script>

@@ -2,14 +2,19 @@
 
 namespace Comment\Grid\Comment;
 
-use Starter\Mvc\Grid\AbstractGrid;
+use Starter\Grid\AbstractGrid;
 
 class Grid extends AbstractGrid
 {
     public function init()
     {
         $em = $this->sm->get('Doctrine\ORM\EntityManager');
-        $source = $em->createQueryBuilder()->select(['comment.id', 'comment.comment', 'user.displayName', 'entity_type.aliasEntity'])
+        $source = $em->createQueryBuilder()->select([
+            'comment.id',
+            'comment.comment',
+            'user.displayName',
+            'entity_type.aliasEntity'
+        ])
             ->from('\Comment\Entity\Comment', 'comment')
             ->innerJoin('comment.user', 'user')
             ->innerJoin('comment.entityType', 'entity_type');
@@ -19,6 +24,7 @@ class Grid extends AbstractGrid
                 'Comment' => 'comment',
                 'User(author)' => 'displayName',
                 'Entity' => 'aliasEntity'])
-            ->setAllowedFilters(['comment', 'displayName', 'aliasEntity'])->setAllowedOrders(['aliasEntity', 'displayName']);
+            ->setAllowedFilters(['comment', 'displayName', 'aliasEntity'])
+            ->setAllowedOrders(['aliasEntity', 'displayName']);
     }
 }

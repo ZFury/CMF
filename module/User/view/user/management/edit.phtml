@@ -3,7 +3,7 @@
 $form = $this->form;
 ?>
 <div class="container">
-    <h1>Create user</h1>
+    <h1>Edit user</h1>
 
     <div class="row">
         <form action="" method="post" class="form-horizontal">
@@ -25,9 +25,10 @@ $form = $this->form;
                 }
                 ?>
                 <div class="form-group">
+                    <?php if ($element->getAttribute('type') != 'hidden') : ?>
                     <label for="<?= $element->getName(); ?>"
                            class="col-sm-2 control-label"><?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?></label>
-
+                    <?php endif; ?>
                     <div class="col-sm-4">
                         <?= $formElement; ?>
                     </div>
@@ -37,7 +38,7 @@ $form = $this->form;
             <div class="form-group">
                 <div class="col-sm-2"></div>
                 <div class="col-sm-4">
-                    <input type="submit" name="submit" class="btn btn-lg btn-primary btn-block" value="Create">
+                    <input type="submit" name="submit" class="btn btn-lg btn-primary btn-block" value="Edit">
                 </div>
             </div>
         </form>

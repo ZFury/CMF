@@ -204,7 +204,7 @@ class File
                 break;
             default:
         }
-        $this->moveFile($destination, $form->getData()[$form->getFileType()]);
+        $this->moveFile($destination, $form->getData()[$type]);
 
         return $file;
     }

@@ -1,5 +1,10 @@
 /*global define,require*/
-define(['jquery'], function($) {
+define(['jquery'], function ($) {
+
+    //$('body').on('click', '.alert', function () {
+    //    $(this).alert('close');
+    //});
+
     "use strict";
 
     var notify, classes, container, counter, deferred;
@@ -12,16 +17,16 @@ define(['jquery'], function($) {
      * @type {{error: string, notice: string, success: string}}
      */
     classes = {
-        'error':'alert alert-danger',
-        'notice':'alert alert-info',
-        'success':'alert alert-success'
+        'error': 'alert alert-danger',
+        'notice': 'alert alert-info',
+        'success': 'alert alert-success'
     };
 
     /**
      * Return messages container
      * @returns {HTMLElement}
      */
-    function prepareContainer () {
+    function prepareContainer() {
         container = document.getElementById('notify');
         if (!container) {
             container = document.createElement('div');
@@ -38,14 +43,14 @@ define(['jquery'], function($) {
      * @param {string} content
      * @returns {HTMLElement}
      */
-    function prepareNotify (type, content) {
+    function prepareNotify(type, content) {
         var div = document.createElement('div');
-            div.className = classes[type];
-            div.innerHTML = content;
-            div.style.display = 'none';
-            div.onclick = function() {
-                div.parentNode.removeChild(div);
-            };
+        div.className = classes[type];
+        div.innerHTML = content;
+        div.style.display = 'none';
+        div.onclick = function () {
+            div.parentNode.removeChild(div);
+        };
 
         // add notification to container
         var container = prepareContainer();
@@ -60,7 +65,7 @@ define(['jquery'], function($) {
      *
      * @param {jQuery} $el
      */
-    function hideNotify ($el) {
+    function hideNotify($el) {
         // decrease
         if (counter) {
             counter--;
@@ -101,9 +106,9 @@ define(['jquery'], function($) {
         add: function (type, content) {
             var $el;
             $el = $(prepareNotify(type, content));
-            $el.animate({opacity:"show"}, 300)
+            $el.animate({opacity: "show"}, 300)
                 .delay(3000)
-                .animate({opacity:"hide"}, 300, function() {
+                .animate({opacity: "hide"}, 300, function () {
                     hideNotify($el);
                 });
         },

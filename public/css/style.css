@@ -99,6 +99,7 @@ div.container a.brand {
 .error-form-message {
     color: #ac2925;
 }
+
 #notify {
     z-index: 1100;
     position: fixed;
@@ -121,4 +122,12 @@ div.container a.brand {
     float: right;
     background: url("../img/jQuery-File-Upload-master/loading.gif") 50% 50% no-repeat;
     display: none;
+}
+
+.undecorated-list {
+    padding: 0;
+}
+
+.undecorated-list > li {
+    list-style-type: none;
 }
