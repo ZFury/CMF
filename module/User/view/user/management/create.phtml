@@ -1,13 +1,14 @@
 <?php
-    /**@var $form Zend/Form */
-    $form = $this->form;
+/**@var $form Zend/Form */
+$form = $this->form;
 ?>
 <div class="container">
     <h1>Create user</h1>
+
     <div class="row">
         <form action="" method="post" class="form-horizontal">
-        <?php foreach($this->form->getElements() as $element) : ?>
-            <?php
+            <?php foreach ($this->form->getElements() as $element) : ?>
+                <?php
                 switch ($element) {
                     case $element instanceof Zend\Form\Element\Select :
                         $formElement = $this->formSelect($element);
@@ -22,15 +23,17 @@
                         $formElement = $this->formInput($element);
                         break;
                 }
-            ?>
-            <div class="form-group">
-                <label for="<?= $element->getName(); ?>" class="col-sm-2 control-label"><?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?></label>
-                <div class="col-sm-4">
-                    <?= $formElement; ?>
+                ?>
+                <div class="form-group">
+                    <label for="<?= $element->getName(); ?>"
+                           class="col-sm-2 control-label"><?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?></label>
+
+                    <div class="col-sm-4">
+                        <?= $formElement; ?>
+                    </div>
+                    <?= $this->formElementErrors($element); ?>
                 </div>
-                <?= $this->formElementErrors($element); ?>
-            </div>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
             <div class="form-group">
                 <div class="col-sm-2"></div>
                 <div class="col-sm-4">

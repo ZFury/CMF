@@ -1,2 +1,4 @@
 local.php
 *.local.php
+testing.php
+*.testing.php

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="./Bootstrap.php" colors="true" convertErrorsToExceptions="true">
+    <testsuites>
+        <testsuite name="zfstarter/user">
+            <directory>./UserTest</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../</directory>
+            <exclude>
+                <directory suffix=".phtml">../view</directory>
+                <directory suffix=".php">../config/</directory>
+            </exclude>
+        </whitelist>
+        <blacklist>
+            <directory suffix=".php">../../../vendor</directory>
+        </blacklist>
+    </filter>
+</phpunit>

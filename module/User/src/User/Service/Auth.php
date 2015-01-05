@@ -70,6 +70,14 @@ class Auth
      */
     public function generateEquals(\User\Entity\User $user, $password)
     {
+        //delete row
+        $auth = $this->getObjectManager()
+            ->getRepository('User\Entity\Auth')
+            ->findOneByUserId($user->getId());
+        if ($auth) {
+            $this->getObjectManager()->remove($auth);
+            $this->getObjectManager()->flush();
+        }
         // new auth row
         $row = new \User\Entity\Auth();
         $row->setUserId($user->getId());
@@ -102,17 +110,16 @@ class Auth
      */
     public function authenticateEquals($email, $password)
     {
-        $authService = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
-        $adapter = $authService->getAdapter();
-        $adapter->setIdentityValue($email);
-        $adapter->setCredentialValue($password);
+        $authService = $this->createAuthService($email, $password);
         $authResult = $authService->authenticate();
 
         if (!$authResult->isValid()) {
             throw new AuthException('Wrong login or password');
         }
 
-        /** @var \User\Entity\Auth $authRow */
+        /**
+         * @var \User\Entity\Auth $authRow
+         */
         $authRow = $authResult->getIdentity();
         $user = $authRow->getUser();
         if (!$user->isActive()) {
@@ -123,5 +130,40 @@ class Auth
         }
 
         return $authRow;
+    }
+
+    /**
+     * Checks if user's password is true or false
+     *
+     * @param  $email
+     * @param  $password
+     * @return bool
+     * @throws AuthException
+     */
+    public function checkCredentials($email, $password)
+    {
+        $authService = $this->createAuthService($email, $password);
+        $authResult = $authService->getAdapter()->authenticate();
+        if (false == $authResult->getCode()) {
+            throw new AuthException('Wrong login or password');
+        }
+        return true;
+    }
+
+    /**
+     * Creates authentication service and sets IdentityValue, Credential Value to its adapter
+     *
+     * @param  $email
+     * @param  $password
+     * @return array|object
+     */
+    public function createAuthService($email, $password)
+    {
+        $authService = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
+        $adapter = $authService->getAdapter();
+        $adapter->setIdentityValue($email);
+        $adapter->setCredentialValue($password);
+
+        return $authService;
     }
 }

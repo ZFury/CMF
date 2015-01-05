@@ -8,16 +8,26 @@
 
 namespace User\Controller;
 
+use User\Exception\AuthException;
+use User\Form\ChangePasswordForm;
+use User\Form\Filter\ChangePasswordInputFilter;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
 class ProfileController extends AbstractActionController
 {
+    /**
+     * @return array|ViewModel
+     */
     public function indexAction()
     {
         return new ViewModel([]);
     }
 
+    /**
+     *
+     */
     public function checkIfFollowing()
     {
         $httpClientOptions = array(
@@ -29,7 +39,7 @@ class ProfileController extends AbstractActionController
         );
         $config = array(
             'access_token' => array(
-                'token'  => '228442924-P7AaZphsNeEkSOrVOL7UlqHNgeLQ6SqxnIQLNOVy',
+                'token' => '228442924-P7AaZphsNeEkSOrVOL7UlqHNgeLQ6SqxnIQLNOVy',
                 'secret' => '8jXYDcJ8O6p3Z5X51WHfbSZqm8y7YPU54xFzdPPjfv8kx',
             ),
             'oauth_options' => array(
@@ -45,4 +55,40 @@ class ProfileController extends AbstractActionController
         }
         $twitter->usersSearch('twitter')->toValue()[0]->following;
     }
-} 
+
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     */
+    public function changePasswordAction()
+    {
+        $form = new ChangePasswordForm();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setInputFilter(new ChangePasswordInputFilter($this->getServiceLocator()));
+            $form->setData($request->getPost());
+            if ($form->isValid()) {
+                $flashMessenger = new FlashMessenger();
+                $userAuth = $this->getServiceLocator()->get('\User\Service\Auth');
+                try {
+                    $userAuth->checkCredentials(
+                        $this->identity()->getUser()->getEmail(),
+                        $form->getData()['currentPassword']
+                    );
+                    $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+                    $user = $objectManager
+                        ->getRepository('User\Entity\User')
+                        ->find($this->identity()->getUser()->getId());
+
+                    $userAuth->generateEquals($user, $form->getData()['password']);
+                    $flashMessenger->addSuccessMessage("You have successfully changed your password!");
+
+                    return $this->redirect()->toRoute('home');
+                } catch (AuthException $exception) {
+                    $flashMessenger->addErrorMessage($exception->getMessage());
+                }
+            }
+        }
+
+        return new ViewModel(['form' => $form]);
+    }
+}
