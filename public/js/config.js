@@ -47,8 +47,8 @@ require.config({
         "video": '../module/test/js/video',
         'redactorContent': '../redactor/redactorContent',
         'conversion': '../module/media/js/conversion',
-        'form': './form',
-        'notify': './notify',
+        'form': './starter.form',
+        'notify': './starter.notify',
         'starter': './starter'
     },
     shim: {
