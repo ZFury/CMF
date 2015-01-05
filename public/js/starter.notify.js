@@ -45,8 +45,9 @@ define(['jquery'], function ($) {
      */
     function prepareNotify(type, content) {
         var div = document.createElement('div');
+        var closeButton = '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
         div.className = classes[type];
-        div.innerHTML = content;
+        div.innerHTML = closeButton + content;
         div.style.display = 'none';
         div.onclick = function () {
             div.parentNode.removeChild(div);

@@ -16,7 +16,7 @@ define(['jquery', 'notify', 'jquery-ui', 'jquery-nestedSortable'], function ($, 
         $('body')
             .on('change', '.category-page-wrapper .select-tree select', function () {
                 var $this = $(this);
-                $('.container-fluid').load('/categories/management/index/' + $this.val(), function () {
+                $('#content').load('/categories/management/index/' + $this.val(), function () {
                     $('body').trigger('form.success', []);
                 });
             })
@@ -43,7 +43,7 @@ define(['jquery', 'notify', 'jquery-ui', 'jquery-nestedSortable'], function ($, 
             .on('click', '.tree-container .btn.delete-entity', function (e) {
                 if (confirm('Are you sure you want to delete?')) {
                     $.get($(this).attr("href"), [], function () {
-                        $('.container-fluid').load(location.pathname, function () {
+                        $('#content').load(location.pathname, function () {
                             $('body').trigger('form.success', []);
                         });
                     }, 'json');
