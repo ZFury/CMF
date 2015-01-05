@@ -16,8 +16,8 @@ class Grid extends AbstractGrid
             'entity_type.aliasEntity'
         ])
             ->from('\Comment\Entity\Comment', 'comment')
-            ->leftJoin('comment.user', 'user')
-            ->leftJoin('comment.entityType', 'entity_type');
+            ->innerJoin('comment.user', 'user')
+            ->innerJoin('comment.entityType', 'entity_type');
         $this->setSource($source)->setEntityAlias('comment')
             ->setColumns([
                 'Id' => 'id',
