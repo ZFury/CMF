@@ -73,7 +73,6 @@ class Comment
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
         $form->setData($data);
         if ($form->isValid()) {
-
             if ($this->enabledComment($data['entity'])) {
                 $data = $form->getData();
                 $serviceEntityType = $serviceLocator->get('Comment\Service\EntityType');
