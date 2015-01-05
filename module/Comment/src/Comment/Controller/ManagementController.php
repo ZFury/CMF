@@ -53,7 +53,6 @@ class ManagementController extends AbstractCrudController
         $form = $this->getCreateForm();
         $form->setHydrator(new DoctrineHydrator($entityManager));
         $form->bind($this->loadEntity());
-//        var_dump($form);die();
         return $form;
     }
 

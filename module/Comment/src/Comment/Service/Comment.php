@@ -67,12 +67,13 @@ class Comment
      * @return \Comment\Entity\Comment
      * @throws \Exception
      */
-    public function add(\Zend\Form\Form $form, array $data)
+    public function add(\Zend\Form\Form $form, $data)
     {
         $serviceLocator = $this->getServiceLocator();
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
         $form->setData($data);
         if ($form->isValid()) {
+
             if ($this->enabledComment($data['entity'])) {
                 $data = $form->getData();
                 $serviceEntityType = $serviceLocator->get('Comment\Service\EntityType');
