@@ -18,10 +18,10 @@ class Modules extends Form
 
         $this->add([
             'type' => 'Zend\Form\Element\Checkbox',
-            'name' => 'checkbox_media',
+            'name' => 'checkbox_media','use_hidden_element' =>true,
             'options' => [
                 'label' => 'Media (image, audio, video upload)',
-                'use_hidden_element' =>true,
+
                 'checked_value' => 'good',
                 'unchecked_value' => 'bad'
             ],
@@ -44,8 +44,8 @@ class Modules extends Form
             'options' => [
                 'label' => 'Comments',
                 'use_hidden_element' =>true,
-                'checked_value' => 'good',
-                'unchecked_value' => 'bad'
+                'unchecked_value' => 'bad',
+                'checked_value' => 'good'
             ],
         ]);
 

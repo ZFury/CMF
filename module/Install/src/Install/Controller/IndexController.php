@@ -11,6 +11,7 @@ namespace Install\Controller;
 use Install\Form\DbConnection;
 use Install\Form\Filter\DbConnectionInputFilter;
 use Install\Form\Filter\MailConfigInputFilter;
+use Install\Form\Filter\ModulesInputFilter;
 use Install\Form\Modules;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -113,6 +114,7 @@ class IndexController extends AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             $modulesForm = new Modules();
+            $modulesForm->setInputFilter(new ModulesInputFilter($this->getServiceLocator()));
             $modulesForm->setData($this->getRequest()->getPost());
             if ($modulesForm->isValid()) {
                 $sessionForms->offsetSet('modulesForm', $modulesForm->getData());

@@ -13,7 +13,8 @@ $modulesForm->prepare();
     <div class="form-group">
         <label for="checkboxMedia" class="col-md-3 control-label"><?= $modulesForm->get('checkbox_media')->getLabel(); ?></label>
         <div class="col-md-offset-1 col-md-2">
-            <input type="checkbox" class="form-control" id="checkboxMedia" name="<?= $modulesForm->get('checkbox_media')->getName(); ?>" value="<?= $modulesForm->get('checkbox_media')->getValue(); ?>" placeholder="<?= $modulesForm->get('checkbox_media')->getLabel(); ?>">
+            <input type="hidden" name="<?= $modulesForm->get('checkbox_media')->getName(); ?>" value="<?= $modulesForm->get('checkbox_media')->getUncheckedValue(); ?>">
+            <input type="checkbox" class="form-control" id="checkboxMedia" name="<?= $modulesForm->get('checkbox_media')->getName(); ?>" value="<?= $modulesForm->get('checkbox_media')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('checkbox_media')->getLabel(); ?>" <?if ("good"===$modulesForm->get('checkbox_media')->getValue()) { echo "checked"; } ?>>
             <?= $this->formElementErrors($modulesForm->get('checkbox_media')); ?>
         </div>
     </div>
@@ -21,7 +22,8 @@ $modulesForm->prepare();
     <div class="form-group">
         <label for="checkboxCategories" class="col-md-3 control-label"><?= $modulesForm->get('checkbox_categories')->getLabel(); ?></label>
         <div class="col-md-offset-1 col-md-2">
-            <input type="checkbox" class="form-control" id="checkboxCategories" name="<?= $modulesForm->get('checkbox_categories')->getName(); ?>" value="<?= $modulesForm->get('checkbox_categories')->getValue(); ?>" placeholder="<?= $modulesForm->get('checkbox_categories')->getLabel(); ?>">
+            <input type="hidden" name="<?= $modulesForm->get('checkbox_categories')->getName(); ?>" value="<?= $modulesForm->get('checkbox_categories')->getUncheckedValue(); ?>">
+            <input type="checkbox" class="form-control" id="checkboxCategories" name="<?= $modulesForm->get('checkbox_categories')->getName(); ?>" value="<?= $modulesForm->get('checkbox_categories')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('checkbox_categories')->getLabel(); ?>" <?if ("good"===$modulesForm->get('checkbox_categories')->getValue()) { echo "checked"; } ?>>
             <?= $this->formElementErrors($modulesForm->get('checkbox_categories')); ?>
         </div>
     </div>
@@ -29,7 +31,8 @@ $modulesForm->prepare();
     <div class="form-group">
         <label for="checkboxComments" class="col-md-3 control-label"><?= $modulesForm->get('checkbox_comments')->getLabel(); ?></label>
         <div class="col-md-offset-1 col-md-2">
-            <input type="checkbox" class="form-control" id="checkboxComments" name="<?= $modulesForm->get('checkbox_comments')->getName(); ?>" value="<?= $modulesForm->get('checkbox_comments')->getValue(); ?>" placeholder="<?= $modulesForm->get('checkbox_comments')->getLabel(); ?>">
+            <input type="hidden" name="<?= $modulesForm->get('checkbox_comments')->getName(); ?>" value="<?= $modulesForm->get('checkbox_comments')->getUncheckedValue(); ?>">
+            <input type="checkbox" class="form-control" id="checkboxComments" name="<?= $modulesForm->get('checkbox_comments')->getName(); ?>" value="<?= $modulesForm->get('checkbox_comments')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('checkbox_comments')->getLabel(); ?>" <?if ("good"===$modulesForm->get('checkbox_comments')->getValue()) { echo "checked"; } ?>>
             <?= $this->formElementErrors($modulesForm->get('checkbox_comments')); ?>
         </div>
     </div>
@@ -37,7 +40,8 @@ $modulesForm->prepare();
     <div class="form-group">
         <label for="checkboxDashboard" class="col-md-3 control-label"><?= $modulesForm->get('checkbox_dashboard')->getLabel(); ?></label>
         <div class="col-md-offset-1 col-md-2">
-            <input type="checkbox" class="form-control" id="checkboxDashboard" name="<?= $modulesForm->get('checkbox_dashboard')->getName(); ?>" value="<?= $modulesForm->get('checkbox_dashboard')->getValue(); ?>" placeholder="<?= $modulesForm->get('checkbox_dashboard')->getLabel(); ?>">
+            <input type="hidden" name="<?= $modulesForm->get('checkbox_dashboard')->getName(); ?>" value="<?= $modulesForm->get('checkbox_dashboard')->getUncheckedValue(); ?>">
+            <input type="checkbox" class="form-control" id="checkboxDashboard" name="<?= $modulesForm->get('checkbox_dashboard')->getName(); ?>" value="<?= $modulesForm->get('checkbox_dashboard')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('checkbox_dashboard')->getLabel(); ?>" <?if ("good"===$modulesForm->get('checkbox_dashboard')->getValue()) { echo "checked"; } ?>>
             <?= $this->formElementErrors($modulesForm->get('checkbox_dashboard')); ?>
         </div>
     </div>
@@ -45,7 +49,8 @@ $modulesForm->prepare();
     <div class="form-group">
         <label for="checkboxMail" class="col-md-3 control-label"><?= $modulesForm->get('checkbox_mail')->getLabel(); ?></label>
         <div class="col-md-offset-1 col-md-2">
-            <input type="checkbox" class="form-control" id="checkboxMail" name="<?= $modulesForm->get('checkbox_mail')->getName(); ?>" value="<?= $modulesForm->get('checkbox_mail')->getValue(); ?>" placeholder="<?= $modulesForm->get('checkbox_mail')->getLabel(); ?>">
+            <input type="hidden" name="<?= $modulesForm->get('checkbox_mail')->getName(); ?>" value="<?= $modulesForm->get('checkbox_mail')->getUncheckedValue(); ?>">
+            <input type="checkbox" class="form-control" id="checkboxMail" name="<?= $modulesForm->get('checkbox_mail')->getName(); ?>" value="<?= $modulesForm->get('checkbox_mail')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('checkbox_mail')->getLabel(); ?>" <?if ("good"===$modulesForm->get('checkbox_mail')->getValue()) { echo "checked"; } ?>>
             <?= $this->formElementErrors($modulesForm->get('checkbox_mail')); ?>
         </div>
     </div>
@@ -53,7 +58,8 @@ $modulesForm->prepare();
     <div class="form-group">
         <label for="checkboxOptions" class="col-md-3 control-label"><?= $modulesForm->get('checkbox_options')->getLabel(); ?></label>
         <div class="col-md-offset-1 col-md-2">
-            <input type="checkbox" class="form-control" id="checkboxOptions" name="<?= $modulesForm->get('checkbox_options')->getName(); ?>" value="<?= $modulesForm->get('checkbox_options')->getValue(); ?>" placeholder="<?= $modulesForm->get('checkbox_options')->getLabel(); ?>">
+            <input type="hidden" name="<?= $modulesForm->get('checkbox_options')->getName(); ?>" value="<?= $modulesForm->get('checkbox_options')->getUncheckedValue(); ?>">
+            <input type="checkbox" class="form-control" id="checkboxOptions" name="<?= $modulesForm->get('checkbox_options')->getName(); ?>" value="<?= $modulesForm->get('checkbox_options')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('checkbox_options')->getLabel(); ?>" <?if ("good"===$modulesForm->get('checkbox_options')->getValue()) { echo "checked"; } ?>>
             <?= $this->formElementErrors($modulesForm->get('checkbox_options')); ?>
         </div>
     </div>
@@ -61,7 +67,8 @@ $modulesForm->prepare();
     <div class="form-group">
         <label for="checkboxPages" class="col-md-3 control-label"><?= $modulesForm->get('checkbox_pages')->getLabel(); ?></label>
         <div class="col-md-offset-1 col-md-2">
-            <input type="checkbox" class="form-control" id="checkboxPages" name="<?= $modulesForm->get('checkbox_pages')->getName(); ?>" value="<?= $modulesForm->get('checkbox_pages')->getValue(); ?>" placeholder="<?= $modulesForm->get('checkbox_pages')->getLabel(); ?>">
+            <input type="hidden" name="<?= $modulesForm->get('checkbox_pages')->getName(); ?>" value="<?= $modulesForm->get('checkbox_pages')->getUncheckedValue(); ?>">
+            <input type="checkbox" class="form-control" id="checkboxPages" name="<?= $modulesForm->get('checkbox_pages')->getName(); ?>" value="<?= $modulesForm->get('checkbox_pages')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('checkbox_pages')->getLabel(); ?>" <?if ("good"===$modulesForm->get('checkbox_pages')->getValue()) { echo "checked"; } ?>>
             <?= $this->formElementErrors($modulesForm->get('checkbox_pages')); ?>
         </div>
     </div>
@@ -69,7 +76,8 @@ $modulesForm->prepare();
     <div class="form-group">
         <label for="checkboxTest" class="col-md-3 control-label"><?= $modulesForm->get('checkbox_test')->getLabel(); ?></label>
         <div class="col-md-offset-1 col-md-2">
-            <input type="checkbox" class="form-control" id="checkboxTest" name="<?= $modulesForm->get('checkbox_test')->getName(); ?>" value="<?= $modulesForm->get('checkbox_test')->getValue(); ?>" placeholder="<?= $modulesForm->get('checkbox_test')->getLabel(); ?>">
+            <input type="hidden" name="<?= $modulesForm->get('checkbox_test')->getName(); ?>" value="<?= $modulesForm->get('checkbox_test')->getUncheckedValue(); ?>">
+            <input type="checkbox" class="form-control" id="checkboxTest" name="<?= $modulesForm->get('checkbox_test')->getName(); ?>" value="<?= $modulesForm->get('checkbox_test')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('checkbox_test')->getLabel(); ?>" <?if ("good"===$modulesForm->get('checkbox_test')->getValue()) { echo "checked"; } ?>>
             <?= $this->formElementErrors($modulesForm->get('checkbox_test')); ?>
         </div>
     </div>
