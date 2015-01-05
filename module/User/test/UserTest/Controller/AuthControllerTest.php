@@ -52,8 +52,14 @@ class AuthControllerTest extends ControllerTestCase
         $this->assertMatchedRouteName('user/default');
     }
 
+    public function testRecoverPasswordAction()
+    {
+
+    }
+
     public function testLogoutActionCanBeAccessed()
     {
+        $this->setupUser();
         $this->dispatch('/user/auth/logout');
         $this->assertResponseStatusCode(302);
         $this->assertRedirectTo('/user/auth/login');
