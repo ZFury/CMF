@@ -30,12 +30,16 @@ $form->prepare();
         <?php // $this->formInput($form->get('username')); ?>
         <input type="email" class="ember-view ember-text-field form-control login-input" id="inputEmail" name="<?= $form->get('email')->getName(); ?>"
                placeholder="<?= $form->get('email')->getLabel(); ?>">
-        <?= $this->formElementErrors($form->get('email')); ?>
+        <div class="error-field error-form-message">
+            <?= $this->formElementErrors($form->get('email')); ?>
+        </div>
 
         <input type="password" class="ember-view ember-text-field form-control login-input" id="inputPassword"
                name="<?= $form->get('password')->getName(); ?>"
                placeholder="<?= $form->get('password')->getLabel(); ?>">
-        <?= $this->formElementErrors($form->get('password')); ?>
+        <div class="error-field error-form-message">
+            <?= $this->formElementErrors($form->get('password')); ?>
+        </div>
 
 <!--    <button class="btn btn-lg btn-primary btn-block btn-center" type="submit">Sign in</button>-->
 
