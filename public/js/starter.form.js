@@ -101,7 +101,7 @@ define(['jquery', 'notify'], function ($, notify) {
             event.preventDefault();
         })
         .on('hidden.bs.modal', function () {
-            $('.container-fluid').load(location.pathname, function () {
+            $('#content').load(location.pathname, function () {
                 $('body').trigger('form.success', []);
                 closeModals();
                 $('.modal').remove();
