@@ -4,6 +4,9 @@ $flash = $this->flashMessenger();
 <div id="notify">
     <?php
     $flash->setMessageOpenFormat('<div%s>
+<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+&times;
+</button>
 <ul class="undecorated-list"><li>')
         ->setMessageSeparatorString('</li><li>')
         ->setMessageCloseString('</li></ul></div>');
