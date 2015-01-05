@@ -125,7 +125,11 @@ class IndexController extends AbstractActionController
                 $flashMessenger->addErrorMessage('Comment is not changed');
             }
         }
-        $viewModel = new ViewModel(['form' => $form, 'title' => 'Add comment', 'ajax' => $this->getRequest()->isXmlHttpRequest()]);
+        $viewModel = new ViewModel([
+            'form' => $form,
+            'title' => 'Add comment',
+            'ajax' => $this->getRequest()->isXmlHttpRequest()
+        ]);
         if ($this->getRequest()->isXmlHttpRequest()) {
             $viewModel->setTerminal(true);
         }
@@ -172,7 +176,11 @@ class IndexController extends AbstractActionController
                 $flashMessenger->addErrorMessage('Comment is not created');
             }
         }
-        $viewModel = new ViewModel(['form' => $form, 'title' => 'Add comment', 'ajax' => $this->getRequest()->isXmlHttpRequest()]);
+        $viewModel = new ViewModel([
+            'form' => $form,
+            'title' => 'Add comment',
+            'ajax' => $this->getRequest()->isXmlHttpRequest()
+        ]);
         if ($this->getRequest()->isXmlHttpRequest()) {
             $viewModel->setTerminal(true);
         }

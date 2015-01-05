@@ -8,7 +8,8 @@
     </div>
     <?php foreach ($this->data as $row) : ?>
         <div class="row entity"
-             data-href="<?= $this->url('comment/default', ['controller' => 'index', 'action' => 'index'],['query' => ['entity' => $this->aliasEntity,'id' => $row->getId()]]) ?>">
+             data-href="<?= $this->url('comment/default', ['controller' => 'index', 'action' => 'index'],
+                                    ['query' => ['entity' => $this->aliasEntity,'id' => $row->getId()]]) ?>">
             <div class="col-md-1">
                 <strong><?= $row->getId() ?></strong>
             </div>
@@ -21,7 +22,8 @@
             <?php if ($this->enabledComment) : ?>
                 <div class="col-md-3">
                     <a type="button" class="btn btn-success add-com dialog"
-                       href="<?= $this->url('comment/default', ['controller' => 'index', 'action' => 'add'],['query' => ['entity' => 'test','id' => $row->getId()]]) ?>">
+                       href="<?= $this->url('comment/default', ['controller' => 'index', 'action' => 'add'],
+                                            ['query' => ['entity' => 'test','id' => $row->getId()]]) ?>">
                         New comment</a>
                 </div>
             <?php endif; ?>
