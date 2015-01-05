@@ -26,7 +26,7 @@ class DbConnection extends Form
 
         $this->add([
             'name' => 'port',
-            'type' => 'Text',
+            'type' => 'Number',
             'options' => [
                 'label' => 'Port',
             ],

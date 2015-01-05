@@ -35,29 +35,25 @@ class IndexController extends AbstractActionController
             $dbForm = new DbConnection();
             $dbForm->setInputFilter(new DbConnectionInputFilter($this->getServiceLocator()));
             $dbForm->setData($this->getRequest()->getPost());
-            var_dump($dbForm->isValid());
             if ($dbForm->isValid()) {
-                $sessionForms->offsetSet('dbForm', $dbForm);
-                var_dump($sessionForms->offsetGet('dbForm'));
-            }
-
-            $sessionProgress->offsetSet('db', self::DONE);
-
-            return $this->redirect()->toRoute(
-                'install/default',
-                [
-                    'controller' => 'index',
-                    'action' => 'mail'
-                ]
-            );
-        } else {
-            var_dump($sessionForms->offsetGet('dbForm'));
-            if (null !== $sessionForms->offsetGet('dbForm')) {
-                var_dump('aaa');
-                $dbForm = $sessionForms->offsetGet('dbForm');
+                $sessionForms->offsetSet('dbForm', $dbForm->getData());
+                $sessionProgress->offsetSet('db', self::DONE);
+                return $this->redirect()->toRoute(
+                    'install/default',
+                    [
+                        'controller' => 'index',
+                        'action' => 'mail'
+                    ]
+                );
             } else {
-                var_dump('bbb');
-                $dbForm = new DbConnection();
+                return  new ViewModel([
+                    'dbForm' => $dbForm,
+                ]);
+            }
+        } else {
+            $dbForm = new DbConnection();
+            if (null !== $sessionForms->offsetGet('dbForm')) {
+                $dbForm->setData($sessionForms->offsetGet('dbForm'));
             }
 
             return new ViewModel([
@@ -74,29 +70,31 @@ class IndexController extends AbstractActionController
         $sessionForms = new Container('forms');
         $this->setProgress();
 
+
         if ($this->getRequest()->isPost()) {
             $mailForm = new MailConfig();
             $mailForm->setInputFilter(new MailConfigInputFilter($this->getServiceLocator()));
             $mailForm->setData($this->getRequest()->getPost());
             if ($mailForm->isValid()) {
-                $sessionForms->offsetSet('mailForm', $mailForm);
-            }
+                $sessionForms->offsetSet('mailForm', $mailForm->getData());
+                $sessionProgress->offsetSet('mail', self::DONE);
 
-            $sessionProgress = new Container('progress_tracker');
-            $sessionProgress->offsetSet('mail', self::DONE);
-
-            return $this->redirect()->toRoute(
-                'install/default',
-                [
-                    'controller' => 'index',
-                    'action' => 'modules'
-                ]
-            );
-        } else {
-            if (null !== $sessionForms->offsetGet('mailForm')) {
-                $mailForm = $sessionForms->offsetGet('mailForm');
+                return $this->redirect()->toRoute(
+                    'install/default',
+                    [
+                        'controller' => 'index',
+                        'action' => 'modules'
+                    ]
+                );
             } else {
-                $mailForm = new MailConfig();
+                return  new ViewModel([
+                    'mailForm' => $mailForm,
+                ]);
+            }
+        } else {
+            $mailForm = new MailConfig();
+            if (null !== $sessionForms->offsetGet('mailForm')) {
+                $mailForm->setData($sessionForms->offsetGet('mailForm'));
             }
 
             return new ViewModel([
@@ -117,24 +115,25 @@ class IndexController extends AbstractActionController
             $modulesForm = new Modules();
             $modulesForm->setData($this->getRequest()->getPost());
             if ($modulesForm->isValid()) {
-                $sessionForms->offsetSet('modulesForm', $modulesForm);
-            }
+                $sessionForms->offsetSet('modulesForm', $modulesForm->getData());
+                $sessionProgress->offsetSet('modules', self::DONE);
 
-            $sessionProgress = new Container('progress_tracker');
-            $sessionProgress->offsetSet('modules', self::DONE);
-
-            return $this->redirect()->toRoute(
-                'install/default',
-                [
-                    'controller' => 'index',
-                    'action' => 'requirements'
-                ]
-            );
-        } else {
-            if (null !== $sessionForms->offsetGet('modulesForm')) {
-                $modulesForm = $sessionForms->offsetGet('modulesForm');
+                return $this->redirect()->toRoute(
+                    'install/default',
+                    [
+                        'controller' => 'index',
+                        'action' => 'requirements'
+                    ]
+                );
             } else {
-                $modulesForm = new Modules();
+                return  new ViewModel([
+                    'modulesForm' => $modulesForm,
+                ]);
+            }
+        } else {
+            $modulesForm = new Modules();
+            if (null !== $sessionForms->offsetGet('modulesForm')) {
+                $modulesForm->setData($sessionForms->offsetGet('modulesForm'));
             }
 
             return new ViewModel([
@@ -173,6 +172,10 @@ class IndexController extends AbstractActionController
         $sessionProgress->offsetSet('finish', self::DONE);
         $this->setProgress();
         $sessionProgress->getManager()->getStorage()->clear('progress_tracker');
+
+        $sessionProgress = new Container('forms');
+
+        $sessionProgress->getManager()->getStorage()->clear('forms');
 
         return new ViewModel();
     }
