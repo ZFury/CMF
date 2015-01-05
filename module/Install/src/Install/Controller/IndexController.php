@@ -8,11 +8,14 @@
 
 namespace Install\Controller;
 
+use Doctrine\DBAL\Driver\PDOMySql\Driver;
 use Install\Form\DbConnection;
 use Install\Form\Filter\DbConnectionInputFilter;
 use Install\Form\Filter\MailConfigInputFilter;
 use Install\Form\Filter\ModulesInputFilter;
 use Install\Form\Modules;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
+use Zend\Db\Adapter\Adapter;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
@@ -23,6 +26,9 @@ class IndexController extends AbstractActionController
     const DONE = 'progress-tracker-done';
     const TODO = 'progress-tracker-todo';
     const STEPS_NUMBER = 5;
+    const MODULES = 'module/';
+    const CHECKED = 'good';
+    const UNCHECKED = 'bad';
 
     public function databaseAction()
     {
@@ -39,13 +45,34 @@ class IndexController extends AbstractActionController
             if ($dbForm->isValid()) {
                 $sessionForms->offsetSet('dbForm', $dbForm->getData());
                 $sessionProgress->offsetSet('db', self::DONE);
+
+                try {
+                    $this->checkDbConnection($dbForm);
+                    $this->createDbConfig($dbForm);
+                    $this->flashMessenger()->addSuccessMessage('Connection established and config file created!');
+
+                    return $this->redirect()->toRoute(
+                        'install/default',
+                        [
+                            'controller' => 'index',
+                            'action' => 'mail'
+                        ]
+                    );
+                } catch (\PDOException $e) {
+                    $this->flashMessenger()->addErrorMessage('Connection can not be established! ' . $e->getMessage());
+                } catch (\Exception $e) {
+                    $this->flashMessenger()->addErrorMessage('Config file can not be created! ' . $e->getMessage());
+                }
+
                 return $this->redirect()->toRoute(
                     'install/default',
                     [
                         'controller' => 'index',
-                        'action' => 'mail'
+                        'action' => 'database',
+                        'dbForm' => $dbForm
                     ]
                 );
+
             } else {
                 return  new ViewModel([
                     'dbForm' => $dbForm,
@@ -119,6 +146,16 @@ class IndexController extends AbstractActionController
             if ($modulesForm->isValid()) {
                 $sessionForms->offsetSet('modulesForm', $modulesForm->getData());
                 $sessionProgress->offsetSet('modules', self::DONE);
+
+                //TODO: rename modules to .nameOfAModule
+                try {
+                    $this->hideModules($modulesForm);
+                    $this->flashMessenger()->addSuccessMessage('Unnecessary modules are hidden now!');
+                } catch (\Exception $e) {
+                    $this->flashMessenger()->addErrorMessage('Can not hide module! ' . $e->getMessage());
+                }
+
+                //TODO: autoLoadConfig
 
                 return $this->redirect()->toRoute(
                     'install/default',
@@ -212,5 +249,67 @@ class IndexController extends AbstractActionController
     public static function getSteps()
     {
         return [ 'db', 'modules', 'requirements', 'mail', 'finish' ];
+    }
+
+    public function checkDbConnection(DbConnection $dbForm)
+    {
+
+        //check db connection
+        //FIXME: try to do it with zend db adapter or doctrine, but not native PDO
+//                $adapter = new Adapter([
+//                    'driver' => 'pdo',
+//                    'database' => $dbForm->getData()['dbname'],
+//                    'username' => $dbForm->getData()['user'],
+//                    'password' => $dbForm->getData()['password'],
+//                    'host' => $dbForm->getData()['host'],
+//                    'port' => $dbForm->getData()['port']
+//                ]);
+//                $isConnected = $adapter->getDriver()->getConnection()->isConnected();
+        $dbname=$dbForm->getData()['dbname'];
+        $host=$dbForm->getData()['host'];
+        $port=$dbForm->getData()['port'];
+        $dsn = "mysql:dbname=$dbname;host=$host;port=$port";
+        $user = 'zfs_user';
+        $password = 'zfs_user';
+        $dbh = new \PDO($dsn, $user, $password);
+    }
+
+    public function createDbConfig(DbConnection $dbForm)
+    {
+        $user = 'zfs_user';
+        $password = 'zfs_user';
+        $dbname=$dbForm->getData()['dbname'];
+        $host=$dbForm->getData()['host'];
+        $port=$dbForm->getData()['port'];
+        $content = "return ['doctrine' =>['connection' => ['orm_default' => [
+                    'driverClass' => 'Doctrine\\DBAL\\Driver\\PDOMySql\\Driver',
+                    'params' => [
+                        'host'     => '$host',
+                        'port'     => '$port',
+                        'user'     => '$user',
+                        'password' => '$password',
+                        'dbname'   => '$dbname',
+                    ],
+                    'doctrine_type_mappings' => ['enum' => 'string'],
+                    ]]]];";
+        $fp = fopen("config/autoload/doctrine.locaaaaal.php", "w+");
+        fwrite($fp, $content);
+        fclose($fp);
+    }
+
+    public function hideModules(Modules $modulesForm)
+    {
+        $this->deleteFromApplicationConfig($modulesForm);
+        $modules = $modulesForm->getData();
+        for ($i=0; $i<count($modules); $i++) {
+            if (self::UNCHECKED == array_values($modules)[$i]) {
+                rename(self::MODULES . array_keys($modules)[$i], self::MODULES . '.' . array_keys($modules)[$i]);
+            }
+        }
+    }
+
+    public function deleteFromApplicationConfig(Modules $modulesForm)
+    {
+        //TODO: Parse application.config.php and delete unnecessary modules
     }
 }

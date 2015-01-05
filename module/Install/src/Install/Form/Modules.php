@@ -18,10 +18,10 @@ class Modules extends Form
 
         $this->add([
             'type' => 'Zend\Form\Element\Checkbox',
-            'name' => 'checkbox_media','use_hidden_element' =>true,
+            'name' => 'Media',
             'options' => [
                 'label' => 'Media (image, audio, video upload)',
-
+                'use_hidden_element' => true,
                 'checked_value' => 'good',
                 'unchecked_value' => 'bad'
             ],
@@ -29,7 +29,7 @@ class Modules extends Form
 
         $this->add([
             'type' => 'Zend\Form\Element\Checkbox',
-            'name' => 'checkbox_categories',
+            'name' => 'Categories',
             'options' => [
                 'label' => 'Categories',
                 'use_hidden_element' =>true,
@@ -40,7 +40,7 @@ class Modules extends Form
 
         $this->add([
             'type' => 'Zend\Form\Element\Checkbox',
-            'name' => 'checkbox_comments',
+            'name' => 'Comment',
             'options' => [
                 'label' => 'Comments',
                 'use_hidden_element' =>true,
@@ -51,7 +51,7 @@ class Modules extends Form
 
         $this->add([
             'type' => 'Zend\Form\Element\Checkbox',
-            'name' => 'checkbox_dashboard',
+            'name' => 'Dashboard',
             'options' => [
                 'label' => 'Dashboard',
                 'use_hidden_element' =>true,
@@ -62,7 +62,7 @@ class Modules extends Form
 
         $this->add([
             'type' => 'Zend\Form\Element\Checkbox',
-            'name' => 'checkbox_mail',
+            'name' => 'Mail',
             'options' => [
                 'label' => 'Mail',
                 'use_hidden_element' =>true,
@@ -73,7 +73,7 @@ class Modules extends Form
 
         $this->add([
             'type' => 'Zend\Form\Element\Checkbox',
-            'name' => 'checkbox_options',
+            'name' => 'Options',
             'options' => [
                 'label' => 'Options',
                 'use_hidden_element' =>true,
@@ -84,7 +84,7 @@ class Modules extends Form
 
         $this->add([
             'type' => 'Zend\Form\Element\Checkbox',
-            'name' => 'checkbox_pages',
+            'name' => 'Pages',
             'options' => [
                 'label' => 'Pages',
                 'use_hidden_element' =>true,
@@ -95,7 +95,7 @@ class Modules extends Form
 
         $this->add([
             'type' => 'Zend\Form\Element\Checkbox',
-            'name' => 'checkbox_test',
+            'name' => 'Test',
             'options' => [
                 'label' => 'Test (Controllers that test another modules)',
                 'use_hidden_element' =>true,

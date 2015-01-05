@@ -15,42 +15,42 @@ class ModulesInputFilter extends InputFilter
     public function __construct($sm, $userId = null)
     {
         $this->add([
-            'name'     => 'checkbox_media',
+            'name'     => 'Media',
             'required' => false,
         ]);
 
         $this->add([
-            'name'     => 'checkbox_categories',
+            'name'     => 'Categories',
             'required' => false,
         ]);
 
         $this->add([
-            'name'     => 'checkbox_comments',
+            'name'     => 'Comment',
             'required' => false,
         ]);
 
         $this->add([
-            'name'     => 'checkbox_dashboard',
+            'name'     => 'Dashboard',
             'required' => false,
         ]);
 
         $this->add([
-            'name'     => 'checkbox_mail',
+            'name'     => 'Mail',
             'required' => false,
         ]);
 
         $this->add([
-            'name'     => 'checkbox_options',
+            'name'     => 'Options',
             'required' => false,
         ]);
 
         $this->add([
-            'name'     => 'checkbox_pages',
+            'name'     => 'Pages',
             'required' => false,
         ]);
 
         $this->add([
-            'name'     => 'checkbox_test',
+            'name'     => 'Test',
             'required' => false,
         ]);
     }
