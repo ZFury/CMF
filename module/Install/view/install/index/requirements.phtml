@@ -4,7 +4,7 @@ $this->headTitle($title);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 
-<form role="form" action="<?=$this->url('install', ['controller' => 'index', 'action' => 'requirements'])?>" class="form-horizontal" method="post">
+<form role="form" action="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'requirements'])?>" class="form-horizontal" method="post">
     <?php
     if (isset($requirements)) {
     ?>

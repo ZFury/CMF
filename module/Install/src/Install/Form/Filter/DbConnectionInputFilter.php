@@ -41,14 +41,6 @@ class DbConnectionInputFilter extends InputFilter
             ],
             'validators' => [
                 [
-                    'name'    => 'StringLength',
-                    'options' => [
-                        'encoding' => 'UTF-8',
-                        'min'      => 2,
-                        'max'      => 40,
-                    ],
-                ],
-                [
                     'name' => 'Between',
                     'otions' => [
                         'min' => 1,

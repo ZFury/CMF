@@ -28,18 +28,19 @@ class IndexController extends AbstractActionController
         $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
         $sessionProgress->offsetSet('db', self::TODO);
+        $sessionForms = new Container('forms');
         $this->setProgress();
 
         if ($this->getRequest()->isPost()) {
             $dbForm = new DbConnection();
             $dbForm->setInputFilter(new DbConnectionInputFilter($this->getServiceLocator()));
             $dbForm->setData($this->getRequest()->getPost());
+            var_dump($dbForm->isValid());
             if ($dbForm->isValid()) {
-                $sessionForms = new Container('forms');
                 $sessionForms->offsetSet('dbForm', $dbForm);
+                var_dump($sessionForms->offsetGet('dbForm'));
             }
 
-            $sessionProgress = new Container('progress_tracker');
             $sessionProgress->offsetSet('db', self::DONE);
 
             return $this->redirect()->toRoute(
@@ -50,7 +51,14 @@ class IndexController extends AbstractActionController
                 ]
             );
         } else {
-            $dbForm = new DbConnection();
+            var_dump($sessionForms->offsetGet('dbForm'));
+            if (null !== $sessionForms->offsetGet('dbForm')) {
+                var_dump('aaa');
+                $dbForm = $sessionForms->offsetGet('dbForm');
+            } else {
+                var_dump('bbb');
+                $dbForm = new DbConnection();
+            }
 
             return new ViewModel([
                 'dbForm' => $dbForm,
@@ -63,6 +71,7 @@ class IndexController extends AbstractActionController
         $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
         $sessionProgress->offsetSet('mail', self::TODO);
+        $sessionForms = new Container('forms');
         $this->setProgress();
 
         if ($this->getRequest()->isPost()) {
@@ -70,7 +79,6 @@ class IndexController extends AbstractActionController
             $mailForm->setInputFilter(new MailConfigInputFilter($this->getServiceLocator()));
             $mailForm->setData($this->getRequest()->getPost());
             if ($mailForm->isValid()) {
-                $sessionForms = new Container('forms');
                 $sessionForms->offsetSet('mailForm', $mailForm);
             }
 
@@ -85,7 +93,11 @@ class IndexController extends AbstractActionController
                 ]
             );
         } else {
-            $mailForm = new MailConfig();
+            if (null !== $sessionForms->offsetGet('mailForm')) {
+                $mailForm = $sessionForms->offsetGet('mailForm');
+            } else {
+                $mailForm = new MailConfig();
+            }
 
             return new ViewModel([
                 'mailForm' => $mailForm,
@@ -98,13 +110,13 @@ class IndexController extends AbstractActionController
         $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
         $sessionProgress->offsetSet('modules', self::TODO);
+        $sessionForms = new Container('forms');
         $this->setProgress();
 
         if ($this->getRequest()->isPost()) {
             $modulesForm = new Modules();
             $modulesForm->setData($this->getRequest()->getPost());
             if ($modulesForm->isValid()) {
-                $sessionForms = new Container('forms');
                 $sessionForms->offsetSet('modulesForm', $modulesForm);
             }
 
@@ -119,7 +131,11 @@ class IndexController extends AbstractActionController
                 ]
             );
         } else {
-            $modulesForm = new Modules();
+            if (null !== $sessionForms->offsetGet('modulesForm')) {
+                $modulesForm = $sessionForms->offsetGet('modulesForm');
+            } else {
+                $modulesForm = new Modules();
+            }
 
             return new ViewModel([
                 'modulesForm' => $modulesForm
