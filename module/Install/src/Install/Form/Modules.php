@@ -104,13 +104,13 @@ class Modules extends Form
             ],
         ]);
 
-        $this->add([
-            'name' => 'submit',
-            'type' => 'Submit',
-            'attributes' => [
-                'value' => 'Submit',
-                'id' => 'submitbutton',
-            ],
-        ]);
+//        $this->add([
+//            'name' => 'submit',
+//            'type' => 'Submit',
+//            'attributes' => [
+//                'value' => 'Submit',
+//                'id' => 'submitbutton',
+//            ],
+//        ]);
     }
 }

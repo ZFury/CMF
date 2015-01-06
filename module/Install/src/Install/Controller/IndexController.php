@@ -105,6 +105,18 @@ class IndexController extends AbstractActionController
             $mailForm->setData($this->getRequest()->getPost());
             if ($mailForm->isValid()) {
                 $sessionForms->offsetSet('mailForm', $mailForm->getData());
+                for ($i=0; $i<count($mailForm->getData()); $i++) {
+                    $paramName = array_keys($mailForm->getData())[$i];
+                    $paramValue = array_values($mailForm->getData())[$i];
+                    if ('emails' == $paramName || 'from' == $paramName) {
+                        $newRow = "'$paramValue'=>[$paramValue]";
+                    }
+                    $this->replaceRowInFile(
+                        'config/autoload/mail.local.php.dist',
+                        $paramName,
+                        "'$paramValue'=>"
+                    );
+                }
                 $sessionProgress->offsetSet('mail', self::DONE);
 
                 return $this->redirect()->toRoute(
@@ -298,17 +310,56 @@ class IndexController extends AbstractActionController
 
     public function hideModules(Modules $modulesForm)
     {
-        $this->deleteFromApplicationConfig($modulesForm);
         $modules = $modulesForm->getData();
         for ($i=0; $i<count($modules); $i++) {
             if (self::UNCHECKED == array_values($modules)[$i]) {
+                $reading = fopen('config/application.config.php', 'r');
+                $writing = fopen('config/application.config.tmp', 'w');
+                $replaced = false;
+                while (!feof($reading)) {
+                    $line = fgets($reading);
+                    if (stristr($line, array_keys($modules)[$i])) {
+                        $line = "//". array_keys($modules)[$i] . "\n";
+                        $replaced = true;
+                    }
+                    fputs($writing, $line);
+                }
+                fclose($reading);
+                fclose($writing);
+                if ($replaced) {
+                    rename('config/application.config.tmp', 'config/application.config.php');
+                } else {
+                    unlink('config/application.config.tmp');
+                }
                 rename(self::MODULES . array_keys($modules)[$i], self::MODULES . '.' . array_keys($modules)[$i]);
             }
         }
     }
 
-    public function deleteFromApplicationConfig(Modules $modulesForm)
+    public function replaceRowInFile($filePath, $word, $newRow, $newFilePath = null)
     {
-        //TODO: Parse application.config.php and COMMENT unnecessary modules
+        $reading = fopen($filePath, 'r');
+        $writing = fopen("$filePath.tmp", 'w');
+        $replaced = false;
+        while (!feof($reading)) {
+            $line = fgets($reading);
+            if (stristr($line, $word)) {
+                $line = "$newRow\n";
+                $replaced = true;
+            }
+            fputs($writing, $line);
+        }
+        fclose($reading);
+        fclose($writing);
+        if ($replaced) {
+            if (null === $newFilePath) {
+                rename("$filePath.tmp", "$filePath");
+            } else {
+                rename("$filePath.tmp", "$newFilePath");
+            }
+
+        } else {
+            unlink("$filePath.tmp");
+        }
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 $env = getenv('APP_ENV') ?: 'production';
 $config =  array(
     // This should be an array of module namespaces used in the application.
@@ -9,13 +8,13 @@ $config =  array(
         'DoctrineORMModule',
         'BjyAuthorize',
         'User',
-//        'Test',
+        'Test',
         'Options',
         'Comment',
         'Dashboard',
         'Categories',
         'Media',
-//        'Pages',
+        'Pages',
         'Mail',
         'Install',
         'DoctrineTools'
