@@ -9,7 +9,7 @@ class SetNewPasswordForm extends Form
 {
     public function __construct($name = null, array $options = array())
     {
-        parent::__construct('form-signup');
+        parent::__construct('set-password');
         $this->setAttribute('method', 'post')
             ->setAttribute('role', 'form')
             ->setAttribute('class', 'form-horizontal');

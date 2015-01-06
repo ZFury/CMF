@@ -26,14 +26,6 @@ class ManagementControllerTest extends ControllerTestCase
      * @var array
      */
     protected $userData = [
-        'name' => 'adminTest1',
-        'email' => 'adminTest@nix.com',
-        'password' => '123456',
-        'repeat-password' => '123456',
-        'submit' => 'Sign Up'
-    ];
-
-    protected $testUserData = [
         'name' => 'testUser',
         'email' => 'testUser@nix.com',
         'password' => '123456',
@@ -77,7 +69,7 @@ class ManagementControllerTest extends ControllerTestCase
      */
     public function tearDown()
     {
-        $this->removeUser($this->testUserData);
+        $this->removeUser($this->userData);
     }
 
     /**
@@ -109,7 +101,7 @@ class ManagementControllerTest extends ControllerTestCase
      */
     public function testCreateAction()
     {
-        $parameters = new Stdlib\Parameters($this->testUserData);
+        $parameters = new Stdlib\Parameters($this->userData);
 
         $this->getRequest()->setMethod('POST')
             ->setPost($parameters);
@@ -127,13 +119,13 @@ class ManagementControllerTest extends ControllerTestCase
     public function testEditAction()
     {
         //create
-        $this->createUser($this->testUserData);
+        $this->createUser($this->userData);
 
         //get
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         /** @var \User\Entity\User $entity */
         $entity = $objectManager->getRepository('User\Entity\User')
-            ->findOneBy(array('email' => $this->testUserData['email']));
+            ->findOneBy(array('email' => $this->userData['email']));
 
         //dispatch edit + post data
         $parameters = new Stdlib\Parameters(
@@ -141,8 +133,8 @@ class ManagementControllerTest extends ControllerTestCase
                 'id' => $entity->getId(),
                 'email' => $entity->getEmail(),
                 'displayName' => $entity->getDisplayName(),
-                'password' => $this->testUserData['email'],
-                'repeat-password' => $this->testUserData['email'],
+                'password' => $this->userData['email'],
+                'repeat-password' => $this->userData['email'],
                 'role' => $entity->getRole(),
                 'status' => $entity->getStatus()
             ]
@@ -166,7 +158,7 @@ class ManagementControllerTest extends ControllerTestCase
     public function testDeleteAction()
     {
         //create
-        $entity = $this->createUser($this->testUserData);
+        $entity = $this->createUser($this->userData);
 
         // remove
         $deletePath = '/user/management/delete/' . $entity->getId();
@@ -175,21 +167,4 @@ class ManagementControllerTest extends ControllerTestCase
         $this->assertEquals(302, $this->getResponse()->getStatusCode());
         $this->assertRedirectTo('/user/management');
     }
-
-    /**
-     *  create entity
-     */
-//    public function createEntity()
-//    {
-//        $entity = new \User\Entity\User();
-//        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-//        $objectManager->getConnection()->beginTransaction();
-//        $hydrator = new DoctrineHydrator($objectManager);
-//        $hydrator->hydrate($this->testUserData, $entity);
-//        $objectManager->persist($entity);
-//        $objectManager->flush();
-//        $objectManager->getConnection()->commit();
-//
-//        return $entity;
-//    }
 }
