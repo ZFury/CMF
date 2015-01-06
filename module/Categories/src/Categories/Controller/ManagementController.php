@@ -45,9 +45,13 @@ class ManagementController extends AbstractCrudController
         $currentRootCategory = null;
         $categories = null;
         if ($id = $this->params('id')) {
-            $currentRootCategory = $entityManager->getRepository('Categories\Entity\Categories')->findOneBy(['parentId' => null, 'id' => $id]);
+            $currentRootCategory = $entityManager
+                ->getRepository('Categories\Entity\Categories')
+                ->findOneBy(['parentId' => null, 'id' => $id]);
         }
-        $rootCategories = $entityManager->getRepository('Categories\Entity\Categories')->findBy(['parentId' => null], ['id' => 'ASC']);
+        $rootCategories = $entityManager
+            ->getRepository('Categories\Entity\Categories')
+            ->findBy(['parentId' => null], ['id' => 'ASC']);
 
         if (!$currentRootCategory && !empty($rootCategories)) {
             $currentRootCategory = $rootCategories[0];
@@ -55,7 +59,11 @@ class ManagementController extends AbstractCrudController
         if ($currentRootCategory) {
             $categories = $repository->findBy(['parentId' => $currentRootCategory->getId()], ['order' => 'ASC']);
         }
-        $viewModel = new ViewModel(['categories' => $categories, 'rootTree' => $rootCategories, 'currentRoot' => $currentRootCategory]);
+        $viewModel = new ViewModel([
+            'categories' => $categories,
+            'rootTree' => $rootCategories,
+            'currentRoot' => $currentRootCategory
+        ]);
         $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
 
         return $viewModel;
@@ -81,7 +89,10 @@ class ManagementController extends AbstractCrudController
                 $parentId = !$this->params()->fromRoute('parentId')
                     ? null
                     : $this->params()->fromRoute('parentId');
-                $aliasValid = new Validator\NoObjectExists(['object_repository' => $repository, 'fields' => ['alias', 'parentId']]);
+                $aliasValid = new Validator\NoObjectExists([
+                    'object_repository' => $repository,
+                    'fields' => ['alias', 'parentId']
+                ]);
                 if ($aliasValid->isValid(
                     ['alias' => $form->get('alias')->getValue(),
                         'parentId' => $parentId]
@@ -109,10 +120,11 @@ class ManagementController extends AbstractCrudController
                         }
                         $categoriesService->clearImages();
                     }
-                    if (!$this->getRequest()->isXmlHttpRequest()) {
-                        $this->flashMessenger()->addSuccessMessage('Category has been successfully added!');
+                    $this->flashMessenger()->addSuccessMessage('Category has been successfully created!');
 
-                        return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
+                    if (!$this->getRequest()->isXmlHttpRequest()) {
+                        return $this->redirect()
+                            ->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
                     } else {
                         return;
                     }
@@ -175,13 +187,14 @@ class ManagementController extends AbstractCrudController
                     $category->setOrder($entity->getOrder());
                     $entityManager->persist($form->getData());
                     $entityManager->flush();
-                    $this->getServiceLocator()->get('Categories\Service\Categories')->updateChildrenPath($form->getData());
+                    $this->getServiceLocator()
+                        ->get('Categories\Service\Categories')
+                        ->updateChildrenPath($form->getData());
                     $this->flashMessenger()->addSuccessMessage('Category has been successfully edited!');
 
                     if (!$this->getRequest()->isXmlHttpRequest()) {
-                        $this->flashMessenger()->addSuccessMessage('Category has been successfully added!');
-
-                        return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
+                        return $this->redirect()
+                            ->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
                     } else {
                         return;
                     }
@@ -273,7 +286,8 @@ class ManagementController extends AbstractCrudController
             }
             return $returnJson;
         }
-        return $this->redirect()->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
+        return $this->redirect()
+            ->toRoute('categories/default', array('controller' => 'management', 'action' => 'index'));
     }
 
     /**

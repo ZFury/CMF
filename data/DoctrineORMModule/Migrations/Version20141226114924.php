@@ -14,7 +14,11 @@ class Version20141226114924 extends AbstractMigration
     {
         $entity = addslashes('Comment\Entity\Comment');
         $date = date("Y-m-d H:i:s");
-        $this->addSql("insert into entity_type (aliasEntity, entity, description, visibleComment, enabledComment, created, updated) VALUES('comment','".$entity."' , 'Comment to comment', 1, 1,'".$date."', '".$date."')");
+        $this->addSql(
+            "insert into entity_type (aliasEntity, entity, description, visibleComment, enabledComment,
+ created, updated) VALUES('comment','" . $entity . "' , 'Comment to comment', 1, 1,'" . $date . "', '" .
+            $date . "')"
+        );
     }
 
     public function down(Schema $schema)
