@@ -300,6 +300,7 @@ class AuthController extends AbstractActionController
             if ($form->isValid()) {
                 $userService = new \User\Service\User($this->getServiceLocator());
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+                /** @var \User\Entity\User $user */
                 $user = $objectManager
                     ->getRepository('User\Entity\User')
                     ->findOneBy(array('confirm' => $confirm));
@@ -309,6 +310,10 @@ class AuthController extends AbstractActionController
 
                 try {
                     $userService->changePassword($user, $form);
+                    $user->setConfirm(null);
+                    $objectManager->persist($user);
+                    $objectManager->flush();
+
                     $this->flashMessenger()->addSuccessMessage('You have successfully changed your password!');
 
                     return $this->redirect()->toRoute('home');

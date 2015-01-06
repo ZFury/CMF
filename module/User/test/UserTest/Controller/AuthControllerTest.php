@@ -13,8 +13,6 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 use Starter\Test\Controller\ControllerTestCase;
 use Zend\Stdlib;
-use Zend\Form\Element\Csrf;
-use User\Entity\User;
 
 class AuthControllerTest extends ControllerTestCase
 {
@@ -129,7 +127,7 @@ class AuthControllerTest extends ControllerTestCase
     public function createUserWithHash(array $userData)
     {
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $user = new User();
+        $user = new \User\Entity\User();
         $objectManager->getConnection()->beginTransaction();
         $hydrator = new DoctrineHydrator($objectManager);
         $hydrator->hydrate($userData, $user);
