@@ -166,6 +166,18 @@ div.container a.brand {
     margin: 0 auto;
 }
 
+.set-password {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.forgot-password {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
 .login-input {
     margin-bottom: 3px;
     border-bottom-left-radius: 0;

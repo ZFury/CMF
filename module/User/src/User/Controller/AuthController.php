@@ -29,23 +29,26 @@ class AuthController extends AbstractActionController
         $flashMessenger = new FlashMessenger();
         if ($this->getRequest()->isPost()) {
             // If you used another name for the authentication service, change it here
-            /**
-             * @var \User\Service\Auth $userAuth
-             */
-            $userAuth = $this->getServiceLocator()->get('\User\Service\Auth');
-            try {
-                $userAuth->authenticateEquals($data['email'], $data['password']);
-                $session = new Container('location');
-                $location = $session->location;
-                if ($location) {
-                    $session->getManager()->getStorage()->clear('location');
-                    return $this->redirect()->toUrl($location);
-                }
+            $form->setData($this->getRequest()->getPost());
+            if ($form->isValid()) {
+                /**
+                 * @var \User\Service\Auth $userAuth
+                 */
+                $userAuth = $this->getServiceLocator()->get('\User\Service\Auth');
+                try {
+                    $userAuth->authenticateEquals($data['email'], $data['password']);
+                    $session = new Container('location');
+                    $location = $session->location;
+                    if ($location) {
+                        $session->getManager()->getStorage()->clear('location');
+                        return $this->redirect()->toUrl($location);
+                    }
 
-                $flashMessenger->addSuccessMessage('You\'re successfully logged in');
-                return $this->redirect()->toRoute('home');
-            } catch (AuthException $exception) {
-                $flashMessenger->addErrorMessage($exception->getMessage());
+                    $flashMessenger->addSuccessMessage('You\'re successfully logged in');
+                    return $this->redirect()->toRoute('home');
+                } catch (AuthException $exception) {
+                    $flashMessenger->addErrorMessage($exception->getMessage());
+                }
             }
         }
 
@@ -297,6 +300,7 @@ class AuthController extends AbstractActionController
             if ($form->isValid()) {
                 $userService = new \User\Service\User($this->getServiceLocator());
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+                /** @var \User\Entity\User $user */
                 $user = $objectManager
                     ->getRepository('User\Entity\User')
                     ->findOneBy(array('confirm' => $confirm));
@@ -306,6 +310,10 @@ class AuthController extends AbstractActionController
 
                 try {
                     $userService->changePassword($user, $form);
+                    $user->setConfirm(null);
+                    $objectManager->persist($user);
+                    $objectManager->flush();
+
                     $this->flashMessenger()->addSuccessMessage('You have successfully changed your password!');
 
                     return $this->redirect()->toRoute('home');

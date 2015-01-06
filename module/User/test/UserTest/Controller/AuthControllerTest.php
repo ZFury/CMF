@@ -9,11 +9,30 @@
 namespace UserTest\Controller;
 
 use SebastianBergmann\Exporter\Exception;
+use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 use Starter\Test\Controller\ControllerTestCase;
+use Zend\Stdlib;
 
 class AuthControllerTest extends ControllerTestCase
 {
+
+    /**
+     * @var array
+     */
+    protected $userData = [
+        'name' => 'testUser',
+        'email' => 'testUser@nix.com',
+        'password' => '123456',
+        'repeat-password' => '123456',
+        'role' => 'user',
+        'status' => 'active',
+        'confirm' => '09310bf5aa26b8860d1705e361d1ba56'
+    ];
+
+    /**
+     * Set up tests
+     */
     public function setUp()
     {
         $this->setApplicationConfig(
@@ -41,6 +60,7 @@ class AuthControllerTest extends ControllerTestCase
     }
 
     /**
+     *  login action test
      */
     public function testLoginActionCanBeAccessed()
     {
@@ -52,8 +72,25 @@ class AuthControllerTest extends ControllerTestCase
         $this->assertMatchedRouteName('user/default');
     }
 
+    public function testRecoverPasswordAction()
+    {
+        $this->createUserWithHash($this->userData);
+
+        $form = new  \User\Form\SetNewPasswordForm('set-password', ['serviceLocator' => $this->getApplicationServiceLocator()]);
+        $path = '/user/auth/recover-password/' . $this->userData['confirm'];
+        $data = array(
+            'password' => '123456',
+            'repeat-password' => '123456',
+            'security' => $form->get('security')->getValue()
+        );
+        $this->dispatch($path, 'POST', $data);
+        $this->assertEquals(302, $this->getResponse()->getStatusCode());
+        $this->assertRedirectTo('/');
+    }
+
     public function testLogoutActionCanBeAccessed()
     {
+        $this->setupUser();
         $this->dispatch('/user/auth/logout');
         $this->assertResponseStatusCode(302);
         $this->assertRedirectTo('/user/auth/login');
@@ -61,6 +98,7 @@ class AuthControllerTest extends ControllerTestCase
 
     public function testLoginAction()
     {
+        $form = new  \User\Form\LoginForm('form-login', ['serviceLocator' => $this->getApplicationServiceLocator()]);
         $userData = [
             'name' => 'User',
             'email' => 'user@nix.com',
@@ -69,7 +107,8 @@ class AuthControllerTest extends ControllerTestCase
         $this->createUser($userData, \User\Entity\User::ROLE_USER);
         $postData = [
             'email' => $userData['email'],
-            'password' => $userData['password']
+            'password' => $userData['password'],
+            'security' => $form->get('security')->getValue()
         ];
 
         $this->dispatch('/user/auth/login', 'POST', $postData);
@@ -83,5 +122,26 @@ class AuthControllerTest extends ControllerTestCase
         $this->dispatch('/user/auth/logout');
         $this->assertResponseStatusCode(302);
         $this->assertRedirectTo('/user/auth/login');
+    }
+
+    public function createUserWithHash(array $userData)
+    {
+        $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $user = new \User\Entity\User();
+        $objectManager->getConnection()->beginTransaction();
+        $hydrator = new DoctrineHydrator($objectManager);
+        $hydrator->hydrate($userData, $user);
+        $user->setDisplayName($user->getEmail());
+
+        $objectManager->persist($user);
+        $objectManager->flush();
+
+        /** @var $authService \User\Service\Auth */
+        $authService = $this->getApplicationServiceLocator()->get('User\Service\Auth');
+        $authService->generateEquals($user, $userData['password']);
+
+        $objectManager->getConnection()->commit();
+
+        return $user;
     }
 }
