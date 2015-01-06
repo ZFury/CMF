@@ -40,21 +40,22 @@ class MailConfig extends Form
             ],
         ]);
 
-        $this->add([
-            'name' => 'emails',
-            'type' => 'Text',
-            'options' => [
-                'label' => 'Emails',
-            ],
-        ]);
+//        $this->add([
+//            'name' => 'emails[]',
+//            'type' => 'email',
+//            'options' => [
+//                'label' => 'Emails',
+//            ],
+//        ]);
 
-        $this->add([
-            'name' => 'from',
-            'type' => 'Text',
-            'options' => [
-                'label' => 'From',
-            ],
-        ]);
+//        $this->add([
+//            'name' => 'from[]',
+//            'type' => 'email',
+//            'options' => [
+//                'label' => 'From',
+//            ],
+//        ]);
+
 
 //        $this->add([
 //            'name' => 'submit',

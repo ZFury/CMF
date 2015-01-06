@@ -73,3 +73,11 @@ div.btn > a {
     text-decoration: none;
     color: #BFE4FF;
 }
+
+.textbox > input, a {
+    display: inline-block;
+}
+
+.textboxinput {
+    width: 90%;
+}

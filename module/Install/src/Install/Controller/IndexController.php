@@ -17,6 +17,7 @@ use Install\Form\Modules;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Zend\Db\Adapter\Adapter;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Validator\EmailAddress;
 use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
 use Install\Form\MailConfig;
@@ -98,23 +99,60 @@ class IndexController extends AbstractActionController
         $sessionForms = new Container('forms');
         $this->setProgress();
 
-
         if ($this->getRequest()->isPost()) {
             $mailForm = new MailConfig();
             $mailForm->setInputFilter(new MailConfigInputFilter($this->getServiceLocator()));
             $mailForm->setData($this->getRequest()->getPost());
+
             if ($mailForm->isValid()) {
+                //validate emails and froms
+                //TODO: redirect if custom validation fails and cut off copycode and try to avoid this
+                $validator = new EmailAddress();
+                $from = [];
+                for ($i=0; $i<count($this->getRequest()->getPost('from')); $i++) {
+                    if (!$validator->isValid($this->getRequest()->getPost('from')[$i])) {
+                        foreach ($validator->getMessages() as $message) {
+                            $this->flashMessenger()->addErrorMessage($message);
+                        }
+                    }
+                    $fr = $this->getRequest()->getPost('from')[$i];
+                    array_push($from, "'$fr'");
+                }
+                $emails = [];
+                for ($i=0; $i<count($this->getRequest()->getPost('emails')); $i++) {
+                    if (!$validator->isValid($this->getRequest()->getPost('emails')[$i])) {
+                        foreach ($validator->getMessages() as $message) {
+                            $this->flashMessenger()->addErrorMessage($message);
+                        }
+                    }
+                    $em = $this->getRequest()->getPost('emails')[$i];
+                    array_push($emails, "'$em'");
+                }
+                $emails_imp = implode(',', $emails);
+                $from_imp = implode(',', $from);
+                $this->replaceRowInFile(
+                    'config/autoload/mail.local.php.dist',
+                    'emails',
+                    "'emails'=>[$emails_imp]",
+                    'config/autoload/mail.local.php.php.php'
+                );
+                $this->replaceRowInFile(
+                    'config/autoload/mail.local.php.dist',
+                    'from',
+                    "'emails'=>[$from_imp]",
+                    'config/autoload/mail.local.php.php.php'
+                );
+
                 $sessionForms->offsetSet('mailForm', $mailForm->getData());
                 for ($i=0; $i<count($mailForm->getData()); $i++) {
                     $paramName = array_keys($mailForm->getData())[$i];
                     $paramValue = array_values($mailForm->getData())[$i];
-                    if ('emails' == $paramName || 'from' == $paramName) {
-                        $newRow = "'$paramValue'=>[$paramValue]";
-                    }
+                    $newRow = "'$paramValue'=>'$paramValue',";
                     $this->replaceRowInFile(
                         'config/autoload/mail.local.php.dist',
                         $paramName,
-                        "'$paramValue'=>"
+                        $newRow,
+                        'config/autoload/mail.local.php.php.php'
                     );
                 }
                 $sessionProgress->offsetSet('mail', self::DONE);

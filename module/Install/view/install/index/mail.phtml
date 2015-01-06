@@ -48,10 +48,12 @@ $mailForm->prepare();
                 </li>
                 <li>
                     <div class="form-group">
-                        <label for="inputEmails" class="col-md-2 control-label"><?= $mailForm->get('emails')->getLabel(); ?></label>
-                        <div class="col-md-2">
-                            <input type="text" class="form-control" id="inputEmails" name="<?= $mailForm->get('emails')->getName(); ?>" value="<?= $mailForm->get('emails')->getValue(); ?>" placeholder="<?= $mailForm->get('emails')->getLabel(); ?>">
-                            <?= $this->formElementErrors($mailForm->get('emails')); ?>
+                        <label for="inputEmails" class="col-md-2 control-label">Emails</label>
+                        <div class="col-md-5">
+                            <div class="input_fields_wrap_emails col-md-8">
+                                <div><input type="email" name="emails[]" class="form-control textboxinput" placeholder="Emails"></div>
+                            </div>
+                            <button class="add_field_button_emails btn btn-warning col-md-4">Add More Fields</button>
                         </div>
                     </div>
                 </li>
@@ -62,10 +64,12 @@ $mailForm->prepare();
             <ul><h4>From</h4>
                 <li>
                     <div class="form-group">
-                        <label for="inputFrom" class="col-md-2 control-label"><?= $mailForm->get('from')->getLabel(); ?></label>
-                        <div class="col-md-2">
-                            <input type="text" class="form-control" id="inputFrom" name="<?= $mailForm->get('from')->getName(); ?>" value="<?= $mailForm->get('from')->getValue(); ?>" placeholder="<?= $mailForm->get('from')->getLabel(); ?>">
-                            <?= $this->formElementErrors($mailForm->get('from')); ?>
+                        <label for="inputFrom" class="col-md-2 control-label">From</label>
+                        <div class="col-md-5">
+                            <div class="input_fields_wrap_from col-md-8">
+                                <div><input type="email" name="from[]" class="form-control textboxinput" placeholder="From"></div>
+                            </div>
+                            <button class="add_field_button_from btn btn-warning col-md-4">Add More Fields</button>
                         </div>
                     </div>
                 </li>
@@ -83,3 +87,5 @@ $mailForm->prepare();
     </div>
 
 </form>
+
+<script>require(['mail-inputs']);</script>
