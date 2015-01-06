@@ -22,12 +22,7 @@ define([
             init();
         }
         $('body')
-            //.on('modal.loaded', function () {
-            //    console.log('loaded modal');
-            //    init();
-            //})
             .on('shown.bs.modal', function () {
-                console.log('loaded modal');
                 init();
             });
     });
@@ -35,7 +30,6 @@ define([
 
     function init() {
         var id = $('#entityId').val();
-        console.log($('#entityId'));
         // Initialize the jQuery File Upload widget:
         $('#fileupload').fileupload({
             url: 'categories/management/start-image-upload' + (id ? "/" + id : "")

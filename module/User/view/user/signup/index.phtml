@@ -1,66 +1,60 @@
 <?php
-$title = 'Sign Up';
+$title = '';
 $this->headTitle($title);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" rel="stylesheet">
+<?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+    ->prependStylesheet($this->basePath() . '/css/bootstrap-social.css') ?>
 <?php
 /**
  * @var Zend/Form/Form $form
  */
 $form = $this->form;
 $form->setAttribute('action', $this->url('user/default', array('controller' => 'signup', 'action' => 'index')));
+$form->setAttribute('class', 'form-signup');
 $form->prepare();
 ?>
-<div class="container">
-    <div class="row">
-        <?php echo $this->form()->openTag($form); ?>
-        <?php echo $this->formHidden($form->get('security')); ?>
-        <div class="form-group">
-            <label for="inputEmail" class="col-sm-2 control-label"><?= $form->get('email')->getLabel(); ?></label>
+<div class="container text-center">
+    <?php echo $this->form()->openTag($form); ?>
+    <?php echo $this->formHidden($form->get('security')); ?>
+    <h2 class="form-signin-heading">Sign up</h2>
+    <p>
+        <a class="btn social-login-btn social-facebook btn-facebook"  href="<?php echo $this->url('user/default', ['controller' => 'auth', 'action' => 'facebook']) ?>"
+            ><i class="fa fa-facebook"></i>
+        </a>
+        <a class="btn social-login-btn social-twitter btn-twitter" href="<?php echo $this->url('user/default', ['controller' => 'auth', 'action' => 'twitter']) ?>">
+            <i class="fa fa-twitter"></i>
+        </a>
+    </p>
+    <?php // $this->formInput($form->get('username')); ?>
+    <input type="email" class="ember-view ember-text-field form-control login-input" id="inputEmail" name="<?= $form->get('email')->getName(); ?>"
+           value="<?= $form->get('email')->getValue(); ?>"
+           placeholder="<?= $form->get('email')->getLabel(); ?>">
+    <div class="error-field error-form-message">
+        <?= $this->formElementErrors($form->get('email')); ?>
+    </div>
 
-            <div class="col-sm-4">
-                <?php // $this->formInput($form->get('username')); ?>
-                <input type="email" class="form-control" id="inputEmail" name="<?= $form->get('email')->getName(); ?>"
-                       value="<?= $form->get('email')->getValue(); ?>"
-                       placeholder="<?= $form->get('email')->getLabel(); ?>">
-            </div>
-            <?= $this->formElementErrors($form->get('email')); ?>
-        </div>
-        <div class="form-group">
-            <label for="inputPassword" class="col-sm-2 control-label"><?= $form->get('password')->getLabel(); ?></label>
 
-            <div class="col-sm-4">
-                <input type="password" class="form-control" id="inputPassword"
-                       name="<?= $form->get('password')->getName(); ?>"
-                       placeholder="<?= $form->get('password')->getLabel(); ?>">
-            </div>
-            <?= $this->formElementErrors($form->get('password')); ?>
-        </div>
-        <div class="form-group">
-            <label for="inputRepeatPassword"
-                   class="col-sm-2 control-label"><?= $form->get('repeat-password')->getLabel(); ?></label>
+    <input type="password" class="ember-view ember-text-field form-control login-input" id="inputPassword"
+           name="<?= $form->get('password')->getName(); ?>"
+           placeholder="<?= $form->get('password')->getLabel(); ?>">
+    <div class="error-field error-form-message">
+        <?= $this->formElementErrors($form->get('password')); ?>
+    </div>
 
-            <div class="col-sm-4">
-                <input type="password" class="form-control" id="inputRepeatPassword"
-                       name="<?= $form->get('repeat-password')->getName(); ?>"
-                       placeholder="<?= $form->get('repeat-password')->getLabel(); ?>">
-            </div>
-            <?= $this->formElementErrors($form->get('repeat-password')); ?>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-4">
-                <input type="submit" name="submit" id="submitbutton" class="btn btn-lg btn-primary btn-block"
-                       value="<?= $form->get('submit')->getValue(); ?>">
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-4">
-                <a class="btn btn-primary col-sm-5"
-                   href="<?php echo $this->url('user/default', ['controller' => 'auth', 'action' => 'twitter']) ?>">Twitter</a>
-            </div>
-        </div>
+
+    <input type="password" class="ember-view ember-text-field form-control login-input" id="inputRepeatPassword"
+           name="<?= $form->get('repeat-password')->getName(); ?>"
+           placeholder="<?= $form->get('repeat-password')->getLabel(); ?>">
+    <div class="error-field error-form-message">
+        <?= $this->formElementErrors($form->get('repeat-password')); ?>
+    </div>
+
+    <input type="submit" name="submit" id="submitbutton" class="btn btn-lg btn-primary btn-block btn-center"
+           value="<?= $form->get('submit')->getValue(); ?>">
         <?php echo $this->form()->closeTag(); ?>
     </div>
-</div>
+<script>
+    require(['starter']);
+</script>

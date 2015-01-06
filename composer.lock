@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "506bfbfc408690cc5159c465e304890e",
+    "hash": "56cb1483a45bab7ef202b290735e4c3d",
     "packages": [
         {
             "name": "bjyoungblood/bjy-authorize",
@@ -944,6 +944,53 @@
             "time": "2013-03-15 09:58:04"
         },
         {
+            "name": "sundrique/doctrine-tools",
+            "version": "0.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Sundrique/DoctrineTools.git",
+                "reference": "90ba0b71951e2b0f6984bbed09f4c4a1e7c4d303"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Sundrique/DoctrineTools/zipball/90ba0b71951e2b0f6984bbed09f4c4a1e7c4d303",
+                "reference": "90ba0b71951e2b0f6984bbed09f4c4a1e7c4d303",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/doctrine-orm-module": ">=0.7",
+                "doctrine/migrations": "dev-master",
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "DoctrineTools\\": "src/",
+                    "DoctrineToolsTest\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aleksandr Sandrovskiy",
+                    "email": "a.sandrovsky@gmail.com"
+                }
+            ],
+            "description": "Zend Framework 2 Module providing unified endpoint for Doctrine command line tools",
+            "homepage": "https://github.com/Sundrique/DoctrineTools",
+            "keywords": [
+                "cli",
+                "doctrine",
+                "module",
+                "tools",
+                "zf2"
+            ],
+            "time": "2013-03-15 09:58:04"
+        },
+        {
             "name": "symfony/console",
             "version": "v2.6.1",
             "target-dir": "Symfony/Component/Console",
@@ -1343,16 +1390,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "2.0.13",
+            "version": "2.0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "0e7d2eec5554f869fa7a4ec2d21e4b37af943ea5"
+                "reference": "ca158276c1200cc27f5409a5e338486bc0b4fc94"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/0e7d2eec5554f869fa7a4ec2d21e4b37af943ea5",
-                "reference": "0e7d2eec5554f869fa7a4ec2d21e4b37af943ea5",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ca158276c1200cc27f5409a5e338486bc0b4fc94",
+                "reference": "ca158276c1200cc27f5409a5e338486bc0b4fc94",
                 "shasum": ""
             },
             "require": {
@@ -1404,7 +1451,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-12-03 06:41:44"
+            "time": "2014-12-26 13:28:33"
         },
         {
             "name": "phpunit/php-file-iterator",

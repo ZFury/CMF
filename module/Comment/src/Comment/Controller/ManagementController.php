@@ -22,6 +22,7 @@ class ManagementController extends AbstractCrudController
         $grid = new Grid($sm);
         $viewModel = new ViewModel(['grid' => $grid]);
         $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
+
         return $viewModel;
     }
 
@@ -53,7 +54,7 @@ class ManagementController extends AbstractCrudController
         $form = $this->getCreateForm();
         $form->setHydrator(new DoctrineHydrator($entityManager));
         $form->bind($this->loadEntity());
-//        var_dump($form);die();
+
         return $form;
     }
 
