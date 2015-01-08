@@ -5,8 +5,4 @@ define(['jquery'], function ($) {
         }
         return false;
     });
-    $('a.add-comment, a.edit-comment').on('click', function (e) {
-        window.location = $(this).attr('data-href');
-        e.preventDefault();
-    });
 });

@@ -31,11 +31,11 @@ class ManagementControllerTest extends ControllerTestCase
     protected $user;
 
     protected $entityData = array(
-    'aliasEntity' => 'user',
-    'entity' => 'User\Entity\User',
-    'enabledEntity' => true,
-    'visibleEntity' => true,
-    'description' => 'another',
+        'aliasEntity' => 'user',
+        'entity' => 'User\Entity\User',
+        'enabledEntity' => true,
+        'visibleEntity' => true,
+        'description' => 'another',
     );
 
     /**

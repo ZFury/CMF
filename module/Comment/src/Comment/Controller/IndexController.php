@@ -28,7 +28,6 @@ class IndexController extends AbstractActionController
 
         // for GET (or query string) data
         if ($this->getRequest()->getQuery()->entity && $entityId = intval($this->getRequest()->getQuery()->id)) {
-            $data = array();
             $data['entity'] = $this->getRequest()->getQuery()->entity;
             $data['entityId'] = $this->getRequest()->getQuery()->id;
         }
@@ -79,11 +78,13 @@ class IndexController extends AbstractActionController
             ->delete($id);
 
         if ($result) {
-            $this->flashMessenger()->addSuccessMessage('Comment deleted');
-
-            //TODO: redirect where?
-            $url = $this->getRequest()->getHeader('Referer')->getUri();
-            return $this->redirect()->toUrl($url);
+            $flashMessenger = new FlashMessenger();
+            $flashMessenger->addSuccessMessage('Comment deleted');
+            if (!$this->getRequest()->isXmlHttpRequest()) {
+                //TODO: redirect where?
+                $url = $this->getRequest()->getHeader('Referer')->getUri();
+                return $this->redirect()->toUrl($url);
+            }
         }
     }
 
@@ -114,14 +115,21 @@ class IndexController extends AbstractActionController
             $flashMessenger = new FlashMessenger();
             if ($commentEdited) {
                 $flashMessenger->addSuccessMessage('Comment edited');
-                $url = $this->getRequest()->getHeader('Referer')->getUri();
-                return $this->redirect()->toUrl($url);
+                if (!$this->getRequest()->isXmlHttpRequest()) {
+                    $url = $this->getRequest()->getHeader('Referer')->getUri();
+                    return $this->redirect()->toUrl($url);
+                }
+
+                return;
             } else {
                 $flashMessenger->addErrorMessage('Comment is not changed');
             }
         }
-        $viewModel = new ViewModel(['form' => $form, 'path' => $this->getRequest()->getUri()->getPath()]);
-
+        $viewModel = new ViewModel([
+            'form' => $form,
+            'title' => 'Add comment',
+            'ajax' => $this->getRequest()->isXmlHttpRequest()
+        ]);
         if ($this->getRequest()->isXmlHttpRequest()) {
             $viewModel->setTerminal(true);
         }
@@ -148,7 +156,6 @@ class IndexController extends AbstractActionController
                 $data->set('entityId', $this->getRequest()->getQuery()->id);
             }
 
-            $data = $data->toArray();
             if (!isset($data['entity']) || !isset($data['entityId'])) {
                 throw new \Exception('Bad request');
             }
@@ -159,16 +166,21 @@ class IndexController extends AbstractActionController
             $flashMessenger = new FlashMessenger();
             if ($comment) {
                 $flashMessenger->addSuccessMessage('Comment created');
-                //TODO: redirect where?
-                $url = $this->getRequest()->getHeader('Referer')->getUri();
-                return $this->redirect()->toUrl($url);
+                if (!$this->getRequest()->isXmlHttpRequest()) {
+                    $url = $this->getRequest()->getHeader('Referer')->getUri();
+                    return $this->redirect()->toUrl($url);
+                }
+
+                return;
             } else {
                 $flashMessenger->addErrorMessage('Comment is not created');
             }
         }
-
-        $path = $this->getRequest()->getUri()->getPath().'?'.$this->getRequest()->getUri()->getQuery();
-        $viewModel = new ViewModel(['form' => $form, 'title' => 'Add comment', 'path' => $path]);
+        $viewModel = new ViewModel([
+            'form' => $form,
+            'title' => 'Add comment',
+            'ajax' => $this->getRequest()->isXmlHttpRequest()
+        ]);
         if ($this->getRequest()->isXmlHttpRequest()) {
             $viewModel->setTerminal(true);
         }
