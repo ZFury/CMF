@@ -54,6 +54,9 @@ class Comment
     {
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
         $entityType = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType($aliasEntity);
+        if (!$entityType) {
+            throw new \Exception('Unknown entity type');
+        }
         if (!$entityType->getEnabledComment()) {
             throw new \Exception('Comment on this entity can not be');
         }
