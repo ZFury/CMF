@@ -50,18 +50,20 @@
              * @param order
              * @param filterField
              * @param searchString
+             * @param limit
              * @param callback
              *
              * Created by Maxim Mandryka maxim.mandryka@nixsolutions.com
              */
-            testFactory.getTests = function(page, orderField, order, filterField, searchString, /*function*/ callback) {
+            testFactory.getTests = function(page, orderField, order, filterField, searchString, limit, /*function*/ callback) {
                 var ord = 'order-' + orderField;
                 var filt = 'filter-' + filterField;
                 var params = {
                     url: this.apiUrl + 'management/angular',
                     method: "GET",
                     params: {
-                        page: page
+                        page: page,
+                        limit: limit
                     },
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 };
