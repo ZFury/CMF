@@ -63,8 +63,8 @@ class IndexControllerTest extends ControllerTestCase
         $entityType = array(
             'aliasEntity' =>'user',
             'entity' =>'User\Entity\User',
-            'enabledEntity' => true,
-            'visibleEntity' => true,
+            'enabledComment' => true,
+            'visibleComment' => true,
             'description' =>'description',
         );
         $this->entityType = $this->createEntityType($entityType);
@@ -88,16 +88,16 @@ class IndexControllerTest extends ControllerTestCase
         $this->assertMatchedRouteName('comment/default');
     }
 
-//    public function testAddActionRedirectsAfterValidPost()
-//    {
-//        $postData = array(
-//            'comment' => "test comment",
-//            'entityType' => $this->entityType->getAliasEntity(),
-//            'entityId' => $this->user->getId(),
-//        );
-//        $this->dispatch('/comment/index/add', 'POST', $postData);
-//        $this->assertResponseStatusCode(200);
-//    }
+    public function testAddActionRedirectsAfterValidPost()
+    {
+        $postData = array(
+            'comment' => "test comment",
+            'entity' => $this->entityType->getAliasEntity(),
+            'entityId' => $this->user->getId(),
+        );
+        $this->dispatch('/comment/index/add', 'POST', $postData);
+        $this->assertResponseStatusCode(302);
+    }
 
     public function testEditActionCanBeAccessed()
     {
@@ -112,28 +112,28 @@ class IndexControllerTest extends ControllerTestCase
         $this->assertMatchedRouteName('comment/default');
     }
 
-//    public function testEditActionRedirectsAfterValidPost()
-//    {
-//        $comment = $this->createComment('Comment for edited');
-//
-//        $postData = array(
-//            'comment' => 'edited'
-//        );
-//        $this->dispatch('/comment/index/edit/' . $comment->getId(), 'POST', $postData);
-//        $this->assertResponseStatusCode(200);
-//    }
+    public function testEditActionRedirectsAfterValidPost()
+    {
+        $comment = $this->createComment('Comment for edited');
 
-//    public function testDeleteActionCanBeAccessed()
-//    {
-//        $comment = $this->createComment('Comment for deleted');
-//        $this->dispatch("/comment/index/delete/".$comment->getId());
-//        $this->assertResponseStatusCode(200);
-//
-//        $this->assertModuleName('comment');
-//        $this->assertControllerName('Comment\Controller\Index');
-//        $this->assertControllerClass('IndexController');
-//        $this->assertMatchedRouteName('comment/default');
-//    }
+        $postData = array(
+            'comment' => 'edited'
+        );
+        $this->dispatch('/comment/index/edit/' . $comment->getId(), 'POST', $postData);
+        $this->assertResponseStatusCode(302);
+    }
+
+    public function testDeleteActionCanBeAccessed()
+    {
+        $comment = $this->createComment('Comment for deleted');
+        $this->dispatch("/comment/index/delete/".$comment->getId());
+        $this->assertResponseStatusCode(302);
+
+        $this->assertModuleName('comment');
+        $this->assertControllerName('Comment\Controller\Index');
+        $this->assertControllerClass('IndexController');
+        $this->assertMatchedRouteName('comment/default');
+    }
 
     /**
      * @param $entityData
