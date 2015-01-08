@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PhoneForTest
 {
     /**
-     * Primary key for table 'contacts'
+     * Primary key for table 'phone_for_test'
      * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
