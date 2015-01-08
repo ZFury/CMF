@@ -31,6 +31,7 @@ class ManagementController extends AbstractCrudController
     {
         $sm = $this->getServiceLocator();
         $grid = new Grid($sm);
+        $grid->getData();
         $viewModel = new ViewModel(['grid' => $grid]);
         $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
         return $viewModel;
