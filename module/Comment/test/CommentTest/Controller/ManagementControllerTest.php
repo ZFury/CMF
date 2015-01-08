@@ -145,7 +145,7 @@ class ManagementControllerTest extends ControllerTestCase
      * @return \Comment\Entity\EntityType
      * @throws \Exception
      */
-    public function createEntityType($entityData)
+    protected function createEntityType($entityData)
     {
         $entity = new EntityType();
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -167,7 +167,7 @@ class ManagementControllerTest extends ControllerTestCase
     /**
      * @param \Comment\Entity\EntityType $detachedEntity
      */
-    public function removeEntityType(EntityType $detachedEntity)
+    protected function removeEntityType(EntityType $detachedEntity)
     {
         /**
          * @var \Doctrine\ORM\EntityManager $objectManager

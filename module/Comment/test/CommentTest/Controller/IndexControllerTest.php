@@ -140,7 +140,7 @@ class IndexControllerTest extends ControllerTestCase
      * @return \Comment\Entity\EntityType
      * @throws \Exception
      */
-    public function createEntityType($entityData)
+    protected function createEntityType($entityData)
     {
         $entity = new EntityType();
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -164,7 +164,7 @@ class IndexControllerTest extends ControllerTestCase
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Exception
      */
-    public function createComment($commentText)
+    protected function createComment($commentText)
     {
         /**
          * @var \Doctrine\ORM\EntityManager $objectManager
@@ -197,7 +197,7 @@ class IndexControllerTest extends ControllerTestCase
     /**
      * @param \Comment\Entity\EntityType $detachedEntity
      */
-    public function removeEntityType(EntityType $detachedEntity)
+    protected function removeEntityType(EntityType $detachedEntity)
     {
         /**
          * @var \Doctrine\ORM\EntityManager $objectManager
@@ -211,7 +211,7 @@ class IndexControllerTest extends ControllerTestCase
     /**
      * @throws \Exception
      */
-    public function dropComments()
+    protected function dropComments()
     {
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
         $sql = 'TRUNCATE TABLE comment';
