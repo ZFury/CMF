@@ -8,11 +8,11 @@
                 <div class="input-group">
                     <div class="input-group-btn grid-filter-search">
                         <button type="button" class="btn btn-default dropdown-toggle"
-                                data-toggle="dropdown"><?= ucfirst(current($this->grid->getAllowedFilters())) ?>
+                                data-toggle="dropdown"><?=ucfirst(explode('.', current($this->grid->getAllowedFilters()))[1])?>
                             <span class="caret"></span></button>
                         <ul class="dropdown-menu">
-                            <?php foreach ($this->grid->getAllowedFilters() as $field) : ?>
-                                <li><a href="javascript:;" data-filter="<?= $field ?>"><?= ucfirst($field) ?></a></li>
+                            <?php foreach ($this->grid->getAllowedFilters() as $filter) : ?>
+                                <li><a href="javascript:;" data-filter="<?= $filter ?>"><?=ucfirst(explode('.', $filter)[1]) ?></a></li>
                             <?php endforeach; ?>
                         </ul>
                     </div>
@@ -32,10 +32,10 @@
             <thead>
             <tr>
                 <?php foreach ($this->grid->getColumns() as $alias => $column) : ?>
-                    <?php if ($order = $this->grid->order($column)) : ?>
-                        <th><a href="<?= $order ?>"><?= $alias ?></a></th>
+                    <?php  if ($order = $this->grid->order($alias)) : ?>
+                        <th><a href="<?= $order ?>"><?= $column ?></a></th>
                     <?php else : ?>
-                        <th><?= $alias ?></th>
+                        <th><?= $column ?></th>
                     <?php endif; ?>
                 <?php endforeach; ?>
                 <th width="96px"></th>
