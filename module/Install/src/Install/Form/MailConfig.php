@@ -9,12 +9,15 @@
 namespace Install\Form;
 
 use Zend\Form\Form;
+use Zend\Form\FormInterface;
 
 class MailConfig extends Form
 {
     public function __construct()
     {
         parent::__construct('mail_config');
+
+        $this->setValidationGroup(FormInterface::VALIDATE_ALL);
 
         $this->add([
             'name' => 'host',
@@ -40,30 +43,32 @@ class MailConfig extends Form
             ],
         ]);
 
-//        $this->add([
-//            'name' => 'emails[]',
-//            'type' => 'email',
-//            'options' => [
-//                'label' => 'Emails',
-//            ],
-//        ]);
+        $this->add(array(
+            'type' => 'Zend\Form\Element\Collection',
+            'name' => 'emails',
+            'options' => array(
+//                'label' => 'Please enter some emails where letters will be forwarded',
+                'count' => 1,
+                'should_create_template' => true,
+                'allow_add' => true,
+                'target_element' => array(
+                    'type' => 'Install\Form\Fieldset\EmailsFieldset'
+                )
+            )
+        ));
 
-//        $this->add([
-//            'name' => 'from[]',
-//            'type' => 'email',
-//            'options' => [
-//                'label' => 'From',
-//            ],
-//        ]);
-
-
-//        $this->add([
-//            'name' => 'submit',
-//            'type' => 'Submit',
-//            'attributes' => [
-//                'value' => 'Submit',
-//                'id' => 'submitbutton',
-//            ],
-//        ]);
+        $this->add(array(
+            'type' => 'Zend\Form\Element\Collection',
+            'name' => 'from',
+            'options' => array(
+//                'label' => 'Please enter some emails will be showed to a recipient as senders emails',
+                'count' => 1,
+                'should_create_template' => true,
+                'allow_add' => true,
+                'target_element' => array(
+                    'type' => 'Install\Form\Fieldset\FromFieldset'
+                )
+            )
+        ));
     }
 }

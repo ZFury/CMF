@@ -35,8 +35,19 @@ $mailForm->prepare();
 
     <ul><h2>Message</h2>
         <li>
-
-            <ul><h4>Headers</h4>
+            <div class="form-group">
+                <label for="inputFrom" class="col-md-2 control-label">From</label>
+                <div class="col-md-5">
+                    <div class="from-fieldset col-md-8">
+                        <?php echo $this->formCollection($mailForm->get('from')); ?>
+                        <?= $this->formElementErrors($mailForm->get('from')); ?>
+                    </div>
+                    <button class="add_field_button_from btn btn-warning col-md-4">Add More Fields</button>
+                </div>
+            </div>
+        </li>
+        <li>
+            <ul><h4>Headers (for Stubmail)</h4>
                 <li>
                     <div class="form-group">
                         <label for="inputProject" class="col-md-2 control-label"><?= $mailForm->get('project')->getLabel(); ?></label>
@@ -50,31 +61,18 @@ $mailForm->prepare();
                     <div class="form-group">
                         <label for="inputEmails" class="col-md-2 control-label">Emails</label>
                         <div class="col-md-5">
-                            <div class="input_fields_wrap_emails col-md-8">
-                                <div><input type="email" name="emails[]" class="form-control textboxinput" placeholder="Emails"></div>
+                            <div class="emails-fieldset col-md-8">
+                                <?php echo $this->formCollection($mailForm->get('emails')); ?>
+                                <?= $this->formElementErrors($mailForm->get('emails')); ?>
                             </div>
-                            <button class="add_field_button_emails btn btn-warning col-md-4">Add More Fields</button>
+<!--                            <div class="col-md-1 glyphicon glyphicon-remove-circle"><a href="#"></a></div>-->
+                            <button class="add_field_button_emails btn btn-warning col-md-3">Add More Fields</button>
                         </div>
                     </div>
                 </li>
             </ul>
         </li>
-        <li>
 
-            <ul><h4>From</h4>
-                <li>
-                    <div class="form-group">
-                        <label for="inputFrom" class="col-md-2 control-label">From</label>
-                        <div class="col-md-5">
-                            <div class="input_fields_wrap_from col-md-8">
-                                <div><input type="email" name="from[]" class="form-control textboxinput" placeholder="From"></div>
-                            </div>
-                            <button class="add_field_button_from btn btn-warning col-md-4">Add More Fields</button>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </li>
     </ul>
 
     <div class="form-group">

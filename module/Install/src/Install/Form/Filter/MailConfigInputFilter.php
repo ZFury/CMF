@@ -69,42 +69,14 @@ class MailConfigInputFilter extends InputFilter
             ],
         ]);
 
-//        $this->add([
-//            'name'     => 'emails[]',
-//            'required' => false,
-//            'filters'  => [
-//                ['name' => 'StripTags'],
-//                ['name' => 'StringTrim'],
-//            ],
-//            'validators' => [
-//                [
-//                    'name'    => 'StringLength',
-//                    'options' => [
-//                        'encoding' => 'UTF-8',
-//                        'min'      => 1,
-//                        'max'      => 255,
-//                    ],
-//                ],
-//            ],
-//        ]);
+        $this->add([
+            'name' => 'emails',
+            'required' => false
+        ]);
 
-//        $this->add([
-//            'name'     => 'from[]',
-//            'required' => false,
-//            'filters'  => [
-//                ['name' => 'StripTags'],
-//                ['name' => 'StringTrim'],
-//            ],
-//            'validators' => [
-//                [
-//                    'name'    => 'StringLength',
-//                    'options' => [
-//                        'encoding' => 'UTF-8',
-//                        'min'      => 2,
-//                        'max'      => 40,
-//                    ],
-//                ],
-//            ],
-//        ]);
+        $this->add([
+            'name' => 'from',
+            'required' => false
+        ]);
     }
 }

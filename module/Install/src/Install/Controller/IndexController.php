@@ -105,65 +105,62 @@ class IndexController extends AbstractActionController
             $mailForm->setData($this->getRequest()->getPost());
 
             if ($mailForm->isValid()) {
-                //validate emails and froms
-                //TODO: redirect if custom validation fails and cut off copycode and try to avoid this
-                $validator = new EmailAddress();
-                $from = [];
-                for ($i=0; $i<count($this->getRequest()->getPost('from')); $i++) {
-                    if (!$validator->isValid($this->getRequest()->getPost('from')[$i])) {
-                        foreach ($validator->getMessages() as $message) {
-                            $this->flashMessenger()->addErrorMessage($message);
-                        }
-                    }
-                    $fr = $this->getRequest()->getPost('from')[$i];
-                    array_push($from, "'$fr'");
-                }
-                $emails = [];
-                for ($i=0; $i<count($this->getRequest()->getPost('emails')); $i++) {
-                    if (!$validator->isValid($this->getRequest()->getPost('emails')[$i])) {
-                        foreach ($validator->getMessages() as $message) {
-                            $this->flashMessenger()->addErrorMessage($message);
-                        }
-                    }
-                    $em = $this->getRequest()->getPost('emails')[$i];
-                    array_push($emails, "'$em'");
-                }
-                $emails_imp = implode(',', $emails);
-                $from_imp = implode(',', $from);
-                $this->replaceRowInFile(
-                    'config/autoload/mail.local.php.dist',
-                    'emails',
-                    "'emails'=>[$emails_imp]",
-                    'config/autoload/mail.local.php.php.php'
-                );
-                $this->replaceRowInFile(
-                    'config/autoload/mail.local.php.dist',
-                    'from',
-                    "'emails'=>[$from_imp]",
-                    'config/autoload/mail.local.php.php.php'
-                );
+                try {
+                    $sessionForms->offsetSet('mailForm', $mailForm->getData());
+                    for ($i=0; $i<count($mailForm->getData()); $i++) {
+                        $paramName = array_keys($mailForm->getData())[$i];
+                        $paramValue = array_values($mailForm->getData())[$i];
 
-                $sessionForms->offsetSet('mailForm', $mailForm->getData());
-                for ($i=0; $i<count($mailForm->getData()); $i++) {
-                    $paramName = array_keys($mailForm->getData())[$i];
-                    $paramValue = array_values($mailForm->getData())[$i];
-                    $newRow = "'$paramValue'=>'$paramValue',";
-                    $this->replaceRowInFile(
-                        'config/autoload/mail.local.php.dist',
-                        $paramName,
-                        $newRow,
-                        'config/autoload/mail.local.php.php.php'
+                        if ('emails' == $paramName || 'from' == $paramName) {
+                            $emailsArray = [];
+                            for ($j=0; $j<count($paramValue); $j++) {
+                                $value = array_values($paramValue[$j]);
+                                $currentEmail = array_shift($value);
+                                if ('emails' == $paramName) {
+                                    $paramName = strtoupper($paramName);
+                                }
+                                array_push($emailsArray, "'$currentEmail'");
+                            }
+                            $emails = implode(',', $emailsArray);
+                            $this->replaceRowInFile(
+                                'config/autoload/mail.local.php.php.php',
+                                $paramName,
+                                "'$paramName'=>[$emails],",
+                                'config/autoload/mail.local.php.php.php'
+                            );
+                        } else {
+                            if ('project' == $paramName) {
+                                $paramName = strtoupper($paramName);
+                            }
+                            $newRow = "'$paramName'=>'$paramValue',";
+                            $this->replaceRowInFile(
+                                'config/autoload/mail.local.php.php.php',
+                                $paramName,
+                                $newRow,
+                                'config/autoload/mail.local.php.php.php'
+                            );
+                        }
+                    }
+                    $sessionProgress->offsetSet('mail', self::DONE);
+                    $this->flashMessenger()->addSuccessMessage('Mail config file created!');
+
+                    return $this->redirect()->toRoute(
+                        'install/default',
+                        [
+                            'controller' => 'index',
+                            'action' => 'modules'
+                        ]
+                    );
+                } catch (\Exception $ex) {
+                    $this->flashMessenger()->addErrorMessage('Mail config file is not created! ' . $ex->getMessage());
+                    return $this->redirect()->toRoute(
+                        'install/default',
+                        [
+                            'controller' => 'index',
+                            'action' => 'mail'
+                        ]
                     );
                 }
-                $sessionProgress->offsetSet('mail', self::DONE);
-
-                return $this->redirect()->toRoute(
-                    'install/default',
-                    [
-                        'controller' => 'index',
-                        'action' => 'modules'
-                    ]
-                );
             } else {
                 return  new ViewModel([
                     'mailForm' => $mailForm,
@@ -346,6 +343,9 @@ class IndexController extends AbstractActionController
         fclose($fp);
     }
 
+    /**
+     * @param Modules $modulesForm
+     */
     public function hideModules(Modules $modulesForm)
     {
         $modules = $modulesForm->getData();
@@ -374,6 +374,12 @@ class IndexController extends AbstractActionController
         }
     }
 
+    /**
+     * @param string $filePath
+     * @param string $word
+     * @param string $newRow
+     * @param null/string $newFilePath
+     */
     public function replaceRowInFile($filePath, $word, $newRow, $newFilePath = null)
     {
         $reading = fopen($filePath, 'r');
@@ -381,7 +387,7 @@ class IndexController extends AbstractActionController
         $replaced = false;
         while (!feof($reading)) {
             $line = fgets($reading);
-            if (stristr($line, $word)) {
+            if (stristr($line, "'$word'")) {
                 $line = "$newRow\n";
                 $replaced = true;
             }
