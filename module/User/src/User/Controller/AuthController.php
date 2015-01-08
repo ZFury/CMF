@@ -5,7 +5,6 @@ namespace User\Controller;
 use Facebook\FacebookRedirectLoginHelper;
 use Facebook\FacebookRequest;
 use Facebook\FacebookSession;
-//use OAuth;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
@@ -53,7 +52,7 @@ class AuthController extends AbstractActionController
             }
         }
 
-        return new ViewModel(array('form' => $form));
+        return new ViewModel(array('form' => $form, 'serviceLocator' => $this->getServiceLocator()));
     }
 
     /**
