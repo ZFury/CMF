@@ -26,10 +26,60 @@ class IndexController extends AbstractActionController
 {
     const DONE = 'progress-tracker-done';
     const TODO = 'progress-tracker-todo';
-    const STEPS_NUMBER = 5;
+    const STEPS_NUMBER = 6;
     const MODULES = 'module/';
     const CHECKED = 'good';
     const UNCHECKED = 'bad';
+    const GOOD = true;
+    const BAD = false;
+
+    public function globalRequirementsAction()
+    {
+        $this->layout('layout/install/install');
+        $sessionProgress = new Container('progress_tracker');
+        $sessionProgress->offsetSet('global_requirements', self::TODO);
+        $this->setProgress();
+
+        $uncheckedDirectories = $this->getDirectories();
+        $checkedDirectories = [];
+
+        for ($i=0; $i<count($uncheckedDirectories); $i++) {
+            $directoryName = array_keys($uncheckedDirectories[$i]);
+            $directoryName = array_shift($directoryName);
+            $directoryPath = array_values($uncheckedDirectories[$i]);
+            $directoryPath = array_shift($directoryPath);
+            $message = "Directory $directoryName which path is '$directoryPath' ";
+            if (file_exists($directoryPath) && is_writable($directoryPath)) {
+                $message .= 'exists. And is writable!';
+                array_push($checkedDirectories, [
+                   $directoryName => [
+                       'message' => $message,
+                       'status' => self::GOOD
+                   ]
+                ]);
+            } else {
+                $message .= 'does not exist or is not writable. Please, make it writable!';
+                array_push($checkedDirectories, [
+                    $directoryName => [
+                        'message' => $message,
+                        'status' => self::BAD
+                    ]
+                ]);
+            }
+        }
+
+        return new ViewModel([
+            'directories' => $checkedDirectories
+        ]);
+    }
+
+    public function getDirectories()
+    {
+        return [
+            ['config' => 'config'],
+            ['config-autoload' => 'config/autoload']
+        ];
+    }
 
     public function databaseAction()
     {
@@ -207,7 +257,7 @@ class IndexController extends AbstractActionController
                     'install/default',
                     [
                         'controller' => 'index',
-                        'action' => 'requirements'
+                        'action' => 'modules-requirements'
                     ]
                 );
             } else {
@@ -227,15 +277,15 @@ class IndexController extends AbstractActionController
         }
     }
 
-    public function requirementsAction()
+    public function modulesRequirementsAction()
     {
         $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('requirements', self::TODO);
+        $sessionProgress->offsetSet('modules_requirements', self::TODO);
         $this->setProgress();
 
         if ($this->getRequest()->isPost()) {
-            $sessionProgress->offsetSet('requirements', self::DONE);
+            $sessionProgress->offsetSet('modules_requirements', self::DONE);
 
             return $this->redirect()->toRoute(
                 'install/default',
@@ -246,7 +296,7 @@ class IndexController extends AbstractActionController
             );
         } else {
             $requirements = $this->getServiceLocator()->get('Config')['requirements'];
-            return new ViewModel(['requirements' => $requirements]);
+            return new ViewModel(['modules_requirements' => $requirements]);
         }
     }
 
@@ -257,9 +307,7 @@ class IndexController extends AbstractActionController
         $sessionProgress->offsetSet('finish', self::DONE);
         $this->setProgress();
         $sessionProgress->getManager()->getStorage()->clear('progress_tracker');
-
         $sessionProgress = new Container('forms');
-
         $sessionProgress->getManager()->getStorage()->clear('forms');
 
         return new ViewModel();
@@ -294,7 +342,7 @@ class IndexController extends AbstractActionController
 
     public static function getSteps()
     {
-        return [ 'db', 'modules', 'requirements', 'mail', 'finish' ];
+        return [ 'global_requirements', 'db', 'modules', 'modules_requirements', 'mail', 'finish' ];
     }
 
     public function checkDbConnection(DbConnection $dbForm)

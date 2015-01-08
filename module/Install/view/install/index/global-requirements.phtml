@@ -1,0 +1,50 @@
+<?php
+$title = 'Global requirements';
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+
+<form role="form" action="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'global-requirements'])?>" class="form-horizontal" method="post">
+    <ul>
+        <li>
+            <h4>PHP</h4>
+            <blockquote>Current php version must be </blockquote>
+        </li>
+        <li>
+            <h4>Directories</h4>
+            <div <?php if (\Install\Controller\IndexController::GOOD == $directories[0]['config']['status']) { echo 'class="panel panel-footer panel-success"'; } else { echo 'class="panel panel-footer panel-danger"'; }?>><?php echo $directories[0]['config']['message'] ?></div>
+            <div <?php if (\Install\Controller\IndexController::GOOD == $directories[1]['config-autoload']['status']) { echo 'class="panel panel-footer panel-success"'; } else { echo 'class="panel panel-footer panel-danger"'; }?>><?php echo $directories[1]['config-autoload']['message'] ?></div>
+        </li>
+        <li>
+            <h4>Files</h4>
+            <blockquote><?//= $files['install']?></blockquote>
+        </li>
+    </ul>
+
+    <?php
+    if (isset($modules_requirements)) {
+        ?>
+        <ul>
+            <?php  foreach (array_keys($modules_requirements) as $moduleName) {?>
+                <li>
+                    <h4>For module <?=$moduleName?></h4>
+                    <dl class="dl-horizontal">
+                        <?php for ($i=0; $i<count($modules_requirements[$moduleName]); $i++) {?>
+                            <dt><?=array_keys($modules_requirements[$moduleName])[$i]?></dt>
+                            <dd><?=array_values($modules_requirements[$moduleName])[$i]?></dd>
+                        <?php } ?>
+                    </dl>
+                </li>
+            <?php } ?>
+        </ul>
+    <?php } ?>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-sm-3">
+            <div class="btn btn-primary"><a href="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'modules'])?>">Previous</a></div>
+        </div>
+        <div class="col-sm-2">
+            <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+    </div>
+</form>

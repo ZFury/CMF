@@ -1,21 +1,21 @@
 <?php
-$title = 'Requirements';
+$title = 'Modules requirements';
 $this->headTitle($title);
 ?>
 <h1><?php echo $this->escapeHtml($title); ?></h1>
 
-<form role="form" action="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'requirements'])?>" class="form-horizontal" method="post">
+<form role="form" action="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'modules-requirements'])?>" class="form-horizontal" method="post">
     <?php
-    if (isset($requirements)) {
+    if (isset($modules_requirements)) {
     ?>
     <ul>
-    <?php  foreach (array_keys($requirements) as $moduleName) {?>
+    <?php  foreach (array_keys($modules_requirements) as $moduleName) {?>
         <li>
             <h4>For module <?=$moduleName?></h4>
             <dl class="dl-horizontal">
-                <?php for ($i=0; $i<count($requirements[$moduleName]); $i++) {?>
-                <dt><?=array_keys($requirements[$moduleName])[$i]?></dt>
-                <dd><?=array_values($requirements[$moduleName])[$i]?></dd>
+                <?php for ($i=0; $i<count($modules_requirements[$moduleName]); $i++) {?>
+                <dt><?=array_keys($modules_requirements[$moduleName])[$i]?></dt>
+                <dd><?=array_values($modules_requirements[$moduleName])[$i]?></dd>
                 <?php } ?>
             </dl>
         </li>
