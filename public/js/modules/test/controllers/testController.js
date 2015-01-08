@@ -33,7 +33,6 @@
              * */
             $scope.getTests = function (num) {
                 $scope.currentPage = $scope.page;
-                console.log($scope.limit);
                 if (typeof(num) !== 'undefined') {
                     $scope.page = num + 1;
                 }
