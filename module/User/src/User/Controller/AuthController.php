@@ -5,6 +5,7 @@ namespace User\Controller;
 use Facebook\FacebookRedirectLoginHelper;
 use Facebook\FacebookRequest;
 use Facebook\FacebookSession;
+//use OAuth;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
@@ -82,6 +83,7 @@ class AuthController extends AbstractActionController
         OAuth::setHttpClient(new Client(null, $config['httpClientOptions']));
         $consumer = new Consumer($config);
         $token = $consumer->getRequestToken();
+
         // persist the token to storage
         $container = new Container('twitter');
         $container->requestToken = serialize($token);
@@ -196,8 +198,8 @@ class AuthController extends AbstractActionController
         );
         FacebookSession::setDefaultApplication($config['appId'], $config['appSecret']);
         $helper = new FacebookRedirectLoginHelper($config['callbackUrl']);
-        $this->redirect()->toUrl($helper->getLoginUrl());
 
+        $this->redirect()->toUrl($helper->getLoginUrl(['scope' => 'email']));
     }
 
     /**
@@ -224,7 +226,9 @@ class AuthController extends AbstractActionController
         if ($session) {
             // Logged in
             $request = new FacebookRequest($session, 'GET', '/me');
+
             $response = $request->execute();
+
             $graphObject = $response->getGraphObject();
 
             /**
@@ -252,6 +256,9 @@ class AuthController extends AbstractActionController
                     //create new user
                     $user = new \User\Entity\User();
                     $user->setDisplayName($graphObject->getProperty('id'));
+                    if ($email = $graphObject->getProperty('email')) {
+                        $user->setEmail($email);
+                    }
                     $user->setRole($user::ROLE_USER);
                     $user->activate();
                     $objectManager->persist($user);
@@ -269,6 +276,7 @@ class AuthController extends AbstractActionController
                 $auth->setTokenType(Auth::TYPE_ACCESS);
                 $auth->setUserId($user->getId());
                 $user->getAuths()->add($auth);
+
                 $auth->setUser($user);
             }
             $objectManager->persist($user);

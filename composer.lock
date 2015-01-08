@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "56cb1483a45bab7ef202b290735e4c3d",
+    "hash": "cf3e4610c8351e570c2261ca802cb8ae",
     "packages": [
         {
             "name": "bjyoungblood/bjy-authorize",
@@ -666,22 +666,27 @@
         },
         {
             "name": "doctrine/lexer",
-            "version": "v1.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/lexer.git",
-                "reference": "2f708a85bb3aab5d99dab8be435abd73e0b18acb"
+                "reference": "83893c552fd2045dd78aef794c31e694c37c0b8c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/lexer/zipball/2f708a85bb3aab5d99dab8be435abd73e0b18acb",
-                "reference": "2f708a85bb3aab5d99dab8be435abd73e0b18acb",
+                "url": "https://api.github.com/repos/doctrine/lexer/zipball/83893c552fd2045dd78aef794c31e694c37c0b8c",
+                "reference": "83893c552fd2045dd78aef794c31e694c37c0b8c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Doctrine\\Common\\Lexer\\": "lib/"
@@ -693,19 +698,16 @@
             ],
             "authors": [
                 {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com",
-                    "homepage": "http://www.instaclick.com"
-                },
-                {
                     "name": "Roman Borschel",
                     "email": "roman@code-factory.org"
                 },
                 {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
                     "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
-                    "role": "Developer of wrapped JMSSerializerBundle"
+                    "email": "schmittjoh@gmail.com"
                 }
             ],
             "description": "Base library for a lexer that can be used in Top-Down, Recursive Descent Parsers.",
@@ -714,7 +716,7 @@
                 "lexer",
                 "parser"
             ],
-            "time": "2013-01-12 18:59:04"
+            "time": "2014-09-09 13:34:57"
         },
         {
             "name": "doctrine/migrations",
@@ -849,16 +851,16 @@
         },
         {
             "name": "facebook/php-sdk-v4",
-            "version": "4.0.13",
+            "version": "4.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/facebook-php-sdk-v4.git",
-                "reference": "ba732909485ae25484584a11202927ef2c70acd3"
+                "reference": "0683838b6966446b2cbef841f01f1d447ae7a5f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/facebook-php-sdk-v4/zipball/ba732909485ae25484584a11202927ef2c70acd3",
-                "reference": "ba732909485ae25484584a11202927ef2c70acd3",
+                "url": "https://api.github.com/repos/facebook/facebook-php-sdk-v4/zipball/0683838b6966446b2cbef841f01f1d447ae7a5f9",
+                "reference": "0683838b6966446b2cbef841f01f1d447ae7a5f9",
                 "shasum": ""
             },
             "require": {
@@ -894,54 +896,7 @@
                 "facebook",
                 "sdk"
             ],
-            "time": "2014-12-12 19:49:23"
-        },
-        {
-            "name": "sundrique/doctrine-tools",
-            "version": "0.2.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Sundrique/DoctrineTools.git",
-                "reference": "90ba0b71951e2b0f6984bbed09f4c4a1e7c4d303"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Sundrique/DoctrineTools/zipball/90ba0b71951e2b0f6984bbed09f4c4a1e7c4d303",
-                "reference": "90ba0b71951e2b0f6984bbed09f4c4a1e7c4d303",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/doctrine-orm-module": ">=0.7",
-                "doctrine/migrations": "dev-master",
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "DoctrineTools\\": "src/",
-                    "DoctrineToolsTest\\": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Aleksandr Sandrovskiy",
-                    "email": "a.sandrovsky@gmail.com"
-                }
-            ],
-            "description": "Zend Framework 2 Module providing unified endpoint for Doctrine command line tools",
-            "homepage": "https://github.com/Sundrique/DoctrineTools",
-            "keywords": [
-                "cli",
-                "doctrine",
-                "module",
-                "tools",
-                "zf2"
-            ],
-            "time": "2013-03-15 09:58:04"
+            "time": "2014-10-30 23:02:36"
         },
         {
             "name": "sundrique/doctrine-tools",
@@ -992,17 +947,17 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.6.1",
+            "version": "v2.6.3",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "ef825fd9f809d275926547c9e57cbf14968793e8"
+                "reference": "6ac6491ff60c0e5a941db3ccdc75a07adbb61476"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/ef825fd9f809d275926547c9e57cbf14968793e8",
-                "reference": "ef825fd9f809d275926547c9e57cbf14968793e8",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/6ac6491ff60c0e5a941db3ccdc75a07adbb61476",
+                "reference": "6ac6491ff60c0e5a941db3ccdc75a07adbb61476",
                 "shasum": ""
             },
             "require": {
@@ -1045,7 +1000,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2014-12-02 20:19:20"
+            "time": "2015-01-06 17:50:02"
         },
         {
             "name": "zendframework/zendframework",
@@ -1164,6 +1119,53 @@
                 "zf2"
             ],
             "time": "2014-09-16 22:58:11"
+        },
+        {
+            "name": "zendframework/zendoauth",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/ZendOAuth.git",
+                "reference": "0d068773448dd224583aa07b0a16349613bd9b8d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/ZendOAuth/zipball/0d068773448dd224583aa07b0a16349613bd9b8d",
+                "reference": "0d068773448dd224583aa07b0a16349613bd9b8d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "zendframework/zend-config": ">=2.0.0",
+                "zendframework/zend-crypt": ">=2.0.0",
+                "zendframework/zend-http": ">=2.0.0",
+                "zendframework/zend-i18n": ">=2.0.0",
+                "zendframework/zend-loader": ">=2.0.0",
+                "zendframework/zend-math": ">=2.0.0",
+                "zendframework/zend-stdlib": ">=2.0.0",
+                "zendframework/zend-uri": ">=2.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "ZendOAuth": "library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "homepage": "http://packages.zendframework.com/",
+            "keywords": [
+                "oauth",
+                "zf2"
+            ],
+            "time": "2013-06-10 21:09:59"
         },
         {
             "name": "zendframework/zendxml",
@@ -1318,16 +1320,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.11.0",
+            "version": "1.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "ec3961874c43840e96da3a8a1ed20d8c73d7e5aa"
+                "reference": "1fbe8c2641f2b163addf49cc5e18f144bec6b19f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/ec3961874c43840e96da3a8a1ed20d8c73d7e5aa",
-                "reference": "ec3961874c43840e96da3a8a1ed20d8c73d7e5aa",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1fbe8c2641f2b163addf49cc5e18f144bec6b19f",
+                "reference": "1fbe8c2641f2b163addf49cc5e18f144bec6b19f",
                 "shasum": ""
             },
             "require": {
@@ -1341,7 +1343,7 @@
                 "aws/aws-sdk-php": "~2.4, >2.4.8",
                 "doctrine/couchdb": "~1.0@dev",
                 "graylog2/gelf-php": "~1.0",
-                "phpunit/phpunit": "~3.7.0",
+                "phpunit/phpunit": "~4.0",
                 "raven/raven": "~0.5",
                 "ruflin/elastica": "0.90.*",
                 "videlalvaro/php-amqplib": "~2.4"
@@ -1360,7 +1362,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.11.x-dev"
+                    "dev-master": "1.12.x-dev"
                 }
             },
             "autoload": {
@@ -1386,7 +1388,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2014-09-30 13:30:58"
+            "time": "2014-12-29 21:29:35"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -2035,16 +2037,16 @@
         },
         {
             "name": "sebastian/version",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/version.git",
-                "reference": "b6e1f0cf6b9e1ec409a0d3e2f2a5fb0998e36b43"
+                "reference": "a77d9123f8e809db3fbdea15038c27a95da4058b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/version/zipball/b6e1f0cf6b9e1ec409a0d3e2f2a5fb0998e36b43",
-                "reference": "b6e1f0cf6b9e1ec409a0d3e2f2a5fb0998e36b43",
+                "url": "https://api.github.com/repos/sebastianbergmann/version/zipball/a77d9123f8e809db3fbdea15038c27a95da4058b",
+                "reference": "a77d9123f8e809db3fbdea15038c27a95da4058b",
                 "shasum": ""
             },
             "type": "library",
@@ -2066,7 +2068,7 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2014-03-07 15:35:33"
+            "time": "2014-12-15 14:25:24"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -2143,17 +2145,17 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.6.1",
+            "version": "v2.6.3",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "3346fc090a3eb6b53d408db2903b241af51dcb20"
+                "reference": "82462a90848a52c2533aa6b598b107d68076b018"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/3346fc090a3eb6b53d408db2903b241af51dcb20",
-                "reference": "3346fc090a3eb6b53d408db2903b241af51dcb20",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/82462a90848a52c2533aa6b598b107d68076b018",
+                "reference": "82462a90848a52c2533aa6b598b107d68076b018",
                 "shasum": ""
             },
             "require": {
@@ -2186,7 +2188,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2014-12-02 20:19:20"
+            "time": "2015-01-03 15:33:07"
         },
         {
             "name": "zendframework/zenddiagnostics",
@@ -2310,7 +2312,6 @@
         "zendframework/zftool": 20
     },
     "prefer-stable": false,
-    "prefer-lowest": false,
     "platform": {
         "php": ">=5.3.3"
     },
