@@ -257,7 +257,8 @@ class AuthController extends AbstractActionController
                     //create new user
                     $user = new \User\Entity\User();
 
-                    $displayName = $graphObject->getProperty('first_name') . ' ' . $graphObject->getProperty('last_name');
+                    $displayName = $graphObject->
+                        getProperty('first_name') . ' ' . $graphObject->getProperty('last_name');
                     $user->setDisplayName($displayName);
                     $user->setRole($user::ROLE_USER);
                     $user->activate();
