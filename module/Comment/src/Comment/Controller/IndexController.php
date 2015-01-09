@@ -99,6 +99,10 @@ class IndexController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $comment = $objectManager->getRepository('\Comment\Entity\Comment')->findOneBy(['id' => $id]);
 
+        if (!$comment) {
+            throw new \Exception("No number comments that edited");
+        }
+
         $form = $this->getServiceLocator()
             ->get('Comment\Service\Comment')->createForm($comment);
 

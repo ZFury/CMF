@@ -7,6 +7,7 @@ use Zend\Http\Response;
 use Zend\Stdlib;
 use Starter\Test\Controller\ControllerTestCase;
 use \Comment\Entity\EntityType;
+use Zend\Http\Client;
 
 /**
  * Class ManagementControllerTest
@@ -51,7 +52,7 @@ class ManagementControllerTest extends ControllerTestCase
      */
     public static function tearDownAfterClass()
     {
-        exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
+        //exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
     }
 
     /**
@@ -84,6 +85,13 @@ class ManagementControllerTest extends ControllerTestCase
         $this->assertControllerName('Comment\Controller\Management');
         $this->assertControllerClass('ManagementController');
         $this->assertMatchedRouteName('comment/default');
+    }
+
+    public function testIndexActionNoPermission()
+    {
+        $this->setupUser();
+        $this->dispatch('/comment/management');
+        $this->assertResponseStatusCode(403);
     }
 
     public function testCreateActionRedirectsAfterValidPost()
@@ -138,6 +146,21 @@ class ManagementControllerTest extends ControllerTestCase
         $this->assertControllerName('Comment\Controller\Management');
         $this->assertControllerClass('ManagementController');
         $this->assertMatchedRouteName('comment/default');
+    }
+
+    public function testDeleteActionNoPermission()
+    {
+        $entity = $this->createEntityType($this->entityData);
+        $this->setupUser();
+        $this->setExpectedException('Exception');
+        $this->commentService->delete($entity->getId());
+    }
+
+
+    public function testDeleteActionNoExistEntity()
+    {
+        $this->dispatch('/comment/management/delete/1');
+        $this->assertResponseStatusCode(500);
     }
 
     /**

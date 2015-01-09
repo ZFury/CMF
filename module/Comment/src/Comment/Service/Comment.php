@@ -66,8 +66,8 @@ class Comment
 
     /**
      * @param \Zend\Form\Form $form
-     * @param array $data
-     * @return \Comment\Entity\Comment
+     * @param $data
+     * @return Entity\Comment|null
      * @throws \Exception
      */
     public function add(\Zend\Form\Form $form, $data)
@@ -108,6 +108,7 @@ class Comment
                 }
             }
         }
+        return null;
     }
 
     /**
