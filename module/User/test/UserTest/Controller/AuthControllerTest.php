@@ -72,11 +72,17 @@ class AuthControllerTest extends ControllerTestCase
         $this->assertMatchedRouteName('user/default');
     }
 
+    /**
+     *  recovery-password action test
+     */
     public function testRecoverPasswordAction()
     {
         $this->createUserWithHash($this->userData);
 
-        $form = new  \User\Form\SetNewPasswordForm('set-password', ['serviceLocator' => $this->getApplicationServiceLocator()]);
+        $form = new  \User\Form\SetNewPasswordForm(
+            'set-password',
+            ['serviceLocator' => $this->getApplicationServiceLocator()]
+        );
         $path = '/user/auth/recover-password/' . $this->userData['confirm'];
         $data = array(
             'password' => '123456',
@@ -88,6 +94,9 @@ class AuthControllerTest extends ControllerTestCase
         $this->assertRedirectTo('/');
     }
 
+    /**
+     *  logout action test access
+     */
     public function testLogoutActionCanBeAccessed()
     {
         $this->setupUser();
@@ -96,6 +105,9 @@ class AuthControllerTest extends ControllerTestCase
         $this->assertRedirectTo('/user/auth/login');
     }
 
+    /**
+     *  login action test
+     */
     public function testLoginAction()
     {
         $form = new  \User\Form\LoginForm('form-login', ['serviceLocator' => $this->getApplicationServiceLocator()]);
@@ -116,6 +128,9 @@ class AuthControllerTest extends ControllerTestCase
         $this->assertRedirectTo('/');
     }
 
+    /**
+     *  logout action test
+     */
     public function testLogoutAction()
     {
         $this->setupUser();
@@ -124,6 +139,10 @@ class AuthControllerTest extends ControllerTestCase
         $this->assertRedirectTo('/user/auth/login');
     }
 
+    /**
+     * @param array $userData
+     * @return \User\Entity\User
+     */
     public function createUserWithHash(array $userData)
     {
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');

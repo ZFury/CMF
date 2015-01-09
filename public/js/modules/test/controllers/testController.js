@@ -7,7 +7,7 @@
             $scope.test = {};
             $scope.testError = {};
             $scope.params = {};
-            $scope.params.limit = 5;
+            $scope.limit = 5;
             $scope.page = 1;
             $scope.currentPage = 1;
             $scope.reverse = true;
@@ -42,7 +42,7 @@
                 if (typeof($scope.filterField) === 'undefined') {
                     $scope.filterField = $scope.defaultFilter;
                 }
-                testService.getTests($scope.page, $scope.orderField, $scope.order, $scope.filterField, $scope.searchString, function(response) {
+                testService.getTests($scope.page, $scope.orderField, $scope.order, $scope.filterField, $scope.searchString, $scope.limit, function(response) {
                     $scope.testGrid = [];
                     angular.forEach(response.data,function(item) {
                         $scope.testGrid.push(item);
@@ -105,7 +105,7 @@
              * */
             $scope.changeLimit = function (limit) {
                 $scope.page = 1;
-                $scope.params.limit = limit;
+                $scope.limit = limit;
                 $scope.getTests();
             };
 

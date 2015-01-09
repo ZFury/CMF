@@ -63,7 +63,11 @@ class Video extends File
      */
     public function executeConversion($oldLocation, $newLocation, $bitrate = 300)
     {
-        exec("avconv -i $oldLocation -strict experimental -r ntsc-film -b $bitrate" . "k -y $newLocation", $output, $return);
+        exec(
+            "avconv -i $oldLocation -strict experimental -r ntsc-film -b $bitrate" . "k -y $newLocation",
+            $output,
+            $return
+        );
         if (isset($return) && 0 === $return) {
             return true;
         }

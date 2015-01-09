@@ -36,7 +36,7 @@ class SignupController extends AbstractActionController
             }
         }
 
-        return new ViewModel(['form' => $form]);
+        return new ViewModel(['form' => $form, 'serviceLocator' => $this->getServiceLocator()]);
     }
 
     /**
