@@ -10,12 +10,11 @@ $mailForm->prepare();
 
 <form role="form" class="form-horizontal" method="post">
 
-
     <ul><h2>Transport</h2>
         <li>
             <div class="form-group">
                 <label for="inputHost" class="col-md-2 control-label"><?= $mailForm->get('host')->getLabel(); ?></label>
-                <div class="col-md-2">
+                <div class="col-md-4">
                     <input type="text" class="form-control" id="inputHost" name="<?= $mailForm->get('host')->getName(); ?>" value="<?= $mailForm->get('host')->getValue(); ?>" placeholder="<?= $mailForm->get('host')->getLabel(); ?>">
                     <?= $this->formElementErrors($mailForm->get('host')); ?>
                 </div>
@@ -24,7 +23,7 @@ $mailForm->prepare();
         <li>
             <div class="form-group">
                 <label for="inputPort" class="col-md-2 control-label"><?= $mailForm->get('port')->getLabel(); ?></label>
-                <div class="col-md-2">
+                <div class="col-md-4">
                     <input type="text" class="form-control" id="inputPort" name="<?= $mailForm->get('port')->getName(); ?>" value="<?= $mailForm->get('port')->getValue(); ?>" placeholder="<?= $mailForm->get('port')->getLabel(); ?>">
                     <?= $this->formElementErrors($mailForm->get('port')); ?>
                 </div>
@@ -37,53 +36,48 @@ $mailForm->prepare();
         <li>
             <div class="form-group">
                 <label for="inputFrom" class="col-md-2 control-label">From</label>
-                <div class="col-md-5">
+                <div class="col-md-8">
                     <div class="from-fieldset col-md-8">
                         <?php echo $this->formCollection($mailForm->get('from')); ?>
                         <?= $this->formElementErrors($mailForm->get('from')); ?>
                     </div>
-                    <button class="add_field_button_from btn btn-warning col-md-4">Add More Fields</button>
+                    <button class="add_field_button_from btn btn-warning col-sm-3">More fields</button>
                 </div>
             </div>
         </li>
         <li>
-            <ul><h4>Headers (for Stubmail)</h4>
-                <li>
-                    <div class="form-group">
-                        <label for="inputProject" class="col-md-2 control-label"><?= $mailForm->get('project')->getLabel(); ?></label>
-                        <div class="col-md-2">
-                            <input type="text" class="form-control" id="inputProject" name="<?= $mailForm->get('project')->getName(); ?>" value="<?= $mailForm->get('project')->getValue(); ?>" placeholder="<?= $mailForm->get('project')->getLabel(); ?>">
-                            <?= $this->formElementErrors($mailForm->get('project')); ?>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="form-group">
-                        <label for="inputEmails" class="col-md-2 control-label">Emails</label>
-                        <div class="col-md-5">
-                            <div class="emails-fieldset col-md-8">
-                                <?php echo $this->formCollection($mailForm->get('emails')); ?>
-                                <?= $this->formElementErrors($mailForm->get('emails')); ?>
-                            </div>
-<!--                            <div class="col-md-1 glyphicon glyphicon-remove-circle"><a href="#"></a></div>-->
-                            <button class="add_field_button_emails btn btn-warning col-md-3">Add More Fields</button>
-                        </div>
-                    </div>
-                </li>
-            </ul>
+            <h4>Headers (for Stubmail)</h4>
+            <div class="form-group">
+                <label for="inputProject" class="col-md-2 control-label"><?= $mailForm->get('project')->getLabel(); ?></label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="inputProject" name="<?= $mailForm->get('project')->getName(); ?>" value="<?= $mailForm->get('project')->getValue(); ?>" placeholder="<?= $mailForm->get('project')->getLabel(); ?>">
+                    <?= $this->formElementErrors($mailForm->get('project')); ?>
+                </div>
+            </div>
         </li>
-
+        <li>
+            <div class="form-group">
+                <label for="inputEmails" class="col-md-2 control-label">Emails</label>
+                <div class="col-md-8">
+                    <div class="emails-fieldset col-md-8">
+                        <?php echo $this->formCollection($mailForm->get('emails')); ?>
+                        <?= $this->formElementErrors($mailForm->get('emails')); ?>
+                    </div>
+<!--                            <div class="col-md-1 glyphicon glyphicon-remove-circle"><a href="#"></a></div>-->
+                    <button class="add_field_button_emails btn btn-warning col-sm-3">More fields</button>
+                </div>
+            </div>
+        </li>
     </ul>
 
     <div class="form-group">
-        <div class="col-md-offset-2 col-sm-3">
-            <div class="btn btn-primary"><a href="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'database'])?>">Previous</a></div>
+        <div class="col-sm-2 col-sm-offset-3">
+            <a href="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'database'])?>" class="btn btn-default btn-circle "><i class="glyphicon glyphicon-chevron-left glyphicon-align-center"></i></a>
         </div>
-        <div class="col-sm-2">
-            <button class="btn btn-primary" type="submit">Next</button>
+        <div class="col-sm-2 col-sm-offset-2">
+            <button class="btn-circle glyphicon glyphicon-chevron-right" type="submit"></button>
         </div>
     </div>
 
 </form>
-
 <script>require(['mail-inputs']);</script>

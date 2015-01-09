@@ -14,78 +14,75 @@ use Install\Form\Filter\DbConnectionInputFilter;
 use Install\Form\Filter\MailConfigInputFilter;
 use Install\Form\Filter\ModulesInputFilter;
 use Install\Form\Modules;
-use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Zend\Db\Adapter\Adapter;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Validator\EmailAddress;
 use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
 use Install\Form\MailConfig;
+use Install\Service\Install;
 
 class IndexController extends AbstractActionController
 {
-    const DONE = 'progress-tracker-done';
-    const TODO = 'progress-tracker-todo';
-    const STEPS_NUMBER = 6;
-    const MODULES = 'module/';
-    const CHECKED = 'good';
-    const UNCHECKED = 'bad';
-    const GOOD = true;
-    const BAD = false;
+
 
     public function globalRequirementsAction()
     {
+        $installService = $this->getServiceLocator()->get('Install\Service\Install');
         $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('global_requirements', self::TODO);
+        $sessionProgress->offsetSet('global_requirements', Install::TODO);
         $this->setProgress();
 
-        $uncheckedDirectories = $this->getDirectories();
-        $checkedDirectories = [];
+        if ($this->getRequest()->isPost()) {
+            $sessionProgress->offsetSet('global_requirements', Install::DONE);
 
-        for ($i=0; $i<count($uncheckedDirectories); $i++) {
-            $directoryName = array_keys($uncheckedDirectories[$i]);
-            $directoryName = array_shift($directoryName);
-            $directoryPath = array_values($uncheckedDirectories[$i]);
-            $directoryPath = array_shift($directoryPath);
-            $message = "Directory $directoryName which path is '$directoryPath' ";
-            if (file_exists($directoryPath) && is_writable($directoryPath)) {
-                $message .= 'exists. And is writable!';
-                array_push($checkedDirectories, [
-                   $directoryName => [
-                       'message' => $message,
-                       'status' => self::GOOD
-                   ]
-                ]);
+            return $this->redirect()->toRoute(
+                'install/default',
+                [
+                    'controller' => 'index',
+                    'action' => 'database'
+                ]
+            );
+        } else {
+            //PHPVERSION
+            if (Install::PHP_VERSION == phpversion() || Install::PHP_VERSION <= phpversion()) {
+                $phpVersion['status'] = true;
+                $phpVersion['message'] = "PHP version is compatible with ZFStarter!";
             } else {
-                $message .= 'does not exist or is not writable. Please, make it writable!';
-                array_push($checkedDirectories, [
-                    $directoryName => [
-                        'message' => $message,
-                        'status' => self::BAD
-                    ]
-                ]);
+                $phpVersion['status'] = false;
+                $phpVersion['message'] =
+                    "PHP version is not compatible for ZFStarter! It might be " .
+                    Install::PHP_VERSION .
+                    " or higher";
             }
+
+            //FILES&DIRECTORIES
+            $checked = $installService->checkFiles(Install::GLOBAL_REQUIREMENTS);
+            $checkedDirectories = $checked['checkedDirectories'];
+            $checkedFiles = $checked['checkedFiles'];
+
+            $continue = Install::BAD;
+            if (!$installService->inArrayRecursive(Install::BAD, $checkedDirectories) &&
+                !$installService->inArrayRecursive(Install::BAD, $checkedFiles)) {
+                $continue = Install::GOOD;
+            }
+
+            return new ViewModel([
+                'directories' => $checkedDirectories,
+                'phpVersion' => $phpVersion,
+                'files' => $checkedFiles,
+                'continue' => $continue
+            ]);
         }
-
-        return new ViewModel([
-            'directories' => $checkedDirectories
-        ]);
-    }
-
-    public function getDirectories()
-    {
-        return [
-            ['config' => 'config'],
-            ['config-autoload' => 'config/autoload']
-        ];
     }
 
     public function databaseAction()
     {
+        $installService = $this->getServiceLocator()->get('Install\Service\Install');
         $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('db', self::TODO);
+//        var_dump($sessionProgress->offsetGet('global_requirements'));die();
+        $sessionProgress->offsetSet('db', Install::TODO);
         $sessionForms = new Container('forms');
         $this->setProgress();
 
@@ -95,11 +92,11 @@ class IndexController extends AbstractActionController
             $dbForm->setData($this->getRequest()->getPost());
             if ($dbForm->isValid()) {
                 $sessionForms->offsetSet('dbForm', $dbForm->getData());
-                $sessionProgress->offsetSet('db', self::DONE);
+                $sessionProgress->offsetSet('db', Install::DONE);
 
                 try {
-                    $this->checkDbConnection($dbForm);
-                    $this->createDbConfig($dbForm);
+                    $installService->checkDbConnection($dbForm);
+                    $installService->createDbConfig($dbForm);
                     $this->flashMessenger()->addSuccessMessage('Connection established and config file created!');
 
                     return $this->redirect()->toRoute(
@@ -143,9 +140,10 @@ class IndexController extends AbstractActionController
 
     public function mailAction()
     {
+        $installService = $this->getServiceLocator()->get('Install\Service\Install');
         $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('mail', self::TODO);
+        $sessionProgress->offsetSet('mail', Install::TODO);
         $sessionForms = new Container('forms');
         $this->setProgress();
 
@@ -172,7 +170,7 @@ class IndexController extends AbstractActionController
                                 array_push($emailsArray, "'$currentEmail'");
                             }
                             $emails = implode(',', $emailsArray);
-                            $this->replaceRowInFile(
+                            $installService->replaceRowInFile(
                                 'config/autoload/mail.local.php.php.php',
                                 $paramName,
                                 "'$paramName'=>[$emails],",
@@ -183,7 +181,7 @@ class IndexController extends AbstractActionController
                                 $paramName = strtoupper($paramName);
                             }
                             $newRow = "'$paramName'=>'$paramValue',";
-                            $this->replaceRowInFile(
+                            $installService->replaceRowInFile(
                                 'config/autoload/mail.local.php.php.php',
                                 $paramName,
                                 $newRow,
@@ -191,7 +189,7 @@ class IndexController extends AbstractActionController
                             );
                         }
                     }
-                    $sessionProgress->offsetSet('mail', self::DONE);
+                    $sessionProgress->offsetSet('mail', Install::DONE);
                     $this->flashMessenger()->addSuccessMessage('Mail config file created!');
 
                     return $this->redirect()->toRoute(
@@ -230,9 +228,10 @@ class IndexController extends AbstractActionController
 
     public function modulesAction()
     {
+        $installService = $this->getServiceLocator()->get('Install\Service\Install');
         $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('modules', self::TODO);
+        $sessionProgress->offsetSet('modules', Install::TODO);
         $sessionForms = new Container('forms');
         $this->setProgress();
 
@@ -242,10 +241,10 @@ class IndexController extends AbstractActionController
             $modulesForm->setData($this->getRequest()->getPost());
             if ($modulesForm->isValid()) {
                 $sessionForms->offsetSet('modulesForm', $modulesForm->getData());
-                $sessionProgress->offsetSet('modules', self::DONE);
+                $sessionProgress->offsetSet('modules', Install::DONE);
 
                 try {
-                    $this->hideModules($modulesForm);
+                    $installService->hideModules($modulesForm);
                     $this->flashMessenger()->addSuccessMessage('Unnecessary modules are hidden now!');
                 } catch (\Exception $e) {
                     $this->flashMessenger()->addErrorMessage('Can not hide module! ' . $e->getMessage());
@@ -279,24 +278,43 @@ class IndexController extends AbstractActionController
 
     public function modulesRequirementsAction()
     {
+        $installService = $this->getServiceLocator()->get('Install\Service\Install');
         $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('modules_requirements', self::TODO);
+        $sessionProgress->offsetSet('modules_requirements', Install::TODO);
         $this->setProgress();
 
         if ($this->getRequest()->isPost()) {
-            $sessionProgress->offsetSet('modules_requirements', self::DONE);
+            $sessionProgress->offsetSet('modules_requirements', Install::DONE);
 
             return $this->redirect()->toRoute(
                 'install/default',
                 [
                     'controller' => 'index',
-                    'action' => 'finish'
+                    'action' => 'database'
                 ]
             );
         } else {
-            $requirements = $this->getServiceLocator()->get('Config')['requirements'];
-            return new ViewModel(['modules_requirements' => $requirements]);
+            //TOOLS
+            $checkedTools = $installService->checkTools();
+
+            //FILES&DIRECTORIES
+            $checked = $installService->checkFiles();
+            $checkedDirectories = $checked['checkedDirectories'];
+            $checkedFiles = $checked['checkedFiles'];
+
+            $continue = Install::BAD;
+            if (!$installService->inArrayRecursive(Install::BAD, $checkedDirectories) &&
+                !$installService->inArrayRecursive(Install::BAD, $checkedFiles)) {
+                $continue = Install::GOOD;
+            }
+
+            return new ViewModel([
+                'directories' => $checkedDirectories,
+                'files' => $checkedFiles,
+                'tools' => $checkedTools,
+                'continue' => $continue
+            ]);
         }
     }
 
@@ -304,154 +322,23 @@ class IndexController extends AbstractActionController
     {
         $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('finish', self::DONE);
+        $sessionProgress->offsetSet('finish', Install::DONE);
         $this->setProgress();
         $sessionProgress->getManager()->getStorage()->clear('progress_tracker');
-        $sessionProgress = new Container('forms');
         $sessionProgress->getManager()->getStorage()->clear('forms');
+
+        exec('install.sh');
 
         return new ViewModel();
     }
 
-    public function checkProgress()
-    {
-        $session = new Container('progress_tracker');
-        $doneSteps = [];
-        $steps = $this->getSteps();
-        for ($i=0; $i<self::STEPS_NUMBER; $i++) {
-            if ($session->offsetExists($steps[$i])) {
-                array_push($doneSteps, [ $steps[$i] => $session->offsetGet($steps[$i])]);
-            } else {
-                $session->offsetSet($steps[$i], self::TODO);
-                array_push($doneSteps, [ $steps[$i] => $session->offsetGet($steps[$i])]);
-            }
-        }
-
-        return $doneSteps;
-    }
-
     public function setProgress()
     {
-        $doneSteps = $this->checkProgress();
+        $doneSteps = $this->getServiceLocator()->get('Install\Service\Install')->checkProgress();
+
         $this->layout()->setVariable('done_steps', $doneSteps);
         foreach ($doneSteps as $step) {
             $this->layout()->setVariable(array_keys($step)[0], array_values($step)[0]);
-        }
-
-    }
-
-    public static function getSteps()
-    {
-        return [ 'global_requirements', 'db', 'modules', 'modules_requirements', 'mail', 'finish' ];
-    }
-
-    public function checkDbConnection(DbConnection $dbForm)
-    {
-
-        //check db connection
-        //FIXME: try to do it with zend db adapter or doctrine, but not native PDO
-//                $adapter = new Adapter([
-//                    'driver' => 'pdo',
-//                    'database' => $dbForm->getData()['dbname'],
-//                    'username' => $dbForm->getData()['user'],
-//                    'password' => $dbForm->getData()['password'],
-//                    'host' => $dbForm->getData()['host'],
-//                    'port' => $dbForm->getData()['port']
-//                ]);
-//                $isConnected = $adapter->getDriver()->getConnection()->isConnected();
-        $dbname=$dbForm->getData()['dbname'];
-        $host=$dbForm->getData()['host'];
-        $port=$dbForm->getData()['port'];
-        $dsn = "mysql:dbname=$dbname;host=$host;port=$port";
-        $user = 'zfs_user';
-        $password = 'zfs_user';
-        $dbh = new \PDO($dsn, $user, $password);
-    }
-
-    public function createDbConfig(DbConnection $dbForm)
-    {
-        $user = 'zfs_user';
-        $password = 'zfs_user';
-        $dbname=$dbForm->getData()['dbname'];
-        $host=$dbForm->getData()['host'];
-        $port=$dbForm->getData()['port'];
-        $content = "return ['doctrine' =>['connection' => ['orm_default' => [
-                    'driverClass' => 'Doctrine\\DBAL\\Driver\\PDOMySql\\Driver',
-                    'params' => [
-                        'host'     => '$host',
-                        'port'     => '$port',
-                        'user'     => '$user',
-                        'password' => '$password',
-                        'dbname'   => '$dbname',
-                    ],
-                    'doctrine_type_mappings' => ['enum' => 'string'],
-                    ]]]];";
-        $fp = fopen("config/autoload/doctrine.locaaaaal.php", "w+");
-        fwrite($fp, $content);
-        fclose($fp);
-    }
-
-    /**
-     * @param Modules $modulesForm
-     */
-    public function hideModules(Modules $modulesForm)
-    {
-        $modules = $modulesForm->getData();
-        for ($i=0; $i<count($modules); $i++) {
-            if (self::UNCHECKED == array_values($modules)[$i]) {
-                $reading = fopen('config/application.config.php', 'r');
-                $writing = fopen('config/application.config.tmp', 'w');
-                $replaced = false;
-                while (!feof($reading)) {
-                    $line = fgets($reading);
-                    if (stristr($line, array_keys($modules)[$i])) {
-                        $line = "//". array_keys($modules)[$i] . "\n";
-                        $replaced = true;
-                    }
-                    fputs($writing, $line);
-                }
-                fclose($reading);
-                fclose($writing);
-                if ($replaced) {
-                    rename('config/application.config.tmp', 'config/application.config.php');
-                } else {
-                    unlink('config/application.config.tmp');
-                }
-                rename(self::MODULES . array_keys($modules)[$i], self::MODULES . '.' . array_keys($modules)[$i]);
-            }
-        }
-    }
-
-    /**
-     * @param string $filePath
-     * @param string $word
-     * @param string $newRow
-     * @param null/string $newFilePath
-     */
-    public function replaceRowInFile($filePath, $word, $newRow, $newFilePath = null)
-    {
-        $reading = fopen($filePath, 'r');
-        $writing = fopen("$filePath.tmp", 'w');
-        $replaced = false;
-        while (!feof($reading)) {
-            $line = fgets($reading);
-            if (stristr($line, "'$word'")) {
-                $line = "$newRow\n";
-                $replaced = true;
-            }
-            fputs($writing, $line);
-        }
-        fclose($reading);
-        fclose($writing);
-        if ($replaced) {
-            if (null === $newFilePath) {
-                rename("$filePath.tmp", "$filePath");
-            } else {
-                rename("$filePath.tmp", "$newFilePath");
-            }
-
-        } else {
-            unlink("$filePath.tmp");
         }
     }
 }

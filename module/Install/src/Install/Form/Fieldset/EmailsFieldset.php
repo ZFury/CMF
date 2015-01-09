@@ -21,9 +21,6 @@ class EmailsFieldset extends Fieldset implements InputFilterProviderInterface
             'name' => 'emails',
             'options' => array(
 //                'label' => 'To these emails messages will be forwarded'
-            ),
-            'attributes' => array(
-                'required' => 'required'
             )
         ));
     }
@@ -35,7 +32,7 @@ class EmailsFieldset extends Fieldset implements InputFilterProviderInterface
     {
         return array(
             'name' => array(
-                'required' => true,
+                'required' => false,
                 'validators' => [
                     [
                         'name' => 'Zend\Validator\EmailAddress'

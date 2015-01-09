@@ -21,9 +21,6 @@ class FromFieldset extends Fieldset implements InputFilterProviderInterface
             'name' => 'from',
             'options' => array(
 //                'label' => 'These emails will be showed to a recipient as senders emails'
-            ),
-            'attributes' => array(
-                'required' => 'required'
             )
         ));
     }
@@ -35,7 +32,7 @@ class FromFieldset extends Fieldset implements InputFilterProviderInterface
     {
         return array(
             'name' => array(
-                'required' => true,
+                'required' => false,
                 'validators' => [
                     [
                         'name' => 'Zend\Validator\EmailAddress'

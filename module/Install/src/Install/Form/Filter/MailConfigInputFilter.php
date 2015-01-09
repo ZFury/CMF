@@ -52,7 +52,7 @@ class MailConfigInputFilter extends InputFilter
 
         $this->add([
             'name'     => 'project',
-            'required' => true,
+            'required' => false,
             'filters'  => [
                 ['name' => 'StripTags'],
                 ['name' => 'StringTrim'],

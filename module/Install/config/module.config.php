@@ -46,7 +46,13 @@ return array(
             ),
         ),
     ),
-    'service_manager' => array(),
+    'service_manager' => array(
+        'factories' => [
+            'Install\Service\Install' => function ($serviceManager) {
+                return new Install\Service\Install($serviceManager);
+            },
+        ]
+    ),
     'controllers' => array(
         'invokables' => array(
             'Install\Controller\Index' => 'Install\Controller\IndexController'
@@ -63,4 +69,14 @@ return array(
             'routes' => array(),
         ),
     ),
+    'installation' => [
+        'files-to-check-global' => [
+            ['install' => 'install.sh'],
+            ['config' => 'config'],
+            ['config-autoload' => 'config/autoload']
+        ],
+        'tools-to-check-global' => [
+
+        ]
+    ],
 );

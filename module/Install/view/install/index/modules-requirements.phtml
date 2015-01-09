@@ -2,32 +2,88 @@
 $title = 'Modules requirements';
 $this->headTitle($title);
 ?>
-<h1><?php echo $this->escapeHtml($title); ?></h1>
+    <h1><?php echo $this->escapeHtml($title); ?></h1>
 
-<form role="form" action="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'modules-requirements'])?>" class="form-horizontal" method="post">
-    <?php
-    if (isset($modules_requirements)) {
-    ?>
-    <ul>
-    <?php  foreach (array_keys($modules_requirements) as $moduleName) {?>
-        <li>
-            <h4>For module <?=$moduleName?></h4>
-            <dl class="dl-horizontal">
-                <?php for ($i=0; $i<count($modules_requirements[$moduleName]); $i++) {?>
-                <dt><?=array_keys($modules_requirements[$moduleName])[$i]?></dt>
-                <dd><?=array_values($modules_requirements[$moduleName])[$i]?></dd>
+    <form role="form" action="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'global-requirements'])?>" class="form-horizontal" method="post">
+        <ul class="col-md-11">
+            <li>
+                <h4>Tools</h4>
+                <?php for ($i=0; $i<count($tools); $i++) { ?>
+                    <div <?php
+                    if (\Install\Service\Install::GOOD == array_values($tools[$i])[0]['status']) {
+                        echo 'class="panel panel-success"';
+                    } else {
+                        echo 'class="panel panel-danger"';
+                    }?>>
+                        <div class="panel-heading">
+                            <?php echo array_values($tools[$i])[0]['message'] ?>
+                        </div>
+                    </div>
                 <?php } ?>
-            </dl>
-        </li>
-    <?php } ?>
-    </ul>
-    <?php } ?>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-sm-3">
-            <div class="btn btn-primary"><a href="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'modules'])?>">Previous</a></div>
+            </li>
+            <li>
+                <h4>Directories</h4>
+                <?php for ($i=0; $i<count($directories); $i++) { ?>
+                    <div <?php
+                    if (\Install\Service\Install::GOOD == array_values($directories[$i])[0]['status']) {
+                        echo 'class="panel panel-success"';
+                    } else {
+                        echo 'class="panel panel-danger"';
+                    }?>>
+                        <div class="panel-heading">
+                            <?php echo array_values($directories[$i])[0]['message'] ?>
+                        </div>
+                    </div>
+                <?php } ?>
+            </li>
+            <li>
+                <h4>Files</h4>
+                <?php for ($i=0; $i<count($files); $i++) { ?>
+                    <div <?php
+                    if (\Install\Service\Install::GOOD == array_values($files[$i])[0]['status']) {
+                        echo 'class="panel panel-success"';
+                    } else {
+                        echo 'class="panel panel-danger"';
+                    }?>>
+                        <div class="panel-heading">
+                            <?php echo array_values($files[$i])[0]['message'] ?>
+                        </div>
+                    </div>
+                <?php } ?>
+            </li>
+        </ul>
+
+        <?php
+        if (isset($modules_requirements)) {
+            ?>
+            <ul>
+                <?php  foreach (array_keys($modules_requirements) as $moduleName) {?>
+                    <li>
+                        <h4>For module <?=$moduleName?></h4>
+                        <dl class="dl-horizontal">
+                            <?php for ($i=0; $i<count($modules_requirements[$moduleName]); $i++) {?>
+                                <dt><?=array_keys($modules_requirements[$moduleName])[$i]?></dt>
+                                <dd><?=array_values($modules_requirements[$moduleName])[$i]?></dd>
+                            <?php } ?>
+                        </dl>
+                    </li>
+                <?php } ?>
+            </ul>
+        <?php } ?>
+
+        <div class="form-group">
+            <div class="col-sm-2">
+                <a href="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'modules'])?>" class="btn btn-default btn-circle "><i class="glyphicon glyphicon-chevron-left glyphicon-align-center"></i></a>
+            </div>
+            <?php $disabled = ''; if (\Install\Service\Install::BAD == $continue) { $disabled = 'disabled'; ?>
+            <div class="col-sm-2 col-sm-offset-1">
+                <a href="<?= $this->url('install/default', ['controller' => 'index', 'action' => 'modules-requirements'])?>" class="btn btn-default btn-circle "><i class="glyphicon glyphicon-chevron-left glyphicon-align-center"></i></a>
+            </div>
+            <div class="col-sm-2 col-sm-offset-2">
+                <?php } else { ?>
+                <div class="col-sm-2 col-sm-offset-5">
+                    <?php } ?>
+                <button class="btn-circle glyphicon glyphicon-ok" type="submit" <?= $disabled ?>></button>
+            </div>
         </div>
-        <div class="col-sm-2">
-            <button class="btn btn-primary" type="submit">Save</button>
-        </div>
-    </div>
-</form>
+    </form>

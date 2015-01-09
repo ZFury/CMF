@@ -83,11 +83,11 @@ $modulesForm->prepare();
     </div>
 
     <div class="form-group">
-        <div class="col-md-offset-2 col-sm-3">
-            <div class="btn btn-primary"><a href="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'mail'])?>">Previous</a></div>
+        <div class="col-sm-2 col-sm-offset-3">
+            <a href="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'mail'])?>" class="btn btn-default btn-circle "><i class="glyphicon glyphicon-chevron-left glyphicon-align-center"></i></a>
         </div>
-        <div class="col-sm-2">
-            <button class="btn btn-primary" type="submit">Next</button>
+        <div class="col-sm-2 col-sm-offset-2">
+            <button class="btn-circle glyphicon glyphicon-chevron-right" type="submit"></button>
         </div>
     </div>
 

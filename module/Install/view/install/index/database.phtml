@@ -7,7 +7,7 @@ $this->headTitle($title);
 $dbForm->setAttribute('action', $this->url('install', ['controller' => 'index', 'action' => 'database']));
 $dbForm->prepare();
 ?>
-<article>
+<article class="form-wrapper">
 <form role="form" class="form-horizontal" method="post">
 
     <div class="form-group">
@@ -51,8 +51,11 @@ $dbForm->prepare();
     </div>
 
     <div class="form-group">
-        <div class="col-md-offset-2 col-sm-offset-3 col-sm-2">
-            <button class="btn btn-primary" type="submit">Next</button>
+        <div class="col-sm-2 col-sm-offset-3">
+            <a href="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'global-requirements'])?>" class="btn btn-default btn-circle "><i class="glyphicon glyphicon-chevron-left glyphicon-align-center"></i></a>
+        </div>
+        <div class="col-sm-2 col-sm-offset-2">
+            <button class="btn-circle glyphicon glyphicon-chevron-right" type="submit"></button>
         </div>
     </div>
 

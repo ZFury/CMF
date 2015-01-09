@@ -11,18 +11,22 @@ ol.progress-tracker li {
 ol.progress-tracker[data-progress-tracker-steps="2"] li {
     width: 49%;
 }
+
 ol.progress-tracker[data-progress-tracker-steps="3"] li {
     width: 33%;
 }
+
 ol.progress-tracker[data-progress-tracker-steps="4"] li {
     width: 24%;
 }
+
 ol.progress-tracker[data-progress-tracker-steps="5"] li {
     width: 19%;
 }
 ol.progress-tracker[data-progress-tracker-steps="6"] li {
     width: 16%;
 }
+
 ol.progress-tracker[data-progress-tracker-steps="7"] li {
     width: 14%;
 }
@@ -40,6 +44,7 @@ ol.progress-tracker li.progress-tracker-todo {
 ol.progress-tracker li:after {
     content: "\00a0\00a0";
 }
+
 ol.progress-tracker li:before {
     position: relative;
     bottom: -2.5em;
@@ -47,6 +52,7 @@ ol.progress-tracker li:before {
     left: 50%;
     line-height: 1em;
 }
+
 ol.progress-tracker li.progress-tracker-done:before {
     content: "\2713";
     color: white;
@@ -57,6 +63,7 @@ ol.progress-tracker li.progress-tracker-done:before {
     border: none;
     border-radius: 1.2em;
 }
+
 ol.progress-tracker li.progress-tracker-todo:before {
     content: "\039F";
     color: silver;
@@ -80,4 +87,54 @@ div.btn > a {
 
 .textboxinput {
     width: 90%;
+}
+
+#page-wrapper {
+    margin-top: 5%;
+}
+
+/*.form-wrapper {*/
+    /*background-color: lightblue;*/
+/*}*/
+
+.container {
+    width: 700px;
+    background-color: #f5f5f5;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 13px;
+}
+.button-next{
+    color: deepskyblue;
+    box-shadow: 3px 4px 5px #005d80;
+}
+.button-previous{
+    color: rgba(247, 247, 0, 0.89);
+    box-shadow: 3px +4px 5px #696900;
+}
+
+a:hover, a:link, a:active {
+    text-decoration: none;
+    color: inherit;
+}
+
+.btn-circle {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    box-shadow: 0 2px 2px #999;
+    padding: 0px;
+    text-decoration: none;
+    text-align: center;
+    font-size: 25px;
+    font-weight: normal;
+    line-height: 2em;
+    border-radius: 25px;
+    -moz-border-radius:25px;
+    -webkit-border-radius:25px;
+}
+
+.btn-circle > i {
+    vertical-align: middle;
 }

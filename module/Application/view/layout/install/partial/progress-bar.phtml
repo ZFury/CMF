@@ -9,7 +9,7 @@ $stepsArray = [
 ];
 if ($this->done_steps) {
     foreach ($this->done_steps as $step) {
-        foreach (\Install\Controller\IndexController::getSteps() as $stepName)
+        foreach (\Install\Service\Install::getSteps() as $stepName)
         {
             if (array_key_exists($stepName, $step)) {
                 $stepsArray[$stepName] = $step[$stepName];
@@ -19,8 +19,8 @@ if ($this->done_steps) {
 }
 ?>
 
-<ol class="progress-tracker" data-progress-tracker-steps="<?=\Install\Controller\IndexController::STEPS_NUMBER?>">
-    <li class="<?= !$stepsArray['global_requirements'] ? 'progress-tracker-todo' : $this->db?>">Global requirements</li><!--
+<ol class="progress-tracker" data-progress-tracker-steps="<?=\Install\Service\Install::STEPS_NUMBER?>">
+    <li class="<?= !$stepsArray['global_requirements'] ? 'progress-tracker-todo' : $this->global_requirements?>">Global requirements</li><!--
  --><li class="<?= !$stepsArray['db'] ? 'progress-tracker-todo' : $this->db?>">DB connection</li><!--
  --><li class="<?= !$stepsArray['mail'] ? 'progress-tracker-todo' : $this->mail?>">Mail configuration</li><!--
  --><li class="<?= !$stepsArray['modules'] ? 'progress-tracker-todo' : $this->modules?>">Needed modules</li><!--
