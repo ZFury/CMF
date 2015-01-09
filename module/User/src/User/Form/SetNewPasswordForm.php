@@ -30,8 +30,6 @@ class SetNewPasswordForm extends Form
                 'name' => 'password',
                 'type' => 'Password',
                 'options' => array(
-                    'min' => 3,
-                    'max' => 25,
                     'label' => 'Password',
                     'label_attributes' => array(
                         'class' => 'col-sm-2 control-label'
@@ -45,8 +43,6 @@ class SetNewPasswordForm extends Form
                 'name' => 'repeat-password',
                 'type' => 'Password',
                 'options' => array(
-                    'min' => 3,
-                    'max' => 25,
                     'label' => 'Repeat password',
                     'label_attributes' => array(
                         'class' => 'col-sm-2 control-label'

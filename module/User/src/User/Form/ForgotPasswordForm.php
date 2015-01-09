@@ -30,8 +30,6 @@ class ForgotPasswordForm extends Form
                 'name' => 'email',
                 'type' => 'text',
                 'options' => array(
-                    'min' => 3,
-                    'max' => 25,
                     'label' => 'Email',
                     'label_attributes' => array(
                         'class' => 'col-sm-2 control-label'

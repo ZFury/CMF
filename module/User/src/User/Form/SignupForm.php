@@ -30,8 +30,6 @@ class SignupForm extends Form
                 'name' => 'email',
                 'type' => 'text',
                 'options' => array(
-                    'min' => 3,
-                    'max' => 25,
                     'label' => 'email',
                 ),
                 'attributes' => ['class' => 'form-control']
@@ -42,8 +40,6 @@ class SignupForm extends Form
                 'name' => 'password',
                 'type' => 'Password',
                 'options' => array(
-                    'min' => 3,
-                    'max' => 25,
                     'label' => 'password',
                 ),
                 'attributes' => ['class' => 'form-control']
@@ -55,8 +51,6 @@ class SignupForm extends Form
                 'name' => 'repeat-password',
                 'type' => 'Password',
                 'options' => array(
-                    'min' => 3,
-                    'max' => 25,
                     'label' => 'repeat-password',
                 ),
                 'attributes' => ['class' => 'form-control']
