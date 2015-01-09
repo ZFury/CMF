@@ -14,14 +14,14 @@ class Grid extends AbstractGrid
             ->from('\User\Entity\User', 'user');
         $this->setSource($source)->setColumns(
             [
-                'Id' => 'id',
-                'Email' => 'email',
-                'Name' => 'displayName',
-                'Role' => 'role',
-                'Status' => 'status',
-                'Created' => 'created'
+                'user.id' => 'Id',
+                'user.email' => 'Email',
+                'user.displayName' => 'Name',
+                'user.role' => 'Role',
+                'user.status' => 'Status',
+                'user.created' => 'Created'
             ]
-        )->setAllowedFilters(['email', 'displayName'])
-            ->setAllowedOrders(['id', 'email', 'displayName', 'role', 'status', 'created']);
+        )->setAllowedFilters(['user.email', 'user.displayName'])
+            ->setAllowedOrders(['user.id', 'user.email', 'user.displayName', 'user.role', 'user.status', 'user.created']);
     }
 }

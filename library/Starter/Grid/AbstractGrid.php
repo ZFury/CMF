@@ -202,7 +202,6 @@ abstract class AbstractGrid
         if ($order = $this->getOrder()) {
             $source->orderBy(key($order), current($order));
         }
-
         if ($filter = $this->getFilter()) {
             $source->where(
                 $source->expr()->orX()

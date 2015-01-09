@@ -11,8 +11,8 @@
             $scope.page = 1;
             $scope.currentPage = 1;
             $scope.reverse = true;
-            $scope.defaultOrder = 'email';
-            $scope.defaultFilter = 'email';
+            $scope.defaultOrder = 'test.email';
+            $scope.defaultFilter = 'test.email';
 
             /**
              * Create test
@@ -47,6 +47,7 @@
                     angular.forEach(response.data,function(item) {
                         $scope.testGrid.push(item);
                     });
+                    console.log($scope.testGrid);
                     $scope.allowedFilters = response.allowedFilters;
                     $scope.totalPages = response.totalPages;
                     $scope.allowedOrders = response.allowedOrders;
