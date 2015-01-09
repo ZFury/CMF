@@ -30,6 +30,7 @@ class AuthController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             // If you used another name for the authentication service, change it here
             $form->setData($this->getRequest()->getPost());
+
             if ($form->isValid()) {
                 /**
                  * @var \User\Service\Auth $userAuth
@@ -37,6 +38,7 @@ class AuthController extends AbstractActionController
                 $userAuth = $this->getServiceLocator()->get('\User\Service\Auth');
                 try {
                     $userAuth->authenticateEquals($data['email'], $data['password']);
+
                     $session = new Container('location');
                     $location = $session->location;
                     if ($location) {
@@ -254,10 +256,9 @@ class AuthController extends AbstractActionController
                 if (!$this->identity()) {
                     //create new user
                     $user = new \User\Entity\User();
-                    $user->setDisplayName($graphObject->getProperty('id'));
-                    if ($email = $graphObject->getProperty('email')) {
-                        $user->setEmail($email);
-                    }
+
+                    $displayName = $graphObject->getProperty('first_name') . ' ' . $graphObject->getProperty('last_name');
+                    $user->setDisplayName($displayName);
                     $user->setRole($user::ROLE_USER);
                     $user->activate();
                     $objectManager->persist($user);
