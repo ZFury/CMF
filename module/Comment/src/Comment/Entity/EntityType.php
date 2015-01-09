@@ -14,7 +14,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @Annotation\Name("entity_type")
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @ORM\HasLifecycleCallbacks
- * @author Sergey Lopay
  */
 class EntityType extends EntityBase
 {

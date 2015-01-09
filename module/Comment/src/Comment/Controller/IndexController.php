@@ -81,9 +81,7 @@ class IndexController extends AbstractActionController
             $flashMessenger = new FlashMessenger();
             $flashMessenger->addSuccessMessage('Comment deleted');
             if (!$this->getRequest()->isXmlHttpRequest()) {
-                //TODO: redirect where?
-                $url = $this->getRequest()->getHeader('Referer')->getUri();
-                return $this->redirect()->toUrl($url);
+                return $this->redirect()->toUrl('/');
             }
         }
     }
@@ -101,6 +99,10 @@ class IndexController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $comment = $objectManager->getRepository('\Comment\Entity\Comment')->findOneBy(['id' => $id]);
 
+        if (!$comment) {
+            throw new \Exception("No number comments that edited");
+        }
+
         $form = $this->getServiceLocator()
             ->get('Comment\Service\Comment')->createForm($comment);
 
@@ -116,8 +118,7 @@ class IndexController extends AbstractActionController
             if ($commentEdited) {
                 $flashMessenger->addSuccessMessage('Comment edited');
                 if (!$this->getRequest()->isXmlHttpRequest()) {
-                    $url = $this->getRequest()->getHeader('Referer')->getUri();
-                    return $this->redirect()->toUrl($url);
+                    return $this->redirect()->toUrl('/');
                 }
 
                 return;
@@ -167,10 +168,8 @@ class IndexController extends AbstractActionController
             if ($comment) {
                 $flashMessenger->addSuccessMessage('Comment created');
                 if (!$this->getRequest()->isXmlHttpRequest()) {
-                    $url = $this->getRequest()->getHeader('Referer')->getUri();
-                    return $this->redirect()->toUrl($url);
+                    return $this->redirect()->toUrl("/");
                 }
-
                 return;
             } else {
                 $flashMessenger->addErrorMessage('Comment is not created');
