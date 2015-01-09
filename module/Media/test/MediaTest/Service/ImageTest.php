@@ -66,7 +66,8 @@ class ImageTest extends AbstractHttpControllerTestCase
     public function testImgPathOriginal()
     {
 
-        $imgPath = $this->imageService->imgPath(\Media\Service\Image::ORIGINAL, $this->imageId, $this->imageEntityData['extension']);
+        $imgPath = $this->imageService
+            ->imgPath(\Media\Service\Image::ORIGINAL, $this->imageId, $this->imageEntityData['extension']);
         $this->assertRegExp(
             '/[a-zA-z]*\/[a-zA-z]*\/' .
             self::DIRECTORY_NAME .
@@ -79,7 +80,8 @@ class ImageTest extends AbstractHttpControllerTestCase
 
     public function testImgPathThumbLil()
     {
-        $imgPath = $this->imageService->imgPath(\Media\Service\Image::SMALL_THUMB, $this->imageId, $this->imageEntityData['extension']);
+        $imgPath = $this->imageService
+            ->imgPath(\Media\Service\Image::SMALL_THUMB, $this->imageId, $this->imageEntityData['extension']);
         $this->assertRegExp(
             '/[a-zA-z]*\/[a-zA-z]*\/' .
             self::DIRECTORY_NAME.

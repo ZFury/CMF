@@ -76,7 +76,8 @@ class VideoTest extends AbstractHttpControllerTestCase
 
     public function testVideoPathOnlyPath()
     {
-        $videoPath = $this->videoService->videoPath($this->videoId, $this->videoEntityData['extension'], \Media\Service\File::FROM_PUBLIC);
+        $videoPath = $this->videoService
+            ->videoPath($this->videoId, $this->videoEntityData['extension'], \Media\Service\File::FROM_PUBLIC);
         $this->assertRegExp(
             '/[a-zA-z]*\/' .
             self::DIRECTORY_NAME.

@@ -28,7 +28,7 @@ $form->prepare();
         </a>
     </p>
     <?php // $this->formInput($form->get('username')); ?>
-    <input type="email" class="ember-view ember-text-field form-control login-input" id="inputEmail" name="<?= $form->get('email')->getName(); ?>"
+    <input type="email" class="form-control input-field" id="inputEmail" name="<?= $form->get('email')->getName(); ?>"
            value="<?= $form->get('email')->getValue(); ?>"
            placeholder="<?= $form->get('email')->getLabel(); ?>">
     <div class="error-field error-form-message">
@@ -36,7 +36,7 @@ $form->prepare();
     </div>
 
 
-    <input type="password" class="ember-view ember-text-field form-control login-input" id="inputPassword"
+    <input type="password" class="form-control input-field" id="inputPassword"
            name="<?= $form->get('password')->getName(); ?>"
            placeholder="<?= $form->get('password')->getLabel(); ?>">
     <div class="error-field error-form-message">
@@ -44,7 +44,7 @@ $form->prepare();
     </div>
 
 
-    <input type="password" class="ember-view ember-text-field form-control login-input" id="inputRepeatPassword"
+    <input type="password" class="form-control input-field" id="inputRepeatPassword"
            name="<?= $form->get('repeat-password')->getName(); ?>"
            placeholder="<?= $form->get('repeat-password')->getLabel(); ?>">
     <div class="error-field error-form-message">

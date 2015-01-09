@@ -79,7 +79,10 @@ class AuthControllerTest extends ControllerTestCase
     {
         $this->createUserWithHash($this->userData);
 
-        $form = new  \User\Form\SetNewPasswordForm('set-password', ['serviceLocator' => $this->getApplicationServiceLocator()]);
+        $form = new  \User\Form\SetNewPasswordForm(
+            'set-password',
+            ['serviceLocator' => $this->getApplicationServiceLocator()]
+        );
         $path = '/user/auth/recover-password/' . $this->userData['confirm'];
         $data = array(
             'password' => '123456',
