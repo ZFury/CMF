@@ -22,6 +22,15 @@ class Grid extends AbstractGrid
                 'user.created' => 'Created'
             ]
         )->setAllowedFilters(['user.email', 'user.displayName'])
-            ->setAllowedOrders(['user.id', 'user.email', 'user.displayName', 'user.role', 'user.status', 'user.created']);
+            ->setAllowedOrders(
+                [
+                    'user.id',
+                    'user.email',
+                    'user.displayName',
+                    'user.role',
+                    'user.status',
+                    'user.created'
+                ]
+            );
     }
 }

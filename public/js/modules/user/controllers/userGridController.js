@@ -3,37 +3,24 @@
         var userGridController = function($scope, $rootScope, userService, $routeParams, $location) {
             var ORDER_ASC = "asc";
             var ORDER_DESC = "desc";
-            $scope.params = {};
-            $scope.params.limit = 3;
-            $scope.params.page = 0;
-            $scope.reverse = true;
-            $scope.params.searchString = '';
-            $scope.params.searchField = 'email';
-            $scope.page = 1;
 
-            $scope.usersGrid = [];
             $scope.limit = 5;
             $scope.page = 1;
             $scope.currentPage = 1;
             $scope.reverse = true;
-            $scope.defaultOrder = 'user.email';
-            $scope.defaultFilter = 'user.email';
+            $scope.orderField = 'user.id';
+            $scope.order = ORDER_ASC;
+            $scope.filterField = 'user.email';
+
             /**
              * Get searched users function
              * */
-            $scope.getUsers = function (num) {
+            $scope.getUsers = function () {
+                $scope.usersGrid = [];
                 if (typeof ($routeParams.params) === 'undefined') {
                     $location.path('/params/page=1');
                 } else {
                     parseUrlParams($routeParams.params);
-                }
-
-                if (typeof($scope.orderField) === 'undefined') {
-                    $scope.orderField = $scope.defaultOrder;
-                    $scope.order = 'asc';
-                }
-                if (typeof($scope.filterField) === 'undefined') {
-                    $scope.filterField = $scope.defaultFilter;
                 }
                 userService.getUsers($scope.page, $scope.orderField, $scope.order, $scope.filterField, $scope.searchString, $scope.limit, function(response) {
                     $scope.testGrid = [];
@@ -46,7 +33,7 @@
                     $scope.defaultLimit = response.defaultLimit;
                     $scope.urlPrev = response.urlPrev;
                     $scope.urlNext = response.urlNext;
-                    $scope.gridPages = Math.ceil(response.count/$scope.params.limit);
+                    $scope.gridPages = Math.ceil(response.count/$scope.limit);
                 });
             };
 
@@ -54,6 +41,7 @@
              * Set orders params
              * */
             $scope.setOrder = function (order) {
+                $scope.page = 1;
                 $scope.orderField = order;
                 $scope.reverse = !$scope.reverse;
                 if ($scope.reverse) {
@@ -61,7 +49,6 @@
                 } else {
                     $scope.order = ORDER_DESC;
                 }
-                $scope.page = 1;
                 setUrl();
                 $scope.getUsers();
             };
@@ -154,10 +141,10 @@
                 if (typeof ($scope.filterField) !== 'undefined' && $scope.filterField !== '') {
                     params += '&filter_field=' + $scope.filterField;
                 }
-                if (typeof ($scope.order) !== 'undefined') {
+                if (typeof ($scope.order) !== 'undefined' && $scope.order !== '') {
                     params += '&order=' + $scope.order;
                 }
-                if (typeof ($scope.orderField) !== 'undefined') {
+                if (typeof ($scope.orderField) !== 'undefined' && $scope.orderField !== '') {
                     params += '&order_field=' + $scope.orderField;
                 }
                 $location.path('/params/' + params);

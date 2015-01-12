@@ -14,7 +14,7 @@
                             <select class="form-control" ng-model="filterField" ng-options="filter for filter in allowedFilters">
                             </select>
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Поиск" ng-model="searchString">
+                                <input type="text" class="form-control" placeholder="Search" ng-model="searchString">
                             </div>
                             <button type="button" class="btn btn-default" ng-click="search()">Search</button>
                             <button type="button" class="btn btn-default" ng-click="searchString='';search();">Clear</button>
@@ -25,9 +25,9 @@
                                 <table class="users-grid table table-fixed  table-striped table-hover">
                                     <thead ng-show="filteredTests.length">
                                     <tr>
-                                        <th class="col-md-1"><a ng-click="setOrder('id')">№</a></th>
+                                        <th class="col-md-1"><a ng-click="setOrder('test.id')">№</a></th>
                                         <th class="col-md-3">Email</th>
-                                        <th class="col-md-3"><a ng-click="setOrder('name')">Name</a></th>
+                                        <th class="col-md-3"><a ng-click="setOrder('test.name')">Name</a></th>
                                         <th class="col-md-1">Edit</th>
                                         <th class="col-md-1">Delete</th>
                                     </tr>
@@ -75,7 +75,7 @@
                                                 ng-click="next()">&raquo;</button>
                                     </ul>
                                 </div>
-                                <div class="btn-group">
+                                <div class="btn-group col-lg-offset-1">
                                     <button class="btn btn-default" type="button" ng-disabled="limit == 1"
                                             ng-click="changeLimit(1)">1</button>
                                     <button class="btn btn-default" type="button" ng-disabled="limit == 5"

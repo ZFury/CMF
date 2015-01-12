@@ -47,7 +47,6 @@
                     angular.forEach(response.data,function(item) {
                         $scope.testGrid.push(item);
                     });
-                    console.log($scope.testGrid);
                     $scope.allowedFilters = response.allowedFilters;
                     $scope.totalPages = response.totalPages;
                     $scope.allowedOrders = response.allowedOrders;
