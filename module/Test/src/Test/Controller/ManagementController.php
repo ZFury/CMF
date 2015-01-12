@@ -49,6 +49,7 @@ class ManagementController extends AbstractCrudController
                 'data' => $grid->getData(),
                 'allowedFilters' => $grid->getAllowedFilters(),
                 'totalPages' => $grid->totalPages(),
+                'columns' => $grid->getColumns(),
                 'allowedOrders' => $grid->getAllowedOrders(),
                 'defaultLimit' => $grid->getDefaultLimit(),
                 'order' => $grid->getOrder(),

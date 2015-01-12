@@ -13,6 +13,7 @@
             $scope.reverse = true;
             $scope.defaultOrder = 'test.email';
             $scope.defaultFilter = 'test.email';
+            $scope.filterOptions = {};
 
             /**
              * Create test
@@ -47,14 +48,19 @@
                     angular.forEach(response.data,function(item) {
                         $scope.testGrid.push(item);
                     });
-                    console.log($scope.testGrid);
                     $scope.allowedFilters = response.allowedFilters;
                     $scope.totalPages = response.totalPages;
                     $scope.allowedOrders = response.allowedOrders;
                     $scope.defaultLimit = response.defaultLimit;
                     $scope.urlPrev = response.urlPrev;
                     $scope.urlNext = response.urlNext;
+                    $scope.columns = response.columns;
                     $scope.gridPages = Math.ceil(response.count/$scope.params.limit);
+                    angular.forEach($scope.columns, function(value, key) {
+                        if ($.inArray(key, $scope.allowedFilters) !== -1) {
+                            $scope.filterOptions[key] = value;
+                        }
+                    });
                 });
             };
 

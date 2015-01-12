@@ -102,6 +102,7 @@ class ManagementController extends AbstractCrudController
             return new JsonModel(array(
                 'data' => $grid->getData(),
                 'allowedFilters' => $grid->getAllowedFilters(),
+                'columns' => $grid->getColumns(),
                 'totalPages' => $grid->totalPages(),
                 'allowedOrders' => $grid->getAllowedOrders(),
                 'defaultLimit' => $grid->getDefaultLimit(),
