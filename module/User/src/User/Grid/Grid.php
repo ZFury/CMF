@@ -38,6 +38,7 @@ class Grid extends AbstractGrid
                     'user.status',
                     'user.created'
                 ]
-            );
+            )
+            ->setSphinxIndex('usersIndex');
     }
 }
