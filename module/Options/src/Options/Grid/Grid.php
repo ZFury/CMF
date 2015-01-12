@@ -15,14 +15,22 @@ class Grid extends AbstractGrid
             ->from('\Options\Entity\Options', 'options');
         $this->setSource($source)->setColumns(
             [
-                'Namespace' => 'namespace',
-                'Key' => 'key',
-                'Value' => 'value',
-                'Description' => 'description',
-                'Created' => 'created',
-                'Updated' => 'updated'
+                'options.namespace' => 'Namespace',
+                'options.key' => 'Key',
+                'options.value' => 'Value',
+                'options.description' => 'Description',
+                'options.created' => 'Created',
+                'options.updated' => 'Updated',
             ]
-        )->setAllowedFilters(['namespace', 'key', 'description'])
-            ->setAllowedOrders(['namespace', 'key', 'value', 'description', 'created', 'updated']);
+        )->setAllowedFilters(['options.namespace', 'options.key', 'options.description'])
+            ->setAllowedOrders(
+                [
+                    'options.namespace',
+                    'options.key',
+                    'options.value',
+                    'options.description',
+                    'options.created',
+                    'options.updated'
+                ]);
     }
 }

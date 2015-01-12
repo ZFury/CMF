@@ -80,8 +80,6 @@ $ajax = $this->ajax ? $this->ajax : false;
     </div>
 <?php if (!$ajax): ?>
     <script>
-        require([
-            <?= implode(',', array_map(function($a) { return "'$a'"; }, $scripts));?>
-        ]);
+        require(['dashboard', 'categories', 'image-categories']);
     </script>
 <?php endif; ?>

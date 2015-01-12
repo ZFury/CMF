@@ -17,11 +17,13 @@ class Filter extends AbstractGridHelper
             $result .= '<div class="input-group">';
             $result .= '<div class="input-group-btn grid-filter-search">';
             $result .= '<button type="button" class="btn btn-default dropdown-toggle"';
-            $result .= 'data-toggle="dropdown">' . ucfirst(current($this->grid->getAllowedFilters()));
+            $result .= 'data-toggle="dropdown">';
+            $result .= ucfirst($this->grid->getColumns()[current($this->grid->getAllowedFilters())]);
             $result .= '<span class="caret"></span></button>';
             $result .= '<ul class="dropdown-menu">';
             foreach ($this->grid->getAllowedFilters() as $field) {
-                $result .= '<li><a href="javascript:;" data-filter="' . $field . '">' . ucfirst($field) . '</a></li>';
+                $result .= '<li><a href="javascript:;" data-filter="' . $field . '">';
+                $result .= $this->grid->getColumns()[$field] . '</a></li>';
             }
             $result .= '</ul></div>';
             $result .= '<input class="grid-filter-search-input"';
