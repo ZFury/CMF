@@ -11,6 +11,7 @@
             $scope.orderField = 'user.id';
             $scope.order = ORDER_ASC;
             $scope.filterField = 'user.email';
+            $scope.filterOptions = {};
 
             /**
              * Get searched users function
@@ -28,12 +29,20 @@
                         $scope.usersGrid.push(item);
                     });
                     $scope.allowedFilters = response.allowedFilters;
+                    $scope.columns = response.columns;
+                    angular.forEach($scope.columns, function(value, key) {
+                        if ($.inArray(key, $scope.allowedFilters) !== -1) {
+                            $scope.filterOptions[key] = value;
+                        }
+                    });
+                    $scope.options = [];
                     $scope.totalPages = response.totalPages;
                     $scope.allowedOrders = response.allowedOrders;
                     $scope.defaultLimit = response.defaultLimit;
                     $scope.urlPrev = response.urlPrev;
                     $scope.urlNext = response.urlNext;
                     $scope.gridPages = Math.ceil(response.count/$scope.limit);
+
                 });
             };
 

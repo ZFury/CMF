@@ -3,7 +3,7 @@
         <div class="tab-pane fade in active" id="users">
             <div class="row tab-wrapper row tab-wrapper-noscroll">
                 <form class="form-inline" role="form">
-                    <select class="form-control" ng-model="filterField" ng-options="filter for filter in allowedFilters">
+                    <select class="form-control" ng-model="filterField" ng-options="k as v for (k,v) in filterOptions">
                     </select>
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Search" ng-model="searchString">
@@ -50,7 +50,7 @@
                                                 ng-click="next()">&raquo;</button>
                                     </ul>
                                 </div>
-                                <div class="btn-group">
+                                <div class="btn-group pagination pull-right" ng-show="usersGrid.length !== 0">
                                     <button type="button" class="btn btn-default" ng-click="changeLimit(3)" ng-disabled="limit == 3">3</button>
                                     <button type="button" class="btn btn-default" ng-click="changeLimit(5)" ng-disabled="limit == 5">5</button>
                                     <button type="button" class="btn btn-default" ng-click="changeLimit(10)" ng-disabled="limit == 10">10</button>
