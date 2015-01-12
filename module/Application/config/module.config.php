@@ -54,13 +54,16 @@ return array(
     'service_manager' => array(
         'abstract_factories' => array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
-            'Zend\Log\LoggerAbstractServiceFactory'
+            'Zend\Log\LoggerAbstractServiceFactory',
+//            'SphinxSearch\Db\Adapter\AdapterAbstractServiceFactory'
         ),
         'factories' => array(
-            'Navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory'
+            'Navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',
+            'SphinxSearch\Db\Adapter\Adapter' => 'SphinxSearch\Db\Adapter\AdapterServiceFactory',
         ),
         'aliases' => array(
             'translator' => 'MvcTranslator',
+//            'sphinxql' => 'SphinxSearch\Db\Adapter\Adapter'
         )
     ),
     'translator' => array(

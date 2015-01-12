@@ -4,6 +4,10 @@ namespace User\Grid;
 
 use Starter\Grid\AbstractGrid;
 
+/**
+ * Class Grid
+ * @package User\Grid
+ */
 class Grid extends AbstractGrid
 {
     public function init()
@@ -23,5 +27,6 @@ class Grid extends AbstractGrid
             ]
         )->setAllowedFilters(['user.email', 'user.displayName'])
             ->setAllowedOrders(['user.id', 'user.email', 'user.displayName', 'user.role', 'user.status', 'user.created']);
+
     }
 }

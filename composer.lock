@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cf3e4610c8351e570c2261ca802cb8ae",
+    "hash": "316f1979ed1010c92bad6707f99d8382",
     "packages": [
         {
             "name": "bjyoungblood/bjy-authorize",
@@ -897,6 +897,75 @@
                 "sdk"
             ],
             "time": "2014-10-30 23:02:36"
+        },
+        {
+            "name": "ripaclub/sphinxsearch",
+            "version": "0.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ripaclub/sphinxsearch.git",
+                "reference": "f0c4bd1deaeaee5ae9ab34bbcfee72815f416763"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ripaclub/sphinxsearch/zipball/f0c4bd1deaeaee5ae9ab34bbcfee72815f416763",
+                "reference": "f0c4bd1deaeaee5ae9ab34bbcfee72815f416763",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "zendframework/zend-db": "~2.2",
+                "zendframework/zend-servicemanager": "~2.2",
+                "zendframework/zend-stdlib": "~2.2"
+            },
+            "require-dev": {
+                "pdepend/pdepend": "2.0.*",
+                "phpmd/phpmd": "2.0.*",
+                "phpunit/phpunit": "4.2.*",
+                "squizlabs/php_codesniffer": "1.5.*"
+            },
+            "suggest": {
+                "ripaclub/zf2-sphinxsearch": "ZF2 integration module for SphinxSearch library",
+                "ripaclub/zf2-sphinxsearch-tool": "ZF2 module/tool that provides a set of tools to configure and handle SphinxSearch engine"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "SphinxSearch": "library/",
+                    "SphinxSearchTest": "tests/"
+                },
+                "classmap": [
+                    "./"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Leonardo Grasso",
+                    "email": "me@leonardograsso.com",
+                    "homepage": "http://github.com/leogr"
+                },
+                {
+                    "name": "Leo Di Donato",
+                    "email": "leodidonato@gmail.com",
+                    "homepage": "http://github.com/leodido"
+                }
+            ],
+            "description": "Sphinx Search library provides SphinxQL indexing and searching features",
+            "homepage": "https://github.com/ripaclub/sphinxsearch",
+            "keywords": [
+                "indexing",
+                "query builder",
+                "search",
+                "search engine",
+                "sphinx",
+                "sphinxql",
+                "zf2"
+            ],
+            "time": "2014-09-30 15:10:56"
         },
         {
             "name": "sundrique/doctrine-tools",

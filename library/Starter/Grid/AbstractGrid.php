@@ -4,6 +4,10 @@ namespace Starter\Grid;
 
 use Doctrine\ORM\QueryBuilder;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use SphinxSearch\Search;
+use SphinxSearch\Db\Sql\Select;
+use SphinxSearch\Db\Sql\Predicate\Match;
+use SphinxSearch\Db\Adapter;
 
 abstract class AbstractGrid
 {
@@ -186,6 +190,27 @@ abstract class AbstractGrid
     }
 
     /**
+     * @var string
+     */
+    protected $index = null;
+
+    /**
+     * @param $index
+     */
+    public function setSphinxIndex($index)
+    {
+        $this->index = $index;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSphinxIndex()
+    {
+        return $this->index;
+    }
+
+    /**
      * Process
      */
     protected function process()
@@ -202,7 +227,33 @@ abstract class AbstractGrid
         if ($order = $this->getOrder()) {
             $source->orderBy(key($order), current($order));
         }
+
         if ($filter = $this->getFilter()) {
+            if ($this->getSphinxIndex()) {
+//                var_dump($this->getSphinxIndex());
+//                die();
+                $adapter = $this->sm->get('SphinxSearch\Db\Adapter\Adapter');
+                $search = new Search($adapter);
+
+                $rowset = $search->search($this->index, function(Select $select) use ($filter) {
+//                    var_dump($filter);
+//                    die();
+                    $select->where(new Match('?', $filter))
+                        ->where(array('status = ?' => 'active'));
+                });
+
+                $data = array();
+                foreach ($rowset as $row) {
+                    $data[] = $row;
+                }
+
+                $this->data = $data;
+                $this->total = $rowset->count();
+
+
+                return;
+            }
+
             $source->where(
                 $source->expr()->orX()
                     ->add(
@@ -214,6 +265,7 @@ abstract class AbstractGrid
                     )
             );
         }
+
         $data = $source->getQuery();
 
         $this->data = $data->getArrayResult();
@@ -639,7 +691,7 @@ abstract class AbstractGrid
         if (!in_array($column, $this->allowedOrders)) {
             return null;
         }
-        
+
         if (isset($this->order[$column])) {
             $order = strtolower($this->order[$column]) == self::ORDER_ASC ? self::ORDER_DESC : self::ORDER_ASC;
         } else {
