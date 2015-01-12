@@ -9,10 +9,10 @@
             <thead>
             <tr>
                 <?php foreach ($this->grid->getColumns() as $alias => $column) : ?>
-                    <?php if ($order = $this->grid->order($column)) : ?>
-                        <th><a href="<?= $order ?>"><?= $alias ?></a></th>
+                    <?php if ($order = $this->grid->order($alias)) : ?>
+                        <th><a href="<?= $order ?>"><?= $column ?></a></th>
                     <?php else : ?>
-                        <th><?= $alias ?></th>
+                        <th><?= $column ?></th>
                     <?php endif; ?>
                 <?php endforeach; ?>
                 <th width="96px"></th>
