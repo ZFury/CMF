@@ -103,6 +103,7 @@ define(['jquery', 'notify'], function ($, notify) {
         .on('hidden.bs.modal', function () {
             $('#content').load(location.pathname, function () {
                 $('body').trigger('form.success', []);
+                $('body').trigger('grid.reload', []);
                 closeModals();
                 $('.modal').remove();
             });
