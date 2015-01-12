@@ -73,7 +73,9 @@ class Auth
         //delete row
         $auth = $this->getObjectManager()
             ->getRepository('User\Entity\Auth')
-            ->findOneByUserId($user->getId());
+            ->findOneBy(['userId' => $user->getId(), 'provider' => Auth::PROVIDER_EQUALS]);
+//            ->findOneByUserId($user->getId());
+
         if ($auth) {
             $this->getObjectManager()->remove($auth);
             $this->getObjectManager()->flush();

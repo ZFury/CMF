@@ -105,6 +105,12 @@ abstract class AbstractGrid
     protected $total = 0;
 
     /**
+     * Aliases of the query
+     * @var array
+     */
+    protected $aliases = [];
+
+    /**
      * Service locator
      * @var ServiceLocatorInterface
      */
@@ -160,7 +166,9 @@ abstract class AbstractGrid
         }
 
         foreach ($this->allowedOrders as $column) {
-            $order = $params->get('order-' . $column);
+            $columnMod = str_replace('.', '_', $column);
+            $order = $params->get('order-' . $columnMod);
+
             if ($order) {
                 $this->setOrder([
                     $column => $order
@@ -169,7 +177,8 @@ abstract class AbstractGrid
         }
 
         foreach ($this->allowedFilters as $column) {
-            $filter = $params->get('filter-' . $column);
+            $columnMod = str_replace('.', '_', $column);
+            $filter = $params->get('filter-' . $columnMod);
             if ($filter) {
                 $this->setFilter([$column => $filter]);
             }
@@ -189,8 +198,9 @@ abstract class AbstractGrid
         $source->setMaxResults($limit);
         $offset = $limit * ($this->getPage() - 1);
         $source->setFirstResult($offset);
+
         if ($order = $this->getOrder()) {
-            $source->orderBy($this->getDoctrineField(key($order)), current($order));
+            $source->orderBy(key($order), current($order));
         }
         if ($filter = $this->getFilter()) {
             $source->where(
@@ -198,7 +208,7 @@ abstract class AbstractGrid
                     ->add(
                         $source->expr()
                             ->like(
-                                $this->getDoctrineField(key($filter)),
+                                key($filter),
                                 $source->expr()->literal('%' . current($filter) . '%')
                             )
                     )
@@ -252,6 +262,29 @@ abstract class AbstractGrid
     public function setEntityAlias($alias)
     {
         $this->entityAlias = $alias;
+
+        return $this;
+    }
+
+    /**
+     * Get aliases
+     *
+     * @return string
+     */
+    public function getAliases()
+    {
+        return $this->aliases;
+    }
+
+    /**
+     * Set aliases
+     *
+     * @param array $aliases
+     * @return $this
+     */
+    public function setAliases($aliases)
+    {
+        $this->aliases = $aliases;
 
         return $this;
     }
@@ -576,17 +609,6 @@ abstract class AbstractGrid
     }
 
     /**
-     * Adds entity alias to field
-     *
-     * @param $field
-     * @return string
-     */
-    protected function getDoctrineField($field)
-    {
-        return $this->entityAlias . '.' . $field;
-    }
-
-    /**
      * Get url for grid according to passed $params
      *
      * @param array $params
@@ -617,7 +639,7 @@ abstract class AbstractGrid
         if (!in_array($column, $this->allowedOrders)) {
             return null;
         }
-
+        
         if (isset($this->order[$column])) {
             $order = strtolower($this->order[$column]) == self::ORDER_ASC ? self::ORDER_DESC : self::ORDER_ASC;
         } else {

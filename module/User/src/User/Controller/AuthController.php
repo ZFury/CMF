@@ -30,6 +30,7 @@ class AuthController extends AbstractActionController
         if ($this->getRequest()->isPost()) {
             // If you used another name for the authentication service, change it here
             $form->setData($this->getRequest()->getPost());
+
             if ($form->isValid()) {
                 /**
                  * @var \User\Service\Auth $userAuth
@@ -37,6 +38,7 @@ class AuthController extends AbstractActionController
                 $userAuth = $this->getServiceLocator()->get('\User\Service\Auth');
                 try {
                     $userAuth->authenticateEquals($data['email'], $data['password']);
+
                     $session = new Container('location');
                     $location = $session->location;
                     if ($location) {
@@ -52,7 +54,7 @@ class AuthController extends AbstractActionController
             }
         }
 
-        return new ViewModel(array('form' => $form));
+        return new ViewModel(array('form' => $form, 'serviceLocator' => $this->getServiceLocator()));
     }
 
     /**
@@ -82,6 +84,7 @@ class AuthController extends AbstractActionController
         OAuth::setHttpClient(new Client(null, $config['httpClientOptions']));
         $consumer = new Consumer($config);
         $token = $consumer->getRequestToken();
+
         // persist the token to storage
         $container = new Container('twitter');
         $container->requestToken = serialize($token);
@@ -196,8 +199,8 @@ class AuthController extends AbstractActionController
         );
         FacebookSession::setDefaultApplication($config['appId'], $config['appSecret']);
         $helper = new FacebookRedirectLoginHelper($config['callbackUrl']);
-        $this->redirect()->toUrl($helper->getLoginUrl());
 
+        $this->redirect()->toUrl($helper->getLoginUrl(['scope' => 'email']));
     }
 
     /**
@@ -224,7 +227,9 @@ class AuthController extends AbstractActionController
         if ($session) {
             // Logged in
             $request = new FacebookRequest($session, 'GET', '/me');
+
             $response = $request->execute();
+
             $graphObject = $response->getGraphObject();
 
             /**
@@ -251,7 +256,10 @@ class AuthController extends AbstractActionController
                 if (!$this->identity()) {
                     //create new user
                     $user = new \User\Entity\User();
-                    $user->setDisplayName($graphObject->getProperty('id'));
+
+                    $displayName = $graphObject->
+                        getProperty('first_name') . ' ' . $graphObject->getProperty('last_name');
+                    $user->setDisplayName($displayName);
                     $user->setRole($user::ROLE_USER);
                     $user->activate();
                     $objectManager->persist($user);
@@ -269,6 +277,7 @@ class AuthController extends AbstractActionController
                 $auth->setTokenType(Auth::TYPE_ACCESS);
                 $auth->setUserId($user->getId());
                 $user->getAuths()->add($auth);
+
                 $auth->setUser($user);
             }
             $objectManager->persist($user);

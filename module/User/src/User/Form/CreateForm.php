@@ -16,8 +16,6 @@ class CreateForm extends Form
                 'name' => 'email',
                 'type' => 'text',
                 'options' => [
-                    'min' => 3,
-                    'max' => 25,
                 ],
                 'attributes' => [
                     'class' => 'form-control',
@@ -31,8 +29,6 @@ class CreateForm extends Form
                 'name' => 'displayName',
                 'type' => 'text',
                 'options' => [
-                    'min' => 3,
-                    'max' => 25,
                     'label' => 'Name'
                 ],
                 'attributes' => [
@@ -47,8 +43,6 @@ class CreateForm extends Form
                 'name' => 'password',
                 'type' => 'Password',
                 'options' => [
-                    'min' => 3,
-                    'max' => 25
                 ],
                 'attributes' => [
                     'class' => 'form-control',
@@ -62,8 +56,6 @@ class CreateForm extends Form
                 'name' => 'repeat-password',
                 'type' => 'Password',
                 'options' => [
-                    'min' => 3,
-                    'max' => 25,
                     'label' => 'Repeat password'
                 ],
                 'attributes' => [

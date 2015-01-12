@@ -31,6 +31,7 @@ class ManagementController extends AbstractCrudController
     {
         $sm = $this->getServiceLocator();
         $grid = new Grid($sm);
+        $grid->getData();
         $viewModel = new ViewModel(['grid' => $grid]);
         $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
         return $viewModel;
@@ -48,6 +49,7 @@ class ManagementController extends AbstractCrudController
                 'data' => $grid->getData(),
                 'allowedFilters' => $grid->getAllowedFilters(),
                 'totalPages' => $grid->totalPages(),
+                'columns' => $grid->getColumns(),
                 'allowedOrders' => $grid->getAllowedOrders(),
                 'defaultLimit' => $grid->getDefaultLimit(),
                 'order' => $grid->getOrder(),

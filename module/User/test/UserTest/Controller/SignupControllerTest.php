@@ -60,7 +60,10 @@ class SignupControllerTest extends ControllerTestCase
     public function testForgotPasswordAction()
     {
         $this->createUserWithHash($this->userData);
-        $form = new  \User\Form\SetNewPasswordForm('forgot-password', ['serviceLocator' => $this->getApplicationServiceLocator()]);
+        $form = new  \User\Form\SetNewPasswordForm(
+            'forgot-password',
+            ['serviceLocator' => $this->getApplicationServiceLocator()]
+        );
         $data = array(
             'email' => $this->userData['email'],
             'security' => $form->get('security')->getValue()
