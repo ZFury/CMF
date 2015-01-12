@@ -54,6 +54,9 @@ class Comment
     {
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
         $entityType = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType($aliasEntity);
+        if (!$entityType) {
+            throw new \Exception('Unknown entity type');
+        }
         if (!$entityType->getEnabledComment()) {
             throw new \Exception('Comment on this entity can not be');
         }
@@ -63,11 +66,11 @@ class Comment
 
     /**
      * @param \Zend\Form\Form $form
-     * @param array $data
-     * @return \Comment\Entity\Comment
+     * @param $data
+     * @return Entity\Comment|null
      * @throws \Exception
      */
-    public function add(\Zend\Form\Form $form, array $data)
+    public function add(\Zend\Form\Form $form, $data)
     {
         $serviceLocator = $this->getServiceLocator();
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
@@ -105,6 +108,7 @@ class Comment
                 }
             }
         }
+        return null;
     }
 
     /**

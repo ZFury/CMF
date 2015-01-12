@@ -9,10 +9,10 @@ class SetNewPasswordForm extends Form
 {
     public function __construct($name = null, array $options = array())
     {
-        parent::__construct('form-signup');
+        parent::__construct('set-password');
         $this->setAttribute('method', 'post')
             ->setAttribute('role', 'form')
-            ->setAttribute('class', 'form-horizontal');
+            ->setAttribute('class', 'form-horizontal set-password');
 
         if (!isset($options['serviceLocator']) || !($options['serviceLocator'] instanceof ServiceManager)) {
             throw new \Exception('No service locator is provided');
@@ -30,14 +30,12 @@ class SetNewPasswordForm extends Form
                 'name' => 'password',
                 'type' => 'Password',
                 'options' => array(
-                    'min' => 3,
-                    'max' => 25,
                     'label' => 'Password',
                     'label_attributes' => array(
                         'class' => 'col-sm-2 control-label'
                     ),
                 ),
-                'attributes' => ['class' => 'form-control']
+                'attributes' => ['class' => 'form-control', 'placeholder' => 'password']
             )
         );
         $this->add(
@@ -45,14 +43,12 @@ class SetNewPasswordForm extends Form
                 'name' => 'repeat-password',
                 'type' => 'Password',
                 'options' => array(
-                    'min' => 3,
-                    'max' => 25,
                     'label' => 'Repeat password',
                     'label_attributes' => array(
                         'class' => 'col-sm-2 control-label'
                     ),
                 ),
-                'attributes' => ['class' => 'form-control']
+                'attributes' => ['class' => 'form-control', 'placeholder' => 'confirm password']
             )
         );
         $this->add(
@@ -60,7 +56,7 @@ class SetNewPasswordForm extends Form
                 'name' => 'submit',
                 'type' => 'Submit',
                 'attributes' => array(
-                    'value' => 'Sign Up',
+                    'value' => 'Change',
                     'id' => 'submitbutton',
                     'class' => 'btn btn-lg btn-primary btn-block'
                 ),

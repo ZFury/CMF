@@ -164,7 +164,13 @@ class ManagementControllerTest extends ControllerTestCase
 
         $json = json_encode(
             [['item_id' => null, "parent_id" => 'none', "depth" => 0, "left" => 1, "right" => 4],
-                ['item_id' => $category2->getId(), "parent_id" => null, "depth" => 1, "left" => 2, "right" => 3, "order" => 1],
+                ['item_id' => $category2->getId(),
+                    "parent_id" => null,
+                    "depth" => 1,
+                    "left" => 2,
+                    "right" => 3,
+                    "order" => 1
+                ],
             ]
         );
         $postData = [

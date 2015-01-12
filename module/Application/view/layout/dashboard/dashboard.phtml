@@ -1,28 +1,29 @@
 <?php echo $this->doctype(); ?>
 <html lang="en">
-    <head>
-        <?= $this->partial('layout/default/partial/header.phtml'); ?>
-        <!-- CSS -->
-        <link href="module/dashboard/css/sb-admin.css" rel="stylesheet">
-        <link href="fonts/font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    </head>
-    <body class="dashboard-body">
-    <div id="wrapper">
-            <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-                <?= $this->partial('layout/dashboard/partial/nav-bar.phtml') ?>
-            </nav>
-            <div id="page-wrapper">
-                <?= $this->partial('layout/default/partial/flashmessenger.phtml') ?>
-                <h1 class="page-header">
-                    Dashboard
-                </h1>
-                <div class="container-fluid">
-                    <?php // echo $this->partial('layout/partial/dashboard/breadcrumbs.phtml)' ?>
-                    <?= $this->content ?>
-                </div>
-                <?= $this->partial('layout/default/partial/footer.phtml') ?>
-            </div>
-            <?php echo $this->inlineScript() ?>
+<head>
+    <?= $this->partial('layout/default/partial/header.phtml'); ?>
+    <!-- CSS -->
+    <link href="module/dashboard/css/sb-admin.css" rel="stylesheet">
+    <link href="fonts/font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+</head>
+<body class="dashboard-body">
+<div id="wrapper">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <?= $this->partial('layout/dashboard/partial/nav-bar.phtml') ?>
+    </nav>
+    <div id="page-wrapper">
+        <?= $this->partial('layout/default/partial/flashmessenger.phtml') ?>
+        <h1 class="page-header">
+            Dashboard
+        </h1>
+
+        <div class="container-fluid" id="content">
+            <?php // echo $this->partial('layout/partial/dashboard/breadcrumbs.phtml)' ?>
+            <?= $this->content ?>
         </div>
-    </body>
+        <?= $this->partial('layout/default/partial/footer.phtml') ?>
+    </div>
+    <?php echo $this->inlineScript() ?>
+</div>
+</body>
 </html>

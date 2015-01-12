@@ -47,7 +47,8 @@ class User
      * @Annotation\Filter({"name":"StringTrim"})
      * @Annotation\Attributes({"class":"form-control"})
      * @Annotation\Validator({"name":"EmailAddress"})
-     * Annotation\Validator({"name":"Db\NoRecordExists", "options":{"adapter": "Db\Adapter", "table" : "users", "fields" : "email"}})
+     * Annotation\Validator({"name":"Db\NoRecordExists",
+     * "options":{"adapter": "Db\Adapter", "table" : "users", "fields" : "email"}})
      * @ORM\Column(type="string", unique=true, nullable=true, length=255)
      */
     protected $email;
@@ -83,7 +84,8 @@ class User
      * @var string
      * @Annotation\Type("Zend\Form\Element\Select")
      * @Annotation\Required(true)
-     * @Annotation\Options({"label":"Satus:", "value_options":{"active" : "active", "inactive" : "inactive", "unconfirmed" : "unconfirmed"}})
+     * @Annotation\Options({"label":"Satus:",
+     * "value_options":{"active" : "active", "inactive" : "inactive", "unconfirmed" : "unconfirmed"}})
      * @Annotation\Attributes({"class":"form-control"})
      * @ORM\Column(type="enumstatus", nullable=false, options={"default" = "unconfirmed"})
      */

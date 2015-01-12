@@ -9,10 +9,10 @@ class ForgotPasswordForm extends Form
 {
     public function __construct($name = null, array $options = array())
     {
-        parent::__construct('form-forgot-password');
+        parent::__construct('forgot-password');
         $this->setAttribute('method', 'post')
             ->setAttribute('role', 'form')
-            ->setAttribute('class', 'form-horizontal');
+            ->setAttribute('class', 'form-horizontal forgot-password');
 
         if (!isset($options['serviceLocator']) || !($options['serviceLocator'] instanceof ServiceManager)) {
             throw new \Exception('No service locator is provided');
@@ -30,14 +30,12 @@ class ForgotPasswordForm extends Form
                 'name' => 'email',
                 'type' => 'text',
                 'options' => array(
-                    'min' => 3,
-                    'max' => 25,
                     'label' => 'Email',
                     'label_attributes' => array(
                         'class' => 'col-sm-2 control-label'
                     ),
                 ),
-                'attributes' => ['class' => 'form-control']
+                'attributes' => ['class' => 'form-control', 'placeholder' => 'email']
             )
         );
         $this->add(
@@ -45,7 +43,7 @@ class ForgotPasswordForm extends Form
                 'name' => 'submit',
                 'type' => 'Submit',
                 'attributes' => array(
-                    'value' => 'Sign Up',
+                    'value' => 'Recovery',
                     'id' => 'submitbutton',
                     'class' => 'btn btn-lg btn-primary btn-block'
                 ),

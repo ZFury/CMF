@@ -18,10 +18,10 @@ class Table extends AbstractGridHelper
         $result .= '<table id="' . $this->id . '" class="' . implode(' ', $this->class) . '">';
         $result .= '<thead><tr>';
         foreach ($this->grid->getColumns() as $alias => $column) {
-            if ($order = $this->grid->order($column)) {
-                $result .= '<th><a href="' . $order . '">' . $alias . '</a></th>';
+            if ($order = $this->grid->order($alias)) {
+                $result .= '<th><a href="' . $order . '">' . $column . '</a></th>';
             } else {
-                $result .= '<th>' . $alias . '</th>';
+                $result .= '<th>' . $column . '</th>';
             }
         }
         $result .= '<th width="96px"></th>';
@@ -52,5 +52,7 @@ class Table extends AbstractGridHelper
     public function setDeleteUrl($deleteUrl)
     {
         $this->deleteUrl = $deleteUrl;
+
+        return $this;
     }
 }

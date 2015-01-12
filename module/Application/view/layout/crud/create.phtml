@@ -6,11 +6,9 @@ $scripts = $this->scripts ? $this->scripts : [];
 $ajax = $this->ajax ? $this->ajax : false;
 ?>
 <div class="container form-container">
-    <br>
-
-    <div class="col-md-9 form-center">
+    <div class="row">
         <?php if (!$ajax): ?>
-            <h1 class="create-label"><?= !$this->title ? 'Create' : $this->escapeHtml($this->title); ?></h1>
+            <h1><?= !$this->title ? 'Create' : $this->escapeHtml($this->title); ?></h1>
         <?php endif; ?>
         <form action="" method="post" class="form-horizontal" id="crudForm">
             <?php foreach ($form->getElements() as $element) : ?>
@@ -54,18 +52,18 @@ $ajax = $this->ajax ? $this->ajax : false;
                     <?php else: ?>
                         <div class="col-sm-2"></div>
                     <?php endif; ?>
-                    <div class="col-sm-9">
+                    <div class="col-sm-4">
                         <?= $formElement; ?>
-                    </div>
-                    <div class="col-sm-9 col-md-offset-2 error-field error-form-message">
-                        <?= $this->formElementErrors($element); ?>
+                        <div class="error-field error-form-message">
+                            <?= $this->formElementErrors($element); ?>
+                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>
             <?php if (!$submit && !$ajax): ?>
                 <div class="form-group">
-                    <div class="col-sm-9 col-md-offset-2">
-                        <input type="submit" name="submit" class="form-control col-md-6 btn btn-success"
+                    <div class="col-sm-4 col-md-offset-2">
+                        <input type="submit" name="submit" class="btn btn-lg btn-primary btn-block"
                                value="<?= $this->title == 'Edit' ? 'Save' : 'Create'; ?>">
                     </div>
                 </div>
@@ -76,6 +74,7 @@ $ajax = $this->ajax ? $this->ajax : false;
 <script>
     require([
         'frontend',
+        'dashboard',
         <?= implode(',', array_map(function($a) { return "'$a'"; }, $scripts));?>
     ]);
 </script>

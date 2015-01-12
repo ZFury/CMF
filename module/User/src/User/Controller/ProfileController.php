@@ -9,6 +9,7 @@
 namespace User\Controller;
 
 use User\Exception\AuthException;
+use User\Form\ChangePasswordAndEmailForm;
 use User\Form\ChangePasswordForm;
 use User\Form\Filter\ChangePasswordInputFilter;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -61,23 +62,39 @@ class ProfileController extends AbstractActionController
      */
     public function changePasswordAction()
     {
-        $form = new ChangePasswordForm();
+        $currentPasswordElement = false;
+        if ($this->identity()->getUser()->getEmail()) {
+            $form = new ChangePasswordForm(null, ['serviceLocator' => $this->getServiceLocator()]);
+            $currentPasswordElement = true;
+        } else {
+            $form = new ChangePasswordAndEmailForm(null, ['serviceLocator' => $this->getServiceLocator()]);
+        }
+
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $form->setInputFilter(new ChangePasswordInputFilter($this->getServiceLocator()));
             $form->setData($request->getPost());
             if ($form->isValid()) {
                 $flashMessenger = new FlashMessenger();
+                /** @var \User\Service\Auth $userAuth */
                 $userAuth = $this->getServiceLocator()->get('\User\Service\Auth');
                 try {
-                    $userAuth->checkCredentials(
-                        $this->identity()->getUser()->getEmail(),
-                        $form->getData()['currentPassword']
-                    );
                     $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+                    /** @var \User\Entity\User $user */
                     $user = $objectManager
                         ->getRepository('User\Entity\User')
                         ->find($this->identity()->getUser()->getId());
+
+                    if ($this->identity()->getUser()->getEmail()) {
+                        $userAuth->checkCredentials(
+                            $this->identity()->getUser()->getEmail(),
+                            $form->getData()['currentPassword']
+                        );
+                    } else {
+                        $user->setEmail($form->getData()['email']);
+                    }
+
+                    $objectManager->persist($user);
+                    $objectManager->flush();
 
                     $userAuth->generateEquals($user, $form->getData()['password']);
                     $flashMessenger->addSuccessMessage("You have successfully changed your password!");
@@ -89,6 +106,6 @@ class ProfileController extends AbstractActionController
             }
         }
 
-        return new ViewModel(['form' => $form]);
+        return new ViewModel(['form' => $form, 'currentPasswordElement' => $currentPasswordElement]);
     }
 }

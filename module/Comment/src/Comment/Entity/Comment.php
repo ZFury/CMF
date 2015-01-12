@@ -15,7 +15,6 @@ use Starter\DBAL\Entity\EntityBase;
  * @Annotation\Name("comment")
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @ORM\HasLifecycleCallbacks
- * @author Sergey Lopay
  */
 class Comment extends EntityBase
 {

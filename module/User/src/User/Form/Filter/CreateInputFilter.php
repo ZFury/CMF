@@ -114,14 +114,6 @@ class CreateInputFilter extends InputFilter
                         'name' => 'EmailAddress'
                     ),
                     $recordExistsValidator
-                    //                array(
-                    //                    'name' => 'Db\NoRecordExists',
-                    //                    'options' => array(
-                    //                        'table' => $this->sm->get('Doctrine\ORM\EntityManager')->getClassMetadata('User\Entity\User')->getTableName(),
-                    //                        'field' => 'email',
-                    //                        'adapter' => $this->sm->get('Db\Adapter')
-                    //                    ),
-                    //                ),
                 ),
                 'filters' => array(
                     array('name' => 'StripTags'),

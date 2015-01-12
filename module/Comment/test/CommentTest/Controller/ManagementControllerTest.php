@@ -7,6 +7,7 @@ use Zend\Http\Response;
 use Zend\Stdlib;
 use Starter\Test\Controller\ControllerTestCase;
 use \Comment\Entity\EntityType;
+use Zend\Http\Client;
 
 /**
  * Class ManagementControllerTest
@@ -31,11 +32,11 @@ class ManagementControllerTest extends ControllerTestCase
     protected $user;
 
     protected $entityData = array(
-    'aliasEntity' => 'user',
-    'entity' => 'User\Entity\User',
-    'enabledEntity' => true,
-    'visibleEntity' => true,
-    'description' => 'another',
+        'aliasEntity' => 'comment',
+        'entity' => 'Comment\Entity\Comment',
+        'enabledComment' => 1,
+        'visibleComment' => 1,
+        'description' => 'another',
     );
 
     /**
@@ -51,7 +52,7 @@ class ManagementControllerTest extends ControllerTestCase
      */
     public static function tearDownAfterClass()
     {
-        exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
+        //exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
     }
 
     /**
@@ -86,17 +87,25 @@ class ManagementControllerTest extends ControllerTestCase
         $this->assertMatchedRouteName('comment/default');
     }
 
+    public function testIndexActionNoPermission()
+    {
+        $this->setupUser();
+        $this->dispatch('/comment/management');
+        $this->assertResponseStatusCode(403);
+    }
+
     public function testCreateActionRedirectsAfterValidPost()
     {
         $postData = array(
             'aliasEntity' => 'user',
             'entity' => 'User\Entity\User',
-            'enabledEntity' => true,
-            'visibleEntity' => true,
+            'enabledComment' => 1,
+            'visibleComment' => 1,
             'description' => 'another',
         );
         $this->dispatch('/comment/management/create', 'POST', $postData);
-        $this->assertResponseStatusCode(200);
+        $this->assertResponseStatusCode(302);
+        $this->assertRedirectTo('/comment/management');
     }
 
     public function testEditActionCanBeAccessed()
@@ -104,7 +113,6 @@ class ManagementControllerTest extends ControllerTestCase
         $entity = $this->createEntityType($this->entityData);
         $this->dispatch('/comment/management/edit/'.$entity->getId());
         $this->assertResponseStatusCode(200);
-
         $this->assertModuleName('Comment');
         $this->assertControllerName('Comment\Controller\Management');
         $this->assertControllerClass('ManagementController');
@@ -117,13 +125,14 @@ class ManagementControllerTest extends ControllerTestCase
         $entity = $this->createEntityType($this->entityData);
         $postData = array(
             'aliasEntity' => 'userEdited',
-            'entity' => 'User\Entity\User',
-            'enabledEntity' => true,
-            'visibleEntity' => true,
+            'entity' => 'Test\Entity\Test',
+            'enabledComment' => true,
+            'visibleComment' => true,
             'description' => 'another',
         );
         $this->dispatch('/comment/management/edit/' . $entity->getId(), 'POST', $postData);
-        $this->assertResponseStatusCode(200);
+        $this->assertResponseStatusCode(302);
+        $this->assertRedirectTo('/comment/management');
         $this->removeEntityType($entity);
     }
 
@@ -139,13 +148,19 @@ class ManagementControllerTest extends ControllerTestCase
         $this->assertMatchedRouteName('comment/default');
     }
 
-    public function testDeleteActionRedirectsAfterValidPost()
+    public function testDeleteActionNoPermission()
     {
         $entity = $this->createEntityType($this->entityData);
-        $this->dispatch('/comment/management/delete/' . $entity->getId());
-        $this->assertResponseStatusCode(302);
+        $this->setupUser();
+        $this->setExpectedException('Exception');
+        $this->commentService->delete($entity->getId());
+    }
 
-        $this->assertRedirectTo('/comment/management');
+
+    public function testDeleteActionNoExistEntity()
+    {
+        $this->dispatch('/comment/management/delete/1');
+        $this->assertResponseStatusCode(500);
     }
 
     /**
@@ -153,7 +168,7 @@ class ManagementControllerTest extends ControllerTestCase
      * @return \Comment\Entity\EntityType
      * @throws \Exception
      */
-    public function createEntityType($entityData)
+    protected function createEntityType($entityData)
     {
         $entity = new EntityType();
         $objectManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -175,7 +190,7 @@ class ManagementControllerTest extends ControllerTestCase
     /**
      * @param \Comment\Entity\EntityType $detachedEntity
      */
-    public function removeEntityType(EntityType $detachedEntity)
+    protected function removeEntityType(EntityType $detachedEntity)
     {
         /**
          * @var \Doctrine\ORM\EntityManager $objectManager
