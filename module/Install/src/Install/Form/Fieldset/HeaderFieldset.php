@@ -2,32 +2,36 @@
 /**
  * Created by PhpStorm.
  * User: alexander
- * Date: 1/8/15
- * Time: 10:19 AM
+ * Date: 1/12/15
+ * Time: 2:57 PM
  */
-
 namespace Install\Form\Fieldset;
 
 use Zend\Form\Fieldset;
 use Zend\InputFilter\InputFilterProviderInterface;
 
-class EmailsFieldset extends Fieldset implements InputFilterProviderInterface
+class HeaderFieldset extends Fieldset implements InputFilterProviderInterface
 {
     public function __construct()
     {
-        parent::__construct('emails');
+        parent::__construct('header');
 
         $this->add(array(
-            'name' => 'emails',
+            'name' => 'header-name',
             'options' => array(
-//                'label' => 'Emails header (for Stubmail)'
+            )
+        ));
+
+        $this->add(array(
+            'name' => 'header-value',
+            'options' => array(
             )
         ));
     }
 
     /**
      * @return array
-    */
+     */
     public function getInputFilterSpecification()
     {
         return array(
@@ -35,7 +39,12 @@ class EmailsFieldset extends Fieldset implements InputFilterProviderInterface
                 'required' => false,
                 'validators' => [
                     [
-                        'name' => 'Zend\Validator\EmailAddress'
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'encoding' => 'UTF-8',
+                            'min'      => 2,
+                            'max'      => 40,
+                        ],
                     ]
                 ]
             )

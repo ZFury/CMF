@@ -138,3 +138,15 @@ a:hover, a:link, a:active {
 .btn-circle > i {
     vertical-align: middle;
 }
+
+button[disabled]{
+    color: grey;
+    background-color: rgba(104, 104, 104, 0.93);
+}
+
+.fieldset-wrapper-header > fieldset > input,
+.fieldset-wrapper-from > fieldset > input,
+.fieldset-wrapper-email > fieldset > input{
+    margin-top: 7px;
+    margin-bottom: 7px;
+}

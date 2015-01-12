@@ -36,10 +36,15 @@ class MailConfig extends Form
         ]);
 
         $this->add([
-            'name' => 'project',
-            'type' => 'Text',
+            'name' => 'header',
+            'type' => 'Zend\Form\Element\Collection',
             'options' => [
-                'label' => 'Project',
+                'count' => 1,
+                'should_create_template' => true,
+                'allow_add' => true,
+                'target_element' => array(
+                    'type' => 'Install\Form\Fieldset\HeaderFieldset'
+                )
             ],
         ]);
 

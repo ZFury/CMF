@@ -51,22 +51,8 @@ class MailConfigInputFilter extends InputFilter
         ]);
 
         $this->add([
-            'name'     => 'project',
+            'name'     => 'header',
             'required' => false,
-            'filters'  => [
-                ['name' => 'StripTags'],
-                ['name' => 'StringTrim'],
-            ],
-            'validators' => [
-                [
-                    'name'    => 'StringLength',
-                    'options' => [
-                        'encoding' => 'UTF-8',
-                        'min'      => 2,
-                        'max'      => 40,
-                    ],
-                ],
-            ],
         ]);
 
         $this->add([

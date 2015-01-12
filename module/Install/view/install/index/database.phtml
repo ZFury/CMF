@@ -2,7 +2,7 @@
 $title = 'Database connection';
 $this->headTitle($title);
 ?>
-<h1><?php echo $this->escapeHtml($title); ?></h1>
+<h1 class="page-header"><?php echo $this->escapeHtml($title); ?></h1>
 <?php
 $dbForm->setAttribute('action', $this->url('install', ['controller' => 'index', 'action' => 'database']));
 $dbForm->prepare();

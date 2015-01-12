@@ -2,22 +2,13 @@
 $title = 'Check modules you want to install';
 $this->headTitle($title);
 ?>
-<h1><?php echo $this->escapeHtml($title); ?></h1>
+<h1 class="page-header"><?php echo $this->escapeHtml($title); ?></h1>
 <?php
 $modulesForm->setAttribute('action', $this->url('install', ['controller' => 'index', 'action' => 'database']));
 $modulesForm->prepare();
 ?>
 
 <form role="form" class="form-horizontal" method="post">
-
-    <div class="form-group">
-        <label for="Media" class="col-md-3 control-label"><?= $modulesForm->get('Media')->getLabel(); ?></label>
-        <div class="col-md-offset-1 col-md-2">
-            <input type="hidden" name="<?= $modulesForm->get('Media')->getName(); ?>" value="<?= $modulesForm->get('Media')->getUncheckedValue(); ?>">
-            <input type="checkbox" class="form-control" id="Media" name="<?= $modulesForm->get('Media')->getName(); ?>" value="<?= $modulesForm->get('Media')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('Media')->getLabel(); ?>" <?if ("good"===$modulesForm->get('Media')->getValue()) { echo "checked"; } ?>>
-            <?= $this->formElementErrors($modulesForm->get('Media')); ?>
-        </div>
-    </div>
 
     <div class="form-group">
         <label for="Categories" class="col-md-3 control-label"><?= $modulesForm->get('Categories')->getLabel(); ?></label>
@@ -34,15 +25,6 @@ $modulesForm->prepare();
             <input type="hidden" name="<?= $modulesForm->get('Comment')->getName(); ?>" value="<?= $modulesForm->get('Comment')->getUncheckedValue(); ?>">
             <input type="checkbox" class="form-control" id="Comment" name="<?= $modulesForm->get('Comment')->getName(); ?>" value="<?= $modulesForm->get('Comment')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('Comment')->getLabel(); ?>" <?if ("good"===$modulesForm->get('Comment')->getValue()) { echo "checked"; } ?>>
             <?= $this->formElementErrors($modulesForm->get('Comment')); ?>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="Dashboard" class="col-md-3 control-label"><?= $modulesForm->get('Dashboard')->getLabel(); ?></label>
-        <div class="col-md-offset-1 col-md-2">
-            <input type="hidden" name="<?= $modulesForm->get('Dashboard')->getName(); ?>" value="<?= $modulesForm->get('Dashboard')->getUncheckedValue(); ?>">
-            <input type="checkbox" class="form-control" id="Dashboard" name="<?= $modulesForm->get('Dashboard')->getName(); ?>" value="<?= $modulesForm->get('Dashboard')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('Dashboard')->getLabel(); ?>" <?if ("good"===$modulesForm->get('Dashboard')->getValue()) { echo "checked"; } ?>>
-            <?= $this->formElementErrors($modulesForm->get('Dashboard')); ?>
         </div>
     </div>
 
@@ -70,15 +52,6 @@ $modulesForm->prepare();
             <input type="hidden" name="<?= $modulesForm->get('Pages')->getName(); ?>" value="<?= $modulesForm->get('Pages')->getUncheckedValue(); ?>">
             <input type="checkbox" class="form-control" id="Pages" name="<?= $modulesForm->get('Pages')->getName(); ?>" value="<?= $modulesForm->get('Pages')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('Pages')->getLabel(); ?>" <?if ("good"===$modulesForm->get('Pages')->getValue()) { echo "checked"; } ?>>
             <?= $this->formElementErrors($modulesForm->get('Pages')); ?>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="Test" class="col-md-3 control-label"><?= $modulesForm->get('Test')->getLabel(); ?></label>
-        <div class="col-md-offset-1 col-md-2">
-            <input type="hidden" name="<?= $modulesForm->get('Test')->getName(); ?>" value="<?= $modulesForm->get('Test')->getUncheckedValue(); ?>">
-            <input type="checkbox" class="form-control" id="Test" name="<?= $modulesForm->get('Test')->getName(); ?>" value="<?= $modulesForm->get('Test')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('Test')->getLabel(); ?>" <?if ("good"===$modulesForm->get('Test')->getValue()) { echo "checked"; } ?>>
-            <?= $this->formElementErrors($modulesForm->get('Test')); ?>
         </div>
     </div>
 

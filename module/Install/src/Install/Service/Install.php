@@ -55,20 +55,27 @@ class Install
      * @param string $filePath
      * @param string $word
      * @param string $newRow
-     * @param null/string $newFilePath
+     * @param null $newFilePath
+     * @param bool $addAfter
      */
-    public function replaceRowInFile($filePath, $word, $newRow, $newFilePath = null)
+    public function replaceRowInFile($filePath, $word, $newRow, $newFilePath = null, $addAfter = false)
     {
         $reading = fopen($filePath, 'r');
         $writing = fopen("$filePath.tmp", 'w');
         $replaced = false;
         while (!feof($reading)) {
             $line = fgets($reading);
-            if (stristr($line, "'$word'")) {
-                $line = "$newRow\n";
-                $replaced = true;
+            if ((true === $addAfter && !stristr($line, $newRow)) || false === $addAfter) {
+                if (stristr($line, "$word")) {
+                    if (false === $addAfter) {
+                        $line = "$newRow\n";
+                    } else {
+                        $line = "$line\n$newRow\n";
+                    }
+                    $replaced = true;
+
+                }fputs($writing, $line);
             }
-            fputs($writing, $line);
         }
         fclose($reading);
         fclose($writing);
@@ -91,26 +98,17 @@ class Install
     {
         $modules = $modulesForm->getData();
         for ($i=0; $i<count($modules); $i++) {
+            $module = array_keys($modules)[$i];
             if (Install::UNCHECKED == array_values($modules)[$i]) {
-                $reading = fopen('config/application.config.php', 'r');
-                $writing = fopen('config/application.config.tmp', 'w');
-                $replaced = false;
-                while (!feof($reading)) {
-                    $line = fgets($reading);
-                    if (stristr($line, array_keys($modules)[$i])) {
-                        $line = "//". array_keys($modules)[$i] . "\n";
-                        $replaced = true;
-                    }
-                    fputs($writing, $line);
+                $this->replaceRowInFile('config/application.config.php', $module, "//$module\n");
+                if (file_exists(Install::MODULES . $module)) {
+                    rename(Install::MODULES . $module, Install::MODULES . ".$module");
                 }
-                fclose($reading);
-                fclose($writing);
-                if ($replaced) {
-                    rename('config/application.config.tmp', 'config/application.config.php');
-                } else {
-                    unlink('config/application.config.tmp');
+            } else {
+                $this->replaceRowInFile('config/application.config.php', "//$module", "'$module',\n");
+                if (file_exists(Install::MODULES . ".$module")) {
+                    rename(Install::MODULES . ".$module", Install::MODULES . $module);
                 }
-                rename(Install::MODULES . array_keys($modules)[$i], Install::MODULES . '.' . array_keys($modules)[$i]);
             }
         }
     }
@@ -122,7 +120,7 @@ class Install
         $dbname=$dbForm->getData()['dbname'];
         $host=$dbForm->getData()['host'];
         $port=$dbForm->getData()['port'];
-        $content = "return ['doctrine' =>['connection' => ['orm_default' => [
+        $content = "<?php return ['doctrine' =>['connection' => ['orm_default' => [
                     'driverClass' => 'Doctrine\\DBAL\\Driver\\PDOMySql\\Driver',
                     'params' => [
                         'host'     => '$host',
@@ -133,14 +131,13 @@ class Install
                     ],
                     'doctrine_type_mappings' => ['enum' => 'string'],
                     ]]]];";
-        $fp = fopen("config/autoload/doctrine.locaaaaal.php", "w+");
-        fwrite($fp, $content);
-        fclose($fp);
+        $config = fopen("config/autoload/doctrine.local.php", "w+");
+        fwrite($config, $content);
+        fclose($config);
     }
 
     public function checkDbConnection(DbConnection $dbForm)
     {
-
         //check db connection
         //FIXME: try to do it with zend db adapter or doctrine, but not native PDO
 //                $adapter = new Adapter([
@@ -159,6 +156,32 @@ class Install
         $user = $dbForm->getData()['user'];
         $password = $dbForm->getData()['password'];
         $dbh = new \PDO($dsn, $user, $password);
+    }
+
+    public function checkPreviousStep()
+    {
+        $session = new Container('progress_tracker');
+        $previousStep = $this->getSteps()[array_search($session->offsetGet('current_step'), $this->getSteps())-1];
+        switch ($previousStep) {
+            case 'global_requirements':
+                $action = 'global-requirements';
+                break;
+            case 'db':
+                $action = 'database';
+                break;
+            case 'modules_requirements':
+                $action = 'modules-requirements';
+                break;
+            default:
+                $action = $previousStep;
+                break;
+        }
+
+        if ($session->offsetExists($previousStep) && $session->offsetGet($previousStep) == self::DONE) {
+            return null;
+        } else {
+            return $action;
+        }
     }
 
     public function checkProgress()
@@ -180,7 +203,7 @@ class Install
 
     public static function getSteps()
     {
-        return [ 'global_requirements', 'db', 'modules', 'modules_requirements', 'mail', 'finish' ];
+        return [ 'global_requirements', 'db', 'mail', 'modules', 'modules_requirements', 'finish' ];
     }
 
     public function checkFiles($global = self::LOCAL_REQUIREMENTS)
@@ -190,37 +213,35 @@ class Install
         if (true === $global) {
             $uncheckedFiles = $this->sm->get('Config')['installation']['files-to-check-global'];
         } else {
-            $uncheckedFiles = $this->sm->get('Config')['installation']['files-to-check'];
+            $uncheckedFiles = null;
+            if (array_key_exists('files-to-check', $this->sm->get('Config')['installation'])) {
+                $uncheckedFiles = $this->sm->get('Config')['installation']['files-to-check'];
+            }
         }
 
+        if (null !== $uncheckedFiles) {
+            for ($i=0; $i<count($uncheckedFiles); $i++) {
+                $fileName = array_keys($uncheckedFiles[$i]);
+                $fileName = array_shift($fileName);
+                $filePath = array_values($uncheckedFiles[$i]);
+                $filePath = array_shift($filePath);
 
-        for ($i=0; $i<count($uncheckedFiles); $i++) {
-            $fileName = array_keys($uncheckedFiles[$i]);
-            $fileName = array_shift($fileName);
-            $filePath = array_values($uncheckedFiles[$i]);
-            $filePath = array_shift($filePath);
-            $message = "$fileName which path is '$filePath' ";
-            if (file_exists($filePath) && is_writable($filePath)) {
-                $message .= 'exists. And is writable!';
-                if (is_dir($filePath)) {
-                    array_push($checkedDirectories, [$fileName => ['message' => $message, 'status' => Install::GOOD]]);
-                } else {
-                    array_push($checkedFiles, [$fileName => ['message' => $message, 'status' => Install::GOOD]]);
-                }
-            } else {
-                if (true === $global && 'install' == $fileName) {
-                    if (is_executable($filePath)) {
-                        $message .= 'is executable. Everything is ok!';
-                        array_push($checkedFiles, [$fileName => ['message' => $message, 'status' => Install::GOOD]]);
+                if (file_exists($filePath) && is_writable($filePath)) {
+                    if (is_dir($filePath)) {
+                        $message="Directory '$fileName' which path is '$filePath' exists and is writable!";
+                        array_push($checkedDirectories, [$fileName => ['message' => $message, 'status' => Install::GOOD]]);
                     } else {
-                        $message .= '  install.sh must be executable to continue installation!';
-                        array_push($checkedFiles, [$fileName => ['message' => $message, 'status' => Install::BAD]]);
+                        $message="File '$fileName' which path is '$filePath' exists and is writable!";
+                        array_push($checkedFiles, [$fileName => ['message' => $message, 'status' => Install::GOOD]]);
                     }
                 } else {
-                    $message .= 'does not exist or is not writable. Please, make it writable or create!';
                     if (is_dir($filePath)) {
+                        $message = "Directory '$fileName' which path is '$filePath' does not exist or is not writable." .
+                            "Please, make it writable or create!";
                         array_push($checkedDirectories, [$fileName => ['message' => $message, 'status' => Install::BAD]]);
                     } else {
+                        $message = "File '$fileName' which path is '$filePath' does not exist or is not writable." .
+                            "Please, make it writable or create!";
                         array_push($checkedFiles, [$fileName => ['message' => $message, 'status' => Install::BAD]]);
                     }
                 }
@@ -233,23 +254,28 @@ class Install
     public function checkTools()
     {
         $checkedTools = [];
-        $uncheckedTools = $this->sm->get('Config')['installation']['tools-to-check'];
+        $uncheckedTools = null;
+        if (array_key_exists('tools-to-check', $this->sm->get('Config')['installation'])) {
+            $uncheckedTools = $this->sm->get('Config')['installation']['tools-to-check'];
+        }
 
-        for ($i=0; $i<count($uncheckedTools); $i++) {
-            $toolName = array_keys($uncheckedTools[$i]);
-            $toolName = array_shift($toolName);
-            $versionCommand = array_values($uncheckedTools[$i]);
-            $versionCommand = array_shift($versionCommand);
-            $message = "$toolName which version command is '$versionCommand' ";
+        if (null !== $uncheckedTools) {
+            for ($i=0; $i<count($uncheckedTools); $i++) {
+                $toolName = array_keys($uncheckedTools[$i]);
+                $toolName = array_shift($toolName);
+                $versionCommand = array_values($uncheckedTools[$i]);
+                $versionCommand = array_shift($versionCommand);
+                $message = "$toolName which version command is '$versionCommand' ";
 
-            $output = [];
-            exec($versionCommand, $output, $return);
-            if (isset($return) && 0 === $return) {
-                $message .= "exists";
-                array_push($checkedTools, [$toolName => ['message' => $message, 'status' => Install::GOOD]]);
-            } else {
-                $message .= "doesn't exist";
-                array_push($checkedTools, [$toolName => ['message' => $message, 'status' => Install::BAD]]);
+                $output = [];
+                exec($versionCommand, $output, $return);
+                if (isset($return) && 0 === $return) {
+                    $message .= "exists";
+                    array_push($checkedTools, [$toolName => ['message' => $message, 'status' => Install::GOOD]]);
+                } else {
+                    $message .= "doesn't exist";
+                    array_push($checkedTools, [$toolName => ['message' => $message, 'status' => Install::BAD]]);
+                }
             }
         }
         return $checkedTools;

@@ -15,22 +15,12 @@ class ModulesInputFilter extends InputFilter
     public function __construct($sm, $userId = null)
     {
         $this->add([
-            'name'     => 'Media',
-            'required' => false,
-        ]);
-
-        $this->add([
             'name'     => 'Categories',
             'required' => false,
         ]);
 
         $this->add([
             'name'     => 'Comment',
-            'required' => false,
-        ]);
-
-        $this->add([
-            'name'     => 'Dashboard',
             'required' => false,
         ]);
 
@@ -46,11 +36,6 @@ class ModulesInputFilter extends InputFilter
 
         $this->add([
             'name'     => 'Pages',
-            'required' => false,
-        ]);
-
-        $this->add([
-            'name'     => 'Test',
             'required' => false,
         ]);
     }

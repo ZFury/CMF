@@ -2,7 +2,7 @@
 $title = 'Mail config';
 $this->headTitle($title);
 ?>
-<h1><?php echo $this->escapeHtml($title); ?></h1>
+<h1 class="page-header"><?php echo $this->escapeHtml($title); ?></h1>
 <?php
 $mailForm->setAttribute('action', $this->url('install', ['controller' => 'index', 'action' => 'database']));
 $mailForm->prepare();
@@ -10,11 +10,11 @@ $mailForm->prepare();
 
 <form role="form" class="form-horizontal" method="post">
 
-    <ul><h2>Transport</h2>
+    <ul>
         <li>
             <div class="form-group">
-                <label for="inputHost" class="col-md-2 control-label"><?= $mailForm->get('host')->getLabel(); ?></label>
-                <div class="col-md-4">
+                <label for="inputHost" class="col-md-3 control-label"><?= $mailForm->get('host')->getLabel(); ?></label>
+                <div class="col-md-5">
                     <input type="text" class="form-control" id="inputHost" name="<?= $mailForm->get('host')->getName(); ?>" value="<?= $mailForm->get('host')->getValue(); ?>" placeholder="<?= $mailForm->get('host')->getLabel(); ?>">
                     <?= $this->formElementErrors($mailForm->get('host')); ?>
                 </div>
@@ -22,21 +22,17 @@ $mailForm->prepare();
         </li>
         <li>
             <div class="form-group">
-                <label for="inputPort" class="col-md-2 control-label"><?= $mailForm->get('port')->getLabel(); ?></label>
-                <div class="col-md-4">
+                <label for="inputPort" class="col-md-3 control-label"><?= $mailForm->get('port')->getLabel(); ?></label>
+                <div class="col-md-5">
                     <input type="text" class="form-control" id="inputPort" name="<?= $mailForm->get('port')->getName(); ?>" value="<?= $mailForm->get('port')->getValue(); ?>" placeholder="<?= $mailForm->get('port')->getLabel(); ?>">
                     <?= $this->formElementErrors($mailForm->get('port')); ?>
                 </div>
             </div>
         </li>
-    </ul>
-
-
-    <ul><h2>Message</h2>
         <li>
             <div class="form-group">
-                <label for="inputFrom" class="col-md-2 control-label">From</label>
-                <div class="col-md-8">
+                <label for="inputFrom" class="col-md-3 control-label">From</label>
+                <div class="form-group col-md-8">
                     <div class="from-fieldset col-md-8">
                         <?php echo $this->formCollection($mailForm->get('from')); ?>
                         <?= $this->formElementErrors($mailForm->get('from')); ?>
@@ -46,19 +42,22 @@ $mailForm->prepare();
             </div>
         </li>
         <li>
-            <h4>Headers (for Stubmail)</h4>
             <div class="form-group">
-                <label for="inputProject" class="col-md-2 control-label"><?= $mailForm->get('project')->getLabel(); ?></label>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" id="inputProject" name="<?= $mailForm->get('project')->getName(); ?>" value="<?= $mailForm->get('project')->getValue(); ?>" placeholder="<?= $mailForm->get('project')->getLabel(); ?>">
-                    <?= $this->formElementErrors($mailForm->get('project')); ?>
+                <label for="inputProject" class="col-md-3 control-label">Header</label>
+                <div class="form-group col-md-8">
+                    <div class="header-fieldset col-md-8">
+                        <?php echo $this->formCollection($mailForm->get('header')); ?>
+                        <?= $this->formElementErrors($mailForm->get('header')); ?>
+                    </div>
+                    <!--                            <div class="col-md-1 glyphicon glyphicon-remove-circle"><a href="#"></a></div>-->
+                    <button class="add_field_button_header btn btn-warning col-sm-3">More fields</button>
                 </div>
             </div>
         </li>
         <li>
             <div class="form-group">
-                <label for="inputEmails" class="col-md-2 control-label">Emails</label>
-                <div class="col-md-8">
+                <label for="inputEmails" class="col-md-3 control-label">Emails header (for Stubmail)</label>
+                <div class="form-group col-md-8">
                     <div class="emails-fieldset col-md-8">
                         <?php echo $this->formCollection($mailForm->get('emails')); ?>
                         <?= $this->formElementErrors($mailForm->get('emails')); ?>

@@ -31,6 +31,8 @@ class IndexController extends AbstractActionController
         $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
         $sessionProgress->offsetSet('global_requirements', Install::TODO);
+        $sessionProgress->offsetSet('current_step', 'global_requirements');
+
         $this->setProgress();
 
         if ($this->getRequest()->isPost()) {
@@ -81,7 +83,17 @@ class IndexController extends AbstractActionController
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
         $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
-//        var_dump($sessionProgress->offsetGet('global_requirements'));die();
+        $sessionProgress->offsetSet('current_step', 'db');
+        $previousStep = $installService->checkPreviousStep();
+        if (null !== $previousStep) {
+            return $this->redirect()->toRoute(
+                'install/default',
+                [
+                    'controller' => 'index',
+                    'action' => $previousStep
+                ]
+            );
+        }
         $sessionProgress->offsetSet('db', Install::TODO);
         $sessionForms = new Container('forms');
         $this->setProgress();
@@ -97,7 +109,6 @@ class IndexController extends AbstractActionController
                 try {
                     $installService->checkDbConnection($dbForm);
                     $installService->createDbConfig($dbForm);
-                    $this->flashMessenger()->addSuccessMessage('Connection established and config file created!');
 
                     return $this->redirect()->toRoute(
                         'install/default',
@@ -107,9 +118,7 @@ class IndexController extends AbstractActionController
                         ]
                     );
                 } catch (\PDOException $e) {
-                    $this->flashMessenger()->addErrorMessage('Connection can not be established! ' . $e->getMessage());
                 } catch (\Exception $e) {
-                    $this->flashMessenger()->addErrorMessage('Config file can not be created! ' . $e->getMessage());
                 }
 
                 return $this->redirect()->toRoute(
@@ -143,6 +152,18 @@ class IndexController extends AbstractActionController
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
         $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
+        $sessionProgress->offsetSet('current_step', 'mail');
+        $previousStep = $installService->checkPreviousStep();
+        if (null !== $previousStep) {
+            return $this->redirect()->toRoute(
+                'install/default',
+                [
+                    'controller' => 'index',
+                    'action' => $previousStep
+                ]
+            );
+        }
+
         $sessionProgress->offsetSet('mail', Install::TODO);
         $sessionForms = new Container('forms');
         $this->setProgress();
@@ -158,10 +179,9 @@ class IndexController extends AbstractActionController
                     for ($i=0; $i<count($mailForm->getData()); $i++) {
                         $paramName = array_keys($mailForm->getData())[$i];
                         $paramValue = array_values($mailForm->getData())[$i];
-
                         if ('emails' == $paramName || 'from' == $paramName) {
                             $emailsArray = [];
-                            for ($j=0; $j<count($paramValue); $j++) {
+                            for ($j = 0; $j < count($paramValue); $j++) {
                                 $value = array_values($paramValue[$j]);
                                 $currentEmail = array_shift($value);
                                 if ('emails' == $paramName) {
@@ -171,26 +191,46 @@ class IndexController extends AbstractActionController
                             }
                             $emails = implode(',', $emailsArray);
                             $installService->replaceRowInFile(
-                                'config/autoload/mail.local.php.php.php',
-                                $paramName,
-                                "'$paramName'=>[$emails],",
-                                'config/autoload/mail.local.php.php.php'
+                                'config/autoload/mail.local.php',
+                                "'$paramName'",
+                                "'$paramName'=>[$emails],"
                             );
                         } else {
-                            if ('project' == $paramName) {
-                                $paramName = strtoupper($paramName);
+                            if ('header' == $paramName) {
+                                for ($j = 0; $j < count($paramValue); $j++) {
+                                    $headerName = strtoupper($paramValue[$j]['header-name']);
+                                    $headerValue = $paramValue[$j]['header-value'];
+                                    $newRow = "'$headerName'=>'$headerValue',";
+
+                                    if ('PROJECT' === $headerName) {
+                                        $installService->replaceRowInFile(
+                                            'config/autoload/mail.local.php',
+                                            "'$headerName'",
+                                            $newRow,
+                                            'config/autoload/mail.local.php'
+                                        );
+                                    } else {
+                                        $installService->replaceRowInFile(
+                                            'config/autoload/mail.local.php',
+                                            "'EMAILS'",
+                                            $newRow,
+                                            'config/autoload/mail.local.php',
+                                            true
+                                        );
+                                    }
+                                }
+                            } else {
+                                $newRow = "'$paramName'=>'$paramValue',";
+                                $installService->replaceRowInFile(
+                                    'config/autoload/mail.local.php',
+                                    "'$paramName'",
+                                    $newRow,
+                                    'config/autoload/mail.local.php'
+                                );
                             }
-                            $newRow = "'$paramName'=>'$paramValue',";
-                            $installService->replaceRowInFile(
-                                'config/autoload/mail.local.php.php.php',
-                                $paramName,
-                                $newRow,
-                                'config/autoload/mail.local.php.php.php'
-                            );
                         }
                     }
                     $sessionProgress->offsetSet('mail', Install::DONE);
-                    $this->flashMessenger()->addSuccessMessage('Mail config file created!');
 
                     return $this->redirect()->toRoute(
                         'install/default',
@@ -200,12 +240,12 @@ class IndexController extends AbstractActionController
                         ]
                     );
                 } catch (\Exception $ex) {
-                    $this->flashMessenger()->addErrorMessage('Mail config file is not created! ' . $ex->getMessage());
                     return $this->redirect()->toRoute(
                         'install/default',
                         [
                             'controller' => 'index',
-                            'action' => 'mail'
+                            'action' => 'mail',
+                            'mailForm' => $mailForm
                         ]
                     );
                 }
@@ -231,6 +271,18 @@ class IndexController extends AbstractActionController
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
         $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
+        $sessionProgress->offsetSet('current_step', 'modules');
+        $previousStep = $installService->checkPreviousStep();
+        if (null !== $previousStep) {
+            return $this->redirect()->toRoute(
+                'install/default',
+                [
+                    'controller' => 'index',
+                    'action' => $previousStep
+                ]
+            );
+        }
+
         $sessionProgress->offsetSet('modules', Install::TODO);
         $sessionForms = new Container('forms');
         $this->setProgress();
@@ -245,12 +297,8 @@ class IndexController extends AbstractActionController
 
                 try {
                     $installService->hideModules($modulesForm);
-                    $this->flashMessenger()->addSuccessMessage('Unnecessary modules are hidden now!');
                 } catch (\Exception $e) {
-                    $this->flashMessenger()->addErrorMessage('Can not hide module! ' . $e->getMessage());
                 }
-
-                //TODO: autoLoadConfig
 
                 return $this->redirect()->toRoute(
                     'install/default',
@@ -281,6 +329,19 @@ class IndexController extends AbstractActionController
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
         $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
+        $sessionProgress->offsetSet('current_step', 'modules_requirements');
+        $previousStep = $installService->checkPreviousStep();
+        if (null !== $previousStep) {
+            return $this->redirect()->toRoute(
+                'install/default',
+                [
+                    'controller' => 'index',
+                    'action' => $previousStep
+                ]
+            );
+        }
+
+
         $sessionProgress->offsetSet('modules_requirements', Install::TODO);
         $this->setProgress();
 
@@ -291,7 +352,7 @@ class IndexController extends AbstractActionController
                 'install/default',
                 [
                     'controller' => 'index',
-                    'action' => 'database'
+                    'action' => 'finish'
                 ]
             );
         } else {
@@ -322,12 +383,23 @@ class IndexController extends AbstractActionController
     {
         $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
+        $installService = $this->getServiceLocator()->get('Install\Service\Install');
+        $sessionProgress->offsetSet('current_step', 'finish');
+        $previousStep = $installService->checkPreviousStep();
+        if (null !== $previousStep) {
+            return $this->redirect()->toRoute(
+                'install/default',
+                [
+                    'controller' => 'index',
+                    'action' => $previousStep
+                ]
+            );
+        }
+
         $sessionProgress->offsetSet('finish', Install::DONE);
         $this->setProgress();
         $sessionProgress->getManager()->getStorage()->clear('progress_tracker');
         $sessionProgress->getManager()->getStorage()->clear('forms');
-
-        exec('install.sh');
 
         return new ViewModel();
     }

@@ -18,17 +18,6 @@ class Modules extends Form
 
         $this->add([
             'type' => 'Zend\Form\Element\Checkbox',
-            'name' => 'Media',
-            'options' => [
-                'label' => 'Media (image, audio, video upload)',
-                'use_hidden_element' => true,
-                'checked_value' => 'good',
-                'unchecked_value' => 'bad'
-            ],
-        ]);
-
-        $this->add([
-            'type' => 'Zend\Form\Element\Checkbox',
             'name' => 'Categories',
             'options' => [
                 'label' => 'Categories',
@@ -46,17 +35,6 @@ class Modules extends Form
                 'use_hidden_element' =>true,
                 'unchecked_value' => 'bad',
                 'checked_value' => 'good'
-            ],
-        ]);
-
-        $this->add([
-            'type' => 'Zend\Form\Element\Checkbox',
-            'name' => 'Dashboard',
-            'options' => [
-                'label' => 'Dashboard',
-                'use_hidden_element' =>true,
-                'checked_value' => 'good',
-                'unchecked_value' => 'bad'
             ],
         ]);
 
@@ -87,17 +65,6 @@ class Modules extends Form
             'name' => 'Pages',
             'options' => [
                 'label' => 'Pages',
-                'use_hidden_element' =>true,
-                'checked_value' => 'good',
-                'unchecked_value' => 'bad'
-            ],
-        ]);
-
-        $this->add([
-            'type' => 'Zend\Form\Element\Checkbox',
-            'name' => 'Test',
-            'options' => [
-                'label' => 'Test (Controllers that test another modules)',
                 'use_hidden_element' =>true,
                 'checked_value' => 'good',
                 'unchecked_value' => 'bad'

@@ -12,7 +12,7 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array(
                     'controller' => 'Install\Controller\Index',
-                    'roles' => array('user'),
+                    'roles' => array('guest'),
                 ),
             ),
         ),
@@ -71,9 +71,9 @@ return array(
     ),
     'installation' => [
         'files-to-check-global' => [
-            ['install' => 'install.sh'],
             ['config' => 'config'],
-            ['config-autoload' => 'config/autoload']
+            ['config-autoload' => 'config/autoload'],
+            ['application-config' => 'config/application.config.php']
         ],
         'tools-to-check-global' => [
 
