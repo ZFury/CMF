@@ -12,6 +12,7 @@
             $scope.order = ORDER_ASC;
             $scope.filterField = 'user.email';
             $scope.filterOptions = {};
+            $scope.checkFilter = false;
 
             /**
              * Get searched users function
@@ -42,7 +43,7 @@
                     $scope.urlPrev = response.urlPrev;
                     $scope.urlNext = response.urlNext;
                     $scope.gridPages = Math.ceil(response.count/$scope.limit);
-
+                    $scope.checkFilter = true;
                 });
             };
 

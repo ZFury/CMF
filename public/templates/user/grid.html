@@ -3,7 +3,8 @@
         <div class="tab-pane fade in active" id="users">
             <div class="row tab-wrapper row tab-wrapper-noscroll">
                 <form class="form-inline" role="form">
-                    <select class="form-control" ng-model="filterField" ng-options="k as v for (k,v) in filterOptions">
+                    <select class="form-control" ng-model="filterField" ng-options="k as v for (k,v) in filterOptions"
+                            ng-show="checkFilter">
                     </select>
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Search" ng-model="searchString">
