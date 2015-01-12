@@ -80,7 +80,11 @@ return array(
     ),
     'view_helpers' => array(
         'invokables' => array(
-            'formRedactor' => 'Starter\Form\View\Helper\FormRedactor'
+            'formRedactor' => 'Starter\Form\View\Helper\FormRedactor',
+            'limit' => 'Starter\View\Helper\Grid\Limit',
+            'pagination' => 'Starter\View\Helper\Grid\Pagination',
+            'filter' => 'Starter\View\Helper\Grid\Filter',
+            'table' => 'Starter\View\Helper\Grid\Table',
         )
     ),
     'view_manager' => array(
