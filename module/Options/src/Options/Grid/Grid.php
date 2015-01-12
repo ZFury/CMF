@@ -31,6 +31,7 @@ class Grid extends AbstractGrid
                     'options.description',
                     'options.created',
                     'options.updated'
-                ]);
+                ]
+            );
     }
 }
