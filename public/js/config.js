@@ -49,7 +49,8 @@ require.config({
         'conversion': '../module/media/js/conversion',
         'form': './starter.form',
         'notify': './starter.notify',
-        'starter': './starter'
+        'starter': './starter',
+        'mail-inputs': '../module/install/js/mail-inputs'
     },
     shim: {
         angular: {
