@@ -19,17 +19,6 @@ return array(
     ),
     'router' => array(
         'routes' => array(
-            'home' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route' => '/',
-                    'defaults' => array(
-                        'module' => 'install',
-                        'controller' => 'Install\Controller\Index',
-                        'action' => 'global-requirements',
-                    ),
-                ),
-            ),
             'install' => array(
                 'type' => 'Literal',
                 'options' => array(
