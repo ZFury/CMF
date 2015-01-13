@@ -1,3 +1,49 @@
 <h1 class="page-header">Finish</h1>
-<h4>Thank you for installing ZFStarter. Now, please, change rights to default values (not 777) of the following files/directories</h4>
-
+<h4>Thank you for installing ZFStarter. Now, please, check and change, if it's necessary, rights of the following files/directories</h4>
+<ul class="col-md-11">
+    <li>
+        <h4>Doctrine2</h4>
+        <?php if (\Install\Service\Install::GOOD === $doctrine['status']) {?>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <?php echo $doctrine['message']; ?>
+                </div>
+            </div>
+        <?php } else { ?>
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <?php echo $doctrine['message']; ?>
+                </div>
+            </div>
+        <?php } ?>
+    </li>
+    <li>
+        <h4>Directories</h4>
+        <?php
+        if (count($directories)>0) {
+            for ($i=0; $i<count($directories); $i++) { ?>
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <?php echo array_values($directories[$i])[0]['path'] ?>
+                    </div>
+                </div>
+            <?php
+            }
+        } ?>
+    </li>
+    <li>
+        <h4>Files</h4>
+        <?php
+        if (count($files)>0) {
+            for ($i=0; $i<count($files); $i++) { ?>
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <?php echo array_values($files[$i])[0]['path'] ?>
+                    </div>
+                </div>
+            <?php
+            }
+        } ?>
+    </li>
+</ul>
+<div class="text-center"><a href="/" class="btn btn-success">Go home!</a></div>

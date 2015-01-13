@@ -8,9 +8,8 @@
 namespace Install\Form\Fieldset;
 
 use Zend\Form\Fieldset;
-use Zend\InputFilter\InputFilterProviderInterface;
 
-class HeaderFieldset extends Fieldset implements InputFilterProviderInterface
+class HeaderFieldset extends Fieldset
 {
     public function __construct()
     {
@@ -27,27 +26,5 @@ class HeaderFieldset extends Fieldset implements InputFilterProviderInterface
             'options' => array(
             )
         ));
-    }
-
-    /**
-     * @return array
-     */
-    public function getInputFilterSpecification()
-    {
-        return array(
-            'name' => array(
-                'required' => false,
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'encoding' => 'UTF-8',
-                            'min'      => 2,
-                            'max'      => 40,
-                        ],
-                    ]
-                ]
-            )
-        );
     }
 }

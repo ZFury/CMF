@@ -50,19 +50,10 @@ class MailConfigInputFilter extends InputFilter
             ],
         ]);
 
-        $this->add([
-            'name'     => 'header',
-            'required' => false,
-        ]);
+        $this->add(new HeaderCollectionInputFilter(), 'header');
 
-        $this->add([
-            'name' => 'emails',
-            'required' => false
-        ]);
+        $this->add(new EmailsCollectionInputFilter(), 'emails');
 
-        $this->add([
-            'name' => 'from',
-            'required' => false
-        ]);
+        $this->add(new FromCollectionInputFilter(), 'from');
     }
 }

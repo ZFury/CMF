@@ -35,7 +35,6 @@ $mailForm->prepare();
                 <div class="form-group col-md-8">
                     <div class="from-fieldset col-md-8">
                         <?php echo $this->formCollection($mailForm->get('from')); ?>
-                        <?= $this->formElementErrors($mailForm->get('from')); ?>
                     </div>
                     <button class="add_field_button_from btn btn-warning col-sm-3">More fields</button>
                 </div>
@@ -47,7 +46,6 @@ $mailForm->prepare();
                 <div class="form-group col-md-8">
                     <div class="header-fieldset col-md-8">
                         <?php echo $this->formCollection($mailForm->get('header')); ?>
-                        <?= $this->formElementErrors($mailForm->get('header')); ?>
                     </div>
                     <!--                            <div class="col-md-1 glyphicon glyphicon-remove-circle"><a href="#"></a></div>-->
                     <button class="add_field_button_header btn btn-warning col-sm-3">More fields</button>
@@ -60,7 +58,6 @@ $mailForm->prepare();
                 <div class="form-group col-md-8">
                     <div class="emails-fieldset col-md-8">
                         <?php echo $this->formCollection($mailForm->get('emails')); ?>
-                        <?= $this->formElementErrors($mailForm->get('emails')); ?>
                     </div>
 <!--                            <div class="col-md-1 glyphicon glyphicon-remove-circle"><a href="#"></a></div>-->
                     <button class="add_field_button_emails btn btn-warning col-sm-3">More fields</button>

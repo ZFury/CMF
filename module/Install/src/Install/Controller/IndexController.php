@@ -10,7 +10,10 @@ namespace Install\Controller;
 
 use Doctrine\DBAL\Driver\PDOMySql\Driver;
 use Install\Form\DbConnection;
+use Install\Form\Fieldset\FromFieldset;
 use Install\Form\Filter\DbConnectionInputFilter;
+use Install\Form\Filter\FromCollectionInputFilter;
+use Install\Form\Filter\FromInputFilter;
 use Install\Form\Filter\MailConfigInputFilter;
 use Install\Form\Filter\ModulesInputFilter;
 use Install\Form\Modules;
@@ -23,16 +26,12 @@ use Install\Service\Install;
 
 class IndexController extends AbstractActionController
 {
-
-
     public function globalRequirementsAction()
     {
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
-        $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
         $sessionProgress->offsetSet('global_requirements', Install::TODO);
         $sessionProgress->offsetSet('current_step', 'global_requirements');
-
         $this->setProgress();
 
         if ($this->getRequest()->isPost()) {
@@ -81,7 +80,6 @@ class IndexController extends AbstractActionController
     public function databaseAction()
     {
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
-        $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
         $sessionProgress->offsetSet('current_step', 'db');
         $previousStep = $installService->checkPreviousStep();
@@ -118,39 +116,24 @@ class IndexController extends AbstractActionController
                         ]
                     );
                 } catch (\PDOException $e) {
+                    $dbForm->get('host')->setMessages([$e->getMessage()]);
                 } catch (\Exception $e) {
+                    $dbForm->get('port')->setMessages([$e->getMessage()]);
                 }
-
-                return $this->redirect()->toRoute(
-                    'install/default',
-                    [
-                        'controller' => 'index',
-                        'action' => 'database',
-                        'dbForm' => $dbForm
-                    ]
-                );
-
-            } else {
-                return  new ViewModel([
-                    'dbForm' => $dbForm,
-                ]);
             }
         } else {
             $dbForm = new DbConnection();
             if (null !== $sessionForms->offsetGet('dbForm')) {
                 $dbForm->setData($sessionForms->offsetGet('dbForm'));
             }
-
-            return new ViewModel([
-                'dbForm' => $dbForm,
-            ]);
         }
+
+        return new ViewModel(['dbForm' => $dbForm]);
     }
 
     public function mailAction()
     {
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
-        $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
         $sessionProgress->offsetSet('current_step', 'mail');
         $previousStep = $installService->checkPreviousStep();
@@ -170,66 +153,13 @@ class IndexController extends AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             $mailForm = new MailConfig();
-            $mailForm->setInputFilter(new MailConfigInputFilter($this->getServiceLocator()));
+            $mainInputFilter = new MailConfigInputFilter($this->getServiceLocator());
+            $mailForm->setInputFilter($mainInputFilter);
             $mailForm->setData($this->getRequest()->getPost());
-
             if ($mailForm->isValid()) {
                 try {
                     $sessionForms->offsetSet('mailForm', $mailForm->getData());
-                    for ($i=0; $i<count($mailForm->getData()); $i++) {
-                        $paramName = array_keys($mailForm->getData())[$i];
-                        $paramValue = array_values($mailForm->getData())[$i];
-                        if ('emails' == $paramName || 'from' == $paramName) {
-                            $emailsArray = [];
-                            for ($j = 0; $j < count($paramValue); $j++) {
-                                $value = array_values($paramValue[$j]);
-                                $currentEmail = array_shift($value);
-                                if ('emails' == $paramName) {
-                                    $paramName = strtoupper($paramName);
-                                }
-                                array_push($emailsArray, "'$currentEmail'");
-                            }
-                            $emails = implode(',', $emailsArray);
-                            $installService->replaceRowInFile(
-                                'config/autoload/mail.local.php',
-                                "'$paramName'",
-                                "'$paramName'=>[$emails],"
-                            );
-                        } else {
-                            if ('header' == $paramName) {
-                                for ($j = 0; $j < count($paramValue); $j++) {
-                                    $headerName = strtoupper($paramValue[$j]['header-name']);
-                                    $headerValue = $paramValue[$j]['header-value'];
-                                    $newRow = "'$headerName'=>'$headerValue',";
-
-                                    if ('PROJECT' === $headerName) {
-                                        $installService->replaceRowInFile(
-                                            'config/autoload/mail.local.php',
-                                            "'$headerName'",
-                                            $newRow,
-                                            'config/autoload/mail.local.php'
-                                        );
-                                    } else {
-                                        $installService->replaceRowInFile(
-                                            'config/autoload/mail.local.php',
-                                            "'EMAILS'",
-                                            $newRow,
-                                            'config/autoload/mail.local.php',
-                                            true
-                                        );
-                                    }
-                                }
-                            } else {
-                                $newRow = "'$paramName'=>'$paramValue',";
-                                $installService->replaceRowInFile(
-                                    'config/autoload/mail.local.php',
-                                    "'$paramName'",
-                                    $newRow,
-                                    'config/autoload/mail.local.php'
-                                );
-                            }
-                        }
-                    }
+                    $installService->createMailConfig($mailForm);
                     $sessionProgress->offsetSet('mail', Install::DONE);
 
                     return $this->redirect()->toRoute(
@@ -240,36 +170,22 @@ class IndexController extends AbstractActionController
                         ]
                     );
                 } catch (\Exception $ex) {
-                    return $this->redirect()->toRoute(
-                        'install/default',
-                        [
-                            'controller' => 'index',
-                            'action' => 'mail',
-                            'mailForm' => $mailForm
-                        ]
-                    );
+                    $mailForm->get('host')->setMessages([$ex->getMessage()]);
                 }
-            } else {
-                return  new ViewModel([
-                    'mailForm' => $mailForm,
-                ]);
             }
         } else {
             $mailForm = new MailConfig();
             if (null !== $sessionForms->offsetGet('mailForm')) {
                 $mailForm->setData($sessionForms->offsetGet('mailForm'));
             }
-
-            return new ViewModel([
-                'mailForm' => $mailForm,
-            ]);
         }
+//        var_dump($mailForm);die();
+        return new ViewModel(['mailForm' => $mailForm]);
     }
 
     public function modulesAction()
     {
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
-        $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
         $sessionProgress->offsetSet('current_step', 'modules');
         $previousStep = $installService->checkPreviousStep();
@@ -293,41 +209,35 @@ class IndexController extends AbstractActionController
             $modulesForm->setData($this->getRequest()->getPost());
             if ($modulesForm->isValid()) {
                 $sessionForms->offsetSet('modulesForm', $modulesForm->getData());
-                $sessionProgress->offsetSet('modules', Install::DONE);
+
 
                 try {
                     $installService->hideModules($modulesForm);
+                    $sessionProgress->offsetSet('modules', Install::DONE);
+                    return $this->redirect()->toRoute(
+                        'install/default',
+                        [
+                            'controller' => 'index',
+                            'action' => 'modules-requirements'
+                        ]
+                    );
                 } catch (\Exception $e) {
+                    $modulesForm->get('Categories')->setMessages([$e->getMessage()]);
                 }
-
-                return $this->redirect()->toRoute(
-                    'install/default',
-                    [
-                        'controller' => 'index',
-                        'action' => 'modules-requirements'
-                    ]
-                );
-            } else {
-                return  new ViewModel([
-                    'modulesForm' => $modulesForm,
-                ]);
             }
         } else {
             $modulesForm = new Modules();
             if (null !== $sessionForms->offsetGet('modulesForm')) {
                 $modulesForm->setData($sessionForms->offsetGet('modulesForm'));
             }
-
-            return new ViewModel([
-                'modulesForm' => $modulesForm
-            ]);
         }
+
+        return new ViewModel(['modulesForm' => $modulesForm]);
     }
 
     public function modulesRequirementsAction()
     {
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
-        $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
         $sessionProgress->offsetSet('current_step', 'modules_requirements');
         $previousStep = $installService->checkPreviousStep();
@@ -340,7 +250,6 @@ class IndexController extends AbstractActionController
                 ]
             );
         }
-
 
         $sessionProgress->offsetSet('modules_requirements', Install::TODO);
         $this->setProgress();
@@ -381,7 +290,6 @@ class IndexController extends AbstractActionController
 
     public function finishAction()
     {
-        $this->layout('layout/install/install');
         $sessionProgress = new Container('progress_tracker');
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
         $sessionProgress->offsetSet('current_step', 'finish');
@@ -396,12 +304,44 @@ class IndexController extends AbstractActionController
             );
         }
 
+        //FILES&DIRECTORIES
+        $checked = $installService->checkFiles();
+        $checkedDirectoriesLocal = $checked['checkedDirectories'];
+        $checkedFilesLocal = $checked['checkedFiles'];
+
+        $checked = $installService->checkFiles(Install::GLOBAL_REQUIREMENTS);
+        $checkedDirectoriesGlobal = $checked['checkedDirectories'];
+        $checkedFilesGlobal = $checked['checkedFiles'];
+
+        $checkedDirectories = array_merge($checkedDirectoriesLocal, $checkedDirectoriesGlobal);
+        $checkedFiles = array_merge($checkedFilesLocal, $checkedFilesGlobal);
+
+        //DOCTRINE2
+        $doctrine = [];
+        exec('./vendor/bin/doctrine-module orm:schema-tool:update --force', $output, $returnUpdate);
+        exec('vendor/doctrine/doctrine-module/bin/doctrine-module migrations:migrate --dry-run', $output, $returnMigrate);
+        if ((isset($returnUpdate) && 0 === $returnUpdate) && (isset($returnMigrate) && 0 === $returnMigrate)) {
+            $doctrine['status'] = Install::GOOD;
+            $doctrine['message'] = "Doctrine2 had successfully updated DB schema and migrated!";
+        } else {
+            $doctrine['status'] = Install::BAD;
+            $doctrine['message'] = "Doctrine2 had not updated DB schema, update it and migrate by yourself!";
+        }
+
         $sessionProgress->offsetSet('finish', Install::DONE);
         $this->setProgress();
         $sessionProgress->getManager()->getStorage()->clear('progress_tracker');
         $sessionProgress->getManager()->getStorage()->clear('forms');
 
-        return new ViewModel();
+        //HIDING INSTALL
+        $installService->replaceRowInFile('config/application.config.php', "'Install'", "//'Install'\n");
+//        rename(Install::MODULES . "Install", Install::MODULES . ".Install");
+
+        return new ViewModel([
+            'directories' => $checkedDirectories,
+            'files' => $checkedFiles,
+            'doctrine' => $doctrine
+        ]);
     }
 
     public function setProgress()

@@ -16,8 +16,8 @@ $config =  array(
         'Media',
         'Pages',
         'Mail',
-        'Install',
-        'DoctrineTools'
+        'DoctrineTools',
+        'Install'
     ),
 
     // These are various options for the listeners attached to the ModuleManager

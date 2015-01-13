@@ -71,7 +71,7 @@ class MailConfig extends Form
                 'should_create_template' => true,
                 'allow_add' => true,
                 'target_element' => array(
-                    'type' => 'Install\Form\Fieldset\FromFieldset'
+                    'type' => 'Install\Form\Fieldset\FromFieldset',
                 )
             )
         ));

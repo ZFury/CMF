@@ -9,36 +9,12 @@
 namespace Install\Form\Fieldset;
 
 use Zend\Form\Fieldset;
-use Zend\InputFilter\InputFilterProviderInterface;
 
-class EmailsFieldset extends Fieldset implements InputFilterProviderInterface
+class EmailsFieldset extends Fieldset
 {
     public function __construct()
     {
         parent::__construct('emails');
-
-        $this->add(array(
-            'name' => 'emails',
-            'options' => array(
-//                'label' => 'Emails header (for Stubmail)'
-            )
-        ));
-    }
-
-    /**
-     * @return array
-    */
-    public function getInputFilterSpecification()
-    {
-        return array(
-            'name' => array(
-                'required' => false,
-                'validators' => [
-                    [
-                        'name' => 'Zend\Validator\EmailAddress'
-                    ]
-                ]
-            )
-        );
+        $this->add(['name' => 'emails', 'options' => []]);
     }
 }

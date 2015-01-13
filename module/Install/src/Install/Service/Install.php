@@ -8,6 +8,7 @@
 namespace Install\Service;
 
 use Install\Form\DbConnection;
+use Install\Form\MailConfig;
 use Install\Form\Modules;
 use Zend\Session\Container;
 
@@ -229,20 +230,20 @@ class Install
                 if (file_exists($filePath) && is_writable($filePath)) {
                     if (is_dir($filePath)) {
                         $message="Directory '$fileName' which path is '$filePath' exists and is writable!";
-                        array_push($checkedDirectories, [$fileName => ['message' => $message, 'status' => Install::GOOD]]);
+                        array_push($checkedDirectories, [$fileName => ['message' => $message, 'status' => Install::GOOD, 'path' => $filePath]]);
                     } else {
                         $message="File '$fileName' which path is '$filePath' exists and is writable!";
-                        array_push($checkedFiles, [$fileName => ['message' => $message, 'status' => Install::GOOD]]);
+                        array_push($checkedFiles, [$fileName => ['message' => $message, 'status' => Install::GOOD, 'path' => $filePath]]);
                     }
                 } else {
                     if (is_dir($filePath)) {
                         $message = "Directory '$fileName' which path is '$filePath' does not exist or is not writable." .
                             "Please, make it writable or create!";
-                        array_push($checkedDirectories, [$fileName => ['message' => $message, 'status' => Install::BAD]]);
+                        array_push($checkedDirectories, [$fileName => ['message' => $message, 'status' => Install::BAD, 'path' => $filePath]]);
                     } else {
                         $message = "File '$fileName' which path is '$filePath' does not exist or is not writable." .
                             "Please, make it writable or create!";
-                        array_push($checkedFiles, [$fileName => ['message' => $message, 'status' => Install::BAD]]);
+                        array_push($checkedFiles, [$fileName => ['message' => $message, 'status' => Install::BAD, 'path' => $filePath]]);
                     }
                 }
             }
@@ -279,5 +280,63 @@ class Install
             }
         }
         return $checkedTools;
+    }
+
+    public function createMailConfig(MailConfig $mailForm)
+    {
+        for ($i=0; $i<count($mailForm->getData()); $i++) {
+            $paramName = array_keys($mailForm->getData())[$i];
+            $paramValue = array_values($mailForm->getData())[$i];
+            if ('emails' == $paramName || 'from' == $paramName) {
+                $emailsArray = [];
+                for ($j = 0; $j < count($paramValue); $j++) {
+                    $value = array_values($paramValue[$j]);
+                    $currentEmail = array_shift($value);
+                    if ('emails' == $paramName) {
+                        $paramName = strtoupper($paramName);
+                    }
+                    array_push($emailsArray, "'$currentEmail'");
+                }
+                $emails = implode(',', $emailsArray);
+                $this->replaceRowInFile(
+                    'config/autoload/mail.local.php',
+                    "'$paramName'",
+                    "'$paramName'=>[$emails],"
+                );
+            } else {
+                if ('header' == $paramName) {
+                    for ($j = 0; $j < count($paramValue); $j++) {
+                        $headerName = strtoupper($paramValue[$j]['header-name']);
+                        $headerValue = $paramValue[$j]['header-value'];
+                        $newRow = "'$headerName'=>'$headerValue',";
+
+                        if ('PROJECT' === $headerName) {
+                            $this->replaceRowInFile(
+                                'config/autoload/mail.local.php',
+                                "'$headerName'",
+                                $newRow,
+                                'config/autoload/mail.local.php'
+                            );
+                        } else {
+                            $this->replaceRowInFile(
+                                'config/autoload/mail.local.php',
+                                "'EMAILS'",
+                                $newRow,
+                                'config/autoload/mail.local.php',
+                                true
+                            );
+                        }
+                    }
+                } else {
+                    $newRow = "'$paramName'=>'$paramValue',";
+                    $this->replaceRowInFile(
+                        'config/autoload/mail.local.php',
+                        "'$paramName'",
+                        $newRow,
+                        'config/autoload/mail.local.php'
+                    );
+                }
+            }
+        }
     }
 }
