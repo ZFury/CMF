@@ -35,5 +35,4 @@ class Pagination extends AbstractGridHelper
 
         return $result;
     }
-
 }
