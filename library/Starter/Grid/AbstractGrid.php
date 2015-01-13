@@ -230,16 +230,11 @@ abstract class AbstractGrid
 
         if ($filter = $this->getFilter()) {
             if ($this->getSphinxIndex()) {
-//                var_dump($this->getSphinxIndex());
-//                die();
                 $adapter = $this->sm->get('SphinxSearch\Db\Adapter\Adapter');
                 $search = new Search($adapter);
 
                 $rowset = $search->search($this->index, function(Select $select) use ($filter) {
-//                    var_dump($filter);
-//                    die();
-                    $select->where(new Match('?', $filter))
-                        ->where(array('status = ?' => 'active'));
+                    $select->where(new Match('?', $filter));
                 });
 
                 $data = array();

@@ -21,6 +21,7 @@ class Grid extends AbstractGrid
                 'mail.updated' => 'updated',
             ]
         )->setAllowedFilters(['mail.alias', 'mail.description'])
-            ->setAllowedOrders(['mail.id', 'mail.alias', 'mail.description', 'mail.created', 'mail.updated']);
+            ->setAllowedOrders(['mail.id', 'mail.alias', 'mail.description', 'mail.created', 'mail.updated'])
+            ->setSphinxIndex('mailIndex');
     }
 }
