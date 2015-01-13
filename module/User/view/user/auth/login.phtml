@@ -20,21 +20,25 @@ $form->prepare();
         <?php echo $this->formHidden($form->get('security')); ?>
     <h2 class="form-signin-heading">Sign in</h2>
     <p>
-        <a class="btn social-login-btn social-facebook btn-facebook"  href="<?php echo $this->url('user/default', ['controller' => 'auth', 'action' => 'facebook']) ?>"
-            ><i class="fa fa-facebook"></i>
-        </a>
-        <a class="btn social-login-btn social-twitter btn-twitter" href="<?php echo $this->url('user/default', ['controller' => 'auth', 'action' => 'twitter']) ?>">
-            <i class="fa fa-twitter"></i>
-        </a>
+        <?php if (isset($this->serviceLocator->get('config')['facebook'])): ?>
+            <a class="btn social-login-btn social-facebook btn-facebook"  href="<?php echo $this->url('user/default', ['controller' => 'auth', 'action' => 'facebook']) ?>"
+                ><i class="fa fa-facebook"></i>
+            </a>
+        <?php endif; ?>
+        <?php if (isset($this->serviceLocator->get('config')['twitter'])): ?>
+            <a class="btn social-login-btn social-twitter btn-twitter" href="<?php echo $this->url('user/default', ['controller' => 'auth', 'action' => 'twitter']) ?>">
+                <i class="fa fa-twitter"></i>
+            </a>
+        <?php endif; ?>
     </p>
         <?php // $this->formInput($form->get('username')); ?>
-        <input type="email" class="ember-view ember-text-field form-control login-input" id="inputEmail" name="<?= $form->get('email')->getName(); ?>"
+        <input type="email" class="form-control input-field" id="inputEmail" name="<?= $form->get('email')->getName(); ?>"
                placeholder="<?= $form->get('email')->getLabel(); ?>">
         <div class="error-field error-form-message">
             <?= $this->formElementErrors($form->get('email')); ?>
         </div>
 
-        <input type="password" class="ember-view ember-text-field form-control login-input" id="inputPassword"
+        <input type="password" class="form-control input-field" id="inputPassword"
                name="<?= $form->get('password')->getName(); ?>"
                placeholder="<?= $form->get('password')->getLabel(); ?>">
         <div class="error-field error-form-message">
@@ -45,6 +49,10 @@ $form->prepare();
 
         <input type="submit" name="submit" id="submitbutton" class="btn btn-lg btn-primary btn-block btn-center"
                value="<?= $form->get('submit')->getValue(); ?>">
+
+        <a href="<?php echo $this->url('user/default', ['controller' => 'signup', 'action' => 'forgot-password']) ?>">
+            Forgot your password?
+        </a>
 
         <!--        --><?php //echo $this->formRow($form->get('submit')); ?>
         <?php echo $this->form()->closeTag(); ?>

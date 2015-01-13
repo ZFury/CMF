@@ -3,60 +3,90 @@
         var userGridController = function($scope, $rootScope, userService, $routeParams, $location) {
             var ORDER_ASC = "asc";
             var ORDER_DESC = "desc";
-            $scope.params = {};
-            $scope.params.limit = 3;
-            $scope.params.page = 0;
-            $scope.reverse = true;
-            $scope.params.searchString = '';
-            $scope.params.searchField = 'email';
+
+            $scope.limit = 5;
             $scope.page = 1;
+            $scope.currentPage = 1;
+            $scope.reverse = true;
+            $scope.orderField = 'user.id';
+            $scope.order = ORDER_ASC;
+            $scope.filterField = 'user.email';
+            $scope.filterOptions = {};
+            $scope.checkFilter = false;
+
             /**
              * Get searched users function
              * */
             $scope.getUsers = function () {
+                $scope.usersGrid = [];
                 if (typeof ($routeParams.params) === 'undefined') {
                     $location.path('/params/page=1');
                 } else {
                     parseUrlParams($routeParams.params);
                 }
-                $scope.params.page = $scope.page - 1;
-                userService.getUsers($scope.params, function(response) {
-                    $scope.usersGrid = [];
+                userService.getUsers($scope.page, $scope.orderField, $scope.order, $scope.filterField, $scope.searchString, $scope.limit, function(response) {
+                    $scope.testGrid = [];
                     angular.forEach(response.data,function(item) {
                         $scope.usersGrid.push(item);
                     });
-                    $scope.gridPages = Math.ceil(response.count/$scope.params.limit);
+                    $scope.allowedFilters = response.allowedFilters;
+                    $scope.columns = response.columns;
+                    angular.forEach($scope.columns, function(value, key) {
+                        if ($.inArray(key, $scope.allowedFilters) !== -1) {
+                            $scope.filterOptions[key] = value;
+                        }
+                    });
+                    $scope.options = [];
+                    $scope.totalPages = response.totalPages;
+                    $scope.allowedOrders = response.allowedOrders;
+                    $scope.defaultLimit = response.defaultLimit;
+                    $scope.urlPrev = response.urlPrev;
+                    $scope.urlNext = response.urlNext;
+                    $scope.gridPages = Math.ceil(response.count/$scope.limit);
+                    $scope.checkFilter = true;
                 });
             };
 
             /**
              * Set orders params
              * */
-            $scope.setOrder = function (field) {
-                $scope.params.field = field;
+            $scope.setOrder = function (order) {
+                $scope.page = 1;
+                $scope.orderField = order;
                 $scope.reverse = !$scope.reverse;
                 if ($scope.reverse) {
-                    $scope.params.reverse = ORDER_ASC;
+                    $scope.order = ORDER_ASC;
                 } else {
-                    $scope.params.reverse = ORDER_DESC;
+                    $scope.order = ORDER_DESC;
                 }
-                $scope.page = 1;
                 setUrl();
                 $scope.getUsers();
             };
 
             /**
-             * get data fo page
+             * change page
              */
-            $scope.getPage = function(flag) {
-                if (flag == 'next') {
-                    $scope.page++;
-                    setUrl();
-                }
-                if (flag == 'prev') {
-                    $scope.page--;
-                    setUrl();
-                }
+            $scope.changePage = function(num) {
+                $scope.page = num + 1;
+                setUrl();
+                $scope.getUsers();
+            };
+
+            /**
+             * get prev page
+             */
+            $scope.prev = function() {
+                $scope.page--;
+                setUrl();
+                $scope.getUsers();
+            };
+
+            /**
+             * get next page
+             */
+            $scope.next = function() {
+                $scope.page++;
+                setUrl();
                 $scope.getUsers();
             };
 
@@ -74,7 +104,7 @@
              * */
             $scope.changeLimit = function (limit) {
                 $scope.page = 1;
-                $scope.params.limit = limit;
+                $scope.limit = limit;
                 setUrl();
                 $scope.getUsers();
             };
@@ -90,16 +120,19 @@
                     $scope.page = params.page;
                 }
                 if (typeof (params.limit) !== 'undefined') {
-                    $scope.params.limit = params.limit;
+                    $scope.limit = params.limit;
                 }
-                if (typeof (params.search) !== 'undefined') {
-                    $scope.params.searchString = params.search;
+                if (typeof (params.filter_string) !== 'undefined') {
+                    $scope.searchString = params.filter_string;
                 }
-                if (typeof (params.field) !== 'undefined') {
-                    $scope.params.field = params.field;
+                if (typeof (params.filter_field) !== 'undefined') {
+                    $scope.filterField = params.filter_field;
+                }
+                if (typeof (params.order_field) !== 'undefined') {
+                    $scope.orderField = params.order_field;
                 }
                 if (typeof (params.order) !== 'undefined') {
-                    $scope.params.reverse = params.order;
+                    $scope.order = params.order;
                 }
                 return params;
             };
@@ -109,19 +142,26 @@
                 if (typeof ($scope.page) !== 'undefined') {
                     params = 'page=' + $scope.page;
                 }
-                if (typeof ($scope.params.limit) !== 'undefined') {
-                    params += '&limit=' + $scope.params.limit;
+                if (typeof ($scope.limit) !== 'undefined') {
+                    params += '&limit=' + $scope.limit;
                 }
-                if (typeof ($scope.params.searchString) !== 'undefined' && $scope.params.searchString !== '') {
-                    params += '&search=' + $scope.params.searchString;
+                if (typeof ($scope.searchString) !== 'undefined' && $scope.searchString !== '') {
+                    params += '&filter_string=' + $scope.searchString;
                 }
-                if (typeof ($scope.params.field) !== 'undefined') {
-                    params += '&field=' + $scope.params.field;
+                if (typeof ($scope.filterField) !== 'undefined' && $scope.filterField !== '') {
+                    params += '&filter_field=' + $scope.filterField;
                 }
-                if (typeof ($scope.params.reverse) !== 'undefined') {
-                    params += '&order=' + $scope.params.reverse;
+                if (typeof ($scope.order) !== 'undefined' && $scope.order !== '') {
+                    params += '&order=' + $scope.order;
+                }
+                if (typeof ($scope.orderField) !== 'undefined' && $scope.orderField !== '') {
+                    params += '&order_field=' + $scope.orderField;
                 }
                 $location.path('/params/' + params);
+            };
+
+            $scope.getTimes=function(n){
+                return new Array(n);
             };
 
             init();

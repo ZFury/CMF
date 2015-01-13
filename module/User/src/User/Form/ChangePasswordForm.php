@@ -9,14 +9,24 @@
 namespace User\Form;
 
 use Zend\Form\Form;
+use User\Form\Filter\ChangePasswordInputFilter;
 
+/**
+ * Class ChangePasswordForm
+ * @package User\Form
+ */
 class ChangePasswordForm extends Form
 {
-    public function __construct($name = null)
+    /**
+     * @param null $name
+     * @param array $options
+     */
+    public function __construct($name = null, $options = [])
     {
         parent::__construct('changePassword');
         $this->setAttribute('method', 'post');
 
+        $this->setInputFilter(new ChangePasswordInputFilter($options['serviceLocator']));
         $this->add(
             array(
                 'name' => 'currentPassword',

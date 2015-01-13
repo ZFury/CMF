@@ -12,4 +12,22 @@
  */
 
 return array(
+    'facebook' => array(
+            'appId' => '%appId%',
+            'appSecret' => '%appSecret%',
+        ),
+
+    'twitter' => array(
+        'siteUrl' => 'https://api.twitter.com/oauth',
+        'authorizeUrl' => 'https://api.twitter.com/oauth/authenticate',
+        'consumerKey' => '%consumerKey%',
+        'consumerSecret' => '%consumerSecret%',
+        'httpClientOptions' => array(
+            'adapter' => 'Zend\Http\Client\Adapter\Curl',
+            'curloptions' => array(
+                CURLOPT_SSL_VERIFYHOST => false,
+                CURLOPT_SSL_VERIFYPEER => false
+            )
+        )
+    ),
 );

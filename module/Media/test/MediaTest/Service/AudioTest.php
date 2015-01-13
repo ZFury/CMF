@@ -71,12 +71,18 @@ class AudioTest extends AbstractHttpControllerTestCase
     public function testAudioPath()
     {
         $audioPath = $this->audioService->audioPath($this->audioId, $this->audioEntityData['extension']);
-        $this->assertRegExp('/[a-zA-z]*\/[a-zA-z]*\/' . self::DIRECTORY_NAME . '*\/[0-9]*\/[0-9]*\/[0-9]*\/[0-9]*\.[a-zA-Z]*/', $audioPath);
+        $this->assertRegExp(
+            '/[a-zA-z]*\/[a-zA-z]*\/' .
+            self::DIRECTORY_NAME .
+            '*\/[0-9]*\/[0-9]*\/[0-9]*\/[0-9]*\.[a-zA-Z]*/',
+            $audioPath
+        );
     }
 
     public function testAudioPathOnlyPath()
     {
-        $audioPath = $this->audioService->audioPath($this->audioId, $this->audioEntityData['extension'], \Media\Service\File::FROM_PUBLIC);
+        $audioPath = $this->audioService
+            ->audioPath($this->audioId, $this->audioEntityData['extension'], \Media\Service\File::FROM_PUBLIC);
         $this->assertRegExp(
             '/[a-zA-z]*\/' .
             self::DIRECTORY_NAME .

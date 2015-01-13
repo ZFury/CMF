@@ -166,27 +166,22 @@ div.container a.brand {
     margin: 0 auto;
 }
 
-.login-input {
+.set-password {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.forgot-password {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.input-field {
     margin-bottom: 3px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-}
-.login-input-pass {
-    margin-bottom: 10px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-}
-
-.signup-input {
-    margin-bottom: -1px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-}
-
-.signup-input-confirm {
-    margin-bottom: 10px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
 }
 
 .create-account {

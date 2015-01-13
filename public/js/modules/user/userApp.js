@@ -1,5 +1,4 @@
 (function() {
-
     var dependencies = [
         'angular',
         'angularSanitize',
@@ -16,7 +15,7 @@
         userGridController
         ) {
 
-        var app = angular.module('zfstarter', ['ngSanitize']);
+        var app = angular.module('zfstarter', ['ngRoute']);
         app
             .factory('userService', userService)
             .controller('userGridController', userGridController);

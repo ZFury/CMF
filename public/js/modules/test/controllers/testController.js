@@ -7,12 +7,13 @@
             $scope.test = {};
             $scope.testError = {};
             $scope.params = {};
-            $scope.params.limit = 5;
+            $scope.limit = 5;
             $scope.page = 1;
             $scope.currentPage = 1;
             $scope.reverse = true;
-            $scope.defaultOrder = 'email';
-            $scope.defaultFilter = 'email';
+            $scope.defaultOrder = 'test.email';
+            $scope.defaultFilter = 'test.email';
+            $scope.filterOptions = {};
 
             /**
              * Create test
@@ -42,7 +43,7 @@
                 if (typeof($scope.filterField) === 'undefined') {
                     $scope.filterField = $scope.defaultFilter;
                 }
-                testService.getTests($scope.page, $scope.orderField, $scope.order, $scope.filterField, $scope.searchString, function(response) {
+                testService.getTests($scope.page, $scope.orderField, $scope.order, $scope.filterField, $scope.searchString, $scope.limit, function(response) {
                     $scope.testGrid = [];
                     angular.forEach(response.data,function(item) {
                         $scope.testGrid.push(item);
@@ -53,7 +54,13 @@
                     $scope.defaultLimit = response.defaultLimit;
                     $scope.urlPrev = response.urlPrev;
                     $scope.urlNext = response.urlNext;
+                    $scope.columns = response.columns;
                     $scope.gridPages = Math.ceil(response.count/$scope.params.limit);
+                    angular.forEach($scope.columns, function(value, key) {
+                        if ($.inArray(key, $scope.allowedFilters) !== -1) {
+                            $scope.filterOptions[key] = value;
+                        }
+                    });
                 });
             };
 
@@ -105,7 +112,7 @@
              * */
             $scope.changeLimit = function (limit) {
                 $scope.page = 1;
-                $scope.params.limit = limit;
+                $scope.limit = limit;
                 $scope.getTests();
             };
 
