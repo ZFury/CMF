@@ -10,10 +10,7 @@ namespace Install\Controller;
 
 use Doctrine\DBAL\Driver\PDOMySql\Driver;
 use Install\Form\DbConnection;
-use Install\Form\Fieldset\FromFieldset;
 use Install\Form\Filter\DbConnectionInputFilter;
-use Install\Form\Filter\FromCollectionInputFilter;
-use Install\Form\Filter\FromInputFilter;
 use Install\Form\Filter\MailConfigInputFilter;
 use Install\Form\Filter\ModulesInputFilter;
 use Install\Form\Modules;
@@ -179,7 +176,7 @@ class IndexController extends AbstractActionController
                 $mailForm->setData($sessionForms->offsetGet('mailForm'));
             }
         }
-//        var_dump($mailForm);die();
+
         return new ViewModel(['mailForm' => $mailForm]);
     }
 
@@ -209,7 +206,6 @@ class IndexController extends AbstractActionController
             $modulesForm->setData($this->getRequest()->getPost());
             if ($modulesForm->isValid()) {
                 $sessionForms->offsetSet('modulesForm', $modulesForm->getData());
-
 
                 try {
                     $installService->hideModules($modulesForm);
@@ -308,11 +304,9 @@ class IndexController extends AbstractActionController
         $checked = $installService->checkFiles();
         $checkedDirectoriesLocal = $checked['checkedDirectories'];
         $checkedFilesLocal = $checked['checkedFiles'];
-
         $checked = $installService->checkFiles(Install::GLOBAL_REQUIREMENTS);
         $checkedDirectoriesGlobal = $checked['checkedDirectories'];
         $checkedFilesGlobal = $checked['checkedFiles'];
-
         $checkedDirectories = array_merge($checkedDirectoriesLocal, $checkedDirectoriesGlobal);
         $checkedFiles = array_merge($checkedFilesLocal, $checkedFilesGlobal);
 
@@ -320,6 +314,7 @@ class IndexController extends AbstractActionController
         $doctrine = [];
         exec('./vendor/bin/doctrine-module orm:schema-tool:update --force', $output, $returnUpdate);
         exec('vendor/doctrine/doctrine-module/bin/doctrine-module migrations:migrate --dry-run', $output, $returnMigrate);
+
         if ((isset($returnUpdate) && 0 === $returnUpdate) && (isset($returnMigrate) && 0 === $returnMigrate)) {
             $doctrine['status'] = Install::GOOD;
             $doctrine['message'] = "Doctrine2 had successfully updated DB schema and migrated!";
@@ -347,8 +342,8 @@ class IndexController extends AbstractActionController
     public function setProgress()
     {
         $doneSteps = $this->getServiceLocator()->get('Install\Service\Install')->checkProgress();
-
         $this->layout()->setVariable('done_steps', $doneSteps);
+
         foreach ($doneSteps as $step) {
             $this->layout()->setVariable(array_keys($step)[0], array_values($step)[0]);
         }

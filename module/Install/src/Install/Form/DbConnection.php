@@ -55,14 +55,5 @@ class DbConnection extends Form
                 'label' => 'DB name',
             ],
         ]);
-
-//        $this->add([
-//            'name' => 'submit',
-//            'type' => 'Submit',
-//            'attributes' => [
-//                'value' => 'Submit',
-//                'id' => 'submitbutton',
-//            ],
-//        ]);
     }
 }

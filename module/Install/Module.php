@@ -15,11 +15,17 @@ use Zend\Session\Container;
 
 class Module
 {
+    /**
+     * @return mixed
+     */
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
     }
 
+    /**
+     * @return array
+     */
     public function getAutoloaderConfig()
     {
         return array(
@@ -31,6 +37,9 @@ class Module
         );
     }
 
+    /**
+     * @param MvcEvent $e
+     */
     public function onBootstrap(MvcEvent $e)
     {
         $application = $e->getApplication();
@@ -39,15 +48,13 @@ class Module
         $em->attach(MvcEvent::EVENT_DISPATCH, array($this, 'onDispatch'), -1000);
     }
 
+    /**
+     * @param MvcEvent $e
+     * @return Response
+     */
     public function preDispatch(MvcEvent $e)
     {
         if (!$e->getRouteMatch()->getParam('module') || $e->getRouteMatch()->getParam('module') !== 'install') {
-//            $controller = $e->getTarget();
-//            $controller->getPluginManager()->get('redirect')->toRoute('home');
-//            $e->getRouteMatch()
-//                ->setParam('controller', 'Install\Controller\Index')
-//                ->setParam('action', 'global-requirements');
-
             $session = new Container('progress_tracker');
             $currentStep = Install::getSteps()[array_search($session->offsetGet('current_step'), Install::getSteps())];
             switch ($currentStep) {
@@ -64,7 +71,6 @@ class Module
                     $action = $currentStep;
                     break;
             }
-
             $response = new Response();
             $response->setStatusCode(302);
             $response->getHeaders()
@@ -74,6 +80,9 @@ class Module
         }
     }
 
+    /**
+     * @param MvcEvent $e
+     */
     public function onDispatch(MvcEvent $e)
     {
         $e->getTarget()->layout('layout/install/install');

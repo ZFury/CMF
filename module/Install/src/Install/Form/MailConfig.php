@@ -42,38 +42,36 @@ class MailConfig extends Form
                 'count' => 1,
                 'should_create_template' => true,
                 'allow_add' => true,
-                'target_element' => array(
+                'target_element' => [
                     'type' => 'Install\Form\Fieldset\HeaderFieldset'
-                )
+                ]
             ],
         ]);
 
-        $this->add(array(
+        $this->add([
             'type' => 'Zend\Form\Element\Collection',
             'name' => 'emails',
-            'options' => array(
-//                'label' => 'Please enter some emails where letters will be forwarded',
+            'options' => [
                 'count' => 1,
                 'should_create_template' => true,
                 'allow_add' => true,
-                'target_element' => array(
+                'target_element' => [
                     'type' => 'Install\Form\Fieldset\EmailsFieldset'
-                )
-            )
-        ));
+                ]
+            ]
+        ]);
 
-        $this->add(array(
+        $this->add([
             'type' => 'Zend\Form\Element\Collection',
             'name' => 'from',
-            'options' => array(
-//                'label' => 'Please enter some emails will be showed to a recipient as senders emails',
+            'options' => [
                 'count' => 1,
                 'should_create_template' => true,
                 'allow_add' => true,
-                'target_element' => array(
+                'target_element' => [
                     'type' => 'Install\Form\Fieldset\FromFieldset',
-                )
-            )
-        ));
+                ]
+            ]
+        ]);
     }
 }

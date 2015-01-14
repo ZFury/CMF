@@ -70,14 +70,5 @@ class Modules extends Form
                 'unchecked_value' => 'bad'
             ],
         ]);
-
-//        $this->add([
-//            'name' => 'submit',
-//            'type' => 'Submit',
-//            'attributes' => [
-//                'value' => 'Submit',
-//                'id' => 'submitbutton',
-//            ],
-//        ]);
     }
 }

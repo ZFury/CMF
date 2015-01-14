@@ -33,22 +33,28 @@ class Install
         $this->sm = $sm;
     }
 
+    /**
+     * @param $search
+     * @param $array
+     * @param bool $strict
+     * @return bool
+     */
     public function inArrayRecursive($search, $array, $strict = false)
     {
         $result = false;
         if (in_array($search, $array)) {
             return true;
-        }//if
+        }
         foreach ($array as $value) {
             if (is_array($value)) {
                 $result = $this->inArrayRecursive($search, $value);
                 if ($result) {
                     return true;
-                }//if
+                }
             } else {
                 return ($strict) ? ($search === $value) : ($search == $value);
-            }//if
-        }//foreach
+            }
+        }
         return $result;
     }
 
@@ -114,6 +120,9 @@ class Install
         }
     }
 
+    /**
+     * @param DbConnection $dbForm
+     */
     public function createDbConfig(DbConnection $dbForm)
     {
         $user = $dbForm->getData()['user'];
@@ -137,6 +146,9 @@ class Install
         fclose($config);
     }
 
+    /**
+     * @param DbConnection $dbForm
+     */
     public function checkDbConnection(DbConnection $dbForm)
     {
         //check db connection
@@ -159,6 +171,9 @@ class Install
         $dbh = new \PDO($dsn, $user, $password);
     }
 
+    /**
+     * @return null|string
+     */
     public function checkPreviousStep()
     {
         $session = new Container('progress_tracker');
@@ -185,6 +200,9 @@ class Install
         }
     }
 
+    /**
+     * @return array
+     */
     public function checkProgress()
     {
         $session = new Container('progress_tracker');
@@ -202,11 +220,18 @@ class Install
         return $doneSteps;
     }
 
+    /**
+     * @return array
+     */
     public static function getSteps()
     {
         return [ 'global_requirements', 'db', 'mail', 'modules', 'modules_requirements', 'finish' ];
     }
 
+    /**
+     * @param bool $global
+     * @return array
+     */
     public function checkFiles($global = self::LOCAL_REQUIREMENTS)
     {
         $checkedDirectories = [];
@@ -230,20 +255,55 @@ class Install
                 if (file_exists($filePath) && is_writable($filePath)) {
                     if (is_dir($filePath)) {
                         $message="Directory '$fileName' which path is '$filePath' exists and is writable!";
-                        array_push($checkedDirectories, [$fileName => ['message' => $message, 'status' => Install::GOOD, 'path' => $filePath]]);
+                        array_push(
+                            $checkedDirectories,
+                            [
+                                $fileName => [
+                                    'message' => $message,
+                                    'status' => Install::GOOD,
+                                    'path' => $filePath]
+                            ]
+                        );
                     } else {
                         $message="File '$fileName' which path is '$filePath' exists and is writable!";
-                        array_push($checkedFiles, [$fileName => ['message' => $message, 'status' => Install::GOOD, 'path' => $filePath]]);
+                        array_push(
+                            $checkedFiles,
+                            [
+                                $fileName => [
+                                    'message' => $message,
+                                    'status' => Install::GOOD,
+                                    'path' => $filePath
+                                ]
+                            ]
+                        );
                     }
                 } else {
                     if (is_dir($filePath)) {
-                        $message = "Directory '$fileName' which path is '$filePath' does not exist or is not writable." .
-                            "Please, make it writable or create!";
-                        array_push($checkedDirectories, [$fileName => ['message' => $message, 'status' => Install::BAD, 'path' => $filePath]]);
+                        $message = "Directory '$fileName' which path is '$filePath' does not exist or is not writable."
+                            . "Please, make it writable or create!";
+                        array_push(
+                            $checkedDirectories,
+                            [
+                                $fileName => [
+                                    'message' => $message,
+                                    'status' => Install::BAD,
+                                    'path' => $filePath
+                                ]
+                            ]
+                        );
                     } else {
                         $message = "File '$fileName' which path is '$filePath' does not exist or is not writable." .
                             "Please, make it writable or create!";
-                        array_push($checkedFiles, [$fileName => ['message' => $message, 'status' => Install::BAD, 'path' => $filePath]]);
+                        array_push(
+                            $checkedFiles,
+                            [
+                                $fileName => [
+                                    'message' => $message,
+                                    'status' => Install::BAD,
+                                    'path' => $filePath
+                                ]
+                            ]
+                        );
                     }
                 }
             }
