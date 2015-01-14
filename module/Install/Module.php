@@ -56,21 +56,7 @@ class Module
     {
         if (!$e->getRouteMatch()->getParam('module') || $e->getRouteMatch()->getParam('module') !== 'install') {
             $session = new Container('progress_tracker');
-            $currentStep = Install::getSteps()[array_search($session->offsetGet('current_step'), Install::getSteps())];
-            switch ($currentStep) {
-                case 'global_requirements':
-                    $action = 'global-requirements';
-                    break;
-                case 'db':
-                    $action = 'database';
-                    break;
-                case 'modules_requirements':
-                    $action = 'modules-requirements';
-                    break;
-                default:
-                    $action = $currentStep;
-                    break;
-            }
+            $action = Install::getStepAction(Install::getCurrentStep());
             $response = new Response();
             $response->setStatusCode(302);
             $response->getHeaders()

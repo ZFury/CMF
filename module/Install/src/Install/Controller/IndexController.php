@@ -23,6 +23,9 @@ use Install\Service\Install;
 
 class IndexController extends AbstractActionController
 {
+    /**
+     * @return ViewModel
+     */
     public function globalRequirementsAction()
     {
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
@@ -33,14 +36,10 @@ class IndexController extends AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             $sessionProgress->offsetSet('global_requirements', Install::DONE);
-
-            return $this->redirect()->toRoute(
-                'install/default',
-                [
-                    'controller' => 'index',
-                    'action' => 'database'
-                ]
-            );
+            return $this->redirect()->toRoute('install/default', [
+                'controller' => 'index',
+                'action' => 'database'
+            ]);
         } else {
             //PHPVERSION
             if (Install::PHP_VERSION == phpversion() || Install::PHP_VERSION <= phpversion()) {
@@ -48,10 +47,8 @@ class IndexController extends AbstractActionController
                 $phpVersion['message'] = "PHP version is compatible with ZFStarter!";
             } else {
                 $phpVersion['status'] = false;
-                $phpVersion['message'] =
-                    "PHP version is not compatible for ZFStarter! It might be " .
-                    Install::PHP_VERSION .
-                    " or higher";
+                $phpVersion['message'] = "PHP version is not compatible for ZFStarter! It might be " .
+                    Install::PHP_VERSION . " or higher";
             }
 
             //FILES&DIRECTORIES
@@ -74,6 +71,9 @@ class IndexController extends AbstractActionController
         }
     }
 
+    /**
+     * @return ViewModel
+     */
     public function databaseAction()
     {
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
@@ -81,13 +81,10 @@ class IndexController extends AbstractActionController
         $sessionProgress->offsetSet('current_step', 'db');
         $previousStep = $installService->checkPreviousStep();
         if (null !== $previousStep) {
-            return $this->redirect()->toRoute(
-                'install/default',
-                [
-                    'controller' => 'index',
-                    'action' => $previousStep
-                ]
-            );
+            return $this->redirect()->toRoute('install/default', [
+                'controller' => 'index',
+                'action' => $previousStep
+            ]);
         }
         $sessionProgress->offsetSet('db', Install::TODO);
         $sessionForms = new Container('forms');
@@ -100,18 +97,14 @@ class IndexController extends AbstractActionController
             if ($dbForm->isValid()) {
                 $sessionForms->offsetSet('dbForm', $dbForm->getData());
                 $sessionProgress->offsetSet('db', Install::DONE);
-
                 try {
                     $installService->checkDbConnection($dbForm);
                     $installService->createDbConfig($dbForm);
 
-                    return $this->redirect()->toRoute(
-                        'install/default',
-                        [
-                            'controller' => 'index',
-                            'action' => 'mail'
-                        ]
-                    );
+                    return $this->redirect()->toRoute('install/default', [
+                        'controller' => 'index',
+                        'action' => 'mail'
+                    ]);
                 } catch (\PDOException $e) {
                     $dbForm->get('host')->setMessages([$e->getMessage()]);
                 } catch (\Exception $e) {
@@ -128,6 +121,9 @@ class IndexController extends AbstractActionController
         return new ViewModel(['dbForm' => $dbForm]);
     }
 
+    /**
+     * @return ViewModel
+     */
     public function mailAction()
     {
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
@@ -135,13 +131,10 @@ class IndexController extends AbstractActionController
         $sessionProgress->offsetSet('current_step', 'mail');
         $previousStep = $installService->checkPreviousStep();
         if (null !== $previousStep) {
-            return $this->redirect()->toRoute(
-                'install/default',
-                [
-                    'controller' => 'index',
-                    'action' => $previousStep
-                ]
-            );
+            return $this->redirect()->toRoute('install/default', [
+                'controller' => 'index',
+                'action' => $previousStep
+            ]);
         }
 
         $sessionProgress->offsetSet('mail', Install::TODO);
@@ -159,13 +152,10 @@ class IndexController extends AbstractActionController
                     $installService->createMailConfig($mailForm);
                     $sessionProgress->offsetSet('mail', Install::DONE);
 
-                    return $this->redirect()->toRoute(
-                        'install/default',
-                        [
-                            'controller' => 'index',
-                            'action' => 'modules'
-                        ]
-                    );
+                    return $this->redirect()->toRoute('install/default', [
+                        'controller' => 'index',
+                        'action' => 'modules'
+                    ]);
                 } catch (\Exception $ex) {
                     $mailForm->get('host')->setMessages([$ex->getMessage()]);
                 }
@@ -180,6 +170,9 @@ class IndexController extends AbstractActionController
         return new ViewModel(['mailForm' => $mailForm]);
     }
 
+    /**
+     * @return ViewModel
+     */
     public function modulesAction()
     {
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
@@ -187,13 +180,10 @@ class IndexController extends AbstractActionController
         $sessionProgress->offsetSet('current_step', 'modules');
         $previousStep = $installService->checkPreviousStep();
         if (null !== $previousStep) {
-            return $this->redirect()->toRoute(
-                'install/default',
-                [
-                    'controller' => 'index',
-                    'action' => $previousStep
-                ]
-            );
+            return $this->redirect()->toRoute('install/default', [
+                'controller' => 'index',
+                'action' => $previousStep
+            ]);
         }
 
         $sessionProgress->offsetSet('modules', Install::TODO);
@@ -210,13 +200,10 @@ class IndexController extends AbstractActionController
                 try {
                     $installService->hideModules($modulesForm);
                     $sessionProgress->offsetSet('modules', Install::DONE);
-                    return $this->redirect()->toRoute(
-                        'install/default',
-                        [
-                            'controller' => 'index',
-                            'action' => 'modules-requirements'
-                        ]
-                    );
+                    return $this->redirect()->toRoute('install/default', [
+                        'controller' => 'index',
+                        'action' => 'modules-requirements'
+                    ]);
                 } catch (\Exception $e) {
                     $modulesForm->get('Categories')->setMessages([$e->getMessage()]);
                 }
@@ -231,6 +218,9 @@ class IndexController extends AbstractActionController
         return new ViewModel(['modulesForm' => $modulesForm]);
     }
 
+    /**
+     * @return ViewModel
+     */
     public function modulesRequirementsAction()
     {
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
@@ -238,37 +228,27 @@ class IndexController extends AbstractActionController
         $sessionProgress->offsetSet('current_step', 'modules_requirements');
         $previousStep = $installService->checkPreviousStep();
         if (null !== $previousStep) {
-            return $this->redirect()->toRoute(
-                'install/default',
-                [
-                    'controller' => 'index',
-                    'action' => $previousStep
-                ]
-            );
+            return $this->redirect()->toRoute('install/default', [
+                'controller' => 'index',
+                'action' => $previousStep
+            ]);
         }
-
         $sessionProgress->offsetSet('modules_requirements', Install::TODO);
         $this->setProgress();
-
         if ($this->getRequest()->isPost()) {
             $sessionProgress->offsetSet('modules_requirements', Install::DONE);
 
-            return $this->redirect()->toRoute(
-                'install/default',
-                [
-                    'controller' => 'index',
-                    'action' => 'finish'
-                ]
-            );
+            return $this->redirect()->toRoute('install/default', [
+                'controller' => 'index',
+                'action' => 'finish'
+            ]);
         } else {
             //TOOLS
             $checkedTools = $installService->checkTools();
-
             //FILES&DIRECTORIES
             $checked = $installService->checkFiles();
             $checkedDirectories = $checked['checkedDirectories'];
             $checkedFiles = $checked['checkedFiles'];
-
             $continue = Install::BAD;
             if (!$installService->inArrayRecursive(Install::BAD, $checkedDirectories) &&
                 !$installService->inArrayRecursive(Install::BAD, $checkedFiles)) {
@@ -284,6 +264,9 @@ class IndexController extends AbstractActionController
         }
     }
 
+    /**
+     * @return ViewModel
+     */
     public function finishAction()
     {
         $sessionProgress = new Container('progress_tracker');
@@ -291,15 +274,11 @@ class IndexController extends AbstractActionController
         $sessionProgress->offsetSet('current_step', 'finish');
         $previousStep = $installService->checkPreviousStep();
         if (null !== $previousStep) {
-            return $this->redirect()->toRoute(
-                'install/default',
-                [
-                    'controller' => 'index',
-                    'action' => $previousStep
-                ]
-            );
+            return $this->redirect()->toRoute('install/default', [
+                'controller' => 'index',
+                'action' => $previousStep
+            ]);
         }
-
         //FILES&DIRECTORIES
         $checked = $installService->checkFiles();
         $checkedDirectoriesLocal = $checked['checkedDirectories'];
@@ -309,12 +288,10 @@ class IndexController extends AbstractActionController
         $checkedFilesGlobal = $checked['checkedFiles'];
         $checkedDirectories = array_merge($checkedDirectoriesLocal, $checkedDirectoriesGlobal);
         $checkedFiles = array_merge($checkedFilesLocal, $checkedFilesGlobal);
-
         //DOCTRINE2
         $doctrine = [];
         exec('./vendor/bin/doctrine-module orm:schema-tool:update --force', $output, $returnUpdate);
         exec('vendor/doctrine/doctrine-module/bin/doctrine-module migrations:migrate --dry-run', $output, $returnMigrate);
-
         if ((isset($returnUpdate) && 0 === $returnUpdate) && (isset($returnMigrate) && 0 === $returnMigrate)) {
             $doctrine['status'] = Install::GOOD;
             $doctrine['message'] = "Doctrine2 had successfully updated DB schema and migrated!";
@@ -339,6 +316,9 @@ class IndexController extends AbstractActionController
         ]);
     }
 
+    /**
+     *
+     */
     public function setProgress()
     {
         $doneSteps = $this->getServiceLocator()->get('Install\Service\Install')->checkProgress();

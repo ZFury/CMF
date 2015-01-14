@@ -10,6 +10,7 @@ namespace Install\Service;
 use Install\Form\DbConnection;
 use Install\Form\MailConfig;
 use Install\Form\Modules;
+use Zend\Db\Adapter\Adapter;
 use Zend\Session\Container;
 
 class Install
@@ -59,22 +60,32 @@ class Install
     }
 
     /**
-     * @param string $filePath
-     * @param string $word
-     * @param string $newRow
-     * @param null $newFilePath
-     * @param bool $addAfter
+     * @param $filePath
+     * @param $word
+     * @param $newRow
+     * @param null $options
      */
-    public function replaceRowInFile($filePath, $word, $newRow, $newFilePath = null, $addAfter = false)
+    public function replaceRowInFile($filePath, $word, $newRow, $options = null)
     {
+        $newFilePath = null;
+        $afterLine = false;
+        if (is_array($options)) {
+            if (array_key_exists('newFilePath', $options)) {
+                $newFilePath = $options['newFilePath'];
+            }
+            if (array_key_exists('afterLine', $options)) {
+                $afterLine = $options['afterLine'];
+            }
+        }
+
         $reading = fopen($filePath, 'r');
         $writing = fopen("$filePath.tmp", 'w');
         $replaced = false;
         while (!feof($reading)) {
             $line = fgets($reading);
-            if ((true === $addAfter && !stristr($line, $newRow)) || false === $addAfter) {
+            if ((true === $afterLine && !stristr($line, $newRow)) || false === $afterLine) {
                 if (stristr($line, "$word")) {
-                    if (false === $addAfter) {
+                    if (false === $afterLine) {
                         $line = "$newRow\n";
                     } else {
                         $line = "$line\n$newRow\n";
@@ -107,12 +118,12 @@ class Install
         for ($i=0; $i<count($modules); $i++) {
             $module = array_keys($modules)[$i];
             if (Install::UNCHECKED == array_values($modules)[$i]) {
-                $this->replaceRowInFile('config/application.config.php', $module, "//$module\n");
+                $this->replaceRowInFile('config/application.config.php', $module, "//'$module'\n");
                 if (file_exists(Install::MODULES . $module)) {
                     rename(Install::MODULES . $module, Install::MODULES . ".$module");
                 }
             } else {
-                $this->replaceRowInFile('config/application.config.php', "//$module", "'$module',\n");
+                $this->replaceRowInFile('config/application.config.php', "//'$module'", "'$module',\n");
                 if (file_exists(Install::MODULES . ".$module")) {
                     rename(Install::MODULES . ".$module", Install::MODULES . $module);
                 }
@@ -151,53 +162,26 @@ class Install
      */
     public function checkDbConnection(DbConnection $dbForm)
     {
-        //check db connection
-        //FIXME: try to do it with zend db adapter or doctrine, but not native PDO
-//                $adapter = new Adapter([
-//                    'driver' => 'pdo',
-//                    'database' => $dbForm->getData()['dbname'],
-//                    'username' => $dbForm->getData()['user'],
-//                    'password' => $dbForm->getData()['password'],
-//                    'host' => $dbForm->getData()['host'],
-//                    'port' => $dbForm->getData()['port']
-//                ]);
-//                $isConnected = $adapter->getDriver()->getConnection()->isConnected();
+        //Zend\Db\Adapter\Adapter style:
+        //$adapter = new Adapter([
+            //'driver' => 'Pdo_Mysql',
+            //'database' => $dbForm->getData()['dbname'],
+            //'username' => $dbForm->getData()['user'],
+            //'password' => $dbForm->getData()['password'],
+            //'hostname' => $dbForm->getData()['host'],
+            //'port' => $dbForm->getData()['port']
+        //]);
+        //$adapter->getDriver()->getConnection()->connect();
+        //
+        //return $adapter->getDriver()->getConnection()->isConnected();
+
         $dbname=$dbForm->getData()['dbname'];
         $host=$dbForm->getData()['host'];
         $port=$dbForm->getData()['port'];
         $dsn = "mysql:dbname=$dbname;host=$host;port=$port";
         $user = $dbForm->getData()['user'];
         $password = $dbForm->getData()['password'];
-        $dbh = new \PDO($dsn, $user, $password);
-    }
-
-    /**
-     * @return null|string
-     */
-    public function checkPreviousStep()
-    {
-        $session = new Container('progress_tracker');
-        $previousStep = $this->getSteps()[array_search($session->offsetGet('current_step'), $this->getSteps())-1];
-        switch ($previousStep) {
-            case 'global_requirements':
-                $action = 'global-requirements';
-                break;
-            case 'db':
-                $action = 'database';
-                break;
-            case 'modules_requirements':
-                $action = 'modules-requirements';
-                break;
-            default:
-                $action = $previousStep;
-                break;
-        }
-
-        if ($session->offsetExists($previousStep) && $session->offsetGet($previousStep) == self::DONE) {
-            return null;
-        } else {
-            return $action;
-        }
+        $connection = new \PDO($dsn, $user, $password);
     }
 
     /**
@@ -218,14 +202,6 @@ class Install
         }
 
         return $doneSteps;
-    }
-
-    /**
-     * @return array
-     */
-    public static function getSteps()
-    {
-        return [ 'global_requirements', 'db', 'mail', 'modules', 'modules_requirements', 'finish' ];
     }
 
     /**
@@ -252,59 +228,27 @@ class Install
                 $filePath = array_values($uncheckedFiles[$i]);
                 $filePath = array_shift($filePath);
 
-                if (file_exists($filePath) && is_writable($filePath)) {
+                if (file_exists($filePath)) {
                     if (is_dir($filePath)) {
-                        $message="Directory '$fileName' which path is '$filePath' exists and is writable!";
-                        array_push(
-                            $checkedDirectories,
-                            [
-                                $fileName => [
-                                    'message' => $message,
-                                    'status' => Install::GOOD,
-                                    'path' => $filePath]
-                            ]
-                        );
+                        $message = 'Directory ';
+                        $whereToPush = &$checkedDirectories;
                     } else {
-                        $message="File '$fileName' which path is '$filePath' exists and is writable!";
-                        array_push(
-                            $checkedFiles,
-                            [
-                                $fileName => [
-                                    'message' => $message,
-                                    'status' => Install::GOOD,
-                                    'path' => $filePath
-                                ]
-                            ]
-                        );
+                        $message = 'File ';
+                        $whereToPush = &$checkedFiles;
                     }
-                } else {
-                    if (is_dir($filePath)) {
-                        $message = "Directory '$fileName' which path is '$filePath' does not exist or is not writable."
+                    if (is_writable($filePath)) {
+                        $message .= "'$fileName' which path is '$filePath' exists and is writable!";
+                        $status = Install::GOOD;
+                    } else {
+                        $message .= "'$fileName' which path is '$filePath' does not exist or is not writable."
                             . "Please, make it writable or create!";
-                        array_push(
-                            $checkedDirectories,
-                            [
-                                $fileName => [
-                                    'message' => $message,
-                                    'status' => Install::BAD,
-                                    'path' => $filePath
-                                ]
-                            ]
-                        );
-                    } else {
-                        $message = "File '$fileName' which path is '$filePath' does not exist or is not writable." .
-                            "Please, make it writable or create!";
-                        array_push(
-                            $checkedFiles,
-                            [
-                                $fileName => [
-                                    'message' => $message,
-                                    'status' => Install::BAD,
-                                    'path' => $filePath
-                                ]
-                            ]
-                        );
+                        $status = Install::BAD;
                     }
+                    array_push($whereToPush, [$fileName => [
+                                'message' => $message,
+                                'status' => $status,
+                                'path' => $filePath]
+                    ]);
                 }
             }
         }
@@ -326,15 +270,14 @@ class Install
                 $toolName = array_shift($toolName);
                 $versionCommand = array_values($uncheckedTools[$i]);
                 $versionCommand = array_shift($versionCommand);
-                $message = "$toolName which version command is '$versionCommand' ";
-
+                $message = "Tool '$toolName' which version command is '$versionCommand' ";
                 $output = [];
                 exec($versionCommand, $output, $return);
                 if (isset($return) && 0 === $return) {
-                    $message .= "exists";
+                    $message .= "exists!";
                     array_push($checkedTools, [$toolName => ['message' => $message, 'status' => Install::GOOD]]);
                 } else {
-                    $message .= "doesn't exist";
+                    $message .= "doesn't exist!";
                     array_push($checkedTools, [$toolName => ['message' => $message, 'status' => Install::BAD]]);
                 }
             }
@@ -375,15 +318,17 @@ class Install
                                 'config/autoload/mail.local.php',
                                 "'$headerName'",
                                 $newRow,
-                                'config/autoload/mail.local.php'
+                                ['newFilePath' => 'config/autoload/mail.local.php']
                             );
                         } else {
                             $this->replaceRowInFile(
                                 'config/autoload/mail.local.php',
                                 "'EMAILS'",
                                 $newRow,
-                                'config/autoload/mail.local.php',
-                                true
+                                [
+                                    'newFilePath' =>'config/autoload/mail.local.php',
+                                    'afterLine' => true
+                                ]
                             );
                         }
                     }
@@ -393,10 +338,65 @@ class Install
                         'config/autoload/mail.local.php',
                         "'$paramName'",
                         $newRow,
-                        'config/autoload/mail.local.php'
+                        [ 'newFilePath' => 'config/autoload/mail.local.php']
                     );
                 }
             }
         }
+    }
+
+    /**
+     * @return null|string
+     */
+    public function checkPreviousStep()
+    {
+        $session = new Container('progress_tracker');
+        $previousStep = $this->getSteps()[array_search($session->offsetGet('current_step'), $this->getSteps())-1];
+        if ($session->offsetExists($previousStep) && $session->offsetGet($previousStep) == self::DONE) {
+            return null;
+        } else {
+            return $this->getStepAction($previousStep);
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getCurrentStep()
+    {
+        $session = new Container('progress_tracker');
+        return self::getSteps()[array_search($session->offsetGet('current_step'), self::getSteps())];
+    }
+
+    /**
+     * @param $step
+     * @return string
+     */
+    public static function getStepAction($step)
+    {
+        switch ($step) {
+            case 'global_requirements':
+                $action = 'global-requirements';
+                break;
+            case 'db':
+                $action = 'database';
+                break;
+            case 'modules_requirements':
+                $action = 'modules-requirements';
+                break;
+            default:
+                $action = $step;
+                break;
+        }
+
+        return $action;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getSteps()
+    {
+        return ['global_requirements', 'db', 'mail', 'modules', 'modules_requirements', 'finish'];
     }
 }
