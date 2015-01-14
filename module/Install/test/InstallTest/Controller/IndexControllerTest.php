@@ -10,7 +10,6 @@ namespace InstallTest\Controller;
 use Install\Service\Install;
 use Zend\Http\Request;
 use Zend\Session\Container;
-use Zend\Stdlib\Parameters;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
 class IndexControllerTest extends AbstractHttpControllerTestCase
@@ -121,15 +120,15 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         $this->assertResponseStatusCode(200);
     }
 
-    public function testSubmitDatabaseAction()
-    {
-        $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('global_requirements', Install::DONE);
-        $this->dispatch('/install/index/database', Request::METHOD_POST, $this->getDbParams());
-        $this->assertRedirectTo('/install/index/mail');
-        $this->assertActionName('database');
-        $this->assertResponseStatusCode(302);
-    }
+//    public function testSubmitDatabaseAction()
+//    {
+//        $sessionProgress = new Container('progress_tracker');
+//        $sessionProgress->offsetSet('global_requirements', Install::DONE);
+//        $this->dispatch('/install/index/database', Request::METHOD_POST, $this->getDbParams());
+//        $this->assertRedirectTo('/install/index/mail');
+//        $this->assertActionName('database');
+//        $this->assertResponseStatusCode(302);
+//    }
 
     public function testMailAction()
     {
@@ -143,15 +142,15 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         $this->assertResponseStatusCode(200);
     }
 
-    public function testSubmitMailAction()
-    {
-        $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('db', Install::DONE);
-        $this->dispatch('/install/index/mail', Request::METHOD_POST, $this->getMailParams());
-        $this->assertRedirectTo('/install/index/modules');
-        $this->assertActionName('mail');
-        $this->assertResponseStatusCode(302);
-    }
+//    public function testSubmitMailAction()
+//    {
+//        $sessionProgress = new Container('progress_tracker');
+//        $sessionProgress->offsetSet('db', Install::DONE);
+//        $this->dispatch('/install/index/mail', Request::METHOD_POST, $this->getMailParams());
+//        $this->assertRedirectTo('/install/index/modules');
+//        $this->assertActionName('mail');
+//        $this->assertResponseStatusCode(302);
+//    }
 
     public function testModulesAction()
     {
