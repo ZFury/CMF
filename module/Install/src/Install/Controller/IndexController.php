@@ -30,12 +30,12 @@ class IndexController extends AbstractActionController
     {
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
         $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('global_requirements', Install::TODO);
-        $sessionProgress->offsetSet('current_step', 'global_requirements');
+        $sessionProgress->offsetSet('global-requirements', Install::TODO);
+        $sessionProgress->offsetSet('current_step', 'global-requirements');
         $this->setProgress();
 
         if ($this->getRequest()->isPost()) {
-            $sessionProgress->offsetSet('global_requirements', Install::DONE);
+            $sessionProgress->offsetSet('global-requirements', Install::DONE);
             return $this->redirect()->toRoute('install/default', [
                 'controller' => 'index',
                 'action' => 'database'
@@ -78,7 +78,7 @@ class IndexController extends AbstractActionController
     {
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
         $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('current_step', 'db');
+        $sessionProgress->offsetSet('current_step', 'database');
         $previousStep = $installService->checkPreviousStep();
         if (null !== $previousStep) {
             return $this->redirect()->toRoute('install/default', [
@@ -86,7 +86,7 @@ class IndexController extends AbstractActionController
                 'action' => $previousStep
             ]);
         }
-        $sessionProgress->offsetSet('db', Install::TODO);
+        $sessionProgress->offsetSet('database', Install::TODO);
         $sessionForms = new Container('forms');
         $this->setProgress();
 
@@ -96,7 +96,7 @@ class IndexController extends AbstractActionController
             $dbForm->setData($this->getRequest()->getPost());
             if ($dbForm->isValid()) {
                 $sessionForms->offsetSet('dbForm', $dbForm->getData());
-                $sessionProgress->offsetSet('db', Install::DONE);
+                $sessionProgress->offsetSet('database', Install::DONE);
                 try {
                     $installService->checkDbConnection($dbForm);
                     $installService->createDbConfig($dbForm);
@@ -225,7 +225,7 @@ class IndexController extends AbstractActionController
     {
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
         $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('current_step', 'modules_requirements');
+        $sessionProgress->offsetSet('current_step', 'modules-requirements');
         $previousStep = $installService->checkPreviousStep();
         if (null !== $previousStep) {
             return $this->redirect()->toRoute('install/default', [
@@ -233,10 +233,10 @@ class IndexController extends AbstractActionController
                 'action' => $previousStep
             ]);
         }
-        $sessionProgress->offsetSet('modules_requirements', Install::TODO);
+        $sessionProgress->offsetSet('modules-requirements', Install::TODO);
         $this->setProgress();
         if ($this->getRequest()->isPost()) {
-            $sessionProgress->offsetSet('modules_requirements', Install::DONE);
+            $sessionProgress->offsetSet('modules-requirements', Install::DONE);
 
             return $this->redirect()->toRoute('install/default', [
                 'controller' => 'index',
@@ -307,6 +307,8 @@ class IndexController extends AbstractActionController
 
         //HIDING INSTALL
         $installService->replaceRowInFile('config/application.config.php', "'Install'", "//'Install'\n");
+        //UNHIDING BJY
+        $installService->replaceRowInFile('config/application.config.php', "//'BjyAuthorize'", "'BjyAuthorize'\n");
 //        rename(Install::MODULES . "Install", Install::MODULES . ".Install");
 
         return new ViewModel([
@@ -321,11 +323,7 @@ class IndexController extends AbstractActionController
      */
     public function setProgress()
     {
-        $doneSteps = $this->getServiceLocator()->get('Install\Service\Install')->checkProgress();
-        $this->layout()->setVariable('done_steps', $doneSteps);
-
-        foreach ($doneSteps as $step) {
-            $this->layout()->setVariable(array_keys($step)[0], array_values($step)[0]);
-        }
+        $steps = $this->getServiceLocator()->get('Install\Service\Install')->checkProgress();
+        $this->layout()->setVariable('steps', $steps);
     }
 }

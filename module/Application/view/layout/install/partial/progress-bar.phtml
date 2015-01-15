@@ -1,29 +1,8 @@
-<?php
-$stepsArray = [
-    'global_requirements' => null,
-    'db' => null,
-    'modules' => null,
-    'modules_requirements' => null,
-    'mail' => null,
-    'finish' => null,
-];
-if ($this->done_steps) {
-    foreach ($this->done_steps as $step) {
-        foreach (\Install\Service\Install::getSteps() as $stepName)
-        {
-            if (array_key_exists($stepName, $step)) {
-                $stepsArray[$stepName] = $step[$stepName];
-            }
-        }
-    }
-}
-?>
-
 <ol class="progress-tracker" data-progress-tracker-steps="<?=\Install\Service\Install::STEPS_NUMBER?>">
-    <li class="<?= !$stepsArray['global_requirements'] ? 'progress-tracker-todo' : $this->global_requirements?>">Global requirements</li><!--
- --><li class="<?= !$stepsArray['db'] ? 'progress-tracker-todo' : $this->db?>">DB connection</li><!--
- --><li class="<?= !$stepsArray['mail'] ? 'progress-tracker-todo' : $this->mail?>">Mail configuration</li><!--
- --><li class="<?= !$stepsArray['modules'] ? 'progress-tracker-todo' : $this->modules?>">Needed modules</li><!--
- --><li class="<?= !$stepsArray['modules_requirements'] ? 'progress-tracker-todo' : $this->modules_requirements?>">Modules requirements</li><!--
- --><li class="<?= !$stepsArray['finish'] ? 'progress-tracker-todo' : $this->finish?>">Done</li>
+    <li class="<?= !isset($this->steps['global-requirements']) ? 'progress-tracker-todo' : $this->steps['global-requirements'] ?>">Global requirements</li><!--
+ --><li class="<?= !isset($this->steps['database']) ? 'progress-tracker-todo' : $this->steps['database'] ?>">DB connection</li><!--
+ --><li class="<?= !isset($this->steps['mail']) ? 'progress-tracker-todo' : $this->steps['mail']?>">Mail configuration</li><!--
+ --><li class="<?= !isset($this->steps['modules']) ? 'progress-tracker-todo' : $this->steps['modules']?>">Needed modules</li><!--
+ --><li class="<?= !isset($this->steps['modules-requirements']) ? 'progress-tracker-todo' : $this->steps['modules-requirements']?>">Modules requirements</li><!--
+ --><li class="<?= !isset($this->steps['finish']) ? 'progress-tracker-todo' : $this->steps['finish']?>">Done</li>
 </ol>

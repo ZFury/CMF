@@ -191,14 +191,8 @@ class Install
     {
         $session = new Container('progress_tracker');
         $doneSteps = [];
-        $steps = $this->getSteps();
-        for ($i=0; $i<Install::STEPS_NUMBER; $i++) {
-            if ($session->offsetExists($steps[$i])) {
-                array_push($doneSteps, [ $steps[$i] => $session->offsetGet($steps[$i])]);
-            } else {
-                $session->offsetSet($steps[$i], Install::TODO);
-                array_push($doneSteps, [ $steps[$i] => $session->offsetGet($steps[$i])]);
-            }
+        foreach ($this->getSteps() as $step) {
+            $doneSteps[$step] = $session->offsetGet($step) ? $session->offsetGet($step) : Install::TODO;
         }
 
         return $doneSteps;
@@ -358,7 +352,7 @@ class Install
         if ($session->offsetExists($previousStep) && $session->offsetGet($previousStep) == self::DONE) {
             return null;
         } else {
-            return $this->getStepAction($previousStep);
+            return $previousStep;
         }
     }
 
@@ -372,34 +366,10 @@ class Install
     }
 
     /**
-     * @param $step
-     * @return string
-     */
-    public static function getStepAction($step)
-    {
-        switch ($step) {
-            case 'global_requirements':
-                $action = 'global-requirements';
-                break;
-            case 'db':
-                $action = 'database';
-                break;
-            case 'modules_requirements':
-                $action = 'modules-requirements';
-                break;
-            default:
-                $action = $step;
-                break;
-        }
-
-        return $action;
-    }
-
-    /**
      * @return array
      */
     public static function getSteps()
     {
-        return ['global_requirements', 'db', 'mail', 'modules', 'modules_requirements', 'finish'];
+        return ['global-requirements', 'database', 'mail', 'modules', 'modules-requirements', 'finish'];
     }
 }

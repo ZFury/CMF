@@ -112,7 +112,7 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
     public function testDatabaseAction()
     {
         $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('global_requirements', Install::DONE);
+        $sessionProgress->offsetSet('global-requirements', Install::DONE);
         $this->dispatch('/install/index/database');
         $this->assertEquals('install', $this->getRouteMatch()->getParam('module'));
         $this->assertEquals('Install\Controller\Index', $this->getRouteMatch()->getParam('controller'));
@@ -123,7 +123,7 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
 //    public function testSubmitDatabaseAction()
 //    {
 //        $sessionProgress = new Container('progress_tracker');
-//        $sessionProgress->offsetSet('global_requirements', Install::DONE);
+//        $sessionProgress->offsetSet('global-requirements', Install::DONE);
 //        $this->dispatch('/install/index/database', Request::METHOD_POST, $this->getDbParams());
 //        $this->assertRedirectTo('/install/index/mail');
 //        $this->assertActionName('database');
@@ -133,7 +133,7 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
     public function testMailAction()
     {
         $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('db', Install::DONE);
+        $sessionProgress->offsetSet('database', Install::DONE);
         $this->dispatch('/install/index/mail');
         $this->assertEquals('install', $this->getRouteMatch()->getParam('module'));
         $this->assertEquals('Install\Controller\Index', $this->getRouteMatch()->getParam('controller'));
@@ -145,7 +145,7 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
 //    public function testSubmitMailAction()
 //    {
 //        $sessionProgress = new Container('progress_tracker');
-//        $sessionProgress->offsetSet('db', Install::DONE);
+//        $sessionProgress->offsetSet('database', Install::DONE);
 //        $this->dispatch('/install/index/mail', Request::METHOD_POST, $this->getMailParams());
 //        $this->assertRedirectTo('/install/index/modules');
 //        $this->assertActionName('mail');

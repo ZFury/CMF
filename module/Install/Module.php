@@ -56,7 +56,7 @@ class Module
     {
         if (!$e->getRouteMatch()->getParam('module') || $e->getRouteMatch()->getParam('module') !== 'install') {
             $session = new Container('progress_tracker');
-            $action = Install::getStepAction(Install::getCurrentStep());
+            $action = Install::getCurrentStep();
             $response = new Response();
             $response->setStatusCode(302);
             $response->getHeaders()
