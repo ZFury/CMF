@@ -120,15 +120,15 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         $this->assertResponseStatusCode(200);
     }
 
-//    public function testSubmitDatabaseAction()
-//    {
-//        $sessionProgress = new Container('progress_tracker');
-//        $sessionProgress->offsetSet('global-requirements', Install::DONE);
-//        $this->dispatch('/install/index/database', Request::METHOD_POST, $this->getDbParams());
-//        $this->assertRedirectTo('/install/index/mail');
-//        $this->assertActionName('database');
-//        $this->assertResponseStatusCode(302);
-//    }
+    public function testSubmitDatabaseAction()
+    {
+        $sessionProgress = new Container('progress_tracker');
+        $sessionProgress->offsetSet('global-requirements', Install::DONE);
+        $this->dispatch('/install/index/database', Request::METHOD_POST, $this->getDbParams());
+        $this->assertRedirectTo('/install/index/mail');
+        $this->assertActionName('database');
+        $this->assertResponseStatusCode(302);
+    }
 
     public function testMailAction()
     {
@@ -142,15 +142,15 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         $this->assertResponseStatusCode(200);
     }
 
-//    public function testSubmitMailAction()
-//    {
-//        $sessionProgress = new Container('progress_tracker');
-//        $sessionProgress->offsetSet('database', Install::DONE);
-//        $this->dispatch('/install/index/mail', Request::METHOD_POST, $this->getMailParams());
-//        $this->assertRedirectTo('/install/index/modules');
-//        $this->assertActionName('mail');
-//        $this->assertResponseStatusCode(302);
-//    }
+    public function testSubmitMailAction()
+    {
+        $sessionProgress = new Container('progress_tracker');
+        $sessionProgress->offsetSet('database', Install::DONE);
+        $this->dispatch('/install/index/mail', Request::METHOD_POST, $this->getMailParams());
+        $this->assertRedirectTo('/install/index/modules');
+        $this->assertActionName('mail');
+        $this->assertResponseStatusCode(302);
+    }
 
     public function testModulesAction()
     {
@@ -202,7 +202,7 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         $this->assertEquals('install', $this->getRouteMatch()->getParam('module'));
         $this->assertEquals('Install\Controller\Index', $this->getRouteMatch()->getParam('controller'));
         $this->assertActionName('finish');
-        $this->assertResponseStatusCode(302);
+        $this->assertResponseStatusCode(200);
     }
 
     public function getRouteMatch()
