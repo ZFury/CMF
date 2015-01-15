@@ -21,6 +21,7 @@ class Grid extends AbstractGrid
                 'pages.updated' => 'Updated',
             ]
         )->setAllowedFilters(['pages.title', 'pages.description'])
-            ->setAllowedOrders(['pages.id', 'pages.title', 'pages.description', 'pages.created', 'pages.updated']);
+            ->setAllowedOrders(['pages.id', 'pages.title', 'pages.description', 'pages.created', 'pages.updated'])
+            ->setSphinxIndex('pagesIndex');
     }
 }

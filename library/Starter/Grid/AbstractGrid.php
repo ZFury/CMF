@@ -233,8 +233,12 @@ abstract class AbstractGrid
                 $adapter = $this->sm->get('SphinxSearch\Db\Adapter\Adapter');
                 $search = new Search($adapter);
 
-                $rowset = $search->search($this->index, function(Select $select) use ($filter) {
-                    $select->where(new Match('?', $filter));
+//                if ($limit > 1000) { $limit = 1000 ;}
+//                if ($offset > 1000) { $offset = 1000 ;}
+
+                $rowset = $search->search($this->index, function(Select $select) use ($filter, $limit, $offset) {
+                    $select->where(new Match('?', $filter))->limit($limit)->offset($offset)
+                        ->option(['max_matches' => 5000], $flag = Select::OPTIONS_MERGE);
                 });
 
                 $data = array();
@@ -243,12 +247,10 @@ abstract class AbstractGrid
                 }
 
                 $this->data = $data;
-                $this->total = $rowset->count();
-
+                $this->total = $this->countTotalRows();
 
                 return;
             }
-
             $source->where(
                 $source->expr()->orX()
                     ->add(
