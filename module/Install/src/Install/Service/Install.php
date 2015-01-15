@@ -287,6 +287,12 @@ class Install
 
     public function createMailConfig(MailConfig $mailForm)
     {
+        $this->replaceRowInFile(
+            'config/autoload/mail.local.php.dist',
+            "<?php",
+            "<?php\n",
+            ['newFilePath' => 'config/autoload/mail.local.php']
+        );
         for ($i=0; $i<count($mailForm->getData()); $i++) {
             $paramName = array_keys($mailForm->getData())[$i];
             $paramValue = array_values($mailForm->getData())[$i];
@@ -317,8 +323,7 @@ class Install
                             $this->replaceRowInFile(
                                 'config/autoload/mail.local.php',
                                 "'$headerName'",
-                                $newRow,
-                                ['newFilePath' => 'config/autoload/mail.local.php']
+                                $newRow
                             );
                         } else {
                             $this->replaceRowInFile(
@@ -326,7 +331,6 @@ class Install
                                 "'EMAILS'",
                                 $newRow,
                                 [
-                                    'newFilePath' =>'config/autoload/mail.local.php',
                                     'afterLine' => true
                                 ]
                             );
@@ -337,8 +341,7 @@ class Install
                     $this->replaceRowInFile(
                         'config/autoload/mail.local.php',
                         "'$paramName'",
-                        $newRow,
-                        [ 'newFilePath' => 'config/autoload/mail.local.php']
+                        $newRow
                     );
                 }
             }
