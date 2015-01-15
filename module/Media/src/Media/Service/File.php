@@ -9,6 +9,7 @@
 namespace Media\Service;
 
 use Media\Entity\File as FileEntity;
+use Media\Entity\ObjectFile;
 use Media\Form\FileUpload;
 use Zend\Filter\File\RenameUpload;
 

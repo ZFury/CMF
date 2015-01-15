@@ -13,11 +13,6 @@ class Video extends File
     const VIDEOS_PATH = "video/";
     const MP4_EXT = 'mp4';
 
-    public static function getDestination($path)
-    {
-        return preg_replace('/.[0-9]*\.((mp4))$/', '', $path);
-    }
-
     /**
      * @param $id
      * @param $ext
