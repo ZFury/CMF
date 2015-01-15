@@ -11,7 +11,7 @@ namespace Media\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Media\Service\Audio;
-use Media\Service\Image as ImageService;
+use Media\Service\Image;
 use Media\Service\Video;
 use Media\Service\File as FileService;
 use Zend\Form\Annotation;
@@ -181,7 +181,7 @@ class File
 
         switch ($this->type) {
             case self::IMAGE_FILETYPE:
-                return ImageService::imgPath(ImageService::ORIGINAL, $this->id, $ext);
+                return Image::imgPath(Image::ORIGINAL, $this->id, $ext);
             case self::AUDIO_FILETYPE:
                 return Audio::audioPath($this->id, $ext);
             case self::VIDEO_FILETYPE:
@@ -201,7 +201,7 @@ class File
 
         switch ($this->type) {
             case self::IMAGE_FILETYPE:
-                return ImageService::imgPath(Image::ORIGINAL, $this->id, $ext, FileService::FROM_PUBLIC);
+                return Image::imgPath(Image::ORIGINAL, $this->id, $ext, FileService::FROM_PUBLIC);
             case self::AUDIO_FILETYPE:
                 return Audio::audioPath($this->id, $ext, FileService::FROM_PUBLIC);
             case self::VIDEO_FILETYPE:
@@ -217,13 +217,13 @@ class File
      * @return null|string
      * @throws \Exception
      */
-    public function getThumb($thumbSize = ImageService::SMALL_THUMB)
+    public function getThumb($thumbSize = Image::SMALL_THUMB)
     {
         switch ($this->type) {
             case self::IMAGE_FILETYPE:
                 $ext = $this->getExtension();
                 $imageId = $this->getId();
-                $urlPart = ImageService::imgPath($thumbSize, $imageId, $ext, FileService::FROM_PUBLIC);
+                $urlPart = Image::imgPath($thumbSize, $imageId, $ext, FileService::FROM_PUBLIC);
                 if (!file_exists($urlPart)) {
                     $originalLocation = $this->getLocation();
                     $image = new \Imagick($originalLocation);
