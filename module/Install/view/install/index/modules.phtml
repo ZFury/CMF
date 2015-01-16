@@ -1,0 +1,67 @@
+<?php
+$title = 'Check modules you want to install';
+$this->headTitle($title);
+?>
+<h1 class="page-header"><?php echo $this->escapeHtml($title); ?></h1>
+<?php
+$modulesForm->setAttribute('action', $this->url('install', ['controller' => 'index', 'action' => 'database']));
+$modulesForm->prepare();
+?>
+
+<form role="form" class="form-horizontal" method="post">
+
+    <div class="form-group">
+        <label for="Categories" class="col-md-3 control-label"><?= $modulesForm->get('Categories')->getLabel(); ?></label>
+        <div class="col-md-offset-1 col-md-2">
+            <input type="hidden" name="<?= $modulesForm->get('Categories')->getName(); ?>" value="<?= $modulesForm->get('Categories')->getUncheckedValue(); ?>">
+            <input type="checkbox" class="form-control" id="Categories" name="<?= $modulesForm->get('Categories')->getName(); ?>" value="<?= $modulesForm->get('Categories')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('Categories')->getLabel(); ?>" <?if ("good"===$modulesForm->get('Categories')->getValue()) { echo "checked"; } ?>>
+            <?= $this->formElementErrors($modulesForm->get('Categories')); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="Comment" class="col-md-3 control-label"><?= $modulesForm->get('Comment')->getLabel(); ?></label>
+        <div class="col-md-offset-1 col-md-2">
+            <input type="hidden" name="<?= $modulesForm->get('Comment')->getName(); ?>" value="<?= $modulesForm->get('Comment')->getUncheckedValue(); ?>">
+            <input type="checkbox" class="form-control" id="Comment" name="<?= $modulesForm->get('Comment')->getName(); ?>" value="<?= $modulesForm->get('Comment')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('Comment')->getLabel(); ?>" <?if ("good"===$modulesForm->get('Comment')->getValue()) { echo "checked"; } ?>>
+            <?= $this->formElementErrors($modulesForm->get('Comment')); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="Mail" class="col-md-3 control-label"><?= $modulesForm->get('Mail')->getLabel(); ?></label>
+        <div class="col-md-offset-1 col-md-2">
+            <input type="hidden" name="<?= $modulesForm->get('Mail')->getName(); ?>" value="<?= $modulesForm->get('Mail')->getUncheckedValue(); ?>">
+            <input type="checkbox" class="form-control" id="Mail" name="<?= $modulesForm->get('Mail')->getName(); ?>" value="<?= $modulesForm->get('Mail')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('Mail')->getLabel(); ?>" <?if ("good"===$modulesForm->get('Mail')->getValue()) { echo "checked"; } ?>>
+            <?= $this->formElementErrors($modulesForm->get('Mail')); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="Options" class="col-md-3 control-label"><?= $modulesForm->get('Options')->getLabel(); ?></label>
+        <div class="col-md-offset-1 col-md-2">
+            <input type="hidden" name="<?= $modulesForm->get('Options')->getName(); ?>" value="<?= $modulesForm->get('Options')->getUncheckedValue(); ?>">
+            <input type="checkbox" class="form-control" id="Options" name="<?= $modulesForm->get('Options')->getName(); ?>" value="<?= $modulesForm->get('Options')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('Options')->getLabel(); ?>" <?if ("good"===$modulesForm->get('Options')->getValue()) { echo "checked"; } ?>>
+            <?= $this->formElementErrors($modulesForm->get('Options')); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="Pages" class="col-md-3 control-label"><?= $modulesForm->get('Pages')->getLabel(); ?></label>
+        <div class="col-md-offset-1 col-md-2">
+            <input type="hidden" name="<?= $modulesForm->get('Pages')->getName(); ?>" value="<?= $modulesForm->get('Pages')->getUncheckedValue(); ?>">
+            <input type="checkbox" class="form-control" id="Pages" name="<?= $modulesForm->get('Pages')->getName(); ?>" value="<?= $modulesForm->get('Pages')->getCheckedValue(); ?>" placeholder="<?= $modulesForm->get('Pages')->getLabel(); ?>" <?if ("good"===$modulesForm->get('Pages')->getValue()) { echo "checked"; } ?>>
+            <?= $this->formElementErrors($modulesForm->get('Pages')); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-2 col-sm-offset-3">
+            <a href="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'mail'])?>" class="btn btn-default btn-circle "><i class="glyphicon glyphicon-chevron-left glyphicon-align-center"></i></a>
+        </div>
+        <div class="col-sm-2 col-sm-offset-2">
+            <button class="btn-circle glyphicon glyphicon-chevron-right" type="submit"></button>
+        </div>
+    </div>
+
+</form>

@@ -68,7 +68,6 @@ class Blueimp
         ]];
     }
 
-
     /**
      * @param array $files
      * @param $mask
@@ -93,7 +92,6 @@ class Blueimp
     }
 
     /**
-     *
      * @return JsonModel
      */
     public function deleteFileJson()

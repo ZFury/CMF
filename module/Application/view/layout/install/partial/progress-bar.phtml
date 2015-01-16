@@ -1,0 +1,8 @@
+<ol class="progress-tracker" data-progress-tracker-steps="<?=\Install\Service\Install::STEPS_NUMBER?>">
+    <li class="<?= !isset($this->steps['global-requirements']) ? 'progress-tracker-todo' : $this->steps['global-requirements'] ?>">Global requirements</li><!--
+ --><li class="<?= !isset($this->steps['database']) ? 'progress-tracker-todo' : $this->steps['database'] ?>">DB connection</li><!--
+ --><li class="<?= !isset($this->steps['mail']) ? 'progress-tracker-todo' : $this->steps['mail']?>">Mail configuration</li><!--
+ --><li class="<?= !isset($this->steps['modules']) ? 'progress-tracker-todo' : $this->steps['modules']?>">Needed modules</li><!--
+ --><li class="<?= !isset($this->steps['modules-requirements']) ? 'progress-tracker-todo' : $this->steps['modules-requirements']?>">Modules requirements</li><!--
+ --><li class="<?= !isset($this->steps['finish']) ? 'progress-tracker-todo' : $this->steps['finish']?>">Done</li>
+</ol>

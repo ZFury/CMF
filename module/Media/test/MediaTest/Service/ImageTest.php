@@ -218,4 +218,13 @@ class ImageTest extends AbstractHttpControllerTestCase
         $this->setExpectedException('Zend\Filter\Exception\RuntimeException');
         $this->imageService->moveFile($imgPath, $image);
     }
+
+    public function testGetDestination()
+    {
+        $path = 'public/uploads/images/000/000/000/test.jpeg';
+        $this->assertRegExp(
+            '/public\/uploads\/images\/000\/000\/000\//',
+            $this->imageService->getDestination($path)
+        );
+    }
 }

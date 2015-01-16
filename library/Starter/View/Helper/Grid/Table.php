@@ -24,18 +24,13 @@ class Table extends AbstractGridHelper
                 $result .= '<th>' . $column . '</th>';
             }
         }
-        $result .= '<th width="96px"></th>';
         $result .= '</tr></thead><tbody>';
         foreach ($this->grid->getData() as $row) {
             $result .= '<tr>';
             foreach ($row as $key => $value) {
                 $result .= '<td>' . ($value instanceof \DateTime ? $value->format('Y-m-d H:i:s') : $value) . '</td>';
             }
-            $result .= '<td><a class="btn btn-primary btn-xs" href="' . $this->editUrl . '">';
-            $result .= '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>';
-            $result .= '<a class="btn btn-danger btn-xs" href="' . $this->deleteUrl .'">';
-            $result .= '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>';
-            $result .= '</td></tr>';
+            $result .= '</tr>';
         }
         $result .= '</tbody></table>';
 

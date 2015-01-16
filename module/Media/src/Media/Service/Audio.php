@@ -14,15 +14,6 @@ class Audio extends File
     const MP3_EXT = 'mp3';
 
     /**
-     * @param $path
-     * @return mixed
-     */
-    public static function getDestination($path)
-    {
-        return preg_replace('/.[0-9]*\.((mp3))$/', '', $path);
-    }
-
-    /**
      * @param $id
      * @param $ext
      * @param bool $from

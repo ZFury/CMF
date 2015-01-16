@@ -1,0 +1,63 @@
+<?php
+$title = 'Database connection';
+$this->headTitle($title);
+?>
+<h1 class="page-header"><?php echo $this->escapeHtml($title); ?></h1>
+<?php
+$dbForm->setAttribute('action', $this->url('install', ['controller' => 'index', 'action' => 'database']));
+$dbForm->prepare();
+?>
+<article class="form-wrapper">
+<form role="form" class="form-horizontal" method="post">
+
+    <div class="form-group">
+        <label for="inputHost" class="col-md-2 control-label"><?= $dbForm->get('host')->getLabel(); ?></label>
+        <div class="col-md-4">
+            <input type="text" class="form-control" id="inputHost" name="<?= $dbForm->get('host')->getName(); ?>" value="<?= $dbForm->get('host')->getValue(); ?>" placeholder="<?= $dbForm->get('host')->getLabel(); ?>">
+            <?= $this->formElementErrors($dbForm->get('host')); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="inputPort" class="col-md-2 control-label"><?= $dbForm->get('port')->getLabel(); ?></label>
+        <div class="col-md-4">
+            <input type="text" class="form-control" id="inputPort" name="<?= $dbForm->get('port')->getName(); ?>" value="<?= $dbForm->get('port')->getValue(); ?>" placeholder="<?= $dbForm->get('port')->getLabel(); ?>">
+            <?= $this->formElementErrors($dbForm->get('port')); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="inputUser" class="col-md-2 control-label"><?= $dbForm->get('user')->getLabel(); ?></label>
+        <div class="col-md-4">
+            <input type="text" class="form-control" id="inputUser" name="<?= $dbForm->get('user')->getName(); ?>" value="<?= $dbForm->get('user')->getValue(); ?>" placeholder="<?= $dbForm->get('user')->getLabel(); ?>">
+            <?= $this->formElementErrors($dbForm->get('user')); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="inputPassword" class="col-md-2 control-label"><?= $dbForm->get('password')->getLabel(); ?></label>
+        <div class="col-md-4">
+            <input type="password" class="form-control" id="inputPassword" name="<?= $dbForm->get('password')->getName(); ?>" value="<?= $dbForm->get('password')->getValue(); ?>" placeholder="<?= $dbForm->get('password')->getLabel(); ?>">
+            <?= $this->formElementErrors($dbForm->get('password')); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="inputDbName" class="col-md-2 control-label"><?= $dbForm->get('dbname')->getLabel(); ?></label>
+        <div class="col-md-4">
+            <input type="text" class="form-control" id="inputDbName" name="<?= $dbForm->get('dbname')->getName(); ?>" value="<?= $dbForm->get('dbname')->getValue(); ?>" placeholder="<?= $dbForm->get('dbname')->getLabel(); ?>">
+            <?= $this->formElementErrors($dbForm->get('dbname')); ?>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-2 col-sm-offset-3">
+            <a href="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'global-requirements'])?>" class="btn btn-default btn-circle "><i class="glyphicon glyphicon-chevron-left glyphicon-align-center"></i></a>
+        </div>
+        <div class="col-sm-2 col-sm-offset-2">
+            <button class="btn-circle glyphicon glyphicon-chevron-right" type="submit"></button>
+        </div>
+    </div>
+
+</form>
+</article>

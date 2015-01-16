@@ -39,4 +39,12 @@ return array(
             ],
         ],
     ],
+    'installation' => [
+        'files-to-check' => [
+            ['uploads' => 'public/uploads'],
+        ],
+        'tools-to-check' => [
+            ['libav (do not forget to install libavcodec-extra-53)' => 'avconv -version', 'version' => '0.10.12']
+        ]
+    ]
 );
