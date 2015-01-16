@@ -20,16 +20,10 @@ use Doctrine\ORM\EntityNotFoundException;
 class IndexController extends AbstractActionController
 {
     /**
-     * @return array|ViewModel
-     * @throws EntityNotFoundException
+     * @return array|string
      */
     public function indexAction()
     {
-        die('cron index');
-    }
-
-    public function testAction()
-    {
-        die('cron test');
+        return 'cron controller index';
     }
 }

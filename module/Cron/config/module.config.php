@@ -76,13 +76,30 @@ return array(
                         ),
                     ),
                 ),
-                'sphinx-test' => array(
-                    'type' => 'simple',
+                'sphinx-all' => array(
                     'options' => array(
-                        'route' => 'sphinx index',
+                        'route' => 'sphinx rotate all',
                         'defaults' => array(
                             'controller' => 'Cron\Controller\Sphinx',
-                            'action' => 'index',
+                            'action' => 'rotate-all-indexes',
+                        ),
+                    ),
+                ),
+                'sphinx-pages-delta' => array(
+                    'options' => array(
+                        'route' => 'sphinx rotate pages-delta',
+                        'defaults' => array(
+                            'controller' => 'Cron\Controller\Sphinx',
+                            'action' => 'pages-delta-index',
+                        ),
+                    ),
+                ),
+                'sphinx-users-delta' => array(
+                    'options' => array(
+                        'route' => 'sphinx rotate users-delta',
+                        'defaults' => array(
+                            'controller' => 'Cron\Controller\Sphinx',
+                            'action' => 'users-delta-index',
                         ),
                     ),
                 ),
