@@ -31,30 +31,14 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
     public static function tearDownAfterClass()
     {
         exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
-        //hide an Install module
-        $reading = fopen('config/application.config.php', 'r');
-        $writing = fopen("config/application.config.php.tmp", 'w');
-        $replaced = false;
-        while (!feof($reading)) {
-            $line = fgets($reading);
-            if (stristr($line, "'Install'")) {
-                $line = "//'Install'\n";
-                $replaced = true;
-            }
-            fputs($writing, $line);
-        }
-        fclose($reading);
-        fclose($writing);
-        if ($replaced) {
-            rename("config/application.config.php.tmp", "config/application.config.php");
-        } else {
-            unlink("config/application.config.php.tmp");
-        }
+        copy('config/application.config.php.back', 'config/application.config.php');
     }
 
     public function tearDown()
     {
         $this->sessionProgress->getManager()->getStorage()->clear('progress_tracker');
+        $forms = new Container('forms');
+        $forms->getManager()->getStorage()->clear('forms');
         parent::tearDown();
     }
 
@@ -63,26 +47,10 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
      */
     public function setUp()
     {
-        //add Install module to an application.config.php
-        $reading = fopen('config/application.config.php', 'r');
-        $writing = fopen("config/application.config.php.tmp", 'w');
-        $replaced = false;
-        while (!feof($reading)) {
-            $line = fgets($reading);
-            if (stristr($line, "//'Install'")) {
-                $line = "'Install'\n";
-                $replaced = true;
-            }
-            fputs($writing, $line);
-        }
-        fclose($reading);
-        fclose($writing);
-        if ($replaced) {
-            rename("config/application.config.php.tmp", "config/application.config.php");
-        } else {
-            unlink("config/application.config.php.tmp");
-        }
-
+        copy('config/application.config.php', 'config/application.config.php.back');
+        $reading = file_get_contents('config/application.config.php');
+        $replaced = preg_replace('#//[\s]*\'Install\'#', "'Install',\n", $reading);
+        file_put_contents('config/application.config.php', $replaced);
 
         $this->setApplicationConfig(
             include 'config/application.config.php'
@@ -169,7 +137,7 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         $this->assertActionName('modules');
         $this->assertResponseStatusCode(200);
     }
-    
+
     public function testSubmitModulesAction()
     {
         $this->sessionProgress->offsetSet('mail', Install::DONE);
