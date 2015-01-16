@@ -117,45 +117,49 @@ return array(
     'service_manager' => array(
         'factories' => array(
             'Db\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
-            'Zend\Authentication\AuthenticationService' => function ($serviceManager) {
-                // If you are using DoctrineORMModule
-                return $serviceManager->get('doctrine.authenticationservice.orm_default');
-            },
-            'User\Service\User' => function ($sm) {
-                return new User\Service\User($sm);
-            },
-            'User\Service\Auth' => function ($sm) {
-                return new User\Service\Auth($sm);
-            },
-            'User\Provider\Identity\DoctrineProvider' => function ($sm) {
-                $entityManager = $sm->get('Doctrine\ORM\EntityManager');
-                $authService = $sm->get('Zend\Authentication\AuthenticationService');
-                $doctrineProvider = new User\Provider\Identity\DoctrineProvider($entityManager, $authService);
-                $doctrineProvider->setServiceLocator($sm);
-                $config = $sm->get('BjyAuthorize\Config');
-                $doctrineProvider->setDefaultRole($config['default_role']);
-
-                return $doctrineProvider;
-            },
-            'mail.transport' => function (\Zend\ServiceManager\ServiceManager $serviceManager) {
-                $config = $serviceManager->get('Config');
-                $transport = new \Zend\Mail\Transport\Smtp();
-                $transport->setOptions(new \Zend\Mail\Transport\SmtpOptions($config['mail']['transport']['options']));
-
-                return $transport;
-                //return smtp transport...
-            },
-            'mail.message' => function (\Zend\ServiceManager\ServiceManager $serviceManager) {
-                $config = $serviceManager->get('Config');
-                $message = new \Zend\Mail\Message();
-                $headers = new \Zend\Mail\Headers();
-                $headers->addHeaders($config['mail']['message']['headers']);
-                $message->setHeaders($headers)->setFrom($config['mail']['message']['from']);
-                //uncomment this if you want send email around
-                //$message->getHeaders()->addHeaderLine('EXTERNAL', 'true');
-
-                return $message;
-            }
+            'Zend\Authentication\AuthenticationService' => 'User\Factory\AuthenticationServiceFactory',
+            'User\Provider\Identity\DoctrineProvider' => 'User\Factory\DoctrineProviderFactory',
+            'mail.transport' => 'User\Factory\MailTransportFactory',
+            'mail.message' => 'User\Factory\MailMessageFactory'
+//            'Zend\Authentication\AuthenticationService' => function ($serviceManager) {
+//                // If you are using DoctrineORMModule
+//                return $serviceManager->get('doctrine.authenticationservice.orm_default');
+//            },
+//            'User\Service\User' => function ($sm) {
+//                return new User\Service\User($sm);
+//            },
+//            'User\Service\Auth' => function ($sm) {
+//                return new User\Service\Auth($sm);
+//            },
+//            'User\Provider\Identity\DoctrineProvider' => function ($sm) {
+//                $entityManager = $sm->get('Doctrine\ORM\EntityManager');
+//                $authService = $sm->get('Zend\Authentication\AuthenticationService');
+//                $doctrineProvider = new User\Provider\Identity\DoctrineProvider($entityManager, $authService);
+//                $doctrineProvider->setServiceLocator($sm);
+//                $config = $sm->get('BjyAuthorize\Config');
+//                $doctrineProvider->setDefaultRole($config['default_role']);
+//
+//                return $doctrineProvider;
+//            },
+//            'mail.transport' => function (\Zend\ServiceManager\ServiceManager $serviceManager) {
+//                $config = $serviceManager->get('Config');
+//                $transport = new \Zend\Mail\Transport\Smtp();
+//                $transport->setOptions(new \Zend\Mail\Transport\SmtpOptions($config['mail']['transport']['options']));
+//
+//                return $transport;
+//                //return smtp transport...
+//            },
+//            'mail.message' => function (\Zend\ServiceManager\ServiceManager $serviceManager) {
+//                $config = $serviceManager->get('Config');
+//                $message = new \Zend\Mail\Message();
+//                $headers = new \Zend\Mail\Headers();
+//                $headers->addHeaders($config['mail']['message']['headers']);
+//                $message->setHeaders($headers)->setFrom($config['mail']['message']['from']);
+//                //uncomment this if you want send email around
+//                //$message->getHeaders()->addHeaderLine('EXTERNAL', 'true');
+//
+//                return $message;
+//            }
         ),
     ),
     'bjyauthorize' => array(

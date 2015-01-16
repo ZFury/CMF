@@ -1,5 +1,7 @@
 <?php
 
+use Zend\Stdlib\ArrayUtils;
+
 $env = getenv('APP_ENV') ?: 'production';
 $config =  array(
     // This should be an array of module namespaces used in the application.
@@ -17,7 +19,8 @@ $config =  array(
         'Media',
         'Pages',
         'Mail',
-        'DoctrineTools',
+//        'DoctrineTools',
+        'Tools'
     ),
 
     // These are various options for the listeners attached to the ModuleManager
@@ -75,6 +78,11 @@ $config =  array(
    // Should be compatible with Zend\ServiceManager\Config.
    // 'service_manager' => array(),
 );
+
+$envConfigFile = 'config/application.config.' . $env . '.php';
+if (is_readable($envConfigFile)) {
+    $config = ArrayUtils::merge($config, require($envConfigFile));
+}
 
 //if (\Zend\Console\Console::isConsole()) {
 //    $config['modules'] = array_values(array_diff($config['modules'], ['BjyAuthorize']));

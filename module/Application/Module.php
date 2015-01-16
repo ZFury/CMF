@@ -148,10 +148,11 @@ class Module
     {
         return array(
             'factories' => array(
-                'Application\Utility\UnauthorizedStrategy' => function ($sm) {
-                    $unauthorizedStrategy = new Utility\UnauthorizedStrategy('error/403');
-                    return $unauthorizedStrategy;
-                }
+                'Application\Utility\UnauthorizedStrategy' => 'Application\Factory\UnauthorizedStrategyFactory',
+//                'Application\Utility\UnauthorizedStrategy' => function ($sm) {
+//                    $unauthorizedStrategy = new Utility\UnauthorizedStrategy('error/403');
+//                    return $unauthorizedStrategy;
+//                }
             ),
         );
     }
