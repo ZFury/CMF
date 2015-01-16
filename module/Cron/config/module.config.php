@@ -66,16 +66,6 @@ return array(
                         ),
                     ),
                 ),
-                'cron-test' => array(
-                    'type' => 'simple',
-                    'options' => array(
-                        'route' => 'cron test',
-                        'defaults' => array(
-                            'controller' => 'Cron\Controller\Index',
-                            'action' => 'test',
-                        ),
-                    ),
-                ),
                 'sphinx-all' => array(
                     'options' => array(
                         'route' => 'sphinx rotate all',
