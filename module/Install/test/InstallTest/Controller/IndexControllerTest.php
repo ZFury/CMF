@@ -22,6 +22,11 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
      */
     public static function setUpBeforeClass()
     {
+        copy('config/application.config.php', 'config/application.config.php.back');
+        $reading = file_get_contents('config/application.config.php');
+        $replaced = preg_replace('#//[\s]*\'Install\'#', "'Install',\n", $reading);
+        file_put_contents('config/application.config.php', $replaced);
+
         exec('vendor/bin/doctrine-module orm:schema-tool:update --force');
     }
 
@@ -47,11 +52,6 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
      */
     public function setUp()
     {
-        copy('config/application.config.php', 'config/application.config.php.back');
-        $reading = file_get_contents('config/application.config.php');
-        $replaced = preg_replace('#//[\s]*\'Install\'#', "'Install',\n", $reading);
-        file_put_contents('config/application.config.php', $replaced);
-
         $this->setApplicationConfig(
             include 'config/application.config.php'
         );
