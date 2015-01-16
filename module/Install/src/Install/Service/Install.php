@@ -362,7 +362,12 @@ class Install
     public static function getCurrentStep()
     {
         $session = new Container('progress_tracker');
-        return self::getSteps()[array_search($session->offsetGet('current_step'), self::getSteps())];
+        $currentStep = $session->offsetGet('current_step');
+        if (null === $currentStep) {
+            $currentStep = 'global-requirements';
+        }
+
+        return self::getSteps()[array_search($currentStep, self::getSteps())];
     }
 
     /**
