@@ -37,4 +37,9 @@ class IndexController extends AbstractActionController
 
         return new ViewModel(array('page' => $page));
     }
+
+    public function testAction()
+    {
+        die('pages index test!');
+    }
 }

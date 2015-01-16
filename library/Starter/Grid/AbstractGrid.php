@@ -238,7 +238,7 @@ abstract class AbstractGrid
 
                 $rowset = $search->search($this->index, function(Select $select) use ($filter, $limit, $offset) {
                     $select->where(new Match('?', $filter))->limit($limit)->offset($offset)
-                        ->option(['max_matches' => 5000], $flag = Select::OPTIONS_MERGE);
+                        ->option(['max_matches' => 2000000], $flag = Select::OPTIONS_MERGE);
                 });
 
                 $data = array();
