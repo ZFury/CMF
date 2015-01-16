@@ -8,14 +8,19 @@
  */
 
 return array(
-    'bjyauthorize' => array(
-        'guards' => array(
-            'BjyAuthorize\Guard\Controller' => array(
-                array(
-                    'controller' => 'Cron\Controller\Index',
-                    'roles' => array(),
+    'doctrine' => array(
+        'driver' => array(
+            'sphinx_entity' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'paths' => array(
+                    __DIR__ . '/../src/Cron/Entity',
                 ),
             ),
+            'orm_default' => array(
+                'drivers' => array(
+                    'Cron\Entity' => 'sphinx_entity',
+                )
+            )
         ),
     ),
     'router' => array(
@@ -48,21 +53,66 @@ return array(
             ),
         ),
     ),
+    'console' => array(
+        'router' => array(
+            'routes' => array(
+                'cron-index' => array(
+                    'type' => 'simple',
+                    'options' => array(
+                        'route' => 'cron index',
+                        'defaults' => array(
+                            'controller' => 'Cron\Controller\Index',
+                            'action' => 'index',
+                        ),
+                    ),
+                ),
+                'cron-test' => array(
+                    'type' => 'simple',
+                    'options' => array(
+                        'route' => 'cron test',
+                        'defaults' => array(
+                            'controller' => 'Cron\Controller\Index',
+                            'action' => 'test',
+                        ),
+                    ),
+                ),
+                'sphinx-test' => array(
+                    'type' => 'simple',
+                    'options' => array(
+                        'route' => 'sphinx index',
+                        'defaults' => array(
+                            'controller' => 'Cron\Controller\Sphinx',
+                            'action' => 'index',
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    ),
+    'bjyauthorize' => array(
+        'guards' => array(
+            'BjyAuthorize\Guard\Controller' => array(
+                array(
+                    'controller' => 'Cron\Controller\Index',
+                    'roles' => array(),
+                ),
+                array(
+                    'controller' => 'Cron\Controller\Sphinx',
+                    'roles' => array(),
+                ),
+            ),
+        ),
+    ),
     'service_manager' => array(),
     'controllers' => array(
         'invokables' => array(
             'Cron\Controller\Index' => 'Cron\Controller\IndexController',
+            'Cron\Controller\Sphinx' => 'Cron\Controller\SphinxController',
         ),
     ),
     'view_manager' => array(
         'template_path_stack' => array(
             __DIR__ . '/../view',
-        ),
-    ),
-    // Placeholder for console routes
-    'console' => array(
-        'router' => array(
-            'routes' => array(),
         ),
     ),
 //    'doctrine' => array(

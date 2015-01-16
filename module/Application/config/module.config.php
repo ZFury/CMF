@@ -51,23 +51,6 @@ return array(
             ),
         ),
     ),
-
-    'console' => array(
-        'router' => array(
-            'routes' => array(
-                'test-some' => array(
-                    'type' => 'simple',
-                    'options' => array(
-                        'route' => 'test123',
-                        'defaults' => array(
-                            'controller' => 'Pages\Controller\Index',
-                            'action' => 'test',
-                        ),
-                    ),
-                ),
-            ),
-        ),
-    ),
     'service_manager' => array(
         'abstract_factories' => array(
             'Zend\Cache\Service\StorageCacheAbstractServiceFactory',
