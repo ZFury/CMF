@@ -17,7 +17,7 @@ class SphinxController extends AbstractActionController
      */
     public function rotateAllIndexesAction()
     {
-        return exec('indexer --rotate --all');
+        return system('indexer --rotate --all');
     }
 
     /**
@@ -25,7 +25,7 @@ class SphinxController extends AbstractActionController
      */
     public function pagesDeltaIndexAction()
     {
-        return exec('indexer pagesIndexDelta --rotate');
+        return system('indexer pagesIndexDelta --rotate');
     }
 
     /**
@@ -33,6 +33,6 @@ class SphinxController extends AbstractActionController
      */
     public function usersDeltaIndexAction()
     {
-        return exec('indexer usersIndexDelta --rotate');
+        return system('indexer usersIndexDelta --rotate');
     }
 }
