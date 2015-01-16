@@ -14,6 +14,9 @@ use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
 class IndexControllerTest extends AbstractHttpControllerTestCase
 {
+
+    private $sessionProgress;
+
     /**
      *  Migration up
      */
@@ -49,6 +52,12 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         }
     }
 
+    public function tearDown()
+    {
+        $this->sessionProgress->getManager()->getStorage()->clear('progress_tracker');
+        parent::tearDown();
+    }
+
     /**
      * Set up
      */
@@ -79,6 +88,7 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
             include 'config/application.config.php'
         );
         $this->setTraceError(true);
+        $this->sessionProgress = new Container('progress_tracker');
         parent::setUp();
     }
 
@@ -111,8 +121,7 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
 
     public function testDatabaseAction()
     {
-        $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('global-requirements', Install::DONE);
+        $this->sessionProgress->offsetSet('global-requirements', Install::DONE);
         $this->dispatch('/install/index/database');
         $this->assertEquals('install', $this->getRouteMatch()->getParam('module'));
         $this->assertEquals('Install\Controller\Index', $this->getRouteMatch()->getParam('controller'));
@@ -132,8 +141,7 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
 
     public function testMailAction()
     {
-        $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('database', Install::DONE);
+        $this->sessionProgress->offsetSet('database', Install::DONE);
         $this->dispatch('/install/index/mail');
         $this->assertEquals('install', $this->getRouteMatch()->getParam('module'));
         $this->assertEquals('Install\Controller\Index', $this->getRouteMatch()->getParam('controller'));
@@ -154,19 +162,17 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
 
     public function testModulesAction()
     {
-        $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('mail', Install::DONE);
+        $this->sessionProgress->offsetSet('mail', Install::DONE);
         $this->dispatch('/install/index/modules');
         $this->assertEquals('install', $this->getRouteMatch()->getParam('module'));
         $this->assertEquals('Install\Controller\Index', $this->getRouteMatch()->getParam('controller'));
         $this->assertActionName('modules');
         $this->assertResponseStatusCode(200);
     }
-
+    
     public function testSubmitModulesAction()
     {
-        $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('mail', Install::DONE);
+        $this->sessionProgress->offsetSet('mail', Install::DONE);
         $this->dispatch('/install/index/modules', Request::METHOD_POST, $this->getModulesParams());
         $this->assertRedirectTo('/install/index/modules-requirements');
         $this->assertActionName('modules');
@@ -175,8 +181,7 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
 
     public function testModulesRequirementsAction()
     {
-        $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('modules', Install::DONE);
+        $this->sessionProgress->offsetSet('modules', Install::DONE);
         $this->dispatch('/install/index/modules-requirements');
         $this->assertEquals('install', $this->getRouteMatch()->getParam('module'));
         $this->assertEquals('Install\Controller\Index', $this->getRouteMatch()->getParam('controller'));
@@ -186,8 +191,7 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
 
     public function testSubmitModulesRequirementsAction()
     {
-        $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('modules', Install::DONE);
+        $this->sessionProgress->offsetSet('modules', Install::DONE);
         $this->dispatch('/install/index/modules-requirements', Request::METHOD_POST);
         $this->assertRedirectTo('/install/index/finish');
         $this->assertActionName('modules-requirements');
@@ -196,8 +200,7 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
 
     public function testFinishAction()
     {
-        $sessionProgress = new Container('progress_tracker');
-        $sessionProgress->offsetSet('modules-requirements', Install::DONE);
+        $this->sessionProgress->offsetSet('modules-requirements', Install::DONE);
         $this->dispatch('/install/index/finish');
         $this->assertEquals('install', $this->getRouteMatch()->getParam('module'));
         $this->assertEquals('Install\Controller\Index', $this->getRouteMatch()->getParam('controller'));
@@ -213,11 +216,11 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
     public function getDbParams()
     {
         return [
-          'host' => '10.10.24.102',
+          'host' => 'alpha-team.php.nixsolutions.com',
           'port' => '3306',
-          'user' => 'zfs_user_test',
-          'password' => 'test',
-          'dbname' => 'zf_starter_test'
+          'user' => 'p_zfs_test',
+          'password' => 'p_zfs_test',
+          'dbname' => 'p_zfs_tests'
         ];
     }
 
