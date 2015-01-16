@@ -18,6 +18,7 @@ $config =  array(
         'Pages',
         'Mail',
         'DoctrineTools',
+        'Cron',
     ),
 
     // These are various options for the listeners attached to the ModuleManager
