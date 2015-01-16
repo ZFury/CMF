@@ -29,11 +29,16 @@
               tofile="${basedir}/config/autoload/testing.php"></copy>
         <copy overwrite="true" file="${basedir}/config/autoload/doctrine.testing.php.dist"
               tofile="${basedir}/config/autoload/doctrine.testing.php"></copy>
+        <copy overwrite="true" file="${basedir}/config/application.config.php.dist"
+              tofile="${basedir}/config/application.config.php"></copy>
         <copy overwrite="true" file="${basedir}/public/.htaccess.sample" tofile="${basedir}/public/.htaccess"></copy>
 
         <antcall target="config-update">
             <param name="file" value="${appDir}/config/autoload/doctrine.testing.php"/>
+            <param name="application-config" value="${appDir}/config/application.config.php"/>
         </antcall>
+
+
 
         <!--<exec dir="${appDir}" executable="sh"  failonerror="true" output="${logsDir}/install.log">-->
         <!--<env key="APP_ENV" value="testing"/>            -->
@@ -48,6 +53,9 @@
             <replacefilter token="{USERNAME}" value="${username}"/>
             <replacefilter token="{PASSWORD}" value="${password}"/>
             <replacefilter token="{PORT}" value="${port}"/>
+        </replace>
+        <replace file="${application-config}">
+            <replacefilter token="'Install'" value="//'Install'"/>
         </replace>
     </target>
 
