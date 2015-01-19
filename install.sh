@@ -21,9 +21,3 @@ chmod -R 0777 public/uploads
 echo "Rename application.config.php.dist to application.config.php"
 cp config/application.config.php.dist config/application.config.php
 
-echo "Enabling git-flow"
-git flow init -d
-
-echo "Install git hook for PHP_CodeSniffer"
-cp data/git_hooks/pre-commit .git/hooks/pre-commit
-chmod +x .git/hooks/pre-commit
