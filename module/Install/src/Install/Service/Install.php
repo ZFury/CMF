@@ -67,6 +67,9 @@ class Install
      */
     public function replaceRowInFile($filePath, $word, $newRow, $options = null)
     {
+//        $reading = file_get_contents($filePath);
+//        $replaced = preg_replace("/$word/", "'Install',\n", $reading);
+//        file_put_contents('config/application.config.php', $replaced);
         $newFilePath = null;
         $afterLine = false;
         if (is_array($options)) {
@@ -250,6 +253,9 @@ class Install
         return ['checkedFiles' => $checkedFiles, 'checkedDirectories' => $checkedDirectories];
     }
 
+    /**
+     * @return array
+     */
     public function checkTools()
     {
         $checkedTools = [];
@@ -279,6 +285,9 @@ class Install
         return $checkedTools;
     }
 
+    /**
+     * @param MailConfig $mailForm
+     */
     public function createMailConfig(MailConfig $mailForm)
     {
         $this->replaceRowInFile(
