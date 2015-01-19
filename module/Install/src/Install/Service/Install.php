@@ -333,19 +333,19 @@ class Install
                     }
                     break;
                 case 'emails':
-                    $emails = "";
+                    $emails = "'";
                     for ($j = 0; $j < count($paramValue); $j++) {
                         $value = array_values($paramValue[$j]);
                         $currentEmail = array_shift($value);
                         if ('emails' == $paramName) {
                             $paramName = strtoupper($paramName);
                         }
-                        $emails .= "'$currentEmail'";
+                        $emails .= "$currentEmail,";
                     }
                     $this->replaceRowInFile(
                         'config/autoload/mail.local.php',
                         "'$paramName'",
-                        "'$paramName'=>$emails,"
+                        "'$paramName'=>$emails',"
                     );
                     break;
                 default:
