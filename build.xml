@@ -22,11 +22,10 @@
     <property environment="env"/>
     <property environment="APP_ENV"/>
 
-    <target name="prepare" depends="configs">
+    <target name="prepare">
         <delete dir="${buildDir}"/>
         <mkdir dir="${appDir}/logs"/>
         <mkdir dir="${logsDir}"/>
-        <mkdir dir="${logsDir}/phpcb"/>
     </target>
 
     <target name="configs">
@@ -68,7 +67,7 @@
         </replace>
     </target>
 
-    <target name="install" description="Run install.sh">
+    <target name="install" description="Run install.sh"  depends="prepare">
         <exec executable="/bin/bash" output="${logsDir}/install.log">
             <arg value="-c"/>
             <arg value="sh ./install.sh"/>
@@ -92,6 +91,7 @@
     </target>
 
     <target name="phpcb" description="PHP_CodeBrowser">
+        <mkdir dir="${logsDir}/phpcb"/>
         <exec dir="${basedir}" executable="${vendorDir}/phpcb" failonerror="false" osfamily="unix">
             <arg line="--log ${logsDir}"/>
             <arg line="--source ${moduleDir}"/>
@@ -181,7 +181,7 @@
         <echo message="##teamcity[publishArtifacts '${appDir}/logs/']"/>
     </target>
 
-    <target name="build" depends="install, prepare, phpunit, phpcs, phpcb">
+    <target name="build" depends="install, configs, phpunit, phpcs, phpcb">
     </target>
 
 </project>
