@@ -39,6 +39,8 @@
               tofile="${basedir}/config/autoload/testing.php"></copy>
         <copy overwrite="true" file="${basedir}/public/.htaccess.sample"
               tofile="${basedir}/public/.htaccess"></copy>
+        <copy overwrite="true" file="${basedir}/config/application.config.php.dist"
+              tofile="${basedir}/config/application.config.php"></copy>
 
         <antcall target="config-update">
             <param name="doctrine-local" value="${appDir}/config/autoload/doctrine.local.php"/>
