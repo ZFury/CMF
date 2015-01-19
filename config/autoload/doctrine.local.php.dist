@@ -5,11 +5,11 @@ return array(
         'connection' => array(
             'orm_default' => array(
                 'params' => array(
-                    'host'     => 'localhost',
-                    'port'     => '3306',
-                    'user'     => '',
-                    'password' => '',
-                    'dbname'   => '',
+                    'host'     => '{HOSTNAME}',
+                    'dbname'   => '{DATABASE}',
+                    'user'     => '{USERNAME}',
+                    'password' => '{PASSWORD}',
+                    'port'     => '{PORT}',
                 ),
             )
         )
