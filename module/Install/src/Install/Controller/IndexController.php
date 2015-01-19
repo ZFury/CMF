@@ -58,7 +58,8 @@ class IndexController extends AbstractActionController
 
             $continue = Install::BAD;
             if (!$installService->inArrayRecursive(Install::BAD, $checkedDirectories) &&
-                !$installService->inArrayRecursive(Install::BAD, $checkedFiles)) {
+                !$installService->inArrayRecursive(Install::BAD, $checkedFiles) &&
+                true === $phpVersion['status']) {
                 $continue = Install::GOOD;
             }
 
@@ -243,16 +244,26 @@ class IndexController extends AbstractActionController
                 'action' => 'finish'
             ]);
         } else {
+            $continue = Install::BAD;
             //TOOLS
             $checkedTools = $installService->checkTools();
+            foreach ($checkedTools as $tool) {
+                if (true === array_values($tool)[0]['status']) {
+                    $continue = Install::GOOD;
+                }
+            }
+
             //FILES&DIRECTORIES
             $checked = $installService->checkFiles();
             $checkedDirectories = $checked['checkedDirectories'];
             $checkedFiles = $checked['checkedFiles'];
-            $continue = Install::BAD;
+
             if (!$installService->inArrayRecursive(Install::BAD, $checkedDirectories) &&
-                !$installService->inArrayRecursive(Install::BAD, $checkedFiles)) {
+                !$installService->inArrayRecursive(Install::BAD, $checkedFiles) &&
+                Install::GOOD === $continue) {
                 $continue = Install::GOOD;
+            } else {
+                $continue = Install::BAD;
             }
 
             return new ViewModel([

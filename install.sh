@@ -16,7 +16,7 @@ mkdir -p data/DoctrineORMModule/Migrations
 mkdir -p public/uploads
 chmod -R 0777 data/*
 chmod -R 0777 public/uploads
-
+cp config/application.config.php.dist config/application.config.php
 echo "Enabling git-flow"
 git flow init -d
 

@@ -290,24 +290,25 @@ class Install
         for ($i=0; $i<count($mailForm->getData()); $i++) {
             $paramName = array_keys($mailForm->getData())[$i];
             $paramValue = array_values($mailForm->getData())[$i];
-            if ('emails' == $paramName || 'from' == $paramName) {
-                $emailsArray = [];
-                for ($j = 0; $j < count($paramValue); $j++) {
-                    $value = array_values($paramValue[$j]);
-                    $currentEmail = array_shift($value);
-                    if ('emails' == $paramName) {
-                        $paramName = strtoupper($paramName);
+            switch ($paramName) {
+                case 'from':
+                    $emailsArray = [];
+                    for ($j = 0; $j < count($paramValue); $j++) {
+                        $value = array_values($paramValue[$j]);
+                        $currentEmail = array_shift($value);
+                        if ('emails' == $paramName) {
+                            $paramName = strtoupper($paramName);
+                        }
+                        array_push($emailsArray, "'$currentEmail'");
                     }
-                    array_push($emailsArray, "'$currentEmail'");
-                }
-                $emails = implode(',', $emailsArray);
-                $this->replaceRowInFile(
-                    'config/autoload/mail.local.php',
-                    "'$paramName'",
-                    "'$paramName'=>[$emails],"
-                );
-            } else {
-                if ('header' == $paramName) {
+                    $emails = implode(',', $emailsArray);
+                    $this->replaceRowInFile(
+                        'config/autoload/mail.local.php',
+                        "'$paramName'",
+                        "'$paramName'=>[$emails],"
+                    );
+                    break;
+                case 'header':
                     for ($j = 0; $j < count($paramValue); $j++) {
                         $headerName = strtoupper($paramValue[$j]['header-name']);
                         $headerValue = $paramValue[$j]['header-value'];
@@ -330,14 +331,31 @@ class Install
                             );
                         }
                     }
-                } else {
+                    break;
+                case 'emails':
+                    $emails = "";
+                    for ($j = 0; $j < count($paramValue); $j++) {
+                        $value = array_values($paramValue[$j]);
+                        $currentEmail = array_shift($value);
+                        if ('emails' == $paramName) {
+                            $paramName = strtoupper($paramName);
+                        }
+                        $emails .= "'$currentEmail'";
+                    }
+                    $this->replaceRowInFile(
+                        'config/autoload/mail.local.php',
+                        "'$paramName'",
+                        "'$paramName'=>$emails,"
+                    );
+                    break;
+                default:
                     $newRow = "'$paramName'=>'$paramValue',";
                     $this->replaceRowInFile(
                         'config/autoload/mail.local.php',
                         "'$paramName'",
                         $newRow
                     );
-                }
+                    break;
             }
         }
     }

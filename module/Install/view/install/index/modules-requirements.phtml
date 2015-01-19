@@ -11,15 +11,17 @@ $this->headTitle($title);
             <?php
             if (count($tools)>0) {
             for ($i=0; $i<count($tools); $i++) { ?>
-                <div <?php
-                if (\Install\Service\Install::GOOD == array_values($tools[$i])[0]['status']) {
-                    echo 'class="panel panel-success"';
-                } else {
-                    echo 'class="panel panel-danger"';
-                }?>>
+                <?php if (\Install\Service\Install::GOOD == array_values($tools[$i])[0]['status']) { ?>
+                    <div class="panel panel-success">
                     <div class="panel-heading">
                         <?php echo array_values($tools[$i])[0]['message'] ?>
                     </div>
+                <?php } else { ?>
+                    <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <?php echo array_values($tools[$i])[0]['install'] ?>
+                    </div>
+                <?php }?>
                 </div>
             <?php
                 }

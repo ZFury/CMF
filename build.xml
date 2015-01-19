@@ -55,6 +55,7 @@
             <replacefilter token="{PORT}" value="${port}"/>
         </replace>
         <replace file="${application-config}">
+            <replacefilter token="//'BjyAuthorize'" value="'BjyAuthorize'"/>
             <replacefilter token="'Install'" value="//'Install'"/>
         </replace>
     </target>
