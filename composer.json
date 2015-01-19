@@ -29,7 +29,7 @@
             "": "library/"
         }
     },
-    "suggest": {
+    "suggests": {
         "libav-tools": "to convert media files",
         "libavcodec-extra-53": "to convert media files"
     }
