@@ -39,8 +39,6 @@
               tofile="${basedir}/config/autoload/testing.php"></copy>
         <copy overwrite="true" file="${basedir}/public/.htaccess.sample"
               tofile="${basedir}/public/.htaccess"></copy>
-        <copy overwrite="true" file="${basedir}/config/application.config.php.dist"
-              tofile="${basedir}/config/application.config.php"></copy>
 
         <antcall target="config-update">
             <param name="doctrine-local" value="${appDir}/config/autoload/doctrine.local.php"/>
@@ -70,7 +68,7 @@
         </replace>
     </target>
 
-    <target name="install" description="Run install.sh" depends="prepare">
+    <target name="install" description="Run install.sh">
         <exec executable="/bin/bash" output="${logsDir}/install.log">
             <arg value="-c"/>
             <arg value="sh ./install.sh"/>
@@ -115,56 +113,56 @@
         <property name="junit" value="${logsDir}/tests-report.xml"/>
 
         <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix"
-              output="${logsDir}/phpunit.log">
+              output="${logsDir}/phpunit.options.log">
             <env key="APP_ENV" value="testing"/>
             <arg line="-c ${moduleDir}/Options/test/phpunit.xml"/>
-            <arg line="--log-junit '${logsDir}/tests-report.xml'"/>
-            <arg line="--coverage-clover '${logsDir}/phpunit.clover.xml'"/>
+            <arg line="--log-junit '${logsDir}/tests-report.options.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.options.xml'"/>
             <arg line="--coverage-html '${logsDir}/coverage/options'"/>
         </exec>
 
         <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix"
-              output="${logsDir}/phpunit.log">
+              output="${logsDir}/phpunit.pages.log">
             <env key="APP_ENV" value="testing"/>
             <arg line="-c ${moduleDir}/Pages/test/phpunit.xml"/>
-            <arg line="--log-junit '${logsDir}/tests-report.xml'"/>
-            <arg line="--coverage-clover '${logsDir}/phpunit.clover.xml'"/>
+            <arg line="--log-junit '${logsDir}/tests-report.pages.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.pages.xml'"/>
             <arg line="--coverage-html '${logsDir}/coverage/pages'"/>
         </exec>
 
         <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix"
-              output="${logsDir}/phpunit.log">
+              output="${logsDir}/phpunit.categories.log">
             <env key="APP_ENV" value="testing"/>
             <arg line="-c ${moduleDir}/Categories/test/phpunit.xml"/>
-            <arg line="--log-junit '${logsDir}/tests-report.xml'"/>
-            <arg line="--coverage-clover '${logsDir}/phpunit.clover.xml'"/>
+            <arg line="--log-junit '${logsDir}/tests-report.categories.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.categories.xml'"/>
             <arg line="--coverage-html '${logsDir}/coverage/categories'"/>
         </exec>
 
         <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix"
-              output="${logsDir}/phpunit.log">
+              output="${logsDir}/phpunit.media.log">
             <env key="APP_ENV" value="testing"/>
             <arg line="-c ${moduleDir}/Media/test/phpunit.xml"/>
-            <arg line="--log-junit '${logsDir}/tests-report.xml'"/>
-            <arg line="--coverage-clover '${logsDir}/phpunit.clover.xml'"/>
+            <arg line="--log-junit '${logsDir}/tests-report.media.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.media.xml'"/>
             <arg line="--coverage-html '${logsDir}/coverage/media'"/>
         </exec>
 
         <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix"
-              output="${logsDir}/phpunit.log">
+              output="${logsDir}/phpunit.install.log">
             <env key="APP_ENV" value="testing"/>
             <arg line="-c ${moduleDir}/Install/test/phpunit.xml"/>
-            <arg line="--log-junit '${logsDir}/tests-report.xml'"/>
-            <arg line="--coverage-clover '${logsDir}/phpunit.clover.xml'"/>
+            <arg line="--log-junit '${logsDir}/tests-report.install.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.install.xml'"/>
             <arg line="--coverage-html '${logsDir}/coverage/install'"/>
         </exec>
 
         <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix"
-              output="${logsDir}/phpunit.log">
+              output="${logsDir}/phpunit.comment.log">
             <env key="APP_ENV" value="testing"/>
             <arg line="-c ${moduleDir}/Comment/test/phpunit.xml"/>
-            <arg line="--log-junit '${logsDir}/tests-report.xml'"/>
-            <arg line="--coverage-clover '${logsDir}/phpunit.clover.xml'"/>
+            <arg line="--log-junit '${logsDir}/tests-report.comment.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.comment.xml'"/>
             <arg line="--coverage-html '${logsDir}/coverage/comment'"/>
         </exec>
 
@@ -183,7 +181,7 @@
         <echo message="##teamcity[publishArtifacts '${appDir}/logs/']"/>
     </target>
 
-    <target name="build" depends="prepare, install, phpunit, phpcs, phpcb">
+    <target name="build" depends="install, prepare, phpunit, phpcs, phpcb">
     </target>
 
 </project>
