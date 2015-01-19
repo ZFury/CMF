@@ -7,11 +7,17 @@
     <property name="vendorDir" value="${basedir}/vendor/bin"/>
     <property name="configDir" value="${basedir}/config"/>
 
-    <property name="hostname" value=""/>
-    <property name="database" value=""/>
-    <property name="username" value=""/>
-    <property name="password" value=""/>
-    <property name="port" value=""/>
+    <property name="hostname_local" value=""/>
+    <property name="database_local" value=""/>
+    <property name="username_local" value=""/>
+    <property name="password_local" value=""/>
+    <property name="port_local" value=""/>
+
+    <property name="hostname_testing" value=""/>
+    <property name="database_testing" value=""/>
+    <property name="username_testing" value=""/>
+    <property name="password_testing" value=""/>
+    <property name="port_testing" value=""/>
 
     <property environment="env"/>
     <property environment="APP_ENV"/>
@@ -25,16 +31,19 @@
 
     <target name="configs">
         <property name="forceConfig" value="true"/>
-        <copy overwrite="true" file="${basedir}/config/autoload/testing.php.dist"
-              tofile="${basedir}/config/autoload/testing.php"></copy>
+        <copy overwrite="true" file="${basedir}/config/autoload/doctrine.local.php.dist"
+              tofile="${basedir}/config/autoload/doctrine.local.php"></copy>
         <copy overwrite="true" file="${basedir}/config/autoload/doctrine.testing.php.dist"
               tofile="${basedir}/config/autoload/doctrine.testing.php"></copy>
+        <copy overwrite="true" file="${basedir}/config/autoload/testing.php.dist"
+              tofile="${basedir}/config/autoload/testing.php"></copy>
         <copy overwrite="true" file="${basedir}/config/application.config.php.dist"
               tofile="${basedir}/config/application.config.php"></copy>
         <copy overwrite="true" file="${basedir}/public/.htaccess.sample" tofile="${basedir}/public/.htaccess"></copy>
 
         <antcall target="config-update">
-            <param name="file" value="${appDir}/config/autoload/doctrine.testing.php"/>
+            <param name="doctrine-local" value="${appDir}/config/autoload/doctrine.local.php"/>
+            <param name="doctrine-testing" value="${appDir}/config/autoload/doctrine.testing.php"/>
             <param name="application-config" value="${appDir}/config/application.config.php"/>
         </antcall>
 
@@ -47,12 +56,19 @@
     </target>
 
     <target name="config-update">
-        <replace file="${file}">
-            <replacefilter token="{HOSTNAME}" value="${hostname}"/>
-            <replacefilter token="{DATABASE}" value="${database}"/>
-            <replacefilter token="{USERNAME}" value="${username}"/>
-            <replacefilter token="{PASSWORD}" value="${password}"/>
-            <replacefilter token="{PORT}" value="${port}"/>
+        <replace file="${doctrine-local}">
+            <replacefilter token="{HOSTNAME}" value="${hostname_local}"/>
+            <replacefilter token="{DATABASE}" value="${database_local}"/>
+            <replacefilter token="{USERNAME}" value="${username_local}"/>
+            <replacefilter token="{PASSWORD}" value="${password_local}"/>
+            <replacefilter token="{PORT}" value="${port_local}"/>
+        </replace>
+        <replace file="${doctrine-testing}">
+            <replacefilter token="{HOSTNAME}" value="${hostname_testing}"/>
+            <replacefilter token="{DATABASE}" value="${database_testing}"/>
+            <replacefilter token="{USERNAME}" value="${username_testing}"/>
+            <replacefilter token="{PASSWORD}" value="${password_testing}"/>
+            <replacefilter token="{PORT}" value="${port_testing}"/>
         </replace>
         <replace file="${application-config}">
             <replacefilter token="//'BjyAuthorize'" value="'BjyAuthorize'"/>
