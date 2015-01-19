@@ -93,6 +93,15 @@ return array(
                         ),
                     ),
                 ),
+                'sphinx-rotate-custom-index' => array(
+                    'options' => array(
+                        'route' => 'sphinx rotate <index>',
+                        'defaults' => array(
+                            'controller' => 'Cron\Controller\Sphinx',
+                            'action' => 'rotate-custom-index',
+                        ),
+                    ),
+                ),
             ),
         ),
     ),

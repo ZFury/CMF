@@ -35,4 +35,16 @@ class SphinxController extends AbstractActionController
     {
         return system('indexer usersIndexDelta --rotate');
     }
+
+    /**
+     * @return string
+     */
+    public function rotateCustomIndexAction()
+    {
+        $sphinxIndex = $this->params('index');
+
+        $query = "indexer $sphinxIndex --rotate";
+
+        return system($query);
+    }
 }
