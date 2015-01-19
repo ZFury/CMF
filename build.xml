@@ -27,6 +27,11 @@
         <mkdir dir="${appDir}/logs"/>
         <mkdir dir="${logsDir}"/>
         <mkdir dir="${logsDir}/phpcb"/>
+        <mkdir dir="${appDir}/data/DoctrineORMModule/Proxy"/>
+        <mkdir dir="${appDir}/data/DoctrineORMModule/Migrations"/>
+        <exec executable="chmod" dir="${appDir}/data" failonerror="true">
+            <arg line="-R 0777 ." />
+        </exec>
     </target>
 
     <target name="configs">
@@ -85,9 +90,6 @@
             <arg line="composer.phar install --dev"/>
             <arg line="--dev"/>
             <arg line="--prefer-dist"/>
-        </exec>
-        <exec dir="${basedir}" executable="php" failonerror="true" output="${logsDir}/composer.log">
-            <arg line="composer.phar update --dev"/>
         </exec>
         <antcall target="configs"/>
         <antcall target="publish"/>
