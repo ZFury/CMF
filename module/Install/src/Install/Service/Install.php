@@ -67,9 +67,6 @@ class Install
      */
     public function replaceRowInFile($filePath, $word, $newRow, $options = null)
     {
-//        $reading = file_get_contents($filePath);
-//        $replaced = preg_replace("/$word/", "'Install',\n", $reading);
-//        file_put_contents('config/application.config.php', $replaced);
         $newFilePath = null;
         $afterLine = false;
         if (is_array($options)) {
@@ -80,35 +77,16 @@ class Install
                 $afterLine = $options['afterLine'];
             }
         }
-
-        $reading = fopen($filePath, 'r');
-        $writing = fopen("$filePath.tmp", 'w');
-        $replaced = false;
-        while (!feof($reading)) {
-            $line = fgets($reading);
-            if ((true === $afterLine && !stristr($line, $newRow)) || false === $afterLine) {
-                if (stristr($line, "$word")) {
-                    if (false === $afterLine) {
-                        $line = "$newRow\n";
-                    } else {
-                        $line = "$line\n$newRow\n";
-                    }
-                    $replaced = true;
-
-                }fputs($writing, $line);
-            }
-        }
-        fclose($reading);
-        fclose($writing);
-        if ($replaced) {
-            if (null === $newFilePath) {
-                rename("$filePath.tmp", "$filePath");
-            } else {
-                rename("$filePath.tmp", "$newFilePath");
-            }
-
+        $reading = file_get_contents($filePath);
+        if (false === $afterLine) {
+            $replaced = preg_replace("#$word#", "$newRow", $reading);
         } else {
-            unlink("$filePath.tmp");
+            $replaced = preg_replace("#$word.*\\s+\\K.*#", "$newRow", $reading);
+        }
+        if (null === $newFilePath) {
+            file_put_contents($filePath, $replaced);
+        } else {
+            file_put_contents($newFilePath, $replaced);
         }
     }
 
@@ -121,12 +99,12 @@ class Install
         for ($i=0; $i<count($modules); $i++) {
             $module = array_keys($modules)[$i];
             if (Install::UNCHECKED == array_values($modules)[$i]) {
-                $this->replaceRowInFile('config/application.config.php', $module, "//'$module'\n");
+                $this->replaceRowInFile('config/application.config.php', "'$module'", "//'$module'");
                 if (file_exists(Install::MODULES . $module)) {
                     rename(Install::MODULES . $module, Install::MODULES . ".$module");
                 }
             } else {
-                $this->replaceRowInFile('config/application.config.php', "//'$module'", "'$module',\n");
+                $this->replaceRowInFile('config/application.config.php', "//'$module'", "'$module'");
                 if (file_exists(Install::MODULES . ".$module")) {
                     rename(Install::MODULES . ".$module", Install::MODULES . $module);
                 }
@@ -290,12 +268,8 @@ class Install
      */
     public function createMailConfig(MailConfig $mailForm)
     {
-        $this->replaceRowInFile(
-            'config/autoload/mail.local.php.dist',
-            "<?php",
-            "<?php\n",
-            ['newFilePath' => 'config/autoload/mail.local.php']
-        );
+        copy('config/autoload/mail.local.php.dist', 'config/autoload/mail.local.php');
+
         for ($i=0; $i<count($mailForm->getData()); $i++) {
             $paramName = array_keys($mailForm->getData())[$i];
             $paramValue = array_values($mailForm->getData())[$i];
@@ -313,8 +287,8 @@ class Install
                     $emails = implode(',', $emailsArray);
                     $this->replaceRowInFile(
                         'config/autoload/mail.local.php',
-                        "'$paramName'",
-                        "'$paramName'=>[$emails],"
+                        "'$paramName'.*\n",
+                        "'$paramName'=>[$emails],\n"
                     );
                     break;
                 case 'header':
@@ -322,21 +296,18 @@ class Install
                         $headerName = strtoupper($paramValue[$j]['header-name']);
                         $headerValue = $paramValue[$j]['header-value'];
                         $newRow = "'$headerName'=>'$headerValue',";
-
                         if ('PROJECT' === $headerName) {
                             $this->replaceRowInFile(
                                 'config/autoload/mail.local.php',
-                                "'$headerName'",
-                                $newRow
+                                "'$headerName'.*\n",
+                                "$newRow\n"
                             );
                         } else {
                             $this->replaceRowInFile(
                                 'config/autoload/mail.local.php',
-                                "'EMAILS'",
-                                $newRow,
-                                [
-                                    'afterLine' => true
-                                ]
+                                "'EMAILS'.*\n",
+                                "$newRow\n",
+                                ['afterLine' => true]
                             );
                         }
                     }
@@ -349,20 +320,24 @@ class Install
                         if ('emails' == $paramName) {
                             $paramName = strtoupper($paramName);
                         }
-                        $emails .= "$currentEmail,";
+                        if (count($paramValue)>1) {
+                            $emails .= "$currentEmail,";
+                        } else {
+                            $emails .= "$currentEmail";
+                        }
                     }
                     $this->replaceRowInFile(
                         'config/autoload/mail.local.php',
-                        "'$paramName'",
-                        "'$paramName'=>$emails',"
+                        "'$paramName'.*\n",
+                        "'$paramName'=>$emails',\n"
                     );
                     break;
                 default:
                     $newRow = "'$paramName'=>'$paramValue',";
                     $this->replaceRowInFile(
                         'config/autoload/mail.local.php',
-                        "'$paramName'",
-                        $newRow
+                        "'$paramName'.*\n",
+                        "$newRow\n"
                     );
                     break;
             }

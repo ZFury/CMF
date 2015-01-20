@@ -319,7 +319,7 @@ class IndexController extends AbstractActionController
         //HIDING INSTALL
         $installService->replaceRowInFile('config/application.config.php', "'Install'", "//'Install'\n");
         //UNHIDING BJY
-        $installService->replaceRowInFile('config/application.config.php', "//'BjyAuthorize'", "'BjyAuthorize',\n");
+        $installService->replaceRowInFile('config/application.config.php', "//'BjyAuthorize'", "'BjyAuthorize'");
 //        rename(Install::MODULES . "Install", Install::MODULES . ".Install");
 
         return new ViewModel([
