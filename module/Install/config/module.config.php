@@ -74,7 +74,8 @@ return array(
         'files-to-check-global' => [
             ['config' => 'config'],
             ['config-autoload' => 'config/autoload'],
-            ['application-config' => 'config/application.config.php']
+            ['application-config' => 'config/application.config.php'],
+            ['doctrine' => 'config/autoload/doctrine.local.php']
         ],
         'tools-to-check-global' => [
 
