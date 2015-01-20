@@ -79,9 +79,9 @@ class Install
         }
         $reading = file_get_contents($filePath);
         if (false === $afterLine) {
-            $replaced = preg_replace("#$word#", "$newRow", $reading);
+            $replaced = preg_replace("#$word.*\n#", "$newRow\n", $reading);
         } else {
-            $replaced = preg_replace("#$word.*\\s+\\K.*#", "$newRow", $reading);
+            $replaced = preg_replace("#$word.*\\s+\\K.*#", "$newRow\n", $reading);
         }
         if (null === $newFilePath) {
             file_put_contents($filePath, $replaced);
@@ -104,7 +104,7 @@ class Install
                     rename(Install::MODULES . $module, Install::MODULES . ".$module");
                 }
             } else {
-                $this->replaceRowInFile('config/application.config.php', "//'$module'", "'$module'");
+                $this->replaceRowInFile('config/application.config.php', "//'$module'", "'$module',");
                 if (file_exists(Install::MODULES . ".$module")) {
                     rename(Install::MODULES . ".$module", Install::MODULES . $module);
                 }
@@ -291,8 +291,8 @@ class Install
                     $emails = implode(',', $emailsArray);
                     $this->replaceRowInFile(
                         'config/autoload/mail.local.php',
-                        "'$paramName'.*\n",
-                        "'$paramName'=>[$emails],\n"
+                        "'$paramName'",
+                        "'$paramName'=>[$emails],"
                     );
                     break;
                 case 'header':
@@ -303,14 +303,14 @@ class Install
                         if ('PROJECT' === $headerName) {
                             $this->replaceRowInFile(
                                 'config/autoload/mail.local.php',
-                                "'$headerName'.*\n",
-                                "$newRow\n"
+                                "'$headerName'",
+                                $newRow
                             );
                         } else {
                             $this->replaceRowInFile(
                                 'config/autoload/mail.local.php',
-                                "'EMAILS'.*\n",
-                                "$newRow\n",
+                                "'EMAILS'", //this means, that a new row will be inserted after matched one
+                                $newRow,
                                 ['afterLine' => true]
                             );
                         }
@@ -332,16 +332,16 @@ class Install
                     }
                     $this->replaceRowInFile(
                         'config/autoload/mail.local.php',
-                        "'$paramName'.*\n",
-                        "'$paramName'=>$emails',\n"
+                        "'$paramName'",
+                        "'$paramName'=>$emails',"
                     );
                     break;
                 default:
                     $newRow = "'$paramName'=>'$paramValue',";
                     $this->replaceRowInFile(
                         'config/autoload/mail.local.php',
-                        "'$paramName'.*\n",
-                        "$newRow\n"
+                        "'$paramName'",
+                        "$newRow"
                     );
                     break;
             }
