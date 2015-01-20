@@ -1,3 +1,4 @@
+/** ZF2 skeleton defaults **/
 body {
     padding-top: 60px;
     padding-bottom: 40px;
@@ -8,14 +9,14 @@ body {
 }
 
 .btn-success {
-  background-color: #57a900;
-  background-image: -moz-linear-gradient(top, #70d900, #57a900);
-  background-image: -ms-linear-gradient(top, #70d900, #57a900);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#70d900), to(#57a900));
-  background-image: -webkit-linear-gradient(top, #70d900, #57a900);
-  background-image: -o-linear-gradient(top, #70d900, #57a900);
-  background-image: linear-gradient(top, #70d900, #57a900);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#70d900', endColorstr='#57a900', GradientType=0);
+    background-color: #57a900;
+    background-image: -moz-linear-gradient(top, #70d900, #57a900);
+    background-image: -ms-linear-gradient(top, #70d900, #57a900);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#70d900), to(#57a900));
+    background-image: -webkit-linear-gradient(top, #70d900, #57a900);
+    background-image: -o-linear-gradient(top, #70d900, #57a900);
+    background-image: linear-gradient(top, #70d900, #57a900);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#70d900', endColorstr='#57a900', GradientType=0);
 }
 
 .btn-success:hover,
@@ -23,15 +24,217 @@ body {
 .btn-success.active,
 .btn-success.disabled,
 .btn-success[disabled] {
-  background-color: #57a900;
+    background-color: #57a900;
 }
 
 .btn-success:active, .btn-success.active {
-  background-color: #57a900;
+    background-color: #57a900;
 }
 
 div.container a.brand {
     background: url("../img/zf2-logo.png") no-repeat scroll 0 10px transparent;
     margin-left: 0;
     padding: 8px 20px 12px 40px;
+}
+
+/** custom styles **/
+.create-label, .edit-label {
+    text-align: center;
+}
+
+.alert {
+    margin-top: 30px;
+}
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes spinner {
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+.spinner {
+    min-width: 24px;
+    min-height: 24px;
+}
+
+.spinner:before {
+    content: 'Loading…';
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    width: 26px;
+    height: 26px;
+    margin-top: -10px;
+    margin-left: -10px;
+}
+
+.spinner:not(:required):before {
+    content: '';
+    border-radius: 50%;
+    border: 2px solid rgba(0, 0, 0, .3);
+    border-top-color: rgba(0, 0, 0, .6);
+    animation: spinner .6s linear infinite;
+    -webkit-animation: spinner .6s linear infinite;
+}
+
+.form-container {
+    width: 1200px;
+}
+
+.form-center {
+    margin: 0 auto;
+    padding: 0 auto;
+}
+
+.error-form-field {
+    border-color: #ac2925;
+}
+
+.error-form-message {
+    color: #ac2925;
+}
+
+#notify {
+    z-index: 1100;
+    position: fixed;
+    left: 10px;
+    top: 55px;
+}
+
+/* Notification BS Element */
+#notify > div {
+    position: relative;
+    z-index: 9999;
+    margin: 5px 0;
+    min-width: 640px;
+}
+
+#loading {
+    z-index: 1100;
+    width: 180px;
+    height: 50px;
+    float: right;
+    background: url("../img/jQuery-File-Upload-master/loading.gif") 50% 50% no-repeat;
+    display: none;
+}
+
+.undecorated-list {
+    padding: 0;
+}
+
+.undecorated-list > li {
+    list-style-type: none;
+}
+
+@import url(http://weloveiconfonts.com/api/?family=brandico|entypo|openwebicons|zocial);
+
+/* brandico */
+[class*="brandico-"]:before {
+    font-family: 'brandico', sans-serif;
+}
+
+/* entypo */
+[class*="entypo-"]:before {
+    font-family: 'entypo', sans-serif;
+}
+
+/* openwebicons */
+[class*="openwebicons-"]:before {
+    font-family: 'OpenWeb Icons', sans-serif;
+}
+
+/* zocial */
+[class*="zocial-"]:before {
+    font-family: 'zocial', sans-serif;
+}
+
+.form-signin{
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.form-signup{
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.set-password {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.forgot-password {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.input-field {
+    margin-bottom: 3px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.create-account {
+    text-align: center;
+    width: 100%;
+    display: block;
+}
+
+.form-signin .form-control {
+    position: relative;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.btn-center{
+    width: 50%;
+    text-align: center;
+    margin: inherit;
+}
+
+.social-login-btn {
+    margin: 5px;
+    width: 20%;
+    font-size: 250%;
+    padding: 0;
+}
+
+.social-login-more {
+    width: 45%;
+}
+
+.social-twitter {
+    background-color: #1daee3;
+    border-color: #3997ba;
+}
+.social-twitter:hover {
+    background-color: #3997ba;
+    border-color: #347b95;
+}
+
+.social-facebook {
+    background-color: #4c699e;
+    border-color: #47618d;
+}
+.social-facebook:hover {
+    background-color: #47618d;
+    border-color: #3c5173;
+}
+.form-error {
+    list-style-type: none;
+    text-align: center;
 }

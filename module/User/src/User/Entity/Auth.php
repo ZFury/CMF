@@ -18,7 +18,7 @@ use Zend\ServiceManager\ServiceManager;
  * @ORM\Entity(repositoryClass="User\Repository\Auth")
  * @ORM\Table(name="auth")
  * @ORM\HasLifecycleCallbacks
- * @author Oleksii Novikov
+ * @author                                             Oleksii Novikov
  */
 class Auth
 {
@@ -192,10 +192,10 @@ class Auth
     }
 
     /**
- * Get tokenSecret.
- *
- * @return string
- */
+     * Get tokenSecret.
+     *
+     * @return string
+     */
     public function getTokenSecret()
     {
         return $this->tokenSecret;

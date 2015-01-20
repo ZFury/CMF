@@ -1,0 +1,18 @@
+<?php echo $this->doctype(); ?>
+<html lang="en">
+<head>
+    <?= $this->partial('layout/default/partial/header.phtml') ?>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <?= $this->partial('layout/default/partial/nav-bar.phtml') ?>
+</nav>
+<?= $this->partial('layout/default/partial/flashmessenger.phtml'); ?>
+<div class="container" id="content">
+    <?php echo $this->content; ?>
+    <hr>
+    <?= $this->partial('layout/default/partial/footer.phtml') ?>
+</div>
+<?php echo $this->inlineScript() ?>
+</body>
+</html>

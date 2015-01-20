@@ -1,0 +1,18 @@
+<h1>Option</h1>
+
+<div class="row">
+    <p>Namespace: <?php echo $this->escapeHtml($option->getNamespace()); ?></p>
+
+    <p>Key: <?php echo $this->escapeHtml($option->getKey()); ?></p>
+
+    <p>Value: <?php echo $this->escapeHtml($option->getValue()); ?></p>
+
+    <p>Description: <?php echo $this->escapeHtml($option->getDescription()); ?></p>
+
+    <p>Created: <?php echo $this->escapeHtml($option->getCreated()->format('Y-m-d H:i:s')); ?></p>
+
+    <p>Updated: <?php echo $this->escapeHtml($option->getUpdated()->format('Y-m-d H:i:s')); ?></p>
+</div>
+<script>
+    require(['dashboard']);
+</script>

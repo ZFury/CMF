@@ -1,0 +1,18 @@
+<?php echo $this->doctype();?>
+<html lang="en">
+<head>
+    <?= $this->partial('layout/default/partial/header.phtml'); ?>
+    <!-- CSS -->
+    <link href="module/install/css/style.css" rel="stylesheet">
+</head>
+<body class="install-body">
+    <?= $this->partial('layout/install/partial/progress-bar.phtml') ?>
+    <div id="page-wrapper">
+        <?= $this->partial('layout/default/partial/flashmessenger.phtml') ?>
+        <div class="container">
+            <?= $this->content ?>
+        </div>
+    </div>
+    <?php echo $this->inlineScript() ?>
+</body>
+</html>

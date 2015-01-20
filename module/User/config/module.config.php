@@ -16,6 +16,13 @@ return array(
                 )
             )
         ),
+        'configuration' => array(
+            'orm_default' => array(
+                'types' => array(
+                    'enumstatus' => 'User\DBAL\Types\EnumStatusType'
+                )
+            )
+        ),
         'authentication' => array(
             'orm_default' => array(
                 'object_manager' => 'Doctrine\ORM\EntityManager',
@@ -28,44 +35,64 @@ return array(
     ),
     'router' => array(
         'routes' => array(
-            'user' => array(
-                'type'    => 'Literal',
+            'login' => array(
+                'type' => 'Literal',
                 'options' => array(
-                    'route'    => '/user',
+                    'route' => '/login',
                     'defaults' => array(
                         '__NAMESPACE__' => 'User\Controller',
-                        'controller'    => 'index',
-                        'action'        => 'index',
+                        'controller' => 'Auth',
+                        'action' => 'login',
+                    ),
+                ),
+                'may_terminate' => true
+            ),
+            'user' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/user',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'User\Controller',
+                        'controller' => 'index',
+                        'action' => 'index',
                     ),
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
                     'default' => array(
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route'    => '/[:controller[/:action]]',
+                            'route' => '/[:controller[/:action[/:id]]]',
                             'constraints' => array(
                                 'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
-                            'defaults' => array(
-
-                            ),
+                            'defaults' => array(),
                         ),
                     ),
                     'confirm' => array(
-                        'type'    => 'Segment',
+                        'type' => 'Segment',
                         'options' => array(
-                            'route'    => '/signup/confirm/:confirm',
+                            'route' => '/signup/confirm/:confirm',
                             'defaults' => array(
                                 'controller' => 'signup',
                                 'action' => 'confirm',
                             ),
                         ),
                     ),
+                    'recover-password' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/auth/recover-password/:hash',
+                            'defaults' => array(
+                                'controller' => 'auth',
+                                'action' => 'recover-password',
+                            ),
+                        ),
+                    ),
                 ),
             ),
-        )
+        ),
     ),
     'controllers' => array(
         'invokables' => array(
@@ -83,24 +110,24 @@ return array(
         'template_map' => array(
             'error/403' => __DIR__ . '/../view/error/403.phtml',
         ),
+        'strategies' => array(
+            'ViewJsonStrategy',
+        )
     ),
     'service_manager' => array(
         'factories' => array(
             'Db\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
-            'Zend\Authentication\AuthenticationService' => function($serviceManager) {
-                // If you are using DoctrineORMModule:
+            'Zend\Authentication\AuthenticationService' => function ($serviceManager) {
+                // If you are using DoctrineORMModule
                 return $serviceManager->get('doctrine.authenticationservice.orm_default');
             },
-            'User\Entity\User' => function($sm) {
-                return new User\Entity\User();
-            },
-            'User\Service\User' => function($sm) {
+            'User\Service\User' => function ($sm) {
                 return new User\Service\User($sm);
             },
-            'User\Service\Auth' => function($sm) {
+            'User\Service\Auth' => function ($sm) {
                 return new User\Service\Auth($sm);
             },
-            'User\Provider\Identity\DoctrineProvider' => function($sm) {
+            'User\Provider\Identity\DoctrineProvider' => function ($sm) {
                 $entityManager = $sm->get('Doctrine\ORM\EntityManager');
                 $authService = $sm->get('Zend\Authentication\AuthenticationService');
                 $doctrineProvider = new User\Provider\Identity\DoctrineProvider($entityManager, $authService);
@@ -136,13 +163,28 @@ return array(
             'BjyAuthorize\Guard\Controller' => array(
                 array(
                     'controller' => 'User\Controller\Auth',
-//                    'action' => array('login', 'logout'),
+                    'action' => array('twitter', 'twitter-callback', 'facebook', 'facebook-callback'),
+                    'roles' => array('guest', 'user'),
+                ),
+                array(
+                    'controller' => 'User\Controller\Auth',
+                    'action' => array('login', 'recover-password'),
+                    'roles' => array('guest'),
+                ),
+                array(
+                    'controller' => 'User\Controller\Auth',
+                    'action' => array('logout'),
+                    'roles' => array('user'),
+                ),
+                array(
+                    'controller' => 'User\Controller\Signup',
+                    'action' => array('confirm'),
                     'roles' => array('guest', 'user'),
                 ),
                 array(
                     'controller' => 'User\Controller\Signup',
-                    'action' => array('index', 'confirm'),
-                    'roles' => array('guest', 'user'),
+                    'action' => array('index', 'forgot-password'),
+                    'roles' => array('guest'),
                 ),
                 array(
                     'controller' => 'User\Controller\Mail',
@@ -152,14 +194,65 @@ return array(
                 array(
                     'controller' => 'User\Controller\Management',
                     'action' => array('create'),
-                    'roles' => array('user'),
+                    'roles' => array('admin'),
+                ),
+                array(
+                    'controller' => 'User\Controller\Management',
+                    'action' => array('grid'),
+                    'roles' => array('guest', 'user', 'admin'),
+                ),
+                array(
+                    'controller' => 'User\Controller\Management',
+                    'action' => array('get-users'),
+                    'roles' => array('guest', 'user', 'admin'),
                 ),
                 array(
                     'controller' => 'User\Controller\Profile',
 //                    'action' => array('index'),
                     'roles' => array('user'),
-                )
+                ),
+                array(
+                    'controller' => 'User\Controller\Management',
+                    'action' => array('index'),
+                    'roles' => array('admin'),
+                ),
+                array(
+                    'controller' => 'User\Controller\Management',
+                    'action' => array('edit'),
+                    'roles' => array('admin')
+                ),
+                array(
+                    'controller' => 'User\Controller\Management',
+                    'action' => array('delete'),
+                    'roles' => array('admin')
+                ),
             ),
         ),
     ),
+    'navigation' => array(
+        'default' => array(
+            array(
+                'label' => 'User',
+                'controller' => 'user',
+                'pages' => array(
+                    array(
+                        'label' => 'All users',
+                        'controller' => 'management',
+                        'action' => 'index',
+                        'route' => 'user/default',
+                        'controller_namespace' => 'User\Controller\Management',
+                        'module' => 'User'
+                    ),
+                    array(
+                        'label' => 'Create user',
+                        'controller' => 'management',
+                        'action' => 'create',
+                        'route' => 'user/default',
+                        'controller_namespace' => 'User\Controller\Management',
+                        'module' => 'User'
+                    )
+                )
+            )
+        )
+    )
 );

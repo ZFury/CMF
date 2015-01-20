@@ -1,0 +1,7 @@
+<div class="collapse navbar-collapse navbar-ex1-collapse">
+    <?php
+    $this->navigation('Navigation')->menu()
+        ->setPartial('layout/dashboard/partial/side-bar-menu.phtml');
+    echo $this->navigation()->menu()->render();
+    ?>
+</div>

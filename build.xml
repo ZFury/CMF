@@ -1,0 +1,187 @@
+<project name="ZF2" default="build">
+
+    <property name="appDir" value="."/>
+    <property name="moduleDir" value="${basedir}/module/"/>
+    <property name="buildDir" value="${basedir}/.build"/>
+    <property name="logsDir" value="${basedir}/logs"/>
+    <property name="vendorDir" value="${basedir}/vendor/bin"/>
+    <property name="configDir" value="${basedir}/config"/>
+
+    <property name="hostname_local" value=""/>
+    <property name="database_local" value=""/>
+    <property name="username_local" value=""/>
+    <property name="password_local" value=""/>
+    <property name="port_local" value=""/>
+
+    <property name="hostname_testing" value=""/>
+    <property name="database_testing" value=""/>
+    <property name="username_testing" value=""/>
+    <property name="password_testing" value=""/>
+    <property name="port_testing" value=""/>
+
+    <property environment="env"/>
+    <property environment="APP_ENV"/>
+
+    <target name="prepare">
+        <delete dir="${buildDir}"/>
+        <mkdir dir="${appDir}/logs"/>
+        <mkdir dir="${logsDir}"/>
+    </target>
+
+    <target name="configs">
+        <property name="forceConfig" value="true"/>
+        <copy overwrite="true" file="${basedir}/config/autoload/doctrine.local.php.dist"
+              tofile="${basedir}/config/autoload/doctrine.local.php"></copy>
+        <copy overwrite="true" file="${basedir}/config/autoload/doctrine.testing.php.dist"
+              tofile="${basedir}/config/autoload/doctrine.testing.php"></copy>
+        <copy overwrite="true" file="${basedir}/config/autoload/testing.php.dist"
+              tofile="${basedir}/config/autoload/testing.php"></copy>
+        <copy overwrite="true" file="${basedir}/public/.htaccess.sample"
+              tofile="${basedir}/public/.htaccess"></copy>
+
+        <antcall target="config-update">
+            <param name="doctrine-local" value="${appDir}/config/autoload/doctrine.local.php"/>
+            <param name="doctrine-testing" value="${appDir}/config/autoload/doctrine.testing.php"/>
+            <param name="application-config" value="${appDir}/config/application.config.php"/>
+        </antcall>
+    </target>
+
+    <target name="config-update">
+        <replace file="${doctrine-local}">
+            <replacefilter token="{HOSTNAME}" value="${hostname_local}"/>
+            <replacefilter token="{DATABASE}" value="${database_local}"/>
+            <replacefilter token="{USERNAME}" value="${username_local}"/>
+            <replacefilter token="{PASSWORD}" value="${password_local}"/>
+            <replacefilter token="{PORT}" value="${port_local}"/>
+        </replace>
+        <replace file="${doctrine-testing}">
+            <replacefilter token="{HOSTNAME}" value="${hostname_testing}"/>
+            <replacefilter token="{DATABASE}" value="${database_testing}"/>
+            <replacefilter token="{USERNAME}" value="${username_testing}"/>
+            <replacefilter token="{PASSWORD}" value="${password_testing}"/>
+            <replacefilter token="{PORT}" value="${port_testing}"/>
+        </replace>
+        <replace file="${application-config}">
+            <replacefilter token="//'BjyAuthorize'" value="'BjyAuthorize'"/>
+            <replacefilter token="'Install'" value="//'Install'"/>
+        </replace>
+    </target>
+
+    <target name="install" description="Run install.sh"  depends="prepare">
+        <exec executable="/bin/bash" output="${logsDir}/install.log">
+            <arg value="-c"/>
+            <arg value="sh ./install.sh"/>
+        </exec>
+        <antcall target="publish"/>
+    </target>
+
+    <target name="phpcs" description="PHP_CodeSniffer">
+        <exec dir="${moduleDir}" executable="${vendorDir}/phpcs" failonerror="false" osfamily="unix"
+              output="${logsDir}/phpcs.log">
+            <arg line="--tab-width=4"/>
+            <arg line="--report=checkstyle"/>
+            <arg line="--standard=PSR2"/>
+            <arg line="--extensions=php"/>
+            <arg line="--ignore=js"/>
+            <arg line="--report-file=${logsDir}/phpcs.xml"/>
+            <arg line="${moduleDir}"/>
+        </exec>
+        <echo message="##teamcity[importData type='checkstyle' path='${logsDir}/phpcs.xml']"/>
+        <antcall target="publish"/>
+    </target>
+
+    <target name="phpcb" description="PHP_CodeBrowser">
+        <mkdir dir="${logsDir}/phpcb"/>
+        <exec dir="${basedir}" executable="${vendorDir}/phpcb" failonerror="false" osfamily="unix">
+            <arg line="--log ${logsDir}"/>
+            <arg line="--source ${moduleDir}"/>
+            <arg line="--output ${logsDir}/phpcb"/>
+        </exec>
+        <zip destfile="${logsDir}/phpcb.zip" basedir="${logsDir}/phpcb"/>
+        <delete dir="${logsDir}/phpcb"/>
+        <antcall target="publish"/>
+    </target>
+
+    <target name="phpunit" description="PHPUnit">
+        <mkdir dir="${logsDir}/coverage"/>
+        <mkdir dir="${logsDir}/coverage/options"/>
+        <mkdir dir="${logsDir}/coverage/pages"/>
+        <mkdir dir="${logsDir}/coverage/categories"/>
+        <mkdir dir="${logsDir}/coverage/comment"/>
+        <mkdir dir="${logsDir}/coverage/media"/>
+        <mkdir dir="${logsDir}/coverage/install"/>
+        <property name="junit" value="${logsDir}/tests-report.xml"/>
+
+        <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix"
+              output="${logsDir}/phpunit.options.log">
+            <env key="APP_ENV" value="testing"/>
+            <arg line="-c ${moduleDir}/Options/test/phpunit.xml"/>
+            <arg line="--log-junit '${logsDir}/tests-report.options.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.options.xml'"/>
+            <arg line="--coverage-html '${logsDir}/coverage/options'"/>
+        </exec>
+
+        <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix"
+              output="${logsDir}/phpunit.pages.log">
+            <env key="APP_ENV" value="testing"/>
+            <arg line="-c ${moduleDir}/Pages/test/phpunit.xml"/>
+            <arg line="--log-junit '${logsDir}/tests-report.pages.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.pages.xml'"/>
+            <arg line="--coverage-html '${logsDir}/coverage/pages'"/>
+        </exec>
+
+        <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix"
+              output="${logsDir}/phpunit.categories.log">
+            <env key="APP_ENV" value="testing"/>
+            <arg line="-c ${moduleDir}/Categories/test/phpunit.xml"/>
+            <arg line="--log-junit '${logsDir}/tests-report.categories.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.categories.xml'"/>
+            <arg line="--coverage-html '${logsDir}/coverage/categories'"/>
+        </exec>
+
+        <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix"
+              output="${logsDir}/phpunit.media.log">
+            <env key="APP_ENV" value="testing"/>
+            <arg line="-c ${moduleDir}/Media/test/phpunit.xml"/>
+            <arg line="--log-junit '${logsDir}/tests-report.media.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.media.xml'"/>
+            <arg line="--coverage-html '${logsDir}/coverage/media'"/>
+        </exec>
+
+        <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix"
+              output="${logsDir}/phpunit.install.log">
+            <env key="APP_ENV" value="testing"/>
+            <arg line="-c ${moduleDir}/Install/test/phpunit.xml"/>
+            <arg line="--log-junit '${logsDir}/tests-report.install.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.install.xml'"/>
+            <arg line="--coverage-html '${logsDir}/coverage/install'"/>
+        </exec>
+
+        <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix"
+              output="${logsDir}/phpunit.comment.log">
+            <env key="APP_ENV" value="testing"/>
+            <arg line="-c ${moduleDir}/Comment/test/phpunit.xml"/>
+            <arg line="--log-junit '${logsDir}/tests-report.comment.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.comment.xml'"/>
+            <arg line="--coverage-html '${logsDir}/coverage/comment'"/>
+        </exec>
+
+        <zip destfile="${logsDir}/coverage.zip" basedir="${logsDir}/coverage"/>
+        <zip destfile="${logsDir}/coverage_options.zip" basedir="${logsDir}/coverage/options"/>
+        <zip destfile="${logsDir}/coverage_pages.zip" basedir="${logsDir}/coverage/pages"/>
+        <zip destfile="${logsDir}/coverage_categories.zip" basedir="${logsDir}/coverage/categories"/>
+        <zip destfile="${logsDir}/coverage_media.zip" basedir="${logsDir}/coverage/media"/>
+        <zip destfile="${logsDir}/coverage_install.zip" basedir="${logsDir}/coverage/install"/>
+        <zip destfile="${logsDir}/coverage_comment.zip" basedir="${logsDir}/coverage/comment"/>
+        <antcall target="publish"/>
+    </target>
+
+    <target name="publish">
+        <echo message="##teamcity[publishArtifacts '${logsDir}/']"/>
+        <echo message="##teamcity[publishArtifacts '${appDir}/logs/']"/>
+    </target>
+
+    <target name="build" depends="install, configs, phpunit, phpcs, phpcb">
+    </target>
+
+</project>

@@ -1,6 +1,8 @@
 # Mod Rewrite
 SetEnv APP_ENV dev
 
+php_value xdebug.max_nesting_level 500
+
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 	RewriteBase /

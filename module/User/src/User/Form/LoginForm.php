@@ -9,6 +9,7 @@
 namespace User\Form;
 
 use Zend\Form\Form;
+use User\Form\Filter\LoginInputFilter;
 
 class LoginForm extends Form
 {
@@ -19,38 +20,42 @@ class LoginForm extends Form
             ->setAttribute('role', 'form')
             ->setAttribute('class', 'form-login form-horizontal');
         $this->setInputFilter(new LoginInputFilter());
-        $this->add(array(
-            'name' => 'security',
-            'type' => 'Zend\Form\Element\Csrf',
-        ));
-        $this->add(array(
-            'name' => 'email',
-            'type' => 'text',
-            'options' => array(
-                'min' => 3,
-                'max' => 25,
-                'label' => 'email',
-            ),
-            'attributes' => ['class' => 'form-control']
-        ));
-        $this->add(array(
-            'name' => 'password',
-            'type' => 'Password',
-            'options' => array(
-                'min' => 3,
-                'max' => 25,
-                'label' => 'password',
-            ),
-            'attributes' => ['class' => 'form-control']
-        ));
-        $this->add(array(
-            'name' => 'submit',
-            'type' => 'Submit',
-            'attributes' => array(
-                'value' => 'Sign In',
-                'id' => 'submitbutton',
-                'class' => 'btn btn-lg btn-primary btn-block'
-            ),
-        ));
+        $this->add(
+            array(
+                'name' => 'security',
+                'type' => 'Zend\Form\Element\Csrf',
+            )
+        );
+        $this->add(
+            array(
+                'name' => 'email',
+                'type' => 'text',
+                'options' => array(
+                    'label' => 'email',
+                ),
+                'attributes' => ['class' => 'form-control']
+            )
+        );
+        $this->add(
+            array(
+                'name' => 'password',
+                'type' => 'Password',
+                'options' => array(
+                    'label' => 'password',
+                ),
+                'attributes' => ['class' => 'form-control']
+            )
+        );
+        $this->add(
+            array(
+                'name' => 'submit',
+                'type' => 'Submit',
+                'attributes' => array(
+                    'value' => 'Sign In',
+                    'id' => 'submitbutton',
+                    'class' => 'btn btn-lg btn-primary btn-block'
+                ),
+            )
+        );
     }
 }

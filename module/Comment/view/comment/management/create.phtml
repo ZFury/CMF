@@ -1,0 +1,84 @@
+<?php
+$title = 'Create entity';
+$this->headTitle($title);
+/**
+ * @var $form Zend/Form
+ */
+$form = $this->form;
+$form->prepare();
+?>
+<div class="container">
+    <h1><?php echo $this->escapeHtml($this->title); ?></h1>
+
+    <div class="row">
+        <form action="" method="post" class="form-horizontal" id="newCategory">
+            <input type="hidden" value="" name="id"/>
+            <div class="form-group">
+                <label for="aliasEntity" class="col-sm-2 control-label">
+                    <?= $form->get('aliasEntity')->getLabel(); ?>
+                </label>
+                <div class="col-sm-4">
+                    <?php echo $this->formInput($form->get('aliasEntity')); ?>
+                </div>
+                <div class="col-sm-9 col-md-offset-2 error-field error-form-message">
+                    <?= $this->formElementErrors($form->get('aliasEntity')); ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="entity" class="col-sm-2 control-label">
+                    <?= $form->get('entity')->getLabel(); ?>
+                </label>
+                <div class="col-sm-4">
+                    <?php echo $this->formSelect($form->get('entity')); ?>
+                </div>
+                <div class="col-sm-9 col-md-offset-2 error-field error-form-message">
+                    <?= $this->formElementErrors($form->get('entity')); ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="enabledComment" class="col-sm-2 control-label">
+                    <?= $form->get('enabledComment')->getLabel(); ?>
+                </label>
+
+                <div class="col-sm-2">
+                    <?php echo $this->formCheckbox($form->get('enabledComment')); ?>
+                </div>
+                <div class="col-sm-9 col-md-offset-2 error-field error-form-message">
+                    <?= $this->formElementErrors($form->get('enabledComment')); ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="visibleComment" class="col-sm-2 control-label">
+                    <?= $form->get('visibleComment')->getLabel(); ?>
+                </label>
+
+                <div class="col-sm-2">
+                    <?php echo $this->formCheckbox($form->get('visibleComment')); ?>
+                </div>
+                <div class="col-sm-9 col-md-offset-2 error-field error-form-message">
+                    <?= $this->formElementErrors($form->get('visibleComment')); ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description" class="col-sm-2 control-label">
+                    <?= $form->get('description')->getLabel(); ?>
+                </label>
+                <div class="col-sm-4">
+                    <?php echo $this->formTextarea($form->get('description')); ?>
+                </div>
+                <div class="col-sm-9 col-md-offset-2 error-field error-form-message">
+                    <?= $this->formElementErrors($form->get('description')); ?>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-4">
+                    <input type="submit" name="submit" class="form-control col-md-3 btn btn-success" value="Save">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    require(['dashboard']);
+</script>

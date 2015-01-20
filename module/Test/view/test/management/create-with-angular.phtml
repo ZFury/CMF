@@ -1,0 +1,24 @@
+<script>
+    require(['jquery', 'bootstrap', 'modules/test/testApp', 'dashboard']);
+</script>
+<div ng-controller="createTestController">
+    <div ng-bind-html="testError.exception.message" class="error-field error-form-message"></div>
+    <form name="createTestForm" ng-submit="createTest()" role="form" class="form-tiny">
+        <div class="form-group">
+            <label class="control-label">Email *</label>
+            <input data-ng-blur="newTest.email" ng-model="newTest.email" name="email" type="text" class="form-control" placeholder="Email" value="">
+            <div ng-bind-html="testError.email[0]" class="error-field error-form-message"></div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Name *</label>
+            <input ng-model="newTest.name" name="name" type="text"
+                   class="form-control" placeholder="name" value="">
+            <div ng-bind-html="testError.name[0]" class="error-field error-form-message"></div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary col-md-offset-4">
+                Save test
+            </button>
+        </div>
+    </form>
+</div>

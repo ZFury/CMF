@@ -13,9 +13,11 @@ return array(
                     'PROJECT' => '%project%',
                     'EMAILS'  => '%mail%'
                 ),
-                'from' => array (
-                    'admin@zfstarter.com'
-                )
+                'from' => array ('admin@zfstarter.com')
             )
+        ),
+        // set true if module mail exists
+        'mailOptions' => array(
+            'useModuleMail' => false
         ),
 );

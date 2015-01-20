@@ -9,3 +9,4 @@ nbproject
 public/.htaccess
 composer.phar
 vendor
+config/application.config.php

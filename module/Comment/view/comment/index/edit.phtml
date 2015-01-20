@@ -1,0 +1,12 @@
+<?php
+echo $this->partial('comment/index/add.phtml',
+    array(
+        'form' => $this->form,
+        'title' => 'Edit comment',
+        'ajax' => $this->ajax
+    )
+);
+?>
+<script>
+    require(['starter']);
+</script>

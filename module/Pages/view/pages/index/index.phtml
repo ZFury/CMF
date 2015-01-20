@@ -1,0 +1,8 @@
+<?php $this->headMeta()->appendName('description', $this->escapeHtml($page->getDescription())); ?>
+<?php $this->headMeta()->appendName('keywords', $this->escapeHtml($page->getKeywords())); ?>
+
+    <h2 class="page-header"><?php echo $this->escapeHtml($page->getTitle()); ?></h2>
+<?php echo $page->getContent(); ?>
+<script>
+    require(['starter']);
+</script>

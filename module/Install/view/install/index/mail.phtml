@@ -1,0 +1,79 @@
+<?php
+$title = 'Mail config';
+$this->headTitle($title);
+?>
+<h1 class="page-header"><?php echo $this->escapeHtml($title); ?></h1>
+<?php
+$mailForm->setAttribute('action', $this->url('install', ['controller' => 'index', 'action' => 'database']));
+$mailForm->prepare();
+?>
+
+<form role="form" class="form-horizontal" method="post">
+
+    <ul>
+        <li>
+            <div class="form-group">
+                <label for="inputHost" class="col-md-3 control-label"><?= $mailForm->get('host')->getLabel(); ?></label>
+                <div class="col-md-5">
+                    <input type="text" class="form-control" id="inputHost" name="<?= $mailForm->get('host')->getName(); ?>" value="<?= $mailForm->get('host')->getValue(); ?>" placeholder="<?= $mailForm->get('host')->getLabel(); ?>">
+                    <?= $this->formElementErrors($mailForm->get('host')); ?>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="form-group">
+                <label for="inputPort" class="col-md-3 control-label"><?= $mailForm->get('port')->getLabel(); ?></label>
+                <div class="col-md-5">
+                    <input type="text" class="form-control" id="inputPort" name="<?= $mailForm->get('port')->getName(); ?>" value="<?= $mailForm->get('port')->getValue(); ?>" placeholder="<?= $mailForm->get('port')->getLabel(); ?>">
+                    <?= $this->formElementErrors($mailForm->get('port')); ?>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="form-group">
+                <label for="inputFrom" class="col-md-3 control-label">From</label>
+                <div class="form-group col-md-8">
+                    <div class="from-fieldset col-md-8">
+                        <?php echo $this->formCollection($mailForm->get('from')); ?>
+                    </div>
+                    <button class="add_field_button_from btn btn-warning col-sm-3">More fields</button>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="form-group">
+                <label for="inputProject" class="col-md-3 control-label">Header</label>
+                <div class="form-group col-md-8">
+                    <div class="header-fieldset col-md-8">
+                        <?php echo $this->formCollection($mailForm->get('header')); ?>
+                    </div>
+                    <!--                            <div class="col-md-1 glyphicon glyphicon-remove-circle"><a href="#"></a></div>-->
+                    <button class="add_field_button_header btn btn-warning col-sm-3">More fields</button>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="form-group">
+                <label for="inputEmails" class="col-md-3 control-label">Emails header (for Stubmail)</label>
+                <div class="form-group col-md-8">
+                    <div class="emails-fieldset col-md-8">
+                        <?php echo $this->formCollection($mailForm->get('emails')); ?>
+                    </div>
+<!--                            <div class="col-md-1 glyphicon glyphicon-remove-circle"><a href="#"></a></div>-->
+                    <button class="add_field_button_emails btn btn-warning col-sm-3">More fields</button>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+    <div class="form-group">
+        <div class="col-sm-2 col-sm-offset-3">
+            <a href="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'database'])?>" class="btn btn-default btn-circle "><i class="glyphicon glyphicon-chevron-left glyphicon-align-center"></i></a>
+        </div>
+        <div class="col-sm-2 col-sm-offset-2">
+            <button class="btn-circle glyphicon glyphicon-chevron-right" type="submit"></button>
+        </div>
+    </div>
+
+</form>
+<script>require(['mail-inputs']);</script>
