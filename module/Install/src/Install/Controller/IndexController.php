@@ -42,7 +42,7 @@ class IndexController extends AbstractActionController
             ]);
         } else {
             //PHPVERSION
-            if (Install::PHP_VERSION == phpversion() || Install::PHP_VERSION <= phpversion()) {
+            if (version_compare(Install::PHP_VERSION, phpversion(), '<=')) {
                 $phpVersion['status'] = true;
                 $phpVersion['message'] = "PHP version is compatible with ZFStarter!";
             } else {
