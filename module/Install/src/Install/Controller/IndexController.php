@@ -42,7 +42,7 @@ class IndexController extends AbstractActionController
             ]);
         } else {
             //PHPVERSION
-            if (Install::PHP_VERSION == phpversion() || Install::PHP_VERSION <= phpversion()) {
+            if (version_compare(Install::PHP_VERSION, phpversion(), '<=')) {
                 $phpVersion['status'] = true;
                 $phpVersion['message'] = "PHP version is compatible with ZFStarter!";
             } else {
@@ -317,9 +317,9 @@ class IndexController extends AbstractActionController
         $sessionProgress->getManager()->getStorage()->clear('forms');
 
         //HIDING INSTALL
-        $installService->replaceRowInFile('config/application.config.php', "'Install'", "//'Install'\n");
+        $installService->replaceRowInFile('config/application.config.php', "'Install'", "//'Install'");
         //UNHIDING BJY
-        $installService->replaceRowInFile('config/application.config.php', "//'BjyAuthorize'", "'BjyAuthorize',\n");
+        $installService->replaceRowInFile('config/application.config.php', "//'BjyAuthorize'", "'BjyAuthorize',");
 //        rename(Install::MODULES . "Install", Install::MODULES . ".Install");
 
         return new ViewModel([
