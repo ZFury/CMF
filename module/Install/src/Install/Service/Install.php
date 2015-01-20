@@ -133,7 +133,7 @@ class Install
                     ],
                     'doctrine_type_mappings' => ['enum' => 'string'],
                     ]]]];";
-        $config = fopen("config/autoload/doctrine.local.php", "w+");
+        $config = fopen("config/autoload/doctrine.local.php", "w");
         fwrite($config, $content);
         fclose($config);
     }
@@ -215,16 +215,20 @@ class Install
                         $message .= "'$fileName' which path is '$filePath' exists and is writable!";
                         $status = Install::GOOD;
                     } else {
-                        $message .= "'$fileName' which path is '$filePath' does not exist or is not writable."
-                            . "Please, make it writable or create!";
+                        $message .= "'$fileName' which path is '$filePath' is not writable."
+                            . "Please, make it writable!";
                         $status = Install::BAD;
                     }
-                    array_push($whereToPush, [$fileName => [
-                                'message' => $message,
-                                'status' => $status,
-                                'path' => $filePath]
-                    ]);
+                } else {
+                    $message = "'$fileName' which path is '$filePath' does not exist."
+                        . "Please, create it!";
+                    $status = Install::BAD;
                 }
+                array_push($whereToPush, [$fileName => [
+                            'message' => $message,
+                            'status' => $status,
+                            'path' => $filePath]
+                ]);
             }
         }
 
