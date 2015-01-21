@@ -13,7 +13,7 @@ use Pages\Grid\Grid;
 use Starter\Mvc\Controller\AbstractCrudController;
 use Zend\View\Model\ViewModel;
 use Pages\Form\Create;
-use Pages\Form\Pages;
+use Pages\Entity\Pages;
 use Zend\Mvc\MvcEvent;
 
 /**
