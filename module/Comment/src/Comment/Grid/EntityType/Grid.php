@@ -2,7 +2,7 @@
 
 namespace Comment\Grid\EntityType;
 
-use Starter\Grid\AbstractGrid;
+use Fury\Grid\AbstractGrid;
 
 class Grid extends AbstractGrid
 {

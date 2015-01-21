@@ -7,7 +7,7 @@
  */
 namespace User\DBAL\Types;
 
-use Starter\DBAL\Types\EnumType;
+use Fury\DBAL\Types\EnumType;
 
 /**
  * Class EnumStatusType

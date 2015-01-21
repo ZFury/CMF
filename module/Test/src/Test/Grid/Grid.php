@@ -2,7 +2,7 @@
 
 namespace Test\Grid;
 
-use Starter\Grid\AbstractGrid;
+use Fury\Grid\AbstractGrid;
 use Doctrine\ORM\QueryBuilder;
 
 class Grid extends AbstractGrid

@@ -46,8 +46,8 @@ require.config({
         "audio": '../module/test/js/audio',
         "video": '../module/test/js/video',
         'conversion': '../module/media/js/conversion',
-        'form': './starter.form',
-        'notify': './starter.notify',
+        'fury.form': './fury.form',
+        'fury.notify': './fury.notify',
         'mail-inputs': '../module/install/js/mail-inputs'
     },
     shim: {

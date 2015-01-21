@@ -2,7 +2,7 @@
 
 <phpunit bootstrap="Bootstrap.php">
     <testsuites>
-        <testsuite name="zfstarter/options">
+        <testsuite name="fury/options">
             <directory>./CategoriesTest</directory>
         </testsuite>
     </testsuites>

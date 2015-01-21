@@ -8,7 +8,7 @@
 namespace User\Controller;
 
 use SebastianBergmann\Exporter\Exception;
-use Starter\Mvc\Controller\AbstractCrudController;
+use Fury\Mvc\Controller\AbstractCrudController;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use User\Service;

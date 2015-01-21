@@ -19,7 +19,7 @@
         createTestController
         ) {
 
-        var app = angular.module('zfstarter', ['ngSanitize']);
+        var app = angular.module('fury', ['ngSanitize']);
         app
             .factory('testService', testService)
             .controller('testController', testController)
@@ -28,7 +28,7 @@
 
         angular.element(document).ready(function () {
             var promise = new Promise(function(resolve, reject) {
-                var ngObject = angular.bootstrap(document, ['zfstarter']);
+                var ngObject = angular.bootstrap(document, ['fury']);
 
                 if (ngObject) {
                     resolve("Stuff worked!");

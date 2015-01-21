@@ -2,7 +2,7 @@
 
 namespace Test\Controller;
 
-use Starter\Mvc\Controller\AbstractCrudController;
+use Fury\Mvc\Controller\AbstractCrudController;
 use Test\Form;
 use Test\Entity;
 use Zend\View\Model\JsonModel;

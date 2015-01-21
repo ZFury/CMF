@@ -7,7 +7,7 @@
 namespace Pages\Controller;
 
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use Starter\Test\Controller\ControllerTestCase;
+use Fury\Test\Controller\ControllerTestCase;
 use Zend\Http\Response;
 use Zend\Stdlib;
 

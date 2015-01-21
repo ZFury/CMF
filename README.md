@@ -1,4 +1,4 @@
-ZFStarter installation
+ZFury installation
 =======================================================
 0. Установить git flow
 apt-get install git-flow

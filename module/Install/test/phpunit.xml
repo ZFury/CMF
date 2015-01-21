@@ -2,7 +2,7 @@
 
 <phpunit bootstrap="./Bootstrap.php" colors="true" convertErrorsToExceptions="true">
     <testsuites>
-        <testsuite name="zfstarter/media">
+        <testsuite name="fury/media">
             <directory>./InstallTest</directory>
         </testsuite>
     </testsuites>

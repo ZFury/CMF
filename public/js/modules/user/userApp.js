@@ -15,7 +15,7 @@
         userGridController
         ) {
 
-        var app = angular.module('zfstarter', ['ngRoute']);
+        var app = angular.module('fury', ['ngRoute']);
         app
             .factory('userService', userService)
             .controller('userGridController', userGridController);
@@ -37,7 +37,7 @@
 
         angular.element(document).ready(function () {
             var promise = new Promise(function(resolve, reject) {
-                var ngObject = angular.bootstrap(document, ['zfstarter']);
+                var ngObject = angular.bootstrap(document, ['fury']);
 
                 if (ngObject) {
                     resolve("Stuff worked!");

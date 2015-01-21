@@ -3,7 +3,7 @@
 namespace Categories\Controller;
 
 use Doctrine\DBAL\Schema\View;
-use Starter\Mvc\Controller\AbstractCrudController;
+use Fury\Mvc\Controller\AbstractCrudController;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Zend\Mvc\MvcEvent;

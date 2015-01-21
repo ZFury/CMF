@@ -44,10 +44,10 @@ class IndexController extends AbstractActionController
             //PHPVERSION
             if (version_compare(Install::PHP_VERSION, phpversion(), '<=')) {
                 $phpVersion['status'] = true;
-                $phpVersion['message'] = "PHP version is compatible with ZFStarter!";
+                $phpVersion['message'] = "PHP version is compatible with ZFury!";
             } else {
                 $phpVersion['status'] = false;
-                $phpVersion['message'] = "PHP version is not compatible for ZFStarter! It might be " .
+                $phpVersion['message'] = "PHP version is not compatible for ZFury! It might be " .
                     Install::PHP_VERSION . " or higher";
             }
 

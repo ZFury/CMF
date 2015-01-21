@@ -9,7 +9,7 @@
 namespace MediaTest\Service;
 
 use Media\Form\ImageUpload;
-use Starter\Test\Controller\ControllerTestCase;
+use Fury\Test\Controller\ControllerTestCase;
 use Zend\Http\Response;
 use Zend\Stdlib;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;

@@ -10,7 +10,7 @@
 namespace Pages\Controller;
 
 use Pages\Grid\Grid;
-use Starter\Mvc\Controller\AbstractCrudController;
+use Fury\Mvc\Controller\AbstractCrudController;
 use Zend\View\Model\ViewModel;
 use Pages\Form\Create;
 use Pages\Entity\Pages;
