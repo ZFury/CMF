@@ -74,12 +74,4 @@ class ManagementController extends AbstractCrudController
         $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
         return $viewModel;
     }
-
-    /**
-     * @return array|ViewModel
-     */
-    public function viewAction()
-    {
-        return new ViewModel(array('page' => $this->loadEntity()));
-    }
 }

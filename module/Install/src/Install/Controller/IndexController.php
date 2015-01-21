@@ -302,7 +302,11 @@ class IndexController extends AbstractActionController
         //DOCTRINE2
         $doctrine = [];
         exec('./vendor/bin/doctrine-module orm:schema-tool:update --force', $output, $returnUpdate);
-        exec('vendor/doctrine/doctrine-module/bin/doctrine-module migrations:migrate --dry-run', $output, $returnMigrate);
+        exec(
+            'vendor/doctrine/doctrine-module/bin/doctrine-module migrations:migrate --dry-run',
+            $output,
+            $returnMigrate
+        );
         if ((isset($returnUpdate) && 0 === $returnUpdate) && (isset($returnMigrate) && 0 === $returnMigrate)) {
             $doctrine['status'] = Install::GOOD;
             $doctrine['message'] = "Doctrine2 had successfully updated DB schema and migrated!";
