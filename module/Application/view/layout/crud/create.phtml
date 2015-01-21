@@ -1,7 +1,5 @@
 <?= $this->headLink()->appendStylesheet($this->basePath() . '/redactor/redactor.css'); ?>
 <?php
-/**@var $form Zend\Form\Form */
-$form = $this->form;
 $scripts = $this->scripts ? $this->scripts : [];
 $ajax = $this->ajax ? $this->ajax : false;
 ?>
@@ -11,7 +9,7 @@ $ajax = $this->ajax ? $this->ajax : false;
             <h1><?= !$this->title ? 'Create' : $this->escapeHtml($this->title); ?></h1>
         <?php endif; ?>
         <form action="" method="post" class="form-horizontal" id="crudForm">
-            <?php foreach ($form->getElements() as $element) : ?>
+            <?php foreach ($this->form->getElements() as $element) : ?>
                 <?php
                 switch ($element) {
                     case $element instanceof Zend\Form\Element\Select :
@@ -73,7 +71,6 @@ $ajax = $this->ajax ? $this->ajax : false;
 </div>
 <script>
     require([
-        'frontend',
         'dashboard',
         <?= implode(',', array_map(function($a) { return "'$a'"; }, $scripts));?>
     ]);
