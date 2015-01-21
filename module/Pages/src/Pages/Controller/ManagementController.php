@@ -13,10 +13,8 @@ use Pages\Grid\Grid;
 use Starter\Mvc\Controller\AbstractCrudController;
 use Zend\View\Model\ViewModel;
 use Pages\Form\Create;
+use Pages\Form\Pages;
 use Zend\Mvc\MvcEvent;
-use Doctrine\ORM\EntityNotFoundException;
-use Zend\Mvc\Controller\AbstractActionController;
-use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 
 /**
  * Class ManagementController
@@ -40,7 +38,7 @@ class ManagementController extends AbstractCrudController
         /**
          * @var $entity = \Pages\Entity\Pages $entity
          */
-        $entity = new \Pages\Entity\Pages();
+        $entity = new Pages();
         $entity->setAuthorId($this->identity()->getUser()->getId());
         return $entity;
     }
@@ -50,7 +48,7 @@ class ManagementController extends AbstractCrudController
      */
     protected function getCreateForm()
     {
-        return new \Pages\Form\Create(null, ['serviceLocator' => $this->getServiceLocator()]);
+        return new Create(null, ['serviceLocator' => $this->getServiceLocator()]);
     }
 
     /**
@@ -58,7 +56,7 @@ class ManagementController extends AbstractCrudController
      */
     protected function getEditForm()
     {
-        $form = new \Pages\Form\Create(null, ['serviceLocator' => $this->getServiceLocator()]);
+        $form = new Create(null, ['serviceLocator' => $this->getServiceLocator()]);
         $form->get('submit')->setValue('Save');
         return $form;
     }
