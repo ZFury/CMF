@@ -330,7 +330,7 @@ class IndexController extends AbstractActionController
     }
 
     /**
-     *
+     * Sets installation progress
      */
     public function setProgress()
     {

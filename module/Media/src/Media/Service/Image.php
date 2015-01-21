@@ -68,7 +68,7 @@ class Image extends File
      * @param $type
      * @return array
      */
-    public static function sizeByType($type)
+    private static function sizeByType($type)
     {
         switch ($type) {
             case self::BIG_THUMB:

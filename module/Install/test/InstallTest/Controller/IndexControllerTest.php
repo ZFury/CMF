@@ -60,6 +60,9 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         parent::setUp();
     }
 
+    /**
+     * Tests that global requirements action can be accessed
+     */
     public function testGlobalRequirementsAction()
     {
         $this->dispatch('/install/index/global-requirements');
@@ -71,6 +74,9 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
 
     }
 
+    /**
+     * Tests redirection to a current step
+     */
     public function testRedirectionToCurrentStep()
     {
         $this->dispatch('/install/index/database');
@@ -80,6 +86,9 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         $this->assertResponseStatusCode(302);
     }
 
+    /**
+     * Tests redirection after submit of global requirements action
+     */
     public function testSubmitGlobalRequirementsAction()
     {
         $this->dispatch('/install/index/global-requirements', Request::METHOD_POST);
@@ -87,6 +96,9 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         $this->assertResponseStatusCode(302);
     }
 
+    /**
+     * Tests that database action can be accessed
+     */
     public function testDatabaseAction()
     {
         $this->sessionProgress->offsetSet('global-requirements', Install::DONE);
@@ -97,16 +109,9 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         $this->assertResponseStatusCode(200);
     }
 
-//    public function testSubmitDatabaseAction()
-//    {
-//        $sessionProgress = new Container('progress_tracker');
-//        $sessionProgress->offsetSet('global-requirements', Install::DONE);
-//        $this->dispatch('/install/index/database', Request::METHOD_POST, $this->getDbParams());
-//        $this->assertRedirectTo('/install/index/mail');
-//        $this->assertActionName('database');
-//        $this->assertResponseStatusCode(302);
-//    }
-
+    /**
+     * Tests that mail action can be accessed
+     */
     public function testMailAction()
     {
         $this->sessionProgress->offsetSet('database', Install::DONE);
@@ -118,16 +123,9 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         $this->assertResponseStatusCode(200);
     }
 
-//    public function testSubmitMailAction()
-//    {
-//        $sessionProgress = new Container('progress_tracker');
-//        $sessionProgress->offsetSet('database', Install::DONE);
-//        $this->dispatch('/install/index/mail', Request::METHOD_POST, $this->getMailParams());
-//        $this->assertRedirectTo('/install/index/modules');
-//        $this->assertActionName('mail');
-//        $this->assertResponseStatusCode(302);
-//    }
-
+    /**
+     * Tests that modules action can be accessed
+     */
     public function testModulesAction()
     {
         $this->sessionProgress->offsetSet('mail', Install::DONE);
@@ -138,6 +136,9 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         $this->assertResponseStatusCode(200);
     }
 
+    /**
+     * Tests redirection after submit of modules action
+     */
     public function testSubmitModulesAction()
     {
         $this->sessionProgress->offsetSet('mail', Install::DONE);
@@ -147,6 +148,9 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         $this->assertResponseStatusCode(302);
     }
 
+    /**
+     * Tests that modules requirements action can be accessed
+     */
     public function testModulesRequirementsAction()
     {
         $this->sessionProgress->offsetSet('modules', Install::DONE);
@@ -157,6 +161,9 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         $this->assertResponseStatusCode(200);
     }
 
+    /**
+     * Tests redirection after submit of modules requirements action
+     */
     public function testSubmitModulesRequirementsAction()
     {
         $this->sessionProgress->offsetSet('modules', Install::DONE);
@@ -166,6 +173,9 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         $this->assertResponseStatusCode(302);
     }
 
+    /**
+     * Tests that finish action can be accessed
+     */
     public function testFinishAction()
     {
         $this->sessionProgress->offsetSet('modules-requirements', Install::DONE);
@@ -176,11 +186,17 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         $this->assertResponseStatusCode(200);
     }
 
+    /**
+     * @return \Zend\Mvc\Router\Http\RouteMatch
+     */
     public function getRouteMatch()
     {
         return $this->getApplicationServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch();
     }
 
+    /**
+     * @return array
+     */
     public function getDbParams()
     {
         return [
@@ -192,6 +208,9 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getMailParams()
     {
         return [
@@ -219,6 +238,9 @@ class IndexControllerTest extends AbstractHttpControllerTestCase
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getModulesParams()
     {
         return [

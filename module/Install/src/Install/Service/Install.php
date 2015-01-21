@@ -29,6 +29,9 @@ class Install
 
     protected $sm;
 
+    /**
+     * @param $sm
+     */
     public function __construct($sm)
     {
         $this->sm = $sm;
@@ -363,7 +366,7 @@ class Install
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public static function getCurrentStep()
     {

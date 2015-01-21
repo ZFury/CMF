@@ -27,21 +27,6 @@ class BlueimpTest extends AbstractHttpControllerTestCase
      */
     private $blueimpService;
 
-    /**
-     *  Migration up
-     */
-    public static function setUpBeforeClass()
-    {
-        exec('vendor/bin/doctrine-module orm:schema-tool:update --force');
-    }
-
-    /**
-     * Migration down
-     */
-    public static function tearDownAfterClass()
-    {
-        exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
-    }
 
     /**
      * Set up
@@ -54,16 +39,11 @@ class BlueimpTest extends AbstractHttpControllerTestCase
         $this->blueimpService = $this->getApplicationServiceLocator()->get('Media\Service\Blueimp');
     }
 
+    /**
+     * Tests valid json when deleting file
+     */
     public function testDeleteFileJson()
     {
         $this->assertJson(json_encode($this->blueimpService->deleteFileJson()));
-    }
-
-    public function testDisplayUploadedFiles()
-    {
-        $entityManager = $this->getApplicationServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $files = $entityManager->getRepository('Media\Entity\File')->findByType('image');
-        $mask = '/mask/mask/';
-        $this->assertJson(json_encode($this->blueimpService->displayUploadedFiles($files, $mask)));
     }
 }

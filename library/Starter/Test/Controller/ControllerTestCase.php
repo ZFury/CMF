@@ -118,4 +118,14 @@ abstract class ControllerTestCase extends AbstractHttpControllerTestCase
 
         $userAuth->login($this->getApplicationServiceLocator());
     }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    public function getDoctrineMock()
+    {
+        return $this->getMockBuilder('Doctrine\Common\Persistence\ObjectManagerDecorator')
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
 }
