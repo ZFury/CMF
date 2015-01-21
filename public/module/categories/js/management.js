@@ -1,7 +1,7 @@
 /**
  * Created by babich on 24.11.14.
  */
-define(['jquery', 'notify', 'jquery-ui', 'jquery-nestedSortable'], function ($, notify) {
+define(['jquery', 'fury.notify', 'jquery-ui', 'jquery-nestedSortable'], function ($, notify) {
     $(function () {
         function sortableInit() {
             $('.sortable').nestedSortable({

@@ -81,7 +81,7 @@ class Create extends Form
             )
         );
 
-        $redactor = new \Starter\Form\Element\Redactor();
+        $redactor = new \Fury\Form\Element\Redactor();
         $redactor->setName('content')
             ->setAttributes(['id' => 'content',
                 'class' => 'form-control redactor-content'])

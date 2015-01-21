@@ -11,8 +11,6 @@
             $scope.page = 1;
             $scope.currentPage = 1;
             $scope.reverse = true;
-            $scope.defaultOrder = 'test.email';
-            $scope.defaultFilter = 'test.email';
             $scope.filterOptions = {};
 
             /**
@@ -36,12 +34,6 @@
                 $scope.currentPage = $scope.page;
                 if (typeof(num) !== 'undefined') {
                     $scope.page = num + 1;
-                }
-                if (typeof($scope.orderField) === 'undefined') {
-                    $scope.orderField = $scope.defaultOrder;
-                }
-                if (typeof($scope.filterField) === 'undefined') {
-                    $scope.filterField = $scope.defaultFilter;
                 }
                 testService.getTests($scope.page, $scope.orderField, $scope.order, $scope.filterField, $scope.searchString, $scope.limit, function(response) {
                     $scope.testGrid = [];

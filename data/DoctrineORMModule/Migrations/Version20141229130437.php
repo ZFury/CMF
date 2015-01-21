@@ -15,8 +15,8 @@ class Version20141229130437 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql("INSERT INTO `mail_templates`(`id`,`alias`,`description`,`subject`,`fromEmail`,
 `fromName`,`bodyHtml`,`bodyText`,`created`,`updated`)
-            VALUES (null,'sign-up','Template for registration','Congratulation','ZFStarter@admins.com',
-            'Admin ZFStarter','<p>Please confirm your registration <a href=\"%confirm%\">confirm</a></p>',
+            VALUES (null,'sign-up','Template for registration','Congratulation','ZFury@admins.com',
+            'Admin ZFury','<p>Please confirm your registration <a href=\"%confirm%\">confirm</a></p>',
             'Please confirm your registration  %confirm%','2014-12-16 13:04:59','2014-12-17 22:29:46');");
     }
 

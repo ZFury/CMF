@@ -82,27 +82,6 @@ class DoctrineProvider implements \BjyAuthorize\Provider\Identity\ProviderInterf
         }
 
         return $this->authService->getIdentity()->getUser()->getRole();
-        //        $roles = $this->entityManager
-        //            ->getRepository($providerConfig['role_entity_class'])
-        //            ->findBy(array(), array('id' => 'DESC'));
-        //        var_dump($roles);
-        //        die();
-        //
-        //        // get roles associated with the logged in user
-        //        $sql    = new Sql($this->adapter);
-        //        $select = $sql->select()->from($this->tableName);
-        //        $where  = new Where();
-        //
-        //        $where->equalTo('user_id', $authService->getIdentity()->getId());
-        //
-        //        $results = $sql->prepareStatementForSqlObject($select->where($where))->execute();
-        //        $roles     = array();
-        //
-        //        foreach ($results as $i) {
-        //            $roles[] = $i['role_id'];
-        //        }
-        //
-        //        return $roles;
     }
 
     /**

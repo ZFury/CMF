@@ -34,21 +34,6 @@ class VideoTest extends AbstractHttpControllerTestCase
      * @var \Media\Service\Video
      */
     private $videoService;
-    /**
-     *  Migration up
-     */
-    public static function setUpBeforeClass()
-    {
-        exec('vendor/bin/doctrine-module orm:schema-tool:update --force');
-    }
-
-    /**
-     * Migration down
-     */
-    public static function tearDownAfterClass()
-    {
-        exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
-    }
 
     /**
      * Set up
@@ -63,6 +48,10 @@ class VideoTest extends AbstractHttpControllerTestCase
         $this->videoService = $this->getApplicationServiceLocator()->get('Media\Service\Video');
     }
 
+    /**
+     * Tests path generator from root
+     * @throws \Exception
+     */
     public function testVideoPath()
     {
         $videoPath = $this->videoService->videoPath($this->videoId, $this->videoEntityData['extension']);
@@ -74,6 +63,10 @@ class VideoTest extends AbstractHttpControllerTestCase
         );
     }
 
+    /**
+     * Tests path generator from public
+     * @throws \Exception
+     */
     public function testVideoPathOnlyPath()
     {
         $videoPath = $this->videoService
@@ -92,20 +85,9 @@ class VideoTest extends AbstractHttpControllerTestCase
         $this->assertTrue($this->videoService->prepareDir($videoPath));
     }
 
-    public function testMoveVideo()
-    {
-        $videoPath = $this->videoService->videoPath($this->videoId, $this->videoEntityData['extension']);
-        $video = [
-            'name' => 'test.mp4',
-            'type' => 'video/mp4',
-            'tmp_name' => __DIR__ . '/../../testFiles/test.mp4',
-            'error' => '0',
-            'size' => '15288220'
-        ];
-        $this->setExpectedException('Zend\Filter\Exception\RuntimeException');
-        $this->videoService->moveFile($videoPath, $video);
-    }
-
+    /**
+     * Tests video conversion to mp4
+     */
     public function testVideoConversion()
     {
         $this->assertTrue($this->videoService->executeConversion($this->oldLocation, $this->newLocation));

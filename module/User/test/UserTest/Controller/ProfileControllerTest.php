@@ -10,7 +10,7 @@ namespace UserTest\Controller;
 
 use SebastianBergmann\Exporter\Exception;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
-use Starter\Test\Controller\ControllerTestCase;
+use Fury\Test\Controller\ControllerTestCase;
 
 class ProfileControllerTest extends ControllerTestCase
 {

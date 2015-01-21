@@ -10,7 +10,7 @@
 namespace Options\Controller;
 
 use Options\Grid\Grid;
-use Starter\Mvc\Controller\AbstractCrudController;
+use Fury\Mvc\Controller\AbstractCrudController;
 use Zend\View\Model\ViewModel;
 use Options\Form\Create;
 use Doctrine\ORM\EntityNotFoundException;

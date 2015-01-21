@@ -8,7 +8,7 @@
 namespace User\Controller;
 
 use SebastianBergmann\Exporter\Exception;
-use Starter\Mvc\Controller\AbstractCrudController;
+use Fury\Mvc\Controller\AbstractCrudController;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use User\Service;
@@ -106,6 +106,8 @@ class ManagementController extends AbstractCrudController
                 'totalPages' => $grid->totalPages(),
                 'allowedOrders' => $grid->getAllowedOrders(),
                 'defaultLimit' => $grid->getDefaultLimit(),
+                'defaultFilter' => $grid->getFilter(),
+                'defaultOrder' => $grid->getOrder(),
                 'order' => $grid->getOrder(),
                 'prev' => $grid->prev(),
                 'next' => $grid->next(),

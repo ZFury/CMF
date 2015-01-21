@@ -10,7 +10,7 @@
 namespace Mail\Controller;
 
 use Mail\Grid\Grid;
-use Starter\Mvc\Controller\AbstractCrudController;
+use Fury\Mvc\Controller\AbstractCrudController;
 use Zend\View\Model\ViewModel;
 use Mail\Form\Create;
 use Zend\Mvc\MvcEvent;

@@ -14,6 +14,9 @@ class Blueimp
 {
     protected $sm;
 
+    /**
+     * @param $sm
+     */
     public function __construct($sm)
     {
         $this->sm = $sm;
@@ -26,6 +29,7 @@ class Blueimp
      */
     public function getFileJson(FileEntity $file, $deleteUrl)
     {
+        /** @var \Media\Service\File  $fileService */
         $fileService = $this->sm->get('Media\Service\File');
         $thumbnailUrl = null;
         $type = null;

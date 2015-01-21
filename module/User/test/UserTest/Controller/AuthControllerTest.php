@@ -11,7 +11,7 @@ namespace UserTest\Controller;
 use SebastianBergmann\Exporter\Exception;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
-use Starter\Test\Controller\ControllerTestCase;
+use Fury\Test\Controller\ControllerTestCase;
 use Zend\Stdlib;
 
 class AuthControllerTest extends ControllerTestCase

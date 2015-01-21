@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Starter\DBAL\Entity\EntityBase;
+use Fury\DBAL\Entity\EntityBase;
 
 /**
  * Categories\Entity\Categories
@@ -19,7 +19,7 @@ use Starter\DBAL\Entity\EntityBase;
  */
 class Categories extends EntityBase
 {
-    use \Starter\Media\File;
+    use \Fury\Media\File;
 
     /**
      * @var integer

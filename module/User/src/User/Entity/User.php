@@ -5,7 +5,7 @@ namespace User\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Starter\Media\File;
+use Fury\Media\File;
 use Zend\Form\Annotation;
 
 /**

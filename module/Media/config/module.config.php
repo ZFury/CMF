@@ -24,6 +24,9 @@ return array(
             'Media\Service\Blueimp' => function ($serviceManager) {
                 return new Media\Service\Blueimp($serviceManager);
             },
+            'Zend\Filter\File\RenameUpload' => function () {
+                return new Zend\Filter\File\RenameUpload([]);
+            },
         ]
     ],
     'doctrine' => [

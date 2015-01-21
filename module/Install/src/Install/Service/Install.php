@@ -29,6 +29,9 @@ class Install
 
     protected $sm;
 
+    /**
+     * @param $sm
+     */
     public function __construct($sm)
     {
         $this->sm = $sm;
@@ -143,19 +146,6 @@ class Install
      */
     public function checkDbConnection(DbConnection $dbForm)
     {
-        //Zend\Db\Adapter\Adapter style:
-        //$adapter = new Adapter([
-            //'driver' => 'Pdo_Mysql',
-            //'database' => $dbForm->getData()['dbname'],
-            //'username' => $dbForm->getData()['user'],
-            //'password' => $dbForm->getData()['password'],
-            //'hostname' => $dbForm->getData()['host'],
-            //'port' => $dbForm->getData()['port']
-        //]);
-        //$adapter->getDriver()->getConnection()->connect();
-        //
-        //return $adapter->getDriver()->getConnection()->isConnected();
-
         $dbname=$dbForm->getData()['dbname'];
         $host=$dbForm->getData()['host'];
         $port=$dbForm->getData()['port'];
@@ -363,7 +353,7 @@ class Install
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public static function getCurrentStep()
     {

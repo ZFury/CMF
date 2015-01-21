@@ -5,7 +5,7 @@ namespace CommenTest\Controller;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Zend\Http\Response;
 use Zend\Stdlib;
-use Starter\Test\Controller\ControllerTestCase;
+use Fury\Test\Controller\ControllerTestCase;
 use \Comment\Entity\EntityType;
 use Zend\Http\Client;
 

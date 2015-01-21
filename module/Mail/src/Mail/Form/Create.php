@@ -133,7 +133,7 @@ class Create extends Form
             )
         );
 
-        $redactor = new \Starter\Form\Element\Redactor();
+        $redactor = new \Fury\Form\Element\Redactor();
         $redactor->setName('bodyHtml')
             ->setAttributes(['id' => 'bodyHtml',
                 'class' => 'form-control redactor-content'])

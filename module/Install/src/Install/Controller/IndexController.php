@@ -44,10 +44,10 @@ class IndexController extends AbstractActionController
             //PHPVERSION
             if (version_compare(Install::PHP_VERSION, phpversion(), '<=')) {
                 $phpVersion['status'] = true;
-                $phpVersion['message'] = "PHP version is compatible with ZFStarter!";
+                $phpVersion['message'] = "PHP version is compatible with ZFury!";
             } else {
                 $phpVersion['status'] = false;
-                $phpVersion['message'] = "PHP version is not compatible for ZFStarter! It might be " .
+                $phpVersion['message'] = "PHP version is not compatible for ZFury! It might be " .
                     Install::PHP_VERSION . " or higher";
             }
 
@@ -302,7 +302,11 @@ class IndexController extends AbstractActionController
         //DOCTRINE2
         $doctrine = [];
         exec('./vendor/bin/doctrine-module orm:schema-tool:update --force', $output, $returnUpdate);
-        exec('vendor/doctrine/doctrine-module/bin/doctrine-module migrations:migrate --dry-run', $output, $returnMigrate);
+        exec(
+            'vendor/doctrine/doctrine-module/bin/doctrine-module migrations:migrate --dry-run',
+            $output,
+            $returnMigrate
+        );
         if ((isset($returnUpdate) && 0 === $returnUpdate) && (isset($returnMigrate) && 0 === $returnMigrate)) {
             $doctrine['status'] = Install::GOOD;
             $doctrine['message'] = "Doctrine2 had successfully updated DB schema and migrated!";
@@ -330,7 +334,7 @@ class IndexController extends AbstractActionController
     }
 
     /**
-     *
+     * Sets installation progress
      */
     public function setProgress()
     {

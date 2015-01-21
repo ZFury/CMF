@@ -10,7 +10,7 @@ use Zend\InputFilter\InputFilter;
 use Zend\I18n\Validator;
 use Zend\Validator\Db;
 use Zend\Validator\Exception;
-use Starter\DBAL\Entity\EntityBase;
+use Fury\DBAL\Entity\EntityBase;
 
 /**
  * @ORM\Entity
@@ -270,10 +270,6 @@ class Pages extends EntityBase
      */
     public function toArray()
     {
-//        $serializer = \JMS\Serializer\SerializerBuilder::create()->build();
-//        $jsonContent = $serializer->serialize($this, 'json');
-//        return $jsonContent;
-
         $result = array(
             "id" => $this->getId(),
             "title" => $this->getTitle(),
