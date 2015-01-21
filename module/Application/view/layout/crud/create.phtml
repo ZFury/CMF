@@ -1,4 +1,8 @@
-<?= $this->headLink()->appendStylesheet($this->basePath() . '/redactor/redactor.css'); ?>
+<?php
+/* place one asterisk for uncomment code here-> /
+    echo $this->headLink()->appendStylesheet($this->basePath() . '/redactor/redactor.css');
+//*/
+?>
 <?php
 $scripts = $this->scripts ? $this->scripts : [];
 $ajax = $this->ajax ? $this->ajax : false;
@@ -22,7 +26,9 @@ $ajax = $this->ajax ? $this->ajax : false;
                         $formElement = $this->formPassword($element);
                         break;
                     case $element instanceof \Starter\Form\Element\Redactor :
+                        /* place one asterisk for uncomment code here-> /
                         array_push($scripts, 'redactorContent');
+                        //*/
                         $formElement = $this->formTextarea($element);
                         break;
                     case $element instanceof Zend\Form\Element\Textarea :
