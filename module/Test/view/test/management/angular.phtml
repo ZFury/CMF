@@ -13,6 +13,7 @@
                     <form class="form-inline" role="form">
                             <select class="form-control" ng-model="filterField" ng-options="k as v for (k,v) in filterOptions"
                                     ng-show="usersGrid.length !== 0">
+                                <option value="">Select filter</option>
                             </select>
                             <div class="form-group">
                                 <input type="text" class="form-control" placeholder="Search" ng-model="searchString">

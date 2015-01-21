@@ -8,9 +8,7 @@
             $scope.page = 1;
             $scope.currentPage = 1;
             $scope.reverse = true;
-            $scope.orderField = 'user.id';
             $scope.order = ORDER_ASC;
-            $scope.filterField = 'user.email';
             $scope.filterOptions = {};
             $scope.checkFilter = false;
 

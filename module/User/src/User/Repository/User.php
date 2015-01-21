@@ -22,7 +22,6 @@ class User extends EntityRepository
     public function countSearchUsers($searchString)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
-//        $qb = $this->getEntityManager()->getRepository('\User\Entity\User')->createQueryBuilder('users');
         $select = $qb->select('count(u.id)')
             ->from('\User\Entity\User', 'u');
         if (!empty($searchString)) {

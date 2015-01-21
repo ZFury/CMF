@@ -18,7 +18,7 @@ require.config({
         "jquery-ui": './libs/jquery-ui',
         "jquery-nestedSortable": './libs/jquery.mjs.nestedSortable',
         redactor: './../redactor/redactor',
-        //"redactor-fullscreen": './../redactor/plugins/fullscreen'
+        'redactorContent': '../redactor/redactorContent',
         dashboard: './../module/dashboard/js/dashboard',
         comment: '../module/comment/js/index',
         commentManagement: '../module/comment/js/management',
@@ -45,11 +45,9 @@ require.config({
         "image": '../module/test/js/image',
         "audio": '../module/test/js/audio',
         "video": '../module/test/js/video',
-        'redactorContent': '../redactor/redactorContent',
         'conversion': '../module/media/js/conversion',
         'form': './starter.form',
         'notify': './starter.notify',
-        'starter': './starter',
         'mail-inputs': '../module/install/js/mail-inputs'
     },
     shim: {
@@ -84,10 +82,6 @@ require.config({
             deps: ['jquery'],
             exports: '$.fn.redactor'
         }
-        //'redactor-fullscreen': {
-        //    deps: ['jquery', 'redactor'],
-        //    exports: '$.fn.redactor'
-        //}
     },
     enforceDefine: true
 });

@@ -111,17 +111,6 @@ class AuthController extends AbstractActionController
                 $this->params()->fromQuery(),
                 unserialize($container->requestToken)
             );
-            //get user's data
-            //            $twitter = new Twitter([
-            //                'accessToken' => $token,
-            //                'httpClientOptions' => $config['httpClientOptions'],
-            //                'oauth_options' => $config
-            //            ]);
-            //            $response = $twitter->account->verifyCredentials();
-            //            if (!$response->isSuccess()) {
-            //                throw new \Exception('Something is wrong with my credentials!');
-            //            }
-            //            $twitterUser = $response->toValue();
             /**
              * @var \Doctrine\ORM\EntityManager $objectManager
              */
