@@ -1,0 +1,10 @@
+<ul id="<?= $this->id ?>" class="<?= implode(' ', $this->class) ?>">
+    <li class="disabled"><a href="javascript:;">Limit</a></li>
+    <?php foreach ($this->limit as $limitValue): ?>
+        <li<?php if ($this->grid->getLimit() == $limitValue): ?>
+            class="active"
+        <?php endif; ?>>
+            <a href="<?= $this->grid->getUrl(['limit' => $limitValue]) ?>"><?= $limitValue ?></a>
+        </li>
+    <?php endforeach; ?>
+</ul>

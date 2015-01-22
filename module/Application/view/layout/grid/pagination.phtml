@@ -1,0 +1,22 @@
+<ul id="<?= $this->id ?>" class="<?= implode(' ', $this->class) ?>">
+    <?php if ($prev = $this->grid->prev()): ?>
+        <li><a href="<?= $this->grid->getUrl(['page' => $prev]) ?>">&laquo;</a></li>
+    <?php else: ?>
+        <li class="disabled"><a href="javascript:;">&laquo;</a></li>
+    <?php endif; ?>
+
+    <?php for ($page = 1; $page <= $this->grid->totalPages(); $page++): ?>
+        <li
+            <?php if ($page == $this->grid->getPage()): ?>
+                class="active"
+            <?php endif; ?>>
+            <a href="<?= $this->grid->getUrl(['page' => $page]) ?>"><?= $page ?></a>
+        </li>
+    <?php endfor; ?>
+
+    <?php if ($next = $this->grid->next()): ?>
+        <li><a href="<?= $this->grid->getUrl(['page' => $next]) ?>">&raquo;</a></li>
+    <?php else: ?>
+        <li class="disabled"><a href="javascript:;">&raquo;</a></li>
+    <?php endif; ?>
+</ul>
