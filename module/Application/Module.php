@@ -32,18 +32,10 @@ class Module
             ini_set($settingName, $settingValue);
         }
 
-        // attach the JSON view strategy
-        $app = $event->getTarget();
-        $sm = $app->getServiceManager();
-        $view = $sm->get('ZendViewView');
-        $strategy = $sm->get('ViewJsonStrategy');
-        $view->getEventManager()->attach($strategy, 100);
-
         /** @var \Zend\Mvc\MvcEvent $events */
         $events = $event->getTarget()->getEventManager();
         $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'onDispatch'), '-1000');
         $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onDispatchError'), '99999');
-        //$events->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'), '99999');
 
         set_error_handler(['Application\Module', 'errorHandler']);
     }
