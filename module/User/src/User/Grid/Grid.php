@@ -2,7 +2,7 @@
 
 namespace User\Grid;
 
-use Starter\Grid\AbstractGrid;
+use Fury\Grid\AbstractGrid;
 
 class Grid extends AbstractGrid
 {
@@ -12,16 +12,28 @@ class Grid extends AbstractGrid
         $source = $em->createQueryBuilder()
             ->select(['user.id', 'user.email', 'user.displayName', 'user.role', 'user.status', 'user.created'])
             ->from('\User\Entity\User', 'user');
-        $this->setSource($source)->setColumns(
-            [
-                'Id' => 'id',
-                'Email' => 'email',
-                'Name' => 'displayName',
-                'Role' => 'role',
-                'Status' => 'status',
-                'Created' => 'created'
-            ]
-        )->setAllowedFilters(['email', 'displayName'])
-            ->setAllowedOrders(['id', 'email', 'displayName', 'role', 'status', 'created']);
+        $this
+            ->setSource($source)
+            ->setColumns(
+                [
+                    'user.id' => 'Id',
+                    'user.email' => 'Email',
+                    'user.displayName' => 'Name',
+                    'user.role' => 'Role',
+                    'user.status' => 'Status',
+                    'user.created' => 'Created'
+                ]
+            )
+            ->setAllowedFilters(['user.email', 'user.displayName'])
+            ->setAllowedOrders(
+                [
+                    'user.id',
+                    'user.email',
+                    'user.displayName',
+                    'user.role',
+                    'user.status',
+                    'user.created'
+                ]
+            );
     }
 }

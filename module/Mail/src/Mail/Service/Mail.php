@@ -174,24 +174,4 @@ class Mail
 
         return $template;
     }
-
-    /**
-     * Send forget password Confirmation email
-     *
-     * @return bool
-     */
-//    public static function newPassword($aUser, $aPassword)
-//    {
-//        $table = new Mail_Model_Templates_Table();
-//        $template = $table->getModel('newPassword');
-//        $template->toEmail = $aUser->email;
-//        $template->toName  = $aUser->login;
-//
-//        $template->assign('password', $aPassword);
-//
-//        if ($template->signature) {
-//            self::assignLayout($template);
-//        }
-//        return $template->send();
-//    }
 }

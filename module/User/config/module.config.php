@@ -109,9 +109,6 @@ return array(
         ),
         'template_map' => array(
             'error/403' => __DIR__ . '/../view/error/403.phtml',
-        ),
-        'strategies' => array(
-            'ViewJsonStrategy',
         )
     ),
     'service_manager' => array(
@@ -178,12 +175,12 @@ return array(
                 ),
                 array(
                     'controller' => 'User\Controller\Signup',
-                    'action' => array('index', 'confirm'),
+                    'action' => array('confirm'),
                     'roles' => array('guest', 'user'),
                 ),
                 array(
                     'controller' => 'User\Controller\Signup',
-                    'action' => array('forgot-password'),
+                    'action' => array('index', 'forgot-password'),
                     'roles' => array('guest'),
                 ),
                 array(

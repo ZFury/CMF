@@ -2,7 +2,7 @@
 
 namespace Comment\Grid\EntityType;
 
-use Starter\Grid\AbstractGrid;
+use Fury\Grid\AbstractGrid;
 
 class Grid extends AbstractGrid
 {
@@ -20,12 +20,14 @@ class Grid extends AbstractGrid
             ->from('\Comment\Entity\EntityType', 'entity_type');
         $this->setSource($source)->setEntityAlias('entity_type')
             ->setColumns([
-                'Id' => 'id',
-                'Alias' => 'aliasEntity',
-                'Entity' => 'entity',
-                'Description' => 'description',
-                'Visible comments' => 'visibleComment',
-                'Possible to comment' => 'enabledComment'])
-            ->setAllowedFilters(['aliasEntity', 'entity'])->setAllowedOrders(['aliasEntity']);
+                'entity_type.id' => 'Id',
+                'entity_type.aliasEntity' => 'Alias',
+                'entity_type.entity' => 'Entity',
+                'entity_type.description' => 'Description',
+                'entity_type.visibleComment' => 'Visible comments',
+                'entity_type.enabledComment' => 'Possible to comment',
+            ])
+            ->setAllowedFilters(['entity_type.aliasEntity', 'entity_type.entity'])
+            ->setAllowedOrders(['entity_type.aliasEntity']);
     }
 }

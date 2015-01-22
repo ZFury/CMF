@@ -9,7 +9,7 @@ $form->prepare();
     <h1><?php echo $this->escapeHtml($this->title); ?></h1>
 
     <div class="row">
-        <form action="<?= $this->path; ?>" method="post" class="form-horizontal" id="newCategory">
+        <form id="crudForm" method="post" class="form-horizontal">
             <div class="form-group">
                 <label for="inputComment" class="col-sm-1 control-label"><?= $form->get('comment')->getLabel(); ?></label>
                 <div class="col-sm-4">
@@ -19,15 +19,17 @@ $form->prepare();
                     <?= $this->formElementErrors($form->get('comment')); ?>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-sm-1"></div>
-                <div class="col-sm-4">
-                    <input type="submit" name="submit" class="form-control col-sm-4 btn btn-success" value="Save">
+            <?php if (!$this->ajax): ?>
+                <div class="form-group">
+                    <div class="col-sm-5 col-sm-offset-">
+                        <input type="submit" name="submit" class="form-control col-md-6 btn btn-success"
+                               value="<?= $this->title == 'Edit comment' ? 'Save' : 'Add'; ?>">
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
         </form>
     </div>
 </div>
 <script>
-    require(['starter']);
+    require(['fury']);
 </script>

@@ -38,22 +38,6 @@ class AudioTest extends AbstractHttpControllerTestCase
     private $audioService;
 
     /**
-     *  Migration up
-     */
-    public static function setUpBeforeClass()
-    {
-        exec('vendor/bin/doctrine-module orm:schema-tool:update --force');
-    }
-
-    /**
-     * Migration down
-     */
-    public static function tearDownAfterClass()
-    {
-        exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
-    }
-
-    /**
      * Set up
      */
     public function setUp()
@@ -68,15 +52,29 @@ class AudioTest extends AbstractHttpControllerTestCase
         $this->audioService = $this->getApplicationServiceLocator()->get('Media\Service\Audio');
     }
 
+    /**
+     * Tests path generator from root
+     * @throws \Exception
+     */
     public function testAudioPath()
     {
         $audioPath = $this->audioService->audioPath($this->audioId, $this->audioEntityData['extension']);
-        $this->assertRegExp('/[a-zA-z]*\/[a-zA-z]*\/' . self::DIRECTORY_NAME . '*\/[0-9]*\/[0-9]*\/[0-9]*\/[0-9]*\.[a-zA-Z]*/', $audioPath);
+        $this->assertRegExp(
+            '/[a-zA-z]*\/[a-zA-z]*\/' .
+            self::DIRECTORY_NAME .
+            '*\/[0-9]*\/[0-9]*\/[0-9]*\/[0-9]*\.[a-zA-Z]*/',
+            $audioPath
+        );
     }
 
+    /**
+     * Tests path generator from public
+     * @throws \Exception
+     */
     public function testAudioPathOnlyPath()
     {
-        $audioPath = $this->audioService->audioPath($this->audioId, $this->audioEntityData['extension'], \Media\Service\File::FROM_PUBLIC);
+        $audioPath = $this->audioService
+            ->audioPath($this->audioId, $this->audioEntityData['extension'], \Media\Service\File::FROM_PUBLIC);
         $this->assertRegExp(
             '/[a-zA-z]*\/' .
             self::DIRECTORY_NAME .
@@ -85,26 +83,19 @@ class AudioTest extends AbstractHttpControllerTestCase
         );
     }
 
+    /**
+     * Tests path generator from public
+     * @throws \Exception
+     */
     public function testPrepareDir()
     {
         $audioPath = $this->audioService->audioPath($this->audioId, $this->audioEntityData['extension']);
         $this->assertTrue($this->audioService->prepareDir($audioPath));
     }
 
-    public function testMoveAudio()
-    {
-        $audioPath = $this->audioService->audioPath($this->audioId, $this->audioEntityData['extension']);
-        $audio = [
-            'name' => 'test.mp3',
-            'type' => 'audio/mpeg',
-            'tmp_name' => __DIR__ . '/../../testFiles/test.mp3',
-            'error' => '0',
-            'size' => '7690060'
-        ];
-        $this->setExpectedException('Zend\Filter\Exception\RuntimeException');
-        $this->audioService->moveFile($audioPath, $audio);
-    }
-
+    /**
+     * Tests audio conversion to mp3
+     */
     public function testAudioConversion()
     {
         $this->assertTrue($this->audioService->executeConversion($this->oldLocation, $this->newLocation));

@@ -11,10 +11,12 @@
             <div class="tab-pane fade in active" id="users">
                 <div class="row tab-wrapper row tab-wrapper-noscroll">
                     <form class="form-inline" role="form">
-                            <select class="form-control" ng-model="filterField" ng-options="filter for filter in allowedFilters">
+                            <select class="form-control" ng-model="filterField" ng-options="k as v for (k,v) in filterOptions"
+                                    ng-show="usersGrid.length !== 0">
+                                <option value="">Select filter</option>
                             </select>
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Поиск" ng-model="searchString">
+                                <input type="text" class="form-control" placeholder="Search" ng-model="searchString">
                             </div>
                             <button type="button" class="btn btn-default" ng-click="search()">Search</button>
                             <button type="button" class="btn btn-default" ng-click="searchString='';search();">Clear</button>
@@ -25,9 +27,9 @@
                                 <table class="users-grid table table-fixed  table-striped table-hover">
                                     <thead ng-show="filteredTests.length">
                                     <tr>
-                                        <th class="col-md-1"><a ng-click="setOrder('id')">№</a></th>
+                                        <th class="col-md-1"><a ng-click="setOrder('test.id')">№</a></th>
                                         <th class="col-md-3">Email</th>
-                                        <th class="col-md-3"><a ng-click="setOrder('name')">Name</a></th>
+                                        <th class="col-md-3"><a ng-click="setOrder('test.name')">Name</a></th>
                                         <th class="col-md-1">Edit</th>
                                         <th class="col-md-1">Delete</th>
                                     </tr>
@@ -62,21 +64,27 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                                <ul class="pagination pull-left" ng-show="totalPages > 1">
-                                    <button class="btn btn-default" type="button" ng-disabled="page == 1"
-                                            ng-click="prev()">&laquo;</button>
+                                <div class="btn-group" ng-show="totalPages > 1">
+                                    <ul class="pagination pull-left">
+                                        <button class="btn btn-default" type="button" ng-disabled="page == 1"
+                                                ng-click="prev()">&laquo;</button>
 
-                                        <li ng-repeat="p in getTimes(totalPages) track by $index">
-                                            <button class="btn btn-default" type="button" ng-click="getTests($index)" ng-disabled="page === $index + 1">{{$index + 1}}</button>
-                                        </li>
-<!--                                    --><?php //for ($page = 1; $page <= $this->grid->totalPages(); $page++) : ?>
-<!--                                        <button class="btn btn-default" type="button" ng-disabled="page === --><?//=$page ?><!--"-->
-<!--                                                ng-click="page = --><?//=$page ?><!--; getTests()">--><?//=$page ?><!--</button>-->
-<!--                                    --><?php //endfor; ?>
+                                            <li ng-repeat="p in getTimes(totalPages) track by $index">
+                                                <button class="btn btn-default" type="button" ng-click="getTests($index)" ng-disabled="page === $index + 1">{{$index + 1}}</button>
+                                            </li>
 
-                                    <button class="btn btn-default" type="button" ng-disabled="page == totalPages"
-                                            ng-click="next()">&raquo;</button>
-                                </ul>
+                                        <button class="btn btn-default" type="button" ng-disabled="page == totalPages"
+                                                ng-click="next()">&raquo;</button>
+                                    </ul>
+                                </div>
+                                <div class="btn-group pagination pull-right">
+                                    <button class="btn btn-default" type="button" ng-disabled="limit == 1"
+                                            ng-click="changeLimit(1)">1</button>
+                                    <button class="btn btn-default" type="button" ng-disabled="limit == 5"
+                                            ng-click="changeLimit(5)">5</button>
+                                    <button class="btn btn-default" type="button" ng-disabled="limit == 10"
+                                            ng-click="changeLimit(10)">10</button>
+                                </div>
                             </div>
                         </div>
                     </div>

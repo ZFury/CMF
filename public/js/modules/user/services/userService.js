@@ -8,20 +8,33 @@
 
             /**
              * Get searched users
-             * @param allParams
+             * @param page
+             * @param orderField
+             * @param order
+             * @param filterField
+             * @param searchString
+             * @param limit
              * @param callback
              *
              * Created by Maxim Mandryka maxim.mandryka@nixsolutions.com
              */
-            usersFactory.getUsers = function(allParams, /*function*/ callback) {
+            usersFactory.getUsers = function(page, orderField, order, filterField, searchString, limit, /*function*/ callback) {
+                var ord = 'order-' + orderField;
+                var filt = 'filter-' + filterField;
                 var params = {
                     url: this.apiUrl + 'management/grid',
-                    method: "POST",
-                    data: $.param({data: allParams}),
+                    method: "GET",
+                    params: {
+                        page: page,
+                        limit: limit
+                    },
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 };
+                params.params[ord] = order;
+                params.params[filt] = searchString;
                 ajaxRequest(params, callback);
             };
+
 
             /**
              * Base function to send ajax request

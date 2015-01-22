@@ -5,7 +5,7 @@ define(['jquery', 'redactor'], function ($) {
     $('.redactor-content').redactor({
         //            plugins: ['fullscreen'],
         //            scrollTarget: '.container',
-        minHeight: 300, // pixels
-        placeholder: 'Page content'
+        minHeight: 300,
+        placeholder: 'Content'
     });
 });

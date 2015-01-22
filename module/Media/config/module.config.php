@@ -24,6 +24,9 @@ return array(
             'Media\Service\Blueimp' => function ($serviceManager) {
                 return new Media\Service\Blueimp($serviceManager);
             },
+            'Zend\Filter\File\RenameUpload' => function () {
+                return new Zend\Filter\File\RenameUpload([]);
+            },
         ]
     ],
     'doctrine' => [
@@ -39,4 +42,15 @@ return array(
             ],
         ],
     ],
+    'installation' => [
+        'files-to-check' => [
+            ['uploads' => 'public/uploads'],
+        ],
+        'tools-to-check' => [
+            [
+                'libav (do not forget sudo apt-get install libavcodec-extra-53)' => 'avconv -version',
+                'version' => '0.10.12',
+                'install' => 'sudo apt-get install libav-tools, sudo apt-get install libavcodec-extra-53']
+        ]
+    ]
 );

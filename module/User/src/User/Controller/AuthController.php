@@ -29,27 +29,32 @@ class AuthController extends AbstractActionController
         $flashMessenger = new FlashMessenger();
         if ($this->getRequest()->isPost()) {
             // If you used another name for the authentication service, change it here
-            /**
-             * @var \User\Service\Auth $userAuth
-             */
-            $userAuth = $this->getServiceLocator()->get('\User\Service\Auth');
-            try {
-                $userAuth->authenticateEquals($data['email'], $data['password']);
-                $session = new Container('location');
-                $location = $session->location;
-                if ($location) {
-                    $session->getManager()->getStorage()->clear('location');
-                    return $this->redirect()->toUrl($location);
-                }
+            $form->setData($this->getRequest()->getPost());
 
-                $flashMessenger->addSuccessMessage('You\'re successfully logged in');
-                return $this->redirect()->toRoute('home');
-            } catch (AuthException $exception) {
-                $flashMessenger->addErrorMessage($exception->getMessage());
+            if ($form->isValid()) {
+                /**
+                 * @var \User\Service\Auth $userAuth
+                 */
+                $userAuth = $this->getServiceLocator()->get('\User\Service\Auth');
+                try {
+                    $userAuth->authenticateEquals($data['email'], $data['password']);
+
+                    $session = new Container('location');
+                    $location = $session->location;
+                    if ($location) {
+                        $session->getManager()->getStorage()->clear('location');
+                        return $this->redirect()->toUrl($location);
+                    }
+
+                    $flashMessenger->addSuccessMessage('You\'re successfully logged in');
+                    return $this->redirect()->toRoute('home');
+                } catch (AuthException $exception) {
+                    $flashMessenger->addErrorMessage($exception->getMessage());
+                }
             }
         }
 
-        return new ViewModel(array('form' => $form));
+        return new ViewModel(array('form' => $form, 'serviceLocator' => $this->getServiceLocator()));
     }
 
     /**
@@ -79,6 +84,7 @@ class AuthController extends AbstractActionController
         OAuth::setHttpClient(new Client(null, $config['httpClientOptions']));
         $consumer = new Consumer($config);
         $token = $consumer->getRequestToken();
+
         // persist the token to storage
         $container = new Container('twitter');
         $container->requestToken = serialize($token);
@@ -105,17 +111,6 @@ class AuthController extends AbstractActionController
                 $this->params()->fromQuery(),
                 unserialize($container->requestToken)
             );
-            //get user's data
-            //            $twitter = new Twitter([
-            //                'accessToken' => $token,
-            //                'httpClientOptions' => $config['httpClientOptions'],
-            //                'oauth_options' => $config
-            //            ]);
-            //            $response = $twitter->account->verifyCredentials();
-            //            if (!$response->isSuccess()) {
-            //                throw new \Exception('Something is wrong with my credentials!');
-            //            }
-            //            $twitterUser = $response->toValue();
             /**
              * @var \Doctrine\ORM\EntityManager $objectManager
              */
@@ -193,8 +188,8 @@ class AuthController extends AbstractActionController
         );
         FacebookSession::setDefaultApplication($config['appId'], $config['appSecret']);
         $helper = new FacebookRedirectLoginHelper($config['callbackUrl']);
-        $this->redirect()->toUrl($helper->getLoginUrl());
 
+        $this->redirect()->toUrl($helper->getLoginUrl(['scope' => 'email']));
     }
 
     /**
@@ -221,7 +216,9 @@ class AuthController extends AbstractActionController
         if ($session) {
             // Logged in
             $request = new FacebookRequest($session, 'GET', '/me');
+
             $response = $request->execute();
+
             $graphObject = $response->getGraphObject();
 
             /**
@@ -248,7 +245,10 @@ class AuthController extends AbstractActionController
                 if (!$this->identity()) {
                     //create new user
                     $user = new \User\Entity\User();
-                    $user->setDisplayName($graphObject->getProperty('id'));
+
+                    $displayName = $graphObject->
+                        getProperty('first_name') . ' ' . $graphObject->getProperty('last_name');
+                    $user->setDisplayName($displayName);
                     $user->setRole($user::ROLE_USER);
                     $user->activate();
                     $objectManager->persist($user);
@@ -266,6 +266,7 @@ class AuthController extends AbstractActionController
                 $auth->setTokenType(Auth::TYPE_ACCESS);
                 $auth->setUserId($user->getId());
                 $user->getAuths()->add($auth);
+
                 $auth->setUser($user);
             }
             $objectManager->persist($user);
@@ -297,6 +298,7 @@ class AuthController extends AbstractActionController
             if ($form->isValid()) {
                 $userService = new \User\Service\User($this->getServiceLocator());
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+                /** @var \User\Entity\User $user */
                 $user = $objectManager
                     ->getRepository('User\Entity\User')
                     ->findOneBy(array('confirm' => $confirm));
@@ -306,6 +308,10 @@ class AuthController extends AbstractActionController
 
                 try {
                     $userService->changePassword($user, $form);
+                    $user->setConfirm(null);
+                    $objectManager->persist($user);
+                    $objectManager->flush();
+
                     $this->flashMessenger()->addSuccessMessage('You have successfully changed your password!');
 
                     return $this->redirect()->toRoute('home');

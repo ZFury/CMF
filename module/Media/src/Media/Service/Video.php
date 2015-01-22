@@ -13,11 +13,6 @@ class Video extends File
     const VIDEOS_PATH = "video/";
     const MP4_EXT = 'mp4';
 
-    public static function getDestination($path)
-    {
-        return preg_replace('/.[0-9]*\.((mp4))$/', '', $path);
-    }
-
     /**
      * @param $id
      * @param $ext
@@ -63,7 +58,11 @@ class Video extends File
      */
     public function executeConversion($oldLocation, $newLocation, $bitrate = 300)
     {
-        exec("avconv -i $oldLocation -strict experimental -r ntsc-film -b $bitrate" . "k -y $newLocation", $output, $return);
+        exec(
+            "avconv -i $oldLocation -strict experimental -r ntsc-film -b $bitrate" . "k -y $newLocation",
+            $output,
+            $return
+        );
         if (isset($return) && 0 === $return) {
             return true;
         }

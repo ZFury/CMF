@@ -10,7 +10,7 @@ use Zend\InputFilter\InputFilter;
 use Zend\I18n\Validator;
 use Zend\Validator\Db;
 use Zend\Validator\Exception;
-use Starter\DBAL\Entity\EntityBase;
+use Fury\DBAL\Entity\EntityBase;
 
 /**
  * Class Options

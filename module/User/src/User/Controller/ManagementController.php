@@ -8,7 +8,7 @@
 namespace User\Controller;
 
 use SebastianBergmann\Exporter\Exception;
-use Starter\Mvc\Controller\AbstractCrudController;
+use Fury\Mvc\Controller\AbstractCrudController;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use User\Service;
@@ -95,23 +95,28 @@ class ManagementController extends AbstractCrudController
     {
         /* @var \Zend\Http\Request $request */
         $request = $this->getRequest();
-        $count = null;
-        $searchString = '';
+        $sm = $this->getServiceLocator();
+        $grid = new Grid($sm);
+        $grid->init();
         if ($request->isXmlHttpRequest()) {
-            $sm = $this->getServiceLocator();
-            $grid = new Grid($sm);
-            $grid->init();
-            $data = $grid->getData();
-            $em = $sm->get('Doctrine\ORM\EntityManager');
-            /* @var \User\Repository\User $usersManager */
-            $usersManager = $em->getRepository('User\Entity\User');
-            $count = $usersManager->countSearchUsers($searchString);
             return new JsonModel(array(
-                'data' => $data,
-                'count' => $count
+                'data' => $grid->getData(),
+                'allowedFilters' => $grid->getAllowedFilters(),
+                'columns' => $grid->getColumns(),
+                'totalPages' => $grid->totalPages(),
+                'allowedOrders' => $grid->getAllowedOrders(),
+                'defaultLimit' => $grid->getDefaultLimit(),
+                'defaultFilter' => $grid->getFilter(),
+                'defaultOrder' => $grid->getOrder(),
+                'order' => $grid->getOrder(),
+                'prev' => $grid->prev(),
+                'next' => $grid->next(),
+                'urlPrev' => $grid->getUrl(['page' => $grid->prev()]),
+                'urlNext' => $grid->getUrl(['page' => $grid->next()]),
+                'urlPage' => $grid->getUrl(['page' => $grid->getPage()]),
             ));
         } else {
-            return new ViewModel();
+            return new ViewModel(['grid' => $grid]);
         }
 
     }

@@ -40,7 +40,8 @@ class UnauthorizedStrategy extends \BjyAuthorize\View\UnauthorizedStrategy
                 $viewVariables['action'] = $e->getParam('action');
                 $router = $e->getRouter();
                 if ($e->getParam('exception') instanceof UnAuthorizedException
-                    && !$e->getApplication()->getServiceManager()->get('Zend\Authentication\AuthenticationService')->hasIdentity()
+                    && !$e->getApplication()->getServiceManager()->get('Zend\Authentication\AuthenticationService')
+                        ->hasIdentity()
                 ) {
                     $session = new Container('location');
                     $session->location = $e->getRequest()->getUri();

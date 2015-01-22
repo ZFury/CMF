@@ -80,7 +80,11 @@ return array(
     ),
     'view_helpers' => array(
         'invokables' => array(
-            'formRedactor' => 'Starter\Form\View\Helper\FormRedactor'
+            'formRedactor' => 'Fury\Form\View\Helper\FormRedactor',
+            'limit' => 'Fury\View\Helper\Grid\Limit',
+            'pagination' => 'Fury\View\Helper\Grid\Pagination',
+            'filter' => 'Fury\View\Helper\Grid\Filter',
+            'table' => 'Fury\View\Helper\Grid\Table',
         )
     ),
     'view_manager' => array(
@@ -96,6 +100,10 @@ return array(
             'layout/layout' => __DIR__ . '/../view/layout/default/layout.phtml',
             'crud/create' => __DIR__ . '/../view/layout/crud/create.phtml',
             'crud/edit' => __DIR__ . '/../view/layout/crud/edit.phtml',
+            'grid/filter' => __DIR__ . '/../view/layout/grid/filter.phtml',
+            'grid/limit' => __DIR__ . '/../view/layout/grid/limit.phtml',
+            'grid/pagination' => __DIR__ . '/../view/layout/grid/pagination.phtml',
+            'grid/table' => __DIR__ . '/../view/layout/grid/table.phtml',
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
             'error/404' => __DIR__ . '/../view/error/404.phtml',
             'error/index' => __DIR__ . '/../view/error/index.phtml',

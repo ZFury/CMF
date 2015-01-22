@@ -2,7 +2,7 @@
 
 namespace Test\Controller;
 
-use Starter\Mvc\Controller\AbstractCrudController;
+use Fury\Mvc\Controller\AbstractCrudController;
 use Test\Form;
 use Test\Entity;
 use Zend\View\Model\JsonModel;
@@ -31,6 +31,7 @@ class ManagementController extends AbstractCrudController
     {
         $sm = $this->getServiceLocator();
         $grid = new Grid($sm);
+        $grid->getData();
         $viewModel = new ViewModel(['grid' => $grid]);
         $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
         return $viewModel;
@@ -48,6 +49,7 @@ class ManagementController extends AbstractCrudController
                 'data' => $grid->getData(),
                 'allowedFilters' => $grid->getAllowedFilters(),
                 'totalPages' => $grid->totalPages(),
+                'columns' => $grid->getColumns(),
                 'allowedOrders' => $grid->getAllowedOrders(),
                 'defaultLimit' => $grid->getDefaultLimit(),
                 'order' => $grid->getOrder(),
@@ -81,24 +83,5 @@ class ManagementController extends AbstractCrudController
             'id' => $model->getId(),
         );
         return new JsonModel(['data' => $test]);
-    }
-
-    public function testAction()
-    {
-        $form = new \Pages\Form\Create('test', ['serviceLocator' => $this->getServiceLocator()]);
-
-        if ($this->getRequest()->isPost()) {
-            $form->setData($this->getRequest()->getPost());
-            if ($form->isValid()) {
-                $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-                $entity = $this->getEntity();
-                $hydrator = new DoctrineHydrator($objectManager);
-                $hydrator->hydrate($form->getData(), $entity);
-                $objectManager->persist($entity);
-                $objectManager->flush();
-            }
-        }
-
-        return new ViewModel(['form' => $form]);
     }
 }

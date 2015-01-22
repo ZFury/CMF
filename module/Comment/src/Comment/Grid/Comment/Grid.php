@@ -2,7 +2,7 @@
 
 namespace Comment\Grid\Comment;
 
-use Starter\Grid\AbstractGrid;
+use Fury\Grid\AbstractGrid;
 
 class Grid extends AbstractGrid
 {
@@ -16,15 +16,16 @@ class Grid extends AbstractGrid
             'entity_type.aliasEntity'
         ])
             ->from('\Comment\Entity\Comment', 'comment')
-            ->leftJoin('comment.user', 'user')
-            ->leftJoin('comment.entityType', 'entity_type');
+            ->innerJoin('comment.user', 'user')
+            ->innerJoin('comment.entityType', 'entity_type');
         $this->setSource($source)->setEntityAlias('comment')
             ->setColumns([
-                'Id' => 'id',
-                'Comment' => 'comment',
-                'User(author)' => 'displayName',
-                'Entity' => 'aliasEntity'])
-            ->setAllowedFilters(['comment', 'displayName', 'aliasEntity'])
-            ->setAllowedOrders(['aliasEntity', 'displayName']);
+                'comment.id' => 'Id',
+                'comment.comment' => 'comment',
+                'user.displayName' => 'User(author)',
+                'entity_type.aliasEntity' => 'Entity',
+            ])
+            ->setAllowedFilters(['comment.comment', 'user.displayName', 'entity_type.aliasEntity'])
+            ->setAllowedOrders(['entity_type.aliasEntity', 'user.displayName']);
     }
 }

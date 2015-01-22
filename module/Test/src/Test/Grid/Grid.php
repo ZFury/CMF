@@ -2,16 +2,26 @@
 
 namespace Test\Grid;
 
-use Starter\Grid\AbstractGrid;
+use Fury\Grid\AbstractGrid;
+use Doctrine\ORM\QueryBuilder;
 
 class Grid extends AbstractGrid
 {
     public function init()
     {
         $em = $this->sm->get('Doctrine\ORM\EntityManager');
-        $source = $em->createQueryBuilder()->select(['test.id', 'test.email', 'test.name'])
-            ->from('\Test\Entity\Test', 'test');
-        $this->setSource($source)->setColumns(['id' => 'id', 'Email' => 'email', 'Name' => 'name'])
-            ->setAllowedFilters(['email', 'name'])->setAllowedOrders(['id', 'name']);
+        /** @var QueryBuilder $source */
+        $source = $em->createQueryBuilder()->select(['test.id', 'test.email', 'test.name', 'phone.number'])
+            ->from('\Test\Entity\Test', 'test')
+            ->leftJoin(
+                '\Test\Entity\PhoneForTest',
+                'phone',
+                \Doctrine\ORM\Query\Expr\Join::WITH,
+                'test.id = phone.testId'
+            );
+        $this->setSource($source)
+            ->setColumns(['test.id' => 'id', 'test.email' => 'Email', 'test.name' => 'Name', 'phone.number' => 'Phone'])
+            ->setAllowedFilters(['test.email', 'test.name', 'phone.number'])
+            ->setAllowedOrders(['test.id', 'test.name', 'phone.number']);
     }
 }

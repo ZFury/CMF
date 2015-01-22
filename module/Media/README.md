@@ -9,7 +9,7 @@ files), for example
 *
 class User
 {
-    use \Starter\Media\File;
+    use \Fury\Media\File;
     ...
 *
 ```
@@ -25,7 +25,7 @@ Attention! This trait has two abstract methods you need to realize
      */
     class User
     {
-        use \Starter\Media\File;
+        use \Fury\Media\File;
         ...
 
     /**

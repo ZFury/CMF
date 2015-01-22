@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use User\Entity\User;
 use Zend\Form\Annotation;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
-use Starter\DBAL\Entity\EntityBase;
+use Fury\DBAL\Entity\EntityBase;
 
 /**
  *
@@ -15,7 +15,6 @@ use Starter\DBAL\Entity\EntityBase;
  * @Annotation\Name("comment")
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @ORM\HasLifecycleCallbacks
- * @author Sergey Lopay
  */
 class Comment extends EntityBase
 {

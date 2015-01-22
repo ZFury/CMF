@@ -1,0 +1,22 @@
+<table id="<?= $this->id ?>" class="<?= implode(' ', $this->class) ?>">
+    <thead>
+    <tr>
+        <?php foreach ($this->grid->getColumns() as $alias => $column): ?>
+            <?php if ($order = $this->grid->order($alias)): ?>
+                <th><a href="<?= $order ?>"><?= $column ?></a></th>
+            <?php else: ?>
+                <th><?= $column ?></th>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($this->grid->getData() as $row): ?>
+        <tr>
+            <?php foreach ($row as $key => $value): ?>
+                <td><?= ($value instanceof \DateTime ? $value->format('Y-m-d H:i:s') : $value) ?></td>
+            <?php endforeach; ?>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

@@ -17,8 +17,8 @@ class Version20141229130438 extends AbstractMigration
     {
         $this->addSql("INSERT INTO `mail_templates` (`id`, `alias`, `description`, `subject`, `fromEmail`, `fromName`,
  `bodyHtml`, `bodyText`, `created`, `updated`)
-        VALUES (NULL, 'forgot-password', 'Template for recovery password', 'Password recovery', 'ZFStarter@admins.com',
-         'Admin ZFStarter', 'Hello User,
+        VALUES (NULL, 'forgot-password', 'Template for recovery password', 'Password recovery', 'ZFury@admins.com',
+         'Admin ZFury', 'Hello User,
           To reset account password click on the following link or copy-paste it in your browser:<span></span><p>
           <a href=\"%reset-password-link%\">%reset-password-link%</a><br></p>', 'Hello User, To reset account password
            click on the following link or copy-paste it in your browser:â€‹\r\n%reset-password-link%',

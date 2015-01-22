@@ -1,0 +1,28 @@
+<div class="col-md-6 pull-right">
+    <form class="navbar-form filter-form pull-right">
+        <div class="input-group">
+            <div class="input-group-btn grid-filter-search">
+                <button type="button" class="btn btn-default dropdown-toggle"
+                        data-toggle="dropdown"><?=
+                    ucfirst($this->grid->getColumns()[current($this->grid->getAllowedFilters())]); ?>
+                    <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <?php
+                    foreach ($this->grid->getAllowedFilters() as $field):?>
+                        <li>
+                            <a href="javascript:;" data-filter="<?= $field ?>">
+                                <?= $this->grid->getColumns()[$field] ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <input class="grid-filter-search-input"
+                   name="filter-<?= current($this->grid->getAllowedFilters()) ?>" type="hidden"/>
+            <input type="search" class="form-control"/>
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="submit">Search</button>
+            </span>
+        </div>
+    </form>
+</div>

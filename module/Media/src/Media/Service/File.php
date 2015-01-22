@@ -20,6 +20,7 @@ class File
     const GETPATH = true;
     const FROM_PUBLIC = true;
     const FROM_ROOT = false;
+    const DEFAULT_FILTER = false;
 
     protected $sm;
 
@@ -52,24 +53,10 @@ class File
     }
 
     /**
-     * @param $destination
-     * @param $file
-     * @return array|string
+     * @param $path
+     * @return string
      */
-    public function moveFile($destination, $file)
-    {
-        $this->prepareDir($destination);
-        $filter = new RenameUpload(
-            array(
-                "target" => $destination,
-                'randomize' => false,
-            )
-        );
-
-        return $filter->filter($file);
-    }
-
-    public static function getDestination($path)
+    protected static function getDestination($path)
     {
         return preg_replace('/.[0-9]*\.((....)|(...))$/', '', $path);
     }
@@ -87,7 +74,7 @@ class File
      * @param $imageName
      * @return mixed
      */
-    public static function getExt($imageName)
+    protected static function getExt($imageName)
     {
         return preg_replace('(.*\.)', '', $imageName);
     }
@@ -98,7 +85,7 @@ class File
      * @param $ext
      * @return string
      */
-    public static function buildFilePath($id, $path, $ext)
+    protected static function buildFilePath($id, $path, $ext)
     {
         return rtrim($path, "/") . "/" . trim(self::buildPath($id, $ext), '/');
     }
@@ -108,7 +95,7 @@ class File
      * @param $ext
      * @return string
      */
-    public static function buildPath($id, $ext)
+    private static function buildPath($id, $ext)
     {
         $path = sprintf('%012d', $id);
         $explodedPath = str_split($path, 3);
@@ -204,9 +191,25 @@ class File
                 break;
             default:
         }
+        $this->prepareDir($destination);
         $this->moveFile($destination, $form->getData()[$type]);
 
         return $file;
+    }
+
+    /**
+     * @param $destination
+     * @param $file
+     * @return array|string
+     */
+    private function moveFile($destination, $file)
+    {
+        /** @var \Zend\Filter\File\RenameUpload $filter */
+        $filter = $this->sm->get('Zend\Filter\File\RenameUpload');
+        $filter->setTarget($destination)
+            ->setRandomize(false);
+
+        return $filter->filter($file);
     }
 
     /**
@@ -229,7 +232,7 @@ class File
     }
 
     /**
-     * @param $filetype
+     * @param string $filetype
      */
     public function generateFileUploadForm($filetype)
     {

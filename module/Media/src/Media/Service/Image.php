@@ -54,7 +54,10 @@ class Image extends File
                     'x' .
                     $size['height'];
             } elseif ($from == File::FROM_PUBLIC) {
-                $path = DIRECTORY_SEPARATOR . self::UPLOADS_PATH . self::IMAGES_PATH . $size['width'] . 'x' . $size['height'];
+                $path = DIRECTORY_SEPARATOR .
+                    self::UPLOADS_PATH .
+                    self::IMAGES_PATH .
+                    $size['width'] . 'x' . $size['height'];
             }
         }
 

@@ -15,7 +15,8 @@
         "bjyoungblood/bjy-authorize": "1.4.*",
         "facebook/php-sdk-v4": "4.0.*",
         "doctrine/migrations": "dev-master",
-        "sundrique/doctrine-tools": ">=0.2"
+        "sundrique/doctrine-tools": ">=0.2",
+        "zendframework/zendoauth": "2.0.*"
     },
     "require-dev": {
         "mayflower/php-codebrowser": "1.1.1",
@@ -28,7 +29,7 @@
             "": "library/"
         }
     },
-    "suggest": {
+    "suggests": {
         "libav-tools": "to convert media files",
         "libavcodec-extra-53": "to convert media files"
     }

@@ -2,7 +2,7 @@
 
 namespace Pages\Grid;
 
-use Starter\Grid\AbstractGrid;
+use Fury\Grid\AbstractGrid;
 
 class Grid extends AbstractGrid
 {
@@ -14,13 +14,13 @@ class Grid extends AbstractGrid
             ->from('\Pages\Entity\Pages', 'pages');
         $this->setSource($source)->setColumns(
             [
-                'Id' => 'id',
-                'Title' => 'title',
-                'Description' => 'description',
-                'Created' => 'created',
-                'Updated' => 'updated'
+                'pages.id' => 'Id',
+                'pages.title' => 'Title',
+                'pages.description' => 'Description',
+                'pages.created' => 'Created',
+                'pages.updated' => 'Updated',
             ]
-        )->setAllowedFilters(['title', 'description'])
-            ->setAllowedOrders(['id', 'title', 'description', 'created', 'updated']);
+        )->setAllowedFilters(['pages.title', 'pages.description'])
+            ->setAllowedOrders(['pages.id', 'pages.title', 'pages.description', 'pages.created', 'pages.updated']);
     }
 }

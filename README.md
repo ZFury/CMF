@@ -1,9 +1,6 @@
-ZFStarter installation
+ZFury installation
 =======================================================
-0. Установить git flow
-apt-get install git-flow
-1. Настроить подключение к бд (doctrine.local.php)
-2. Запустить install.sh
-sh ./install.sh
-3. Создать симлинк
-ln -s /path/to/public /path/to/www
+1. Clone project and launch *install.sh*  
+2. Create symlink to the public directory  
+```sh ln -s /path/to/public /path/to/www```  
+3. Open application in browser and follow installation steps!

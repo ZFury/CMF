@@ -6,26 +6,18 @@ curl -sS https://getcomposer.org/installer | php
 echo "Installing dependencies"
 php composer.phar install
 
-echo "Doctrine setup"
-./vendor/bin/doctrine-module orm:schema-tool:update --force
-
-echo "Update migrations"
-vendor/doctrine/doctrine-module/bin/doctrine-module migrations:migrate --dry-run
-
 echo "Creating .htaccess"
 cp ./public/.htaccess.sample ./public/.htaccess
 
 echo "Creating directories"
-mkdir -p data/
 mkdir -p data/DoctrineORMModule/Proxy
 mkdir -p data/DoctrineORMModule/Migrations
 mkdir -p public/uploads
+
+echo "Changing permissions for data and uploads directories"
 chmod -R 0777 data/*
 chmod -R 0777 public/uploads
 
-echo "Enabling git-flow"
-git flow init -d
+echo "Rename application.config.php.dist to application.config.php"
+cp config/application.config.php.dist config/application.config.php
 
-echo "Install git hook for PHP_CodeSniffer"
-cp data/git_hooks/pre-commit .git/hooks/pre-commit
-chmod +x .git/hooks/pre-commit

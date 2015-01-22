@@ -1,7 +1,6 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Lopay
  * Date: 17.12.14
  * Time: 15:43
  */
@@ -15,6 +14,7 @@ use Comment\Service;
 use Comment\Form\Filter;
 use DoctrineModule\Validator;
 use Comment\Entity;
+use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
 class CommentController extends AbstractActionController
 {
@@ -32,12 +32,18 @@ class CommentController extends AbstractActionController
         if (!$entityTest = $objectManager->getRepository('Comment\Entity\EntityType')
             ->getEntityTypeByEntity('Test\\Entity\\Test')
         ) {
-            throw new \Exception('Comment on this entity can not be');
+            $flashMessenger = new FlashMessenger();
+            $flashMessenger->addSuccessMessage('There are no comments');
         }
-        return new ViewModel(array(
+        $ViewModel = new ViewModel(array(
             'data' => $entities,
-            'aliasEntity' => $entityTest->getAliasEntity(),
-            'enabledComment' => $entityTest->getEnabledComment()
         ));
+        if ($entityTest) {
+            $ViewModel->setVariables([
+                'aliasEntity' => $entityTest->getAliasEntity(),
+                'enabledComment' => $entityTest->getEnabledComment()
+            ]);
+        }
+        return $ViewModel;
     }
 }
