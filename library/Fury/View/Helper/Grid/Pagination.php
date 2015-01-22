@@ -11,7 +11,6 @@ class Pagination extends AbstractGridHelper
     {
         $result = '';
         if ($this->grid->totalPages() > 1) {
-
             $result = $this->getView()->partial(
                 'layout/grid/pagination.phtml',
                 [
