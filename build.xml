@@ -153,7 +153,7 @@
               output="${logsDir}/phpunit.user.log">
             <env key="APP_ENV" value="testing"/>
             <arg line="-c ${moduleDir}/User/test/phpunit.xml"/>
-            <arg line="--log-junit '${logsDir}/tests-report.media.xml'"/>
+            <arg line="--log-junit '${logsDir}/tests-report.user.xml'"/>
             <arg line="--coverage-clover '${logsDir}/phpunit.clover.user.xml'"/>
             <arg line="--coverage-html '${logsDir}/coverage/user'"/>
         </exec>
