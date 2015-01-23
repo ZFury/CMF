@@ -67,7 +67,7 @@
         </replace>
     </target>
 
-    <target name="install" description="Run install.sh"  depends="prepare">
+    <target name="install" description="Run install.sh" depends="prepare">
         <exec executable="/bin/bash" output="${logsDir}/install.log">
             <arg value="-c"/>
             <arg value="sh ./install.sh"/>
@@ -109,6 +109,7 @@
         <mkdir dir="${logsDir}/coverage/categories"/>
         <mkdir dir="${logsDir}/coverage/comment"/>
         <mkdir dir="${logsDir}/coverage/media"/>
+        <mkdir dir="${logsDir}/coverage/user"/>
         <mkdir dir="${logsDir}/coverage/install"/>
         <property name="junit" value="${logsDir}/tests-report.xml"/>
 
@@ -149,6 +150,15 @@
         </exec>
 
         <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix"
+              output="${logsDir}/phpunit.user.log">
+            <env key="APP_ENV" value="testing"/>
+            <arg line="-c ${moduleDir}/User/test/phpunit.xml"/>
+            <arg line="--log-junit '${logsDir}/tests-report.media.xml'"/>
+            <arg line="--coverage-clover '${logsDir}/phpunit.clover.user.xml'"/>
+            <arg line="--coverage-html '${logsDir}/coverage/user'"/>
+        </exec>
+
+        <exec executable="${vendorDir}/phpunit" dir="${appDir}" failonerror="true" osfamily="unix"
               output="${logsDir}/phpunit.install.log">
             <env key="APP_ENV" value="testing"/>
             <arg line="-c ${moduleDir}/Install/test/phpunit.xml"/>
@@ -171,6 +181,7 @@
         <zip destfile="${logsDir}/coverage_pages.zip" basedir="${logsDir}/coverage/pages"/>
         <zip destfile="${logsDir}/coverage_categories.zip" basedir="${logsDir}/coverage/categories"/>
         <zip destfile="${logsDir}/coverage_media.zip" basedir="${logsDir}/coverage/media"/>
+        <zip destfile="${logsDir}/coverage_user.zip" basedir="${logsDir}/coverage/user"/>
         <zip destfile="${logsDir}/coverage_install.zip" basedir="${logsDir}/coverage/install"/>
         <zip destfile="${logsDir}/coverage_comment.zip" basedir="${logsDir}/coverage/comment"/>
         <antcall target="publish"/>
