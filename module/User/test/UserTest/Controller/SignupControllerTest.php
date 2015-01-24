@@ -9,6 +9,9 @@
 namespace UserTest\Controller;
 
 use SebastianBergmann\Exporter\Exception;
+use User\Form\SetNewPasswordForm;
+use User\Form\SignupForm;
+use Zend\Mvc\Controller\ControllerManager;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Fury\Test\Controller\ControllerTestCase;
@@ -59,8 +62,26 @@ class SignupControllerTest extends ControllerTestCase
      */
     public function testForgotPasswordAction()
     {
-        $this->createUserWithHash($this->userData);
-        $form = new  \User\Form\SetNewPasswordForm(
+        $mailTransportMock = $this->getMockBuilder('Zend\Mail\Transport\Smtp')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mailTransportMock->expects($this->once())
+            ->method('send')
+            ->will($this->returnValue(null));
+        $mailMessageMock = $this->getMockBuilder('Zend\Mail\Message')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mailMessageMock->expects($this->once())
+            ->method('addTo')
+            ->will($this->returnSelf());
+        $mailMessageMock->expects($this->once())
+            ->method('setSubject')
+            ->will($this->returnSelf());
+        $mailMessageMock->expects($this->once())
+            ->method('setBody')
+            ->will($this->returnSelf());
+
+        $form = new  SetNewPasswordForm(
             'forgot-password',
             ['serviceLocator' => $this->getApplicationServiceLocator()]
         );
@@ -68,6 +89,13 @@ class SignupControllerTest extends ControllerTestCase
             'email' => $this->userData['email'],
             'security' => $form->get('security')->getValue()
         );
+
+        $this->getApplicationServiceLocator()->setAllowOverride(true);
+        $this->getApplicationServiceLocator()->setService('mail.transport', $mailTransportMock);
+        $this->getApplicationServiceLocator()->setService('mail.message', $mailMessageMock);
+
+        $this->createUserWithHash($this->userData);
+
         $this->dispatch('/user/signup/forgot-password', 'POST', $data);
         $this->assertEquals(302, $this->getResponse()->getStatusCode());
         $this->assertRedirectTo('/');
@@ -91,7 +119,30 @@ class SignupControllerTest extends ControllerTestCase
      */
     public function testIndex()
     {
-        $form = new  \User\Form\SignupForm('create-user', ['serviceLocator' => $this->getApplicationServiceLocator()]);
+        $mailTransportMock = $this->getMockBuilder('Zend\Mail\Transport\Smtp')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mailTransportMock->expects($this->once())
+            ->method('send')
+            ->will($this->returnValue(null));
+        $mailMessageMock = $this->getMockBuilder('Zend\Mail\Message')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mailMessageMock->expects($this->once())
+            ->method('addTo')
+            ->will($this->returnSelf());
+        $mailMessageMock->expects($this->once())
+            ->method('setSubject')
+            ->will($this->returnSelf());
+        $mailMessageMock->expects($this->once())
+            ->method('setBody')
+            ->will($this->returnSelf());
+
+        $this->getApplicationServiceLocator()->setAllowOverride(true);
+        $this->getApplicationServiceLocator()->setService('mail.transport', $mailTransportMock);
+        $this->getApplicationServiceLocator()->setService('mail.message', $mailMessageMock);
+
+        $form = new  SignupForm('create-user', ['serviceLocator' => $this->getApplicationServiceLocator()]);
         $data = [
             'security' => $form->get('security')->getValue(),
             'email' => 'aaaaaa@gmail.com',
