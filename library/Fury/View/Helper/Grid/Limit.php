@@ -14,14 +14,15 @@ class Limit extends AbstractGridHelper
      */
     public function getWidget()
     {
-        $result = '<ul id="' . $this->id . '" class="' . implode(' ', $this->class) . '">';
-        $result .= '<li class="disabled"><a href="javascript:;">Limit</a></li>';
-        foreach ($this->limit as $limitValue) {
-            $result .= '<li' . (($this->grid->getLimit() == $limitValue) ? ' class="active"' : '') . '>';
-            $result .= '<a href="' . $this->grid->getUrl(['limit' => $limitValue]) . '">' . $limitValue . '</a>';
-            $result .= '</li>';
-        }
-        $result .= '</ul>';
+        $result = $this->getView()->partial(
+            'layout/grid/limit.phtml',
+            [
+                'grid' => $this->grid,
+                'limit' => $this->limit,
+                'class' => $this->class,
+                'id' => $this->id
+            ]
+        );
         return $result;
     }
 
