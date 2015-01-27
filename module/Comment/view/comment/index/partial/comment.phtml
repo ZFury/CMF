@@ -2,11 +2,14 @@
 <ul class="media">
     <li class="media-body">
             <h5 class="media-heading">
-                <?php echo $this->escapeHtml(
-                        $this->comment->getUser()->getDisplayName())
-                    . '<small>'. '<i class="delimeter glyphicon glyphicon-asterisk"></i>'
-                    . $this->comment->getCreated()->format('d/m/Y  h:m') . '</small>';
-
+                <div class="col-sm-3">
+                    <?php echo $this->escapeHtml(\Comment\Service\Comment::cutName($this->comment->getUser()->getDisplayName()))?>
+                </div>
+                <div class="col-sm-1"><i class="delimeter glyphicon glyphicon-asterisk"></i></div>
+                <div class="col-sm-6">
+                    <small><?= $this->comment->getCreated()->format('d-m-Y  h:m'); ?></small>;
+                </div>
+                <?php
                 if (($this->comment->getUserId() === $this->identity()->getUserId() &&
                         $this->enabledCommentByComment) ||
                     $this->identity()->getUser()->getRole() === User\Entity\User::ROLE_ADMIN) : ?>

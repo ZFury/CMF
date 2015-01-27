@@ -45,6 +45,16 @@ class Comment
         return false;
     }
 
+
+    public static function cutName($username)
+    {
+        if (strlen($username)<=6) {
+            return $username;
+        } else {
+            return substr($username, 0, 6);
+        }
+    }
+
     /**
      * @param $aliasEntity
      * @return bool
@@ -236,10 +246,9 @@ class Comment
         return $form;
     }
 
-
     public function generateAddCommentForm($form)
     {
         echo $this->serviceManager->get('ViewHelperManager')
-            ->get('Partial')->__invoke("comment/index/add.phtml", ['form' => $form]);
+            ->get('Partial')->__invoke("comment/index/add.phtml", ['form' => $form, 'commentService' => $this]);
     }
 }

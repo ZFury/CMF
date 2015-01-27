@@ -21,7 +21,7 @@
                 <strong><?= $row->getName() ?></strong>
             </div>
             <?php if ($this->enabledComment) : ?>
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <?php if ($this->enabledComment) : ?>
                         <div class="add-comment-form col-md-4"><?php $commentService->generateAddCommentForm($commentService->createForm()); ?></div>
                     <?php endif; ?>
