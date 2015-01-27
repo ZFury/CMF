@@ -1,9 +1,14 @@
+<link href="module/comment/css/comment.css" rel="stylesheet">
 <ul class="media">
     <li class="media-body">
-            <h4 class="media-heading">
-                <?php echo $this->escapeHtml($this->comment->getUser()->getDisplayName()); ?>
-                <?php
-                if (($this->comment->getUserId() === $this->identity()->getUserId() && $this->enabledCommentByComment) ||
+            <h5 class="media-heading">
+                <?php echo $this->escapeHtml(
+                        $this->comment->getUser()->getDisplayName())
+                    . '<small>'. '<i class="delimeter glyphicon glyphicon-asterisk"></i>'
+                    . $this->comment->getCreated()->format('d/m/Y  h:m') . '</small>';
+
+                if (($this->comment->getUserId() === $this->identity()->getUserId() &&
+                        $this->enabledCommentByComment) ||
                     $this->identity()->getUser()->getRole() === User\Entity\User::ROLE_ADMIN) : ?>
                     <a class="dialog"
                        href="<?php echo $this->url('comment/default', array(
@@ -21,15 +26,21 @@
                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     </a>
                 <?php endif; ?>
-            </h4>
-            <textarea class="form-control span6" disabled>
+            </h5>
+            <div class="comment-text form-control col-md-6">
                 <?php echo $this->escapeHtml($this->comment->getComment()); ?>
-            </textarea>
+            </div>
             <?php if ($this->enabledCommentByComment) : ?>
                 <p>
-                    <a href="<?=$this->url('comment/default', ['controller' => 'index', 'action' => 'add'],
-                                        ['query' => ['entity' => 'comment','id' => $this->comment->getId()]])?>"
-                       class="dialog"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New comment</a>
+                    <small><a href="<?=$this->url(
+                                'comment/default',
+                                ['controller' => 'index', 'action' => 'add'],
+                                ['query' => ['entity' => 'comment', 'id' => $this->comment->getId()]]
+                            )?>"
+                            id="answer-button">
+                            <span aria-hidden="true"></span>Answer
+                        </a>
+                    </small>
                 </p>
             <?php endif; ?>
             <?php if (count($this->children) > 0) : ?>

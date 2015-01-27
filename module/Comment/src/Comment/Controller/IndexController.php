@@ -144,8 +144,7 @@ class IndexController extends AbstractActionController
      */
     public function addAction()
     {
-        $form = $this->getServiceLocator()
-            ->get('Comment\Service\Comment')->createForm();
+        $form = $this->getServiceLocator()->get('Comment\Service\Comment')->createForm();
 
         // for POST data
         if ($this->getRequest()->isPost()) {

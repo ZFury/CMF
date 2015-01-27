@@ -1,5 +1,4 @@
 define(['jquery','bootstrap'], function ($) {
-
     var displayComments = function() {
         $('.entity').each(function() {
             var elem = $(this);
@@ -13,7 +12,13 @@ define(['jquery','bootstrap'], function ($) {
         });
     };
     displayComments();
-    $('body').on('form.success', function () {
-        displayComments();
+    $('body')
+        .on('form.success', function () {
+            displayComments();
+        });
+
+    var answerButton = $('#answer-button');
+    answerButton.click(function(){
+        answerButton.closest('ul').append($('#crudForm').clone());
     });
 });

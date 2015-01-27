@@ -52,13 +52,14 @@ class Comment
      */
     public function enabledComment($aliasEntity)
     {
+
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
         $entityType = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType($aliasEntity);
         if (!$entityType) {
             throw new \Exception('Unknown entity type');
         }
         if (!$entityType->getEnabledComment()) {
-            throw new \Exception('Comment on this entity can not be');
+            throw new \Exception('You can not comment this entity');
         }
 
         return true;
@@ -233,5 +234,12 @@ class Comment
         }
 
         return $form;
+    }
+
+
+    public function generateAddCommentForm($form)
+    {
+        echo $this->serviceManager->get('ViewHelperManager')
+            ->get('Partial')->__invoke("comment/index/add.phtml", ['form' => $form]);
     }
 }

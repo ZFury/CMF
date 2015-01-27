@@ -1,3 +1,6 @@
+<h3 class="page-header">
+    Try commenting created Test Entity.
+</h3>
 <div id="grid">
     <div class="head row">
         <div class="col-md-1">id</div>
@@ -7,9 +10,7 @@
         <hr/>
     </div>
     <?php foreach ($this->data as $row) : ?>
-        <div class="row entity"
-             data-href="<?= $this->url('comment/default', ['controller' => 'index', 'action' => 'index'],
-                                    ['query' => ['entity' => $this->aliasEntity,'id' => $row->getId()]]) ?>">
+        <div class="row entity"  data-href="<?= $this->url('comment/default', ['controller' => 'index', 'action' => 'index'], ['query' => ['entity' => $this->aliasEntity,'id' => $row->getId()]]) ?>">
             <div class="col-md-1">
                 <strong><?= $row->getId() ?></strong>
             </div>
@@ -21,10 +22,9 @@
             </div>
             <?php if ($this->enabledComment) : ?>
                 <div class="col-md-3">
-                    <a type="button" class="btn btn-success add-com dialog"
-                       href="<?= $this->url('comment/default', ['controller' => 'index', 'action' => 'add'],
-                                            ['query' => ['entity' => 'test','id' => $row->getId()]]) ?>">
-                        New comment</a>
+                    <?php if ($this->enabledComment) : ?>
+                        <div class="add-comment-form col-md-4"><?php $commentService->generateAddCommentForm($commentService->createForm()); ?></div>
+                    <?php endif; ?>
                 </div>
             <?php endif; ?>
         </div>

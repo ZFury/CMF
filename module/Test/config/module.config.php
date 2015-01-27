@@ -90,11 +90,11 @@ return [
     'navigation' => [
         'default' => [
             [
-                'label' => 'Test',
+                'label' => 'TestingFeatures',
                 'controller' => 'test',
                 'pages' => [
                     [
-                        'label' => 'Images',
+                        'label' => 'UploadImages',
                         'controller' => 'image',
                         'action' => 'upload-image',
                         'route' => 'test/default',
@@ -102,7 +102,7 @@ return [
                         'module' => 'Test'
                     ],
                     [
-                        'label' => 'Audios',
+                        'label' => 'UploadAudios',
                         'controller' => 'audio',
                         'action' => 'upload-audio',
                         'route' => 'test/default',
@@ -110,7 +110,7 @@ return [
                         'module' => 'Test'
                     ],
                     [
-                        'label' => 'Videos',
+                        'label' => 'UploadVideos',
                         'controller' => 'video',
                         'action' => 'upload-video',
                         'route' => 'test/default',
@@ -118,7 +118,7 @@ return [
                         'module' => 'Test'
                     ],
                     [
-                        'label' => 'Users',
+                        'label' => 'TestUsers',
                         'controller' => 'management',
                         'action' => 'index',
                         'route' => 'test/default',
@@ -126,7 +126,7 @@ return [
                         'module' => 'Test'
                     ],
                     [
-                        'label' => 'Comments',
+                        'label' => 'WriteComments',
                         'controller' => 'comment',
                         'action' => 'index',
                         'route' => 'test/default',

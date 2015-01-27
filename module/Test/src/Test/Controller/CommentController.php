@@ -41,7 +41,8 @@ class CommentController extends AbstractActionController
         if ($entityTest) {
             $ViewModel->setVariables([
                 'aliasEntity' => $entityTest->getAliasEntity(),
-                'enabledComment' => $entityTest->getEnabledComment()
+                'enabledComment' => $entityTest->getEnabledComment(),
+                'commentService' => $this->serviceLocator->get('Comment\Service\Comment'),//for generating form
             ]);
         }
         return $ViewModel;
