@@ -9,27 +9,27 @@
         <div class="col-md-3"></div>
         <hr/>
     </div>
-    <?php foreach ($this->data as $row) : ?>
-        <div class="row entity"  data-href="<?= $this->url('comment/default', ['controller' => 'index', 'action' => 'index'], ['query' => ['entity' => $this->aliasEntity,'id' => $row->getId()]]) ?>">
-            <div class="col-md-1">
-                <strong><?= $row->getId() ?></strong>
-            </div>
-            <div class="col-md-2">
-                <strong><?= $row->getEmail() ?></strong>
-            </div>
-            <div class="col-md-2">
-                <strong><?= $row->getName() ?></strong>
-            </div>
-            <?php if ($this->enabledComment) : ?>
-                <div class="col-md-6">
-                    <?php if ($this->enabledComment) : ?>
-                        <div class="add-comment-form col-md-4"><?php $commentService->generateAddCommentForm($commentService->createForm()); ?></div>
-                    <?php endif; ?>
-                </div>
+    <div class="row entity" >
+        <div class="col-md-1">
+            <strong><?= $testEntity->getId() ?></strong>
+        </div>
+        <div class="col-md-2">
+            <strong><?= $testEntity->getEmail() ?></strong>
+        </div>
+        <div class="col-md-2">
+            <strong><?= $testEntity->getName() ?></strong>
+        </div>
+        <div class="col-md-6">
+            <?php if (null !== $addCommentForm) : ?>
+                <?= $addCommentForm ?>
             <?php endif; ?>
         </div>
-        <div class="row"></div>
-    <?php endforeach; ?>
+    </div>
+</div>
+<div data-spy="grid" class="grid">
+    <?php if ($comments && $isVisible !== 0) {
+        echo $this->comment('comment/index/partial/comment.phtml', $comments);
+    }; ?>
 </div>
 
 <script>

@@ -99,7 +99,7 @@ class IndexControllerTest extends ControllerTestCase
 
         $postData = array(
             'comment' => "test comment",
-            'entity' => $this->entityType->getAliasEntity(),
+            'entity' => $this->entityType->getAlias(),
             'entityId' => $this->user->getId(),
         );
         $this->dispatch('/comment/index/add', 'POST', $postData);
@@ -120,7 +120,7 @@ class IndexControllerTest extends ControllerTestCase
         $form = $this->commentService->createForm();
         $postData = array(
             'comment' => "test comment",
-            'entity' => $this->entityType->getAliasEntity(),
+            'entity' => $this->entityType->getAlias(),
             'entityId' => $this->user->getId(),
         );
         $this->entityType->setEnabledComment(0);

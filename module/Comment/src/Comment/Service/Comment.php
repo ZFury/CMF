@@ -68,7 +68,7 @@ class Comment
         if (!$entityType) {
             throw new \Exception('Unknown entity type');
         }
-        if (!$entityType->getEnabledComment()) {
+        if ($entityType->isEnabled() === 0) {
             throw new \Exception('You can not comment this entity');
         }
 
@@ -86,12 +86,13 @@ class Comment
         $serviceLocator = $this->getServiceLocator();
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
         $form->setData($data);
+
         if ($form->isValid()) {
-            if ($this->enabledComment($data['entity'])) {
+            if ($this->enabledComment($data['alias'])) {
                 $data = $form->getData();
                 $serviceEntityType = $serviceLocator->get('Comment\Service\EntityType');
-                $entityType = $serviceEntityType->getEntity($data['entity'], $data['entityId']);
-                if (!$this->enabledComment($data['entity'])) {
+                $entityType = $serviceEntityType->getEntity($data['alias'], $data['entityId']);
+                if (!$this->enabledComment($data['alias'])) {
                     throw new \Exception('Prohibited add comments for this entity');
                 }
 
@@ -127,14 +128,14 @@ class Comment
      * @return array
      * @throws \Exception
      */
-    public function lisComments(array $data)
+    public function listComments(array $data)
     {
-        if (!isset($data['entity']) || !isset($data['entityId'])) {
+        if (!isset($data['alias']) || !isset($data['id'])) {
             throw new \Exception('Bad request');
         }
 
         $serviceEntityType = $this->getServiceLocator()->get('Comment\Service\EntityType');
-        $entityType = $serviceEntityType->getEntity($data['entity'], $data['entityId']);
+        $entityType = $serviceEntityType->getEntity($data['alias'], $data['id']);
         $arrayComments = array();
         if (!$entityType) {
             return $arrayComments;
@@ -142,20 +143,20 @@ class Comment
 
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
         $commentRepository = $objectManager->getRepository('Comment\Entity\Comment');
-        $comments = $commentRepository->findBy(array('entityType' => $entityType, 'entityId' => $data['entityId']));
+        $comments = $commentRepository->findBy(array('entityType' => $entityType, 'entityId' => $data['id']));
 
         $identity = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity();
-        if ($entityType->getVisibleComment() || $identity->getUser()->getRole() === User::ROLE_ADMIN) {
-            $entityComment = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType($data['entity']);
-            $enabledCommentByComment = $entityComment->getEnabledComment();
+        if ($entityType->isVisible() || $identity->getUser()->getRole() === User::ROLE_ADMIN) {
+            $entityComment = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType($data['alias']);
+            $enabledCommentByComment = $entityComment->isEnabled();
 
             foreach ($comments as $comment) {
                 $arrayComments[$comment->getId()]['comment'] = $comment;
-                if ($entityComment->getVisibleComment()) {
+                if ($entityComment->isVisible()) {
                     $entity = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment');
                     if ($entity) {
-                        $data = ['entity' => 'comment', 'entityId' => $comment->getId()];
-                        $arrayComments[$comment->getId()]['children'] = $this->lisComments($data);
+                        $data = ['alias' => 'comment', 'id' => $comment->getId()];
+                        $arrayComments[$comment->getId()]['children'] = $this->listComments($data);
                     } else {
                         $arrayComments[$comment->getId()]['children'] = array();
                     }
@@ -183,7 +184,7 @@ class Comment
         if (!$this->commentOwner($comment)) {
             throw new \Exception('You do not have permission for this operation');
         }
-        if (!$this->enabledComment($comment->getEntityType()->getAliasEntity())) {
+        if (!$this->enabledComment($comment->getEntityType()->getAlias())) {
             throw new \Exception('Comment can not be deleted');
         }
 
@@ -212,7 +213,7 @@ class Comment
         if (!$this->commentOwner($comment)) {
             throw new \Exception('You do not have permission for this operation');
         }
-        if (!$this->enabledComment($comment->getEntityType()->getAliasEntity())) {
+        if (!$this->enabledComment($comment->getEntityType()->getAlias())) {
             throw new \Exception('Comment can not be edited');
         }
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -246,9 +247,18 @@ class Comment
         return $form;
     }
 
-    public function generateAddCommentForm($form)
+    /**
+     * @param $form
+     * @param $entityId
+     * @param $entity
+     * @return string
+     */
+    public function getAddCommentForm($form, $entityId, $entity)
     {
-        echo $this->serviceManager->get('ViewHelperManager')
-            ->get('Partial')->__invoke("comment/index/add.phtml", ['form' => $form, 'commentService' => $this]);
+        return $this->serviceManager->get('ViewHelperManager')
+            ->get('Partial')->__invoke(
+                "comment/index/add.phtml",
+                ['form' => $form, 'commentService' => $this, 'id' => $entityId, 'alias' => $entity]
+            );
     }
 }

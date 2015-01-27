@@ -7,6 +7,7 @@
 
 namespace Test\Controller;
 
+use Comment\Grid\Comment\Grid;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Comment\Form;
@@ -24,25 +25,39 @@ class CommentController extends AbstractActionController
      */
     public function indexAction()
     {
+
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $entities = $objectManager->getRepository('Test\Entity\Test')->findAll();
+        $testEntity = $objectManager->getRepository('Test\Entity\Test')->findOneByName('testuser');
         /**
-         * @var /Comment\Entity\EntityType $entityTest
+         * @var Entity\EntityType $entityType
          */
-        if (!$entityTest = $objectManager->getRepository('Comment\Entity\EntityType')
+        if (!$entityType = $objectManager->getRepository('Comment\Entity\EntityType')
             ->getEntityTypeByEntity('Test\\Entity\\Test')
         ) {
-            $flashMessenger = new FlashMessenger();
-            $flashMessenger->addSuccessMessage('There are no comments');
+            $this->flashMessenger()
+                ->addErrorMessage('You cannot comment this entity! Create it in Dashboard-Comment-CreateEntity');
+        }
+        $comments = $this->getServiceLocator()
+            ->get('Comment\Service\Comment')
+            ->listComments($testEntity->toArray());
+
+        $addCommentForm = null;
+        if ($entityType->isEnabled() !== 0) {
+            $addCommentForm = $this->getServiceLocator()->get('Comment\Service\Comment')->getAddCommentForm(
+                $this->getServiceLocator()->get('Comment\Service\Comment')->createForm(),
+                $testEntity->getId(),
+                $testEntity->getAlias()
+            );
         }
         $ViewModel = new ViewModel(array(
-            'data' => $entities,
+            'testEntity' => $testEntity,
         ));
-        if ($entityTest) {
+
+        if ($entityType) {
             $ViewModel->setVariables([
-                'aliasEntity' => $entityTest->getAliasEntity(),
-                'enabledComment' => $entityTest->getEnabledComment(),
-                'commentService' => $this->serviceLocator->get('Comment\Service\Comment'),//for generating form
+                'isVisible' => $entityType->isVisible(),
+                'addCommentForm' => $addCommentForm,
+                'comments' => $comments
             ]);
         }
         return $ViewModel;

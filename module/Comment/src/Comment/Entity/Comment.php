@@ -23,7 +23,7 @@ class Comment extends EntityBase
      * @Annotation\Type("Zend\Form\Element\Text")
      * @Annotation\Exclude
      * @ORM\Id
-     * @ORM\Column(type="integer", options={"unsigned"=true})
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
@@ -34,57 +34,57 @@ class Comment extends EntityBase
      * @Annotation\Required(true)
      * @Annotation\Options({"label":"Comment:",})
      * @Annotation\Attributes({"class":"form-control"})
-     * @ORM\Column(type="text", nullable=false)
+     * @ORM\Column(name="comment", type="text", nullable=false)
      */
     protected $comment;
 
     /**
      * @ORM\ManyToOne(targetEntity="User\Entity\User")
-     * @ORM\JoinColumn(name="userId", referencedColumnName="id", onDelete="cascade")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")
      */
     private $user;
 
     /**
      * @var int
      * @Annotation\Type("Zend\Form\Element\Text")
-     * @ORM\Column(type="integer", options={"unsigned"=true})
+     * @ORM\Column(name="user_id", type="integer", options={"unsigned"=true})
      */
     protected $userId;
 
     /**
      * @Annotation\Required(true)
      * @ORM\ManyToOne(targetEntity="Comment\Entity\EntityType")
-     * @ORM\JoinColumn(name="entityTypeId", referencedColumnName="id", onDelete="cascade")
+     * @ORM\JoinColumn(name="entity_type_id", referencedColumnName="id", onDelete="cascade")
      */
     protected $entityType;
 
     /**
      * @var int
      * @Annotation\Type("Zend\Form\Element\Text")
-     * @ORM\Column(type="integer", nullable=false, options={"unsigned"=true})
+     * @ORM\Column(name="entity_type_id", type="integer", nullable=false, options={"unsigned"=true})
      */
     protected $entityTypeId;
 
     /**
      * @Annotation\Required(true)
      * @Annotation\Type("Zend\Form\Element\Text")
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(name="entity_id", type="integer", nullable=false)
      */
     protected $entityId;
 
     /**
-     * @var created
+     * @var \Datetime
      * @Annotation\Exclude
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(name="created_at", type="datetime")
      */
-    protected $created;
+    protected $createdAt;
 
     /**
-     * @var updated
+     * @var \Datetime
      * @Annotation\Exclude
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(name="updated_at", type="datetime")
      */
-    protected $updated;
+    protected $updatedAt;
 
     /**
      * @ORM\PreRemove
@@ -110,10 +110,10 @@ class Comment extends EntityBase
      */
     public function updatedTimestamps()
     {
-        $this->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
+        $this->setUpdatedAt(new \DateTime(date('Y-m-d H:i:s')));
 
-        if ($this->getCreated() == null) {
-            $this->setCreated(new \DateTime(date('Y-m-d H:i:s')));
+        if ($this->getCreatedAt() == null) {
+            $this->setCreatedAt(new \DateTime(date('Y-m-d H:i:s')));
         }
     }
 
@@ -256,13 +256,13 @@ class Comment extends EntityBase
     /**
      * Set created.
      *
-     * @param string $created
+     * @param string $createdAt
      *
      * @return void
      */
-    public function setCreated($created)
+    public function setCreatedAt($createdAt)
     {
-        $this->created = $created;
+        $this->createdAt = $createdAt;
     }
 
     /**
@@ -270,9 +270,9 @@ class Comment extends EntityBase
      *
      * @return string
      */
-    public function getCreated()
+    public function getCreatedAt()
     {
-        return $this->created;
+        return $this->createdAt;
     }
 
     /**
@@ -280,21 +280,21 @@ class Comment extends EntityBase
      *
      * @return string
      */
-    public function getUpdated()
+    public function getUpdatedAt()
     {
-        return $this->updated;
+        return $this->updatedAt;
     }
 
     /**
      * Set updated.
      *
-     * @param string $updated
+     * @param string $updatedAt
      *
      * @return void
      */
-    public function setUpdated($updated)
+    public function setUpdatedAt($updatedAt)
     {
-        $this->updated = $updated;
+        $this->updatedAt = $updatedAt;
     }
 
     /**
@@ -310,8 +310,8 @@ class Comment extends EntityBase
                 "entityTypeId" => $this->getEntityTypeId(),
                 "entityId" => $this->getEntityId(),
                 "user" => $this->getUser(),
-                "created" => $this->getCreated(),
-                "updated" => $this->getUpdated(),
+                "createdAt" => $this->getCreatedAt(),
+                "updatedAt" => $this->getUpdatedAt(),
             );
             return $result;
         }

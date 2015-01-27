@@ -111,6 +111,12 @@ class User
      */
     private $auths;
 
+    /**
+     * @Annotation\Exclude
+     * @ORM\OneToMany(targetEntity="Comment\Entity\Comment", mappedBy="user")
+     */
+    private $comments;
+
     private $entityManager;
 
     /**
@@ -119,6 +125,7 @@ class User
     public function __construct()
     {
         $this->auths = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -127,6 +134,14 @@ class User
     public function getAuths()
     {
         return $this->auths;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 
     /**

@@ -21,7 +21,7 @@ class EntityTypeInputFilter extends InputFilter
     public function __construct(ServiceManager $sm)
     {
         $this->sm = $sm;
-        $this->aliasEntity();
+        $this->alias();
         $this->entity();
         $this->description();
     }

@@ -27,18 +27,18 @@ class IndexController extends AbstractActionController
         }
 
         // for GET (or query string) data
-        if ($this->getRequest()->getQuery()->entity && $entityId = intval($this->getRequest()->getQuery()->id)) {
-            $data['entity'] = $this->getRequest()->getQuery()->entity;
-            $data['entityId'] = $this->getRequest()->getQuery()->id;
+        if ($this->getRequest()->getQuery('alias') && $entityId = intval($this->getRequest()->getQuery('id'))) {
+            $data['alias'] = $this->getRequest()->getQuery('alias');
+            $data['id'] = $this->getRequest()->getQuery('id');
         }
 
-        if (!isset($data['entity']) || !isset($data['entityId'])) {
+        if (!isset($data['alias']) || !isset($data['id'])) {
             throw new \Exception('Bad request');
         }
 
         $comments = $this->getServiceLocator()
             ->get('Comment\Service\Comment')
-            ->lisComments($data);
+            ->listComments($data);
 
         $viewModel = new ViewModel(array('comments' => $comments));
 
@@ -145,18 +145,17 @@ class IndexController extends AbstractActionController
     public function addAction()
     {
         $form = $this->getServiceLocator()->get('Comment\Service\Comment')->createForm();
-
         // for POST data
         if ($this->getRequest()->isPost()) {
             $data = $this->getRequest()->getPost();
-
             // for GET (or query string) data
-            if ($this->getRequest()->getQuery()->entity && $entityId = intval($this->getRequest()->getQuery()->id)) {
-                $data->set('entity', $this->getRequest()->getQuery()->entity);
-                $data->set('entityId', $this->getRequest()->getQuery()->id);
+
+            if ($this->getRequest()->getQuery('alias') && $entityId = intval($this->getRequest()->getQuery('id'))) {
+                $data->set('alias', $this->getRequest()->getQuery('alias'));
+                $data->set('entityId', $this->getRequest()->getQuery('id'));
             }
 
-            if (!isset($data['entity']) || !isset($data['entityId'])) {
+            if (!isset($data['alias']) || !isset($data['entityId'])) {
                 throw new \Exception('Bad request');
             }
             $comment = $this->getServiceLocator()
@@ -174,6 +173,7 @@ class IndexController extends AbstractActionController
                 $flashMessenger->addErrorMessage('Comment is not created');
             }
         }
+
         $viewModel = new ViewModel([
             'form' => $form,
             'title' => 'Add comment',

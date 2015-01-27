@@ -16,7 +16,7 @@ class CommentInputFilter extends InputFilter
     public function __construct(ServiceManager $sm)
     {
         $this->sm = $sm;
-        $this->entity();
+        $this->alias();
         $this->comment();
         $this->entityId();
     }
@@ -24,10 +24,10 @@ class CommentInputFilter extends InputFilter
     /**
      * @return $this
      */
-    protected function entity()
+    protected function alias()
     {
         $this->add(array(
-            'name' => 'entity',
+            'name' => 'alias',
             'required' => true,
             'filters' => array(
                 array('name' => 'StripTags'),

@@ -7,7 +7,7 @@
                 </div>
                 <div class="col-sm-1"><i class="delimeter glyphicon glyphicon-asterisk"></i></div>
                 <div class="col-sm-6">
-                    <small><?= $this->comment->getCreated()->format('d-m-Y  h:m'); ?></small>;
+                    <small><?= $this->comment->getCreatedAt()->format('d-m-Y  h:m'); ?></small>;
                 </div>
                 <?php
                 if (($this->comment->getUserId() === $this->identity()->getUserId() &&
