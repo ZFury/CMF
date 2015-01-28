@@ -25,7 +25,8 @@ $ajax = $this->viewModel()->getCurrent()->terminate();
                             $formElement = $this->formInput($element);
                             break;
                     }
-                    ?> <?php $element->getAttributes()['type'] == 'submit' ? $submit = true : $submit = false; ?>
+                    ?>
+                    <?php $element->getAttributes()['type'] == 'submit' ? $submit = true : $submit = false; ?>
                     <div class="form-group">
                         <?php if (!$submit): ?>
                             <?php if ($element->getAttributes()['type'] !== 'hidden'): ?>
@@ -39,15 +40,13 @@ $ajax = $this->viewModel()->getCurrent()->terminate();
                                     <?= $this->formElementErrors($element); ?>
                                 </div>
                             </div>
-                        <?php else: ?>
-                            <?php if (!$ajax): ?>
-                                <div class="col-sm-4 col-sm-offset-2">
-                                    <?= $formElement; ?>
-                                    <div class="error-field error-form-message">
-                                        <?= $this->formElementErrors($element); ?>
-                                    </div>
+                        <?php elseif (!$ajax): ?>
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <?= $formElement; ?>
+                                <div class="error-field error-form-message">
+                                    <?= $this->formElementErrors($element); ?>
                                 </div>
-                            <?php endif; ?>
+                            </div>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
