@@ -17,7 +17,8 @@ define(['jquery'], function ($) {
                         $grid.find('a, .btn').addClass('disabled');
                     },
                     success: function (html) {
-                        $grid.html($(html).children().unwrap());
+                        $grid.find('a, .btn').removeClass('disabled');
+                        $grid.find('.grid').html($(html).find('.grid').children().unwrap());
                         $('body').trigger('grid.loaded', []);
                     }
                 });
@@ -33,7 +34,8 @@ define(['jquery'], function ($) {
                         $grid.find('a, .btn').addClass('disabled');
                     },
                     success: function (html) {
-                        $grid.html($(html).children().unwrap());
+                        $grid.find('a, .btn').removeClass('disabled');
+                        $grid.find('.grid').html($(html).find('.grid').children().unwrap());
                         $('body').trigger('grid.loaded', []);
                     }
                 });

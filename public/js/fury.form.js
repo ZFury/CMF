@@ -26,7 +26,7 @@ define(['jquery', 'fury.notify'], function ($, notify) {
                         for (var key in jsonData.errors) {
                             var field = $this.find('.form-group .form-control[name="' + key + '"]');
                             field.addClass('form-control error-form-field');
-                            field.parent().next().html(jsonData.errors[key][0]);
+                            field.next().html(jsonData.errors[key][0]);
                         }
                     } else {
                         $this.trigger('success.form.fury', []);
