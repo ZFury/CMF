@@ -176,6 +176,8 @@ class ManagementController extends AbstractCrudController
         $form = new Form\EditForm();
         /** @var Entity\User $entity */
         $entity = $this->loadEntity();
+        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $form->setHydrator(new DoctrineHydrator($entityManager));
         $form->bind($entity);
         $form->setInputFilter(new Form\Filter\EditInputFilter($this->getServiceLocator()));
         $urlHelper = $this->getUrlHelper();
