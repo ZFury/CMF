@@ -32,6 +32,8 @@ class ManagementController extends AbstractCrudController
     }
 
     /**
+     * Create action
+     *
      * @return \Zend\Http\Response|ViewModel
      */
     public function createAction()
@@ -64,6 +66,8 @@ class ManagementController extends AbstractCrudController
     }
 
     /**
+     * Edit action
+     *
      * @return \Zend\Http\Response|ViewModel
      * @throws \Doctrine\ORM\EntityNotFoundException
      */
@@ -135,6 +139,7 @@ class ManagementController extends AbstractCrudController
     }
 
     /**
+     * Get entity
      *
      * @return Entity\User
      */
@@ -144,6 +149,8 @@ class ManagementController extends AbstractCrudController
     }
 
     /**
+     * Get create form
+     *
      * @return Form\CreateForm
      */
     public function getCreateForm()
@@ -159,7 +166,8 @@ class ManagementController extends AbstractCrudController
     }
 
     /**
-     * 
+     * Get edit form
+     *
      * @return Form\EditForm
      * @throws \Doctrine\ORM\EntityNotFoundException
      */
