@@ -22,6 +22,10 @@ use Zend\View\Model\JsonModel;
 class ManagementController extends AbstractCrudController
 {
 
+    /**
+     * Index action for default users grid
+     * @return ViewModel
+     */
     public function indexAction()
     {
         $sm = $this->getServiceLocator();
@@ -31,6 +35,9 @@ class ManagementController extends AbstractCrudController
         return $viewModel;
     }
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     */
     public function createAction()
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -57,7 +64,10 @@ class ManagementController extends AbstractCrudController
         ]);
     }
 
-
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     * @throws \Doctrine\ORM\EntityNotFoundException
+     */
     public function editAction()
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -87,7 +97,7 @@ class ManagementController extends AbstractCrudController
     }
 
     /**
-     * Grid action
+     * Grid action for angular
      *
      * @return \Zend\View\Model\ViewModel
      *
@@ -123,16 +133,25 @@ class ManagementController extends AbstractCrudController
 
     }
 
+    /**
+     * @return Entity\User
+     */
     public function getEntity()
     {
         return new Entity\User();
     }
 
+    /**
+     * @return Form\CreateForm
+     */
     public function getCreateForm()
     {
         return new Form\CreateForm();
     }
 
+    /**
+     * @return Form\EditForm
+     */
     public function getEditForm()
     {
         return new Form\EditForm();
