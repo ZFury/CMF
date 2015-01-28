@@ -14,11 +14,14 @@ use User\Entity;
 use User\Form;
 use User\Grid\Grid;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use Zend\View\Model\JsonModel;
 
 class ManagementController extends AbstractCrudController
 {
 
+    /**
+     * Index action for default users grid
+     * @return ViewModel
+     */
     public function indexAction()
     {
         $sm = $this->getServiceLocator();
@@ -28,6 +31,9 @@ class ManagementController extends AbstractCrudController
         return $viewModel;
     }
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     */
     public function createAction()
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -57,9 +63,9 @@ class ManagementController extends AbstractCrudController
         return $viewModel;
     }
 
-
     /**
      * @return \Zend\Http\Response|ViewModel
+     * @throws \Doctrine\ORM\EntityNotFoundException
      */
     public function editAction()
     {
@@ -92,7 +98,7 @@ class ManagementController extends AbstractCrudController
     }
 
     /**
-     * Grid action
+     * Grid action for angular
      *
      * @return \Zend\View\Model\ViewModel
      *
@@ -129,7 +135,8 @@ class ManagementController extends AbstractCrudController
     }
 
     /**
-     * @return mixed|Entity\User
+     *
+     * @return Entity\User
      */
     public function getEntity()
     {
@@ -137,7 +144,7 @@ class ManagementController extends AbstractCrudController
     }
 
     /**
-     * @return mixed|Form\CreateForm
+     * @return Form\CreateForm
      */
     public function getCreateForm()
     {
@@ -152,7 +159,8 @@ class ManagementController extends AbstractCrudController
     }
 
     /**
-     * @return mixed
+     * 
+     * @return Form\EditForm
      * @throws \Doctrine\ORM\EntityNotFoundException
      */
     public function getEditForm()
