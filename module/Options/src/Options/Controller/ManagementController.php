@@ -38,8 +38,10 @@ class ManagementController extends AbstractCrudController
     {
         $form = new \Options\Form\Create(null, ['serviceLocator' => $this->getServiceLocator()]);
         $urlHelper = $this->getUrlHelper();
-        $form
-            ->setAttribute('action', $urlHelper('options/default', ['controller' => 'management', 'action' => 'create']));
+        $form->setAttribute(
+            'action',
+            $urlHelper('options/default', ['controller' => 'management', 'action' => 'create'])
+        );
 
         return $form;
     }
@@ -82,8 +84,7 @@ class ManagementController extends AbstractCrudController
 
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
-        if (
-        !$model = $objectManager
+        if (!$model = $objectManager
             ->getRepository(get_class($this->getEntity()))->find(['namespace' => $namespace, 'key' => $key])
         ) {
             throw new EntityNotFoundException('Entity not found');
