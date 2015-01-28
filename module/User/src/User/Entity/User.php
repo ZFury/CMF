@@ -358,6 +358,9 @@ class User
         $this->entityManager = $args->getEntityManager();
     }
 
+    /**
+     * @return string
+     */
     public function getEntityName()
     {
         return 'User';
