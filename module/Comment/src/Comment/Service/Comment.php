@@ -113,7 +113,6 @@ class Comment
                     $entityManager->getConnection()->commit();
 
                     return $comment;
-
                 } catch (\Exception $e) {
                     $entityManager->getConnection()->rollback();
                     throw $e;
@@ -202,13 +201,12 @@ class Comment
     }
 
     /**
-     * @param \Zend\Form\Form $form
      * @param Entity\Comment $comment
      * @param $data
      * @return Entity\Comment
      * @throws \Exception
      */
-    public function edit(\Zend\Form\Form $form, Entity\Comment $comment, $data)
+    public function edit(Entity\Comment $comment, $data)
     {
         if (!$this->commentOwner($comment)) {
             throw new \Exception('You do not have permission for this operation');
@@ -219,10 +217,8 @@ class Comment
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $hydrator = new DoctrineHydrator($entityManager);
         $hydrator->hydrate($data, $comment);
-        if ($form->isValid()) {
-            $entityManager->persist($comment);
-            $entityManager->flush();
-        }
+        $entityManager->persist($comment);
+        $entityManager->flush();
 
         return $comment;
     }
@@ -236,12 +232,14 @@ class Comment
     {
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $builder = new AnnotationBuilder($entityManager);
-        $form = $builder->createForm(new Entity\Comment());
-        $form->setInputFilter(new Filter\CommentInputFilter($this->getServiceLocator()));
         if ($comment) {
+            $form = $builder->createForm($comment);
             $form->setInputFilter(new Filter\CommentEditInputFilter($this->getServiceLocator()));
             $form->setHydrator(new DoctrineHydrator($entityManager));
             $form->bind($comment);
+        } else {
+            $form = $builder->createForm(new Entity\Comment());
+            $form->setInputFilter(new Filter\CommentInputFilter($this->getServiceLocator()));
         }
 
         return $form;
