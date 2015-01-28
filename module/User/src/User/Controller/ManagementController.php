@@ -38,6 +38,7 @@ class ManagementController extends AbstractCrudController
         $form = $this->getCreateForm();
         $form->setHydrator(new DoctrineHydrator($entityManager));
         $form->bind($user);
+
         if ($this->getRequest()->isPost()) {
             $form->setInputFilter(new Form\Filter\CreateInputFilter($this->getServiceLocator()));
             $form->setData($this->getRequest()->getPost());
@@ -64,6 +65,7 @@ class ManagementController extends AbstractCrudController
         $form = $this->getEditForm();
         $form->setHydrator(new DoctrineHydrator($entityManager));
         $form->bind($user);
+
         if ($this->getRequest()->isPost()) {
             $form->setInputFilter(new Form\Filter\EditInputFilter($this->getServiceLocator()));
             $form->setData($this->getRequest()->getPost());

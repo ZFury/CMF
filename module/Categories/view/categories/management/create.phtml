@@ -1,9 +1,8 @@
-<?= $this->headLink()->appendStylesheet($this->basePath() . '/redactor/redactor.css'); ?>
 <?php
 /**@var $form Zend\Form\Form */
 $form = $this->form;
-$scripts = $this->scripts ? $this->scripts : [];
-$ajax = $this->ajax ? $this->ajax : false;
+$scripts = isset($this->scripts) ? $this->scripts : [];
+$ajax = $this->viewModel()->getCurrent()->terminate();
 ?>
     <div class="container form-container">
         <input type="hidden" id="entityId" value="<?= $this->fileUpload['id'] ? $this->fileUpload['id'] : ''; ?>">
@@ -13,7 +12,7 @@ $ajax = $this->ajax ? $this->ajax : false;
             <?php if (!$ajax): ?>
                 <h1 class="create-label"><?= !$this->title ? 'Create' : $this->escapeHtml($this->title); ?></h1>
             <?php endif; ?>
-            <form action="" method="post" class="form-horizontal" id="crudForm">
+            <form action="<?= $form->getAttribute('action') ?>" method="post" class="form-horizontal <?= $ajax ? 'form-ajax' : '' ?>">
                 <?php foreach ($form->getElements() as $element) : ?>
                     <?php
                     switch ($element) {

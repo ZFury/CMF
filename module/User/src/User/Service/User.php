@@ -136,6 +136,7 @@ class User
 
             //use module mail for user registration
             if ($this->useModuleMail()) {
+                /** @var \Mail\Service\Mail $mailService */
                 $mailService = $this->getServiceLocator()->get('Mail\Service\Mail');
                 $mailService->signUpMail($user);
             } else {

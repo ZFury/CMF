@@ -37,12 +37,12 @@ class TreeBuild extends AbstractHelper
             if (count($node->getChildren()) == 0) {
                 $str .= '<li class="mjs-nestedSortable-leaf" data-order="'
                     . $node->getOrder() . '" id="list_' . $node->getId() . '">'
-                    . $this->getView()->partial('categories/management/partial/navigation.phtml', ['node' => $node])
+                    . $this->getView()->partial('categories/management/partial/management.phtml', ['node' => $node])
                     . '</li>';
             } else {
                 $str .= '<li class="mjs-nestedSortable-leaf" data-order="'
                     . $node->getOrder() . '" id="list_' . $node->getId() . '">'
-                    . $this->getView()->partial('categories/management/partial/navigation.phtml', ['node' => $node])
+                    . $this->getView()->partial('categories/management/partial/management.phtml', ['node' => $node])
                     . '<ol>'
                     . $this->treeBuild($node->getChildren()->toArray())
                     . '</ol>'

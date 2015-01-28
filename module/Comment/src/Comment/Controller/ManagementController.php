@@ -41,6 +41,11 @@ class ManagementController extends AbstractCrudController
         $select->setValueOptions($options);
         $select->setOptions(array('empty_option' => 'Please choose entity'));
         $form->setInputFilter(new Filter\EntityTypeInputFilter($this->getServiceLocator()));
+        $urlHelper = $this->getUrlHelper();
+        $form->setAttribute(
+            'action',
+            $urlHelper('comment/default', ['controller' => 'management', 'action' => 'create'])
+        );
 
         return $form;
     }
@@ -53,7 +58,13 @@ class ManagementController extends AbstractCrudController
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $form = $this->getCreateForm();
         $form->setHydrator(new DoctrineHydrator($entityManager));
-        $form->bind($this->loadEntity());
+        $entity = $this->loadEntity();
+        $form->bind($entity);
+        $urlHelper = $this->getUrlHelper();
+        $form->setAttribute(
+            'action',
+            $urlHelper('comment/default', ['controller' => 'management', 'action' => 'edit', 'id' => $entity->getId()])
+        );
 
         return $form;
     }

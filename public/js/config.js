@@ -48,6 +48,7 @@ require.config({
         'conversion': '../module/media/js/conversion',
         'fury.form': './fury.form',
         'fury.notify': './fury.notify',
+        'fury.ajax': './fury.ajax',
         'mail-inputs': '../module/install/js/mail-inputs'
     },
     shim: {
