@@ -27,37 +27,6 @@ class ProfileController extends AbstractActionController
     }
 
     /**
-     *
-     */
-    public function checkIfFollowing()
-    {
-        $httpClientOptions = array(
-            'adapter' => 'Zend\Http\Client\Adapter\Curl',
-            'curloptions' => array(
-                CURLOPT_SSL_VERIFYHOST => false,
-                CURLOPT_SSL_VERIFYPEER => false
-            ),
-        );
-        $config = array(
-            'access_token' => array(
-                'token' => '228442924-P7AaZphsNeEkSOrVOL7UlqHNgeLQ6SqxnIQLNOVy',
-                'secret' => '8jXYDcJ8O6p3Z5X51WHfbSZqm8y7YPU54xFzdPPjfv8kx',
-            ),
-            'oauth_options' => array(
-                'consumerKey' => 'oh906btm1R0oTSPN5cBFHsRus',
-                'consumerSecret' => 'dX9JBVIr5suWs09v9kWX0nbKDPfKS4nGEh8wWHXnT9LxDtCsY0',
-            ),
-            'httpClientOptions' => $httpClientOptions
-        );
-        $twitter = new Twitter($config);
-        $response = $twitter->account->verifyCredentials();
-        if (!$response->isSuccess()) {
-            die('Something is wrong with my credentials!');
-        }
-        $twitter->usersSearch('twitter')->toValue()[0]->following;
-    }
-
-    /**
      * @return \Zend\Http\Response|ViewModel
      */
     public function changePasswordAction()
