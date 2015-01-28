@@ -3,6 +3,7 @@ define(['jquery'], function ($) {
     $(function () {
         $('[data-spy="grid"]').each(function () {
             var $grid = $(this);
+            console.log($grid.data('url'));
             if (!$grid.data('url')) {
                 $grid.data('url', window.location.pathname);
             }

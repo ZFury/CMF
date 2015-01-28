@@ -1,4 +1,4 @@
-<link href="module/comment/css/comment.css" rel="stylesheet">
+<?php echo $this->headLink()->appendStylesheet($this->basePath() . '/module/comment/css/comment.css')?>
 <ul class="media">
     <li class="media-body">
             <h5 class="media-heading">
@@ -21,7 +21,8 @@
                        )); ?>">
                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                     </a>
-                    <a class="del-comment" href="<?php echo $this->url('comment/default', array(
+                    <a class="del-comment confirm ajax" data-ajax-method="delete"
+                       href="<?php echo $this->url('comment/default', array(
                         'controller'=>'index',
                         'action' => 'delete',
                         'id' => $this->comment->getId()

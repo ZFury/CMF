@@ -183,14 +183,8 @@ class IndexController extends AbstractActionController
             }
         }
 
-        $viewModel = new ViewModel([
-            'form' => $form,
-            'title' => 'Add comment',
-            'ajax' => $this->getRequest()->isXmlHttpRequest()
-        ]);
-        if ($this->getRequest()->isXmlHttpRequest()) {
-            $viewModel->setTerminal(true);
-        }
+        $viewModel = new ViewModel(['form' => $form, 'title' => 'Add comment']);
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
 
         return $viewModel;
     }

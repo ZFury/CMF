@@ -49,9 +49,7 @@ class CommentController extends AbstractActionController
                 $testEntity->getAlias()
             );
         }
-        $ViewModel = new ViewModel(array(
-            'testEntity' => $testEntity,
-        ));
+        $ViewModel = new ViewModel(array('testEntity' => $testEntity));
 
         if ($entityType) {
             $ViewModel->setVariables([

@@ -26,12 +26,14 @@
         </div>
     </div>
 </div>
-<div data-spy="grid" class="grid">
-    <?php if ($comments && $isVisible !== 0) {
-        echo $this->comment('comment/index/partial/comment.phtml', $comments);
-    }; ?>
+<div data-spy="grid"  data-url="<?= $this->url('test/default', ['controller' => 'comment', 'action' => 'index'])?>">
+    <div class="grid">
+        <?php if ($comments && $isVisible !== 0) {
+            echo $this->comment('comment/index/partial/comment.phtml', $comments);
+        }; ?>
+    </div>
 </div>
 
 <script>
-    require(['test','comment', 'fury.form', 'dashboard']);
+    require(['dashboard', 'test', 'comment']);
 </script>
