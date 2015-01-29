@@ -2,19 +2,21 @@
     <div class="media-body">
     <h5 class="media-heading row">
         <div class="col-sm-3" data-toggle="tooltip" data-placement="top" title="<?= $this->comment->getUser()->getDisplayName()?>"><?php echo $this->escapeHtml(\Comment\Service\Comment::cutName($this->comment->getUser()->getDisplayName()))?></div>
-        <div class="col-sm-6">
-            <small><?= $this->comment->getCreatedAt()->format('d-m-Y  H:m:s') ?></small>;
+        <div class="data-edit col-sm-9 text-right">
+            <div class="data text-right">
+                <small><?= $this->comment->getCreatedAt()->format('d-m-Y  H:m:s') ?></small>
+            </div>
+            <?php if (($this->comment->getUserId() === $this->identity()->getUserId() && $this->enabledCommentByComment) || $this->identity()->getUser()->getRole() === User\Entity\User::ROLE_ADMIN) : ?>
+            <div class="text-right  edit-delete">
+                <a class="edit-comment" href="javascript:;">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                </a>
+                <a class="del-comment confirm ajax" data-ajax-method="delete" href="<?php echo $this->url('comment/default', array('controller'=>'index', 'action' => 'delete', 'id' => $this->comment->getId())); ?>">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </a>
+            </div>
+            <?php endif; ?>
         </div>
-        <?php if (($this->comment->getUserId() === $this->identity()->getUserId() && $this->enabledCommentByComment) || $this->identity()->getUser()->getRole() === User\Entity\User::ROLE_ADMIN) : ?>
-        <div class="col-sm-3 text-right  edit-delete">
-            <a class="edit-comment" data-ajax-method="" href="javascript:;">
-                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-            </a>
-            <a class="del-comment confirm ajax" data-ajax-method="delete" href="<?php echo $this->url('comment/default', array('controller'=>'index', 'action' => 'delete', 'id' => $this->comment->getId())); ?>">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            </a>
-        </div>
-        <?php endif; ?>
     </h5>
     <div class="comment-text form-control"><?php echo $this->escapeHtml($this->comment->getComment()); ?></div>
     <?php if ($this->enabledCommentByComment) : ?>

@@ -1,7 +1,7 @@
 /**
  * Created by babich on 12/19/14.
  */
-define(['jquery', 'fury.notify'], function ($, notify) {
+define(['jquery', 'fury.notify', 'bootstrap'], function ($, notify) {
     $(function () {
         $("[rel='tooltip']").tooltip();
     });
@@ -18,6 +18,7 @@ define(['jquery', 'fury.notify'], function ($, notify) {
                 type: 'POST',
                 beforeSend: function () {
                     $('.modal').find('a, .btn').addClass('disabled');
+                    $this.find('input[type=submit]').addClass('disabled');
                     $('.error-form-field').each(function (i, element) {
                         $(element).removeClass('error-form-field');
                     });
@@ -27,6 +28,7 @@ define(['jquery', 'fury.notify'], function ($, notify) {
                 },
                 success: function (jsonData) {
                     $('.modal').find('a, .btn').removeClass('disabled');
+                    $this.find('input[type=submit]').removeClass('disabled');
                     if (!$.isEmptyObject(jsonData.errors)) {
                         for (var key in jsonData.errors) {
                             var field = $this.find('.form-group .form-control[name="' + key + '"]');

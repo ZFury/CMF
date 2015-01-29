@@ -18,3 +18,15 @@ ul {
 .media-body {
     display: inherit;
 }
+
+.edit-delete {
+    width: 50px;
+}
+
+.data {
+    width: 200px;
+}
+
+.data-edit > div {
+    display: inline-block;
+}
