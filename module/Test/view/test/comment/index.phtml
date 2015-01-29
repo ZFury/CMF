@@ -1,37 +1,32 @@
-<div id="grid">
-    <div class="head row">
-        <div class="col-md-1">id</div>
-        <div class="col-md-2">email</div>
-        <div class="col-md-2">name</div>
-        <div class="col-md-3"></div>
-        <hr/>
-    </div>
-    <?php foreach ($this->data as $row) : ?>
-        <div class="row entity"
-             data-href="<?= $this->url('comment/default', ['controller' => 'index', 'action' => 'index'],
-                                    ['query' => ['entity' => $this->aliasEntity,'id' => $row->getId()]]) ?>">
-            <div class="col-md-1">
-                <strong><?= $row->getId() ?></strong>
-            </div>
-            <div class="col-md-2">
-                <strong><?= $row->getEmail() ?></strong>
-            </div>
-            <div class="col-md-2">
-                <strong><?= $row->getName() ?></strong>
-            </div>
-            <?php if ($this->enabledComment) : ?>
-                <div class="col-md-3">
-                    <a type="button" class="btn btn-success add-com dialog"
-                       href="<?= $this->url('comment/default', ['controller' => 'index', 'action' => 'add'],
-                                            ['query' => ['entity' => 'test','id' => $row->getId()]]) ?>">
-                        New comment</a>
-                </div>
-            <?php endif; ?>
-        </div>
-        <div class="row"></div>
-    <?php endforeach; ?>
+<h3 class="page-header">
+    Try to comment this entity!
+</h3>
+<?php echo $this->headLink()->appendStylesheet($this->basePath() . '/module/comment/css/comment.css')?>
+<div class="row">
+<div>
+    <dl class="dl-horizontal">
+        <dt>Id</dt>
+        <dt>Name</dt>
+        <dd><?= $testEntity->getId() ?></dd>
+        <dd><?= $testEntity->getName() ?></dd>
+    </dl>
+</div>
+
+<?php if (null !== $addCommentForm) : ?>
+<div class="col-sm-6">
+    <?= $addCommentForm ?>
+</div>
+<?php endif; ?>
+</div>
+
+<div data-spy="grid"  class="row" data-url="<?= $this->url('test/default', ['controller' => 'comment', 'action' => 'index'])?>">
+    <ul class="grid col-md-6">
+        <?php  if ($comments && is_array($comments) && count($comments)>0) {
+            echo $this->comment('comment/index/partial/comment.phtml', $comments);
+        }; ?>
+    </ul>
 </div>
 
 <script>
-    require(['test','comment', 'fury.form', 'dashboard']);
+    require(['dashboard', 'comment']);
 </script>

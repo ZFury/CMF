@@ -22,7 +22,15 @@
             <?php foreach ($this->grid->getData() as $row) : ?>
                 <tr>
                     <?php foreach ($row as $key => $value) : ?>
-                        <td><?= $value ?></td>
+                        <?php if ('visibleComment' === $key || 'enabledComment' === $key) {
+                                if (true == $value) { ?>
+                                    <td><i class="glyphicon glyphicon-ok"></i></td>
+                                <?php } else { ?>
+                                    <td><i class="glyphicon glyphicon-remove"></i></td>
+                                <?php } ?>
+                        <?php } else { ?>
+                            <td><?= $value ?></td>
+                        <?php } ?>
                     <?php endforeach; ?>
                     <td>
                         <a class="btn btn-primary btn-xs" href="<?=

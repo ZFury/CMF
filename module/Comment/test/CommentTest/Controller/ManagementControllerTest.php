@@ -32,7 +32,7 @@ class ManagementControllerTest extends ControllerTestCase
     protected $user;
 
     protected $entityData = array(
-        'aliasEntity' => 'comment',
+        'alias' => 'comment',
         'entity' => 'Comment\Entity\Comment',
         'enabledComment' => 1,
         'visibleComment' => 1,
@@ -44,6 +44,7 @@ class ManagementControllerTest extends ControllerTestCase
      */
     public static function setUpBeforeClass()
     {
+        exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
         exec('vendor/bin/doctrine-module orm:schema-tool:update --force');
     }
 
@@ -52,7 +53,7 @@ class ManagementControllerTest extends ControllerTestCase
      */
     public static function tearDownAfterClass()
     {
-        //exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
+        exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
     }
 
     /**
@@ -94,7 +95,7 @@ class ManagementControllerTest extends ControllerTestCase
         $this->assertResponseStatusCode(403);
     }
 
-    public function testCreateActionRedirectsAfterValidPost()
+    public function testCreateActionValidPost()
     {
         $postData = array(
             'aliasEntity' => 'user',
@@ -104,8 +105,7 @@ class ManagementControllerTest extends ControllerTestCase
             'description' => 'another',
         );
         $this->dispatch('/comment/management/create', 'POST', $postData);
-        $this->assertResponseStatusCode(302);
-        $this->assertRedirectTo('/comment/management');
+        $this->assertResponseStatusCode(200);
     }
 
     public function testEditActionCanBeAccessed()
@@ -120,19 +120,18 @@ class ManagementControllerTest extends ControllerTestCase
         $this->removeEntityType($entity);
     }
 
-    public function testEditActionRedirectsAfterValidPost()
+    public function testEditActionValidPost()
     {
         $entity = $this->createEntityType($this->entityData);
         $postData = array(
-            'aliasEntity' => 'userEdited',
+            'alias' => 'userEdited',
             'entity' => 'Test\Entity\Test',
             'enabledComment' => true,
             'visibleComment' => true,
             'description' => 'another',
         );
         $this->dispatch('/comment/management/edit/' . $entity->getId(), 'POST', $postData);
-        $this->assertResponseStatusCode(302);
-        $this->assertRedirectTo('/comment/management');
+        $this->assertResponseStatusCode(200);
         $this->removeEntityType($entity);
     }
 

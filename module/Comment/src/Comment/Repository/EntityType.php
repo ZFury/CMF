@@ -30,7 +30,7 @@ class EntityType extends EntityRepository
      */
     public function getEntityType($aliasEntity)
     {
-        $entity = $this->findOneBy(['aliasEntity' => $aliasEntity]);
+        $entity = $this->findOneBy(['alias' => $aliasEntity]);
         return $entity;
     }
 
@@ -40,7 +40,6 @@ class EntityType extends EntityRepository
      */
     public function getEntityTypeByEntity($entity)
     {
-        $entities = $this->findOneBy(['entity' => $entity]);
-        return $entities;
+        return $this->findOneBy(['entity' => $entity]);
     }
 }
