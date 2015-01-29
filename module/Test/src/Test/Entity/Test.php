@@ -94,18 +94,12 @@ class Test
         return $this->name;
     }
 
-    public function getAlias()
-    {
-        return 'test';
-    }
-
     public function toArray()
     {
         return [
             'id' => $this->id,
             'email' => $this->email,
-            'name' => $this->id,
-            'alias' => $this->getAlias()
+            'name' => $this->id
         ];
     }
 }

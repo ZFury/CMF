@@ -2,6 +2,7 @@
 
 namespace Comment\Controller;
 
+use Doctrine\ORM\EntityNotFoundException;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Comment\Form;
@@ -38,7 +39,7 @@ class IndexController extends AbstractActionController
 
         $comments = $this->getServiceLocator()
             ->get('Comment\Service\Comment')
-            ->listComments($data);
+            ->tree($data);
 
         $viewModel = new ViewModel(array('comments' => $comments));
 
@@ -64,24 +65,30 @@ class IndexController extends AbstractActionController
     }
 
     /**
-     * @return \Zend\Http\Response
-     * @throws \Exception
+     * @return Zend\Http\Response
+     * @throws EntityNotFoundException
      */
     public function deleteAction()
     {
-        if (!($id = $this->params()->fromRoute('id'))) {
-            throw new \Exception("No number comments that removed");
+        $params = array_merge($this->params()->fromPost(), $this->params()->fromRoute());
+        if (empty($params['id'])) {
+            $this->getResponse()->setStatusCode(400);
+            throw new EntityNotFoundException('Bad Request');
         }
 
         $result = $this->getServiceLocator()
             ->get('Comment\Service\Comment')
-            ->delete($id);
+            ->delete($params['id']);
 
         if ($result) {
             $flashMessenger = new FlashMessenger();
             $flashMessenger->addSuccessMessage('Comment deleted');
             if (!$this->getRequest()->isXmlHttpRequest()) {
-                return $this->redirect()->toUrl($this->getRequest()->getHeader('Referer')->getUri());
+                if ($this->getRequest()->getHeader('Referer')) {
+                    return $this->redirect()->toUrl($this->getRequest()->getHeader('Referer')->getUri());
+                } else {
+                    return $this->redirect()->toUrl('/');
+                }
             }
         }
     }
@@ -100,14 +107,15 @@ class IndexController extends AbstractActionController
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         /** @var \Comment\Entity\Comment $comment */
         $comment = $objectManager->getRepository('\Comment\Entity\Comment')->findOneById($id);
+        if (!$comment) {
+            $this->getResponse()->setStatusCode(404);
+            throw new \Exception("Invalid comment id. The comment you are trying to edit doesn't exist!");
+        }
+
         /** @var \Comment\Entity\EntityType $entityType */
         $entityType = $objectManager->getRepository('\Comment\Entity\EntityType')
             ->findOneById($comment->getEntityTypeId());
 
-
-        if (!$comment) {
-            throw new \Exception("No number comments that edited");
-        }
 
         $form = $this->getServiceLocator()->get('Comment\Service\Comment')->createForm($comment);
 
@@ -125,12 +133,20 @@ class IndexController extends AbstractActionController
             if ($commentEdited) {
                 $this->flashMessenger()->addSuccessMessage('Comment edited');
                 if (!$this->getRequest()->isXmlHttpRequest()) {
-                    return $this->redirect()->toUrl($this->getRequest()->getHeader('Referer')->getUri());
+                    if ($this->getRequest()->getHeader('Referer')) {
+                        return $this->redirect()->toUrl($this->getRequest()->getHeader('Referer')->getUri());
+                    } else {
+                        return $this->redirect()->toUrl('/');
+                    }
                 }
                 return;
             } else {
                 $this->flashMessenger()->addErrorMessage('Comment is not changed');
-                return $this->redirect()->toUrl($this->getRequest()->getHeader('Referer')->getUri());
+                if ($this->getRequest()->getHeader('Referer')) {
+                    return $this->redirect()->toUrl($this->getRequest()->getHeader('Referer')->getUri());
+                } else {
+                    return $this->redirect()->toUrl('/');
+                }
             }
         }
         $viewModel = new ViewModel([
@@ -165,6 +181,7 @@ class IndexController extends AbstractActionController
             }
 
             if (!isset($data['alias']) || !isset($data['entityId'])) {
+                $this->getResponse()->setStatusCode(400);
                 throw new \Exception('Bad request');
             }
             $comment = $this->getServiceLocator()
@@ -175,7 +192,11 @@ class IndexController extends AbstractActionController
             if ($comment) {
                 $flashMessenger->addSuccessMessage('Comment created');
                 if (!$this->getRequest()->isXmlHttpRequest()) {
-                    return $this->redirect()->toUrl($this->getRequest()->getHeader('Referer')->getUri());
+                    if ($this->getRequest()->getHeader('Referer')) {
+                        return $this->redirect()->toUrl($this->getRequest()->getHeader('Referer')->getUri());
+                    } else {
+                        return $this->redirect()->toUrl('/');
+                    }
                 }
                 return;
             } else {

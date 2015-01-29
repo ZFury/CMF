@@ -7,17 +7,13 @@
  */
 namespace User\Controller;
 
-use SebastianBergmann\Exporter\Exception;
 use Fury\Mvc\Controller\AbstractCrudController;
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use User\Service;
 use User\Entity;
 use User\Form;
 use User\Grid\Grid;
-use Zend\Form\Annotation\AnnotationBuilder;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
-use Zend\View\Model\JsonModel;
 
 class ManagementController extends AbstractCrudController
 {
@@ -36,6 +32,8 @@ class ManagementController extends AbstractCrudController
     }
 
     /**
+     * Create action
+     *
      * @return \Zend\Http\Response|ViewModel
      */
     public function createAction()
@@ -54,46 +52,53 @@ class ManagementController extends AbstractCrudController
                 $entityManager->flush();
                 $authService = new Service\Auth($this->getServiceLocator());
                 $authService->generateEquals($user, $form->get('password')->getValue());
-
-                return $this->redirect()->toRoute(null, ['controller' => 'management']);
+                if (!$this->getRequest()->isXmlHttpRequest()) {
+                    return $this->redirect()->toRoute(null, ['controller' => 'management']);
+                } else {
+                    return;
+                }
             }
         }
+        $viewModel = new ViewModel(['form' => $form]);
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
 
-        return new ViewModel([
-            'form' => $form
-        ]);
+        return $viewModel;
     }
 
     /**
+     * Edit action
+     *
      * @return \Zend\Http\Response|ViewModel
      * @throws \Doctrine\ORM\EntityNotFoundException
      */
     public function editAction()
     {
-        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $user = $this->loadEntity();
         $form = $this->getEditForm();
-        $form->setHydrator(new DoctrineHydrator($entityManager));
-        $form->bind($user);
-
+        $entity = $form->getObject();
         if ($this->getRequest()->isPost()) {
-            $form->setInputFilter(new Form\Filter\EditInputFilter($this->getServiceLocator()));
-            $form->setData($this->getRequest()->getPost());
+            $data = $this->getRequest()->getPost()->toArray();
+            $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+            $hydrator = new DoctrineHydrator($entityManager);
+            $hydrator->hydrate($data, $entity);
+
             if ($form->isValid()) {
-                $entityManager->persist($user);
+                $entityManager->persist($entity);
                 $entityManager->flush();
                 $authService = new Service\Auth($this->getServiceLocator());
                 if ($form->get('password')->getValue()) {
-                    $authService->generateEquals($user, $form->get('password')->getValue());
+                    $authService->generateEquals($entity, $form->get('password')->getValue());
                 }
-
-                return $this->redirect()->toRoute(null, ['controller' => 'management']);
+                if (!$this->getRequest()->isXmlHttpRequest()) {
+                    return $this->redirect()->toRoute(null, ['controller' => 'management']);
+                } else {
+                    return;
+                }
             }
         }
+        $viewModel = new ViewModel(['form' => $form]);
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
 
-        return new ViewModel([
-            'form' => $form
-        ]);
+        return $viewModel;
     }
 
     /**
@@ -134,6 +139,8 @@ class ManagementController extends AbstractCrudController
     }
 
     /**
+     * Get entity
+     *
      * @return Entity\User
      */
     public function getEntity()
@@ -142,18 +149,41 @@ class ManagementController extends AbstractCrudController
     }
 
     /**
+     * Get create form
+     *
      * @return Form\CreateForm
      */
     public function getCreateForm()
     {
-        return new Form\CreateForm();
+        $form = new Form\CreateForm();
+        $urlHelper = $this->getUrlHelper();
+        $form->setAttribute(
+            'action',
+            $urlHelper('user/default', ['controller' => 'management', 'action' => 'create'])
+        );
+
+        return $form;
     }
 
     /**
+     * Get edit form
+     *
      * @return Form\EditForm
+     * @throws \Doctrine\ORM\EntityNotFoundException
      */
     public function getEditForm()
     {
-        return new Form\EditForm();
+        $form = new Form\EditForm();
+        /** @var Entity\User $entity */
+        $entity = $this->loadEntity();
+        $form->bind($entity);
+        $form->setInputFilter(new Form\Filter\EditInputFilter($this->getServiceLocator()));
+        $urlHelper = $this->getUrlHelper();
+        $form->setAttribute(
+            'action',
+            $urlHelper('user/default', ['controller' => 'management', 'action' => 'edit', 'id' => $entity->getId()])
+        );
+
+        return $form;
     }
 }

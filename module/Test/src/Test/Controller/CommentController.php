@@ -25,39 +25,35 @@ class CommentController extends AbstractActionController
      */
     public function indexAction()
     {
-
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $testEntity = $objectManager->getRepository('Test\Entity\Test')->findOneByName('testuser');
-        /**
-         * @var Entity\EntityType $entityType
-         */
-        if (!$entityType = $objectManager->getRepository('Comment\Entity\EntityType')
-            ->getEntityTypeByEntity('Test\\Entity\\Test')
-        ) {
-            $this->flashMessenger()
-                ->addErrorMessage('You cannot comment this entity! Create it in Dashboard-Comment-CreateEntity');
-        }
+
+        $entity = $objectManager->getRepository('Test\Entity\Test')->findAll()[0];
+        $entityType = $objectManager->getRepository('Comment\Entity\EntityType')
+            ->getEntityTypeByEntity('Test\\Entity\\Test');
+
+        $entityId = $entity->getId();
+        $entityAlias = $entityType->getAlias();
+
         $comments = $this->getServiceLocator()
             ->get('Comment\Service\Comment')
-            ->listComments($testEntity->toArray());
+            ->tree(['alias' => $entityAlias, 'id' => $entityId]);
+
 
         $addCommentForm = null;
         if ($entityType->isEnabled() !== 0) {
             $addCommentForm = $this->getServiceLocator()->get('Comment\Service\Comment')->getAddCommentForm(
                 $this->getServiceLocator()->get('Comment\Service\Comment')->createForm(),
-                $testEntity->getId(),
-                $testEntity->getAlias()
+                $entityId,
+                $entityAlias
             );
         }
-        $ViewModel = new ViewModel(array('testEntity' => $testEntity));
+        $viewModel = new ViewModel([
+            'testEntity' => $entity,
+            'addCommentForm' => $addCommentForm,
+            'comments' => $comments
+        ]);
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
 
-        if ($entityType) {
-            $ViewModel->setVariables([
-                'isVisible' => $entityType->isVisible(),
-                'addCommentForm' => $addCommentForm,
-                'comments' => $comments
-            ]);
-        }
-        return $ViewModel;
+        return $viewModel;
     }
 }

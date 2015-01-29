@@ -34,9 +34,7 @@ class ManagementController extends AbstractCrudController
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $builder = new AnnotationBuilder($entityManager);
         $form = $builder->createForm($this->getEntity());
-
-        $options = $entityManager
-            ->getRepository('Comment\Entity\EntityType')->getEntities();
+        $options = $entityManager->getRepository('Comment\Entity\EntityType')->getEntities();
         $select = $form->getElements()['entity'];
         $select->setValueOptions($options);
         $select->setOptions(array('empty_option' => 'Please choose entity'));

@@ -3,6 +3,7 @@
 namespace CommenTest\Controller;
 
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
+use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Stdlib;
 use Fury\Test\Controller\ControllerTestCase;
@@ -40,6 +41,7 @@ class IndexControllerTest extends ControllerTestCase
      */
     public static function setUpBeforeClass()
     {
+        exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
         exec('vendor/bin/doctrine-module orm:schema-tool:update --force');
     }
 
@@ -48,7 +50,7 @@ class IndexControllerTest extends ControllerTestCase
      */
     public static function tearDownAfterClass()
     {
-        //exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
+        exec('vendor/bin/doctrine-module orm:schema-tool:drop --force');
     }
 
     /**
@@ -63,10 +65,9 @@ class IndexControllerTest extends ControllerTestCase
         parent::setUp();
 
         $this->setupAdmin();
-
         $this->user = $this->createUser($this->anotherUser);
         $entityType = array(
-            'aliasEntity' =>'user',
+            'alias' =>'user',
             'entity' =>'User\Entity\User',
             'enabledComment' => true,
             'visibleComment' => true,
@@ -83,10 +84,10 @@ class IndexControllerTest extends ControllerTestCase
         $this->removeEntityType($this->entityType);
     }
 
-    public function testAddActionCanBeAccessed()
+    public function testAddActionBadRequest()
     {
-        $this->dispatch('/comment/index/add');
-        $this->assertResponseStatusCode(200);
+        $this->dispatch('/comment/index/add', Request::METHOD_POST, ['aa'=>'bb']);
+        $this->assertResponseStatusCode(400);
 
         $this->assertModuleName('comment');
         $this->assertControllerName('Comment\Controller\Index');
@@ -96,23 +97,13 @@ class IndexControllerTest extends ControllerTestCase
 
     public function testAddActionRedirectsAfterValidPost()
     {
-
         $postData = array(
             'comment' => "test comment",
-            'entity' => $this->entityType->getAlias(),
-            'entityId' => $this->user->getId(),
+            'alias' => $this->entityType->getAlias(),
+            'id' => $this->user->getId(),
         );
-        $this->dispatch('/comment/index/add', 'POST', $postData);
+        $this->dispatch('/comment/index/add?alias=' . $this->entityType->getAlias() . '&id=' . $this->user->getId(), 'POST', $postData);
         $this->assertResponseStatusCode(302);
-    }
-
-    public function testAddActionRedirectsAfterInvalidPost()
-    {
-        $postData = array(
-            'comment' => "test comment",
-        );
-        $this->dispatch('/comment/index/add', 'POST', $postData);
-        $this->assertResponseStatusCode(500);
     }
 
     public function testAddActionNoEnabledEntity()
@@ -120,12 +111,11 @@ class IndexControllerTest extends ControllerTestCase
         $form = $this->commentService->createForm();
         $postData = array(
             'comment' => "test comment",
-            'entity' => $this->entityType->getAlias(),
-            'entityId' => $this->user->getId(),
+            'alias' => $this->entityType->getAlias(),
+            'id' => $this->user->getId(),
         );
-        $this->entityType->setEnabledComment(0);
-        $this->setExpectedException('Exception');
-        $this->commentService->add($form, $postData);
+        $this->entityType->setEnabled(0);
+        $this->assertNull($this->commentService->add($form, $postData));
     }
 
     public function testAddInvalidEntity()
@@ -133,11 +123,10 @@ class IndexControllerTest extends ControllerTestCase
         $form = $this->commentService->createForm();
         $postData = array(
             'comment' => "test comment",
-            'entity' => "some",
-            'entityId' => $this->user->getId(),
+            'alias' => "some",
+            'id' => $this->user->getId(),
         );
-        $this->setExpectedException('Exception');
-        $this->commentService->add($form, $postData);
+        $this->assertNull($this->commentService->add($form, $postData));
     }
 
     public function testEditActionCanBeAccessed()
@@ -164,19 +153,19 @@ class IndexControllerTest extends ControllerTestCase
         $this->assertResponseStatusCode(302);
     }
 
-    public function testEditActionNoExistComment()
+    public function testEditActionCommentDoesntExist()
     {
         $postData = array(
             'comment' => 'edited'
         );
         $this->dispatch('/comment/index/edit/1', 'POST', $postData);
-        $this->assertResponseStatusCode(500);
+        $this->assertResponseStatusCode(404);
     }
 
     public function testEditActionNoPermission()
     {
         $form = $this->commentService->createForm();
-        $comment = $this->createComment('Comment for edited');
+        $comment = $this->createComment('Comment');
         $this->setupUser();
         $postData = array(
             'comment' => 'edited'
@@ -187,7 +176,7 @@ class IndexControllerTest extends ControllerTestCase
 
     public function testDeleteActionCanBeAccessed()
     {
-        $comment = $this->createComment('Comment for deleted');
+        $comment = $this->createComment('Comment for deleting');
         $this->dispatch("/comment/index/delete/".$comment->getId());
         $this->assertResponseStatusCode(302);
 
@@ -199,15 +188,15 @@ class IndexControllerTest extends ControllerTestCase
 
     public function testDeleteActionNoPermission()
     {
-        $comment = $this->createComment('Comment for deleted');
+        $comment = $this->createComment('Comment for deleting');
         $this->setupUser();
         $this->setExpectedException('Exception');
         $this->commentService->delete($comment->getId());
     }
 
-    public function testDeleteActionNoExistComment()
+    public function testDeleteActionCommentDoesntExist()
     {
-        $this->dispatch('/comment/index/delete/1');
+        $this->dispatch('/comment/index/delete/777777777');
         $this->assertResponseStatusCode(500);
     }
 

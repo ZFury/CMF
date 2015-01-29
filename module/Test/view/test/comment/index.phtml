@@ -1,39 +1,32 @@
+<?php echo $this->headLink()->appendStylesheet($this->basePath() . '/module/comment/css/comment.css')?>
 <h3 class="page-header">
     Try commenting created Test Entity.
 </h3>
-<div id="grid">
-    <div class="head row">
-        <div class="col-md-1">id</div>
-        <div class="col-md-2">email</div>
-        <div class="col-md-2">name</div>
-        <div class="col-md-3"></div>
-        <hr/>
-    </div>
-    <div class="row entity" >
-        <div class="col-md-1">
-            <strong><?= $testEntity->getId() ?></strong>
-        </div>
-        <div class="col-md-2">
-            <strong><?= $testEntity->getEmail() ?></strong>
-        </div>
-        <div class="col-md-2">
-            <strong><?= $testEntity->getName() ?></strong>
-        </div>
-        <div class="col-md-6">
-            <?php if (null !== $addCommentForm) : ?>
-                <?= $addCommentForm ?>
-            <?php endif; ?>
-        </div>
-    </div>
+<div class="row">
+<div>
+    <dl class="dl-horizontal">
+        <dt>Id</dt>
+        <dt>Name</dt>
+        <dd><?= $testEntity->getId() ?></dd>
+        <dd><?= $testEntity->getName() ?></dd>
+    </dl>
 </div>
-<div data-spy="grid"  data-url="<?= $this->url('test/default', ['controller' => 'comment', 'action' => 'index'])?>">
-    <div class="grid">
-        <?php if ($comments && $isVisible !== 0) {
+
+<?php if (null !== $addCommentForm) : ?>
+<div class="col-sm-6">
+    <?= $addCommentForm ?>
+</div>
+<?php endif; ?>
+</div>
+
+<div data-spy="grid"  class="row" data-url="<?= $this->url('test/default', ['controller' => 'comment', 'action' => 'index'])?>">
+    <div class="grid col-md-6">
+        <?php  if ($comments && is_array($comments) && count($comments)>0) {
             echo $this->comment('comment/index/partial/comment.phtml', $comments);
         }; ?>
     </div>
 </div>
 
 <script>
-    require(['dashboard', 'test', 'comment']);
+    require(['dashboard', 'comment']);
 </script>

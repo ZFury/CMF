@@ -4,28 +4,26 @@
  */
 $form = $this->form;
 $form->prepare();
-//TODO: prependStylesheet
+echo $this->headLink()->appendStylesheet($this->basePath() . '/module/comment/css/comment.css');
 ?>
-<link href="module/comment/css/comment.css" rel="stylesheet">
-<div class="container">
-    <div class="row">
+<div class="row">
+    <div class="form-send well well-sm">
         <form class="form-ajax form-horizontal" action="<?=$this->url('comment/default', ['controller' => 'index', 'action' => 'add'], ['query'=>['alias' => $alias, 'id' => $id]])?>"  method="post">
             <div class="form-group">
-                <div class="col-sm-4">
+                <div class="col-sm-12">
                     <?php echo $this->formTextarea($form->get('comment')); ?>
                 </div>
-                <?php if (!$this->ajax): ?>
-                    <div class="add-comment-button col-sm-1">
-                        <input type="submit" name="submit" id="add-comment-button" class="form-control btn btn-success" value="Add">
-                    </div>
-                <?php endif; ?>
                 <div class="error-field error-form-message">
                     <?= $this->formElementErrors($form->get('comment')); ?>
                 </div>
             </div>
+            <div class="form-group">
+                <?php if (!$this->ajax): ?>
+                    <div class="add-comment-button col-sm-3">
+                        <input type="submit" name="submit" id="add-comment-button" class="form-control btn btn-xs btn-success" value="Send">
+                    </div>
+                <?php endif; ?>
+            </div>
         </form>
     </div>
 </div>
-<script>
-//    require(['fury', 'fury.form', 'fury.ajax']);
-</script>

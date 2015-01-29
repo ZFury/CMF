@@ -1,12 +1,14 @@
 <?php
 /**@var $form Zend/Form */
 $form = $this->form;
+$ajax = $this->viewModel()->getCurrent()->terminate();
 ?>
 <div class="container">
     <h1>Edit user</h1>
 
     <div class="row">
-        <form action="" method="post" class="form-horizontal">
+        <form action="<?= $form->getAttribute('action') ?>" method="post"
+              class="form-horizontal <?= $ajax ? 'form-ajax' : '' ?>">
             <?php foreach ($this->form->getElements() as $element) : ?>
                 <?php
                 switch ($element) {
@@ -35,15 +37,19 @@ $form = $this->form;
                     <?= $this->formElementErrors($element); ?>
                 </div>
             <?php endforeach; ?>
-            <div class="form-group">
-                <div class="col-sm-2"></div>
-                <div class="col-sm-4">
-                    <input type="submit" name="submit" class="btn btn-lg btn-primary btn-block" value="Edit">
+            <?php if (!$ajax): ?>
+                <div class="form-group">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-4">
+                        <input type="submit" name="submit" class="btn btn-lg btn-primary btn-block" value="Edit">
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
         </form>
     </div>
 </div>
-<script>
-    require(['dashboard']);
-</script>
+<?php if (!$ajax): ?>
+    <script>
+        require(['dashboard']);
+    </script>
+<?php endif; ?>

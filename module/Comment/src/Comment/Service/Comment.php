@@ -51,7 +51,7 @@ class Comment
         if (strlen($username)<=6) {
             return $username;
         } else {
-            return substr($username, 0, 6);
+            return substr($username, 0, 6) . '...';
         }
     }
 
@@ -127,39 +127,43 @@ class Comment
      * @return array
      * @throws \Exception
      */
-    public function listComments(array $data)
+    public function tree(array $data)
     {
         if (!isset($data['alias']) || !isset($data['id'])) {
             throw new \Exception('Bad request');
         }
+        $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
+        $entityType = $objectManager->getRepository('Comment\Entity\EntityType')->findOneByAlias($data['alias']);
 
-        $serviceEntityType = $this->getServiceLocator()->get('Comment\Service\EntityType');
-        $entityType = $serviceEntityType->getEntity($data['alias'], $data['id']);
-        $arrayComments = array();
+        $arrayComments = [];
         if (!$entityType) {
             return $arrayComments;
         }
 
-        $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
-        $commentRepository = $objectManager->getRepository('Comment\Entity\Comment');
-        $comments = $commentRepository->findBy(array('entityType' => $entityType, 'entityId' => $data['id']));
-
         $identity = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity();
         if ($entityType->isVisible() || $identity->getUser()->getRole() === User::ROLE_ADMIN) {
-            $entityComment = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType($data['alias']);
-            $enabledCommentByComment = $entityComment->isEnabled();
+            $comments = $objectManager->getRepository('Comment\Entity\Comment')
+                ->findBy([
+                    'entityType' => $entityType,
+                    'entityId' => $data['id']
+                ]);
+
+            $enabledCommentByComment = null;
+            if ($objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment')->isEnabled() !== 0) {
+                $enabledCommentByComment = true;
+            }
 
             foreach ($comments as $comment) {
                 $arrayComments[$comment->getId()]['comment'] = $comment;
-                if ($entityComment->isVisible()) {
-                    $entity = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment');
-                    if ($entity) {
-                        $data = ['alias' => 'comment', 'id' => $comment->getId()];
-                        $arrayComments[$comment->getId()]['children'] = $this->listComments($data);
-                    } else {
-                        $arrayComments[$comment->getId()]['children'] = array();
-                    }
+
+                $entity = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment');
+                if ($entity) {
+                    $data = ['alias' => 'comment', 'id' => $comment->getId()];
+                    $arrayComments[$comment->getId()]['children'] = $this->tree($data);
+                } else {
+                    $arrayComments[$comment->getId()]['children'] = array();
                 }
+
                 $arrayComments[$comment->getId()]['enabledCommentByComment'] = $enabledCommentByComment;
             }
         }
@@ -188,6 +192,7 @@ class Comment
         }
 
         $objectManager->getConnection()->beginTransaction();
+
         try {
             $objectManager->remove($comment);
             $objectManager->flush();

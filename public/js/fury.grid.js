@@ -3,7 +3,6 @@ define(['jquery'], function ($) {
     $(function () {
         $('[data-spy="grid"]').each(function () {
             var $grid = $(this);
-            console.log($grid.data('url'));
             if (!$grid.data('url')) {
                 $grid.data('url', window.location.pathname);
             }
@@ -34,7 +33,7 @@ define(['jquery'], function ($) {
                         $grid.find('a, .btn').addClass('disabled');
                     },
                     success: function (html) {
-                        $grid.html($(html).children().unwrap());
+                        $grid.find('.grid').html($(html).find('.grid').children().unwrap());
                         $('body').trigger('grid.loaded', []);
                     }
                 });
@@ -90,8 +89,20 @@ define(['jquery'], function ($) {
                 var $a = $(this);
                 $grid.find('.grid-filter-search .dropdown-toggle').html($a.text() + ' <span class="caret"></span>');
                 $grid.find('.grid-filter-search-input').attr('name', 'filter-' + $a.data('filter'));
+            }).on('reload.fury', function () {
+                $.ajax({
+                    url: $grid.data('url'),
+                    type: 'get',
+                    dataType: 'html',
+                    beforeSend: function () {
+                        $grid.find('a, .btn').addClass('disabled');
+                    },
+                    success: function (html) {
+                        $grid.find('.grid').html($(html).find('.grid').children().unwrap());
+                        $('body').trigger('grid.loaded', []);
+                    }
+                });
             });
-
         });
     });
 });
