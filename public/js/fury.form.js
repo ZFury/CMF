@@ -2,6 +2,9 @@
  * Created by babich on 12/19/14.
  */
 define(['jquery', 'fury.notify'], function ($, notify) {
+    $(function () {
+        $("[rel='tooltip']").tooltip();
+    });
     $('body')
         .on('click', '.submit-ajax-button', function () {
             $(this).closest('.modal').find('form.form-ajax').trigger('submit.ajax');
@@ -14,6 +17,7 @@ define(['jquery', 'fury.notify'], function ($, notify) {
                 url: $this.attr('action'),
                 type: 'POST',
                 beforeSend: function () {
+                    $('.modal').find('a, .btn').addClass('disabled');
                     $('.error-form-field').each(function (i, element) {
                         $(element).removeClass('error-form-field');
                     });
@@ -22,11 +26,27 @@ define(['jquery', 'fury.notify'], function ($, notify) {
                     });
                 },
                 success: function (jsonData) {
+                    $('.modal').find('a, .btn').removeClass('disabled');
                     if (!$.isEmptyObject(jsonData.errors)) {
                         for (var key in jsonData.errors) {
                             var field = $this.find('.form-group .form-control[name="' + key + '"]');
                             field.addClass('form-control error-form-field');
-                            field.next().html(jsonData.errors[key][0]);
+                            field.attr("rel", "tooltip");
+                            field.tooltip({
+                                html: true,
+                                title: jsonData.errors[key],
+                                //title: jsonData.errors[key][0],
+                                trigger: 'manual',
+                                // change position for long messages, and for hidden fields
+                                placement: (field.width() < 220) || field.is('label') ? 'right' : 'top',
+                                animation: true
+                            });
+                            field.tooltip('show');
+                            field.click(function () {
+                                $(this).removeClass('error-form-field');
+                                $(this).tooltip('destroy');
+                            });
+                            //field.next().html(jsonData.errors[key][0]);
                         }
                     } else {
                         $this.trigger('success.form.fury', []);
