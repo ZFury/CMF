@@ -233,17 +233,17 @@ return array(
                 'controller' => 'user',
                 'pages' => array(
                     array(
-                        'label' => 'All users',
+                        'label' => 'Create',
                         'controller' => 'management',
-                        'action' => 'index',
+                        'action' => 'create',
                         'route' => 'user/default',
                         'controller_namespace' => 'User\Controller\Management',
                         'module' => 'User'
                     ),
                     array(
-                        'label' => 'Create user',
+                        'label' => 'All',
                         'controller' => 'management',
-                        'action' => 'create',
+                        'action' => 'index',
                         'route' => 'user/default',
                         'controller_namespace' => 'User\Controller\Management',
                         'module' => 'User'

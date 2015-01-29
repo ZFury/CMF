@@ -19,6 +19,7 @@ define(['jquery'], function ($) {
                     success: function (html) {
                         $grid.find('a, .btn').removeClass('disabled');
                         $grid.find('.grid').html($(html).find('.grid').children().unwrap());
+
                         $('body').trigger('grid.loaded', []);
                     }
                 });
@@ -66,13 +67,14 @@ define(['jquery'], function ($) {
                 return false;
             }).on('submit', 'form.filter-form', function () {
                 var $form = $(this),
-                    $searchInput = $form.find('.grid-filter-search-input');
+                    $searchInput = $form.find('.grid-filter-search-input'),
+                    href = $grid.data('url');
 
                 if ($form.find('[type=search]').length) {
                     $searchInput.val($form.find('[type=search]').val());
                 }
                 $.ajax({
-                    url: $grid.data('url'),
+                    url: href,
                     type: 'get',
                     data: $form.serializeArray(),
                     dataType: 'html',
@@ -81,6 +83,7 @@ define(['jquery'], function ($) {
                         $grid.find('a, .btn').addClass('disabled');
                     },
                     success: function (html) {
+                        $grid.data('url', $(html).data('url'));
                         $grid.find('a, .btn').removeClass('disabled');
                         $grid.find('.grid').html($(html).find('.grid').children().unwrap());
                     }
