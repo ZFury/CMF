@@ -5,79 +5,89 @@
 ?>
 <?php
 $scripts = $this->scripts ? $this->scripts : [];
-$ajax = $this->ajax ? $this->ajax : false;
+$ajax = $this->viewModel()->getCurrent()->terminate();
 ?>
-<div class="container form-container">
-    <div class="row">
-        <?php if (!$ajax): ?>
-            <h1><?= !$this->title ? 'Create' : $this->escapeHtml($this->title); ?></h1>
-        <?php endif; ?>
-        <form action="" method="post" class="form-horizontal" id="crudForm">
-            <?php foreach ($this->form->getElements() as $element) : ?>
-                <?php
-                switch ($element) {
-                    case $element instanceof Zend\Form\Element\Select :
-                        $formElement = $this->formSelect($element);
-                        break;
-                    case $element instanceof Zend\Form\Element\Email :
-                        $formElement = $this->formEmail($element);
-                        break;
-                    case $element instanceof Zend\Form\Element\Password :
-                        $formElement = $this->formPassword($element);
-                        break;
-                    case $element instanceof \Fury\Form\Element\Redactor :
-                        /* place one asterisk for uncomment code here-> /
-                        array_push($scripts, 'redactorContent');
-                        //*/
-                        $formElement = $this->formTextarea($element);
-                        break;
-                    case $element instanceof Zend\Form\Element\Textarea :
-                        $formElement = $this->formTextarea($element);
-                        break;
-                    case $element instanceof Zend\Form\Element\Hidden :
-                        $formElement = $this->formHidden($element);
-                        break;
-                    case $element instanceof Zend\Form\Element\Checkbox :
-                        $formElement = $this->formCheckbox($element);
-                        break;
-                    default :
-                        $formElement = $this->formInput($element);
-                        break;
-                }
-                ?>
-                <?php $element->getAttributes()['type'] == 'submit' ? $submit = true : $submit = false; ?>
-                <div class="form-group">
-                    <?php if ($element->getAttributes()['type'] !== 'submit'): ?>
-                        <?php if ($element->getAttributes()['type'] !== 'hidden'): ?>
-                            <label for="<?= $element->getName(); ?>" class="col-sm-2 control-label">
-                                <?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?>
-                            </label>
+    <div class="container form-container">
+        <div class="row">
+            <?php if (!$ajax): ?>
+                <h1><?= !$this->title ? 'Create' : $this->escapeHtml($this->title); ?></h1>
+            <?php endif; ?>
+            <form action="<?= $form->getAttribute('action') ?>" method="post"
+                  class="form-horizontal <?= $ajax ? 'form-ajax' : '' ?>">
+                <?php foreach ($this->form->getElements() as $element) : ?>
+                    <?php
+                    switch ($element) {
+                        case $element instanceof Zend\Form\Element\Select :
+                            $formElement = $this->formSelect($element);
+                            break;
+                        case $element instanceof Zend\Form\Element\Email :
+                            $formElement = $this->formEmail($element);
+                            break;
+                        case $element instanceof Zend\Form\Element\Password :
+                            $formElement = $this->formPassword($element);
+                            break;
+                        case $element instanceof \Fury\Form\Element\Redactor :
+                            /* place one asterisk for uncomment code here-> /
+                            array_push($scripts, 'redactorContent');
+                            //*/
+                            $formElement = $this->formTextarea($element);
+                            break;
+                        case $element instanceof Zend\Form\Element\Textarea :
+                            $formElement = $this->formTextarea($element);
+                            break;
+                        case $element instanceof Zend\Form\Element\Hidden :
+                            $formElement = $this->formHidden($element);
+                            break;
+                        case $element instanceof Zend\Form\Element\Checkbox :
+                            $formElement = $this->formCheckbox($element);
+                            break;
+                        default :
+                            $formElement = $this->formInput($element);
+                            break;
+                    }
+                    ?>
+                    <?php $element->getAttributes()['type'] == 'submit' ? $submit = true : $submit = false; ?>
+                    <div class="form-group">
+                        <?php if (!$submit): ?>
+                            <?php if ($element->getAttributes()['type'] !== 'hidden'): ?>
+                                <label for="<?= $element->getName(); ?>" class="col-sm-2 control-label">
+                                    <?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?>
+                                </label>
+                            <?php endif; ?>
+                            <div class="col-sm-4">
+                                <?= $formElement; ?>
+                                <div class="error-field error-form-message">
+                                    <?= $this->formElementErrors($element); ?>
+                                </div>
+                            </div>
+                        <?php else: ?>
+                            <?php if (!$ajax): ?>
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <?= $formElement; ?>
+                                    <div class="error-field error-form-message">
+                                        <?= $this->formElementErrors($element); ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         <?php endif; ?>
-                    <?php else: ?>
-                        <div class="col-sm-2"></div>
-                    <?php endif; ?>
-                    <div class="col-sm-4">
-                        <?= $formElement; ?>
-                        <div class="error-field error-form-message">
-                            <?= $this->formElementErrors($element); ?>
+                    </div>
+                <?php endforeach; ?>
+                <?php if (!$submit && !$ajax): ?>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-md-offset-2">
+                            <input type="submit" name="submit" class="btn btn-lg btn-primary btn-block"
+                                   value="<?= $this->title == 'Edit' ? 'Save' : 'Create'; ?>">
                         </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
-            <?php if (!$submit && !$ajax): ?>
-                <div class="form-group">
-                    <div class="col-sm-4 col-md-offset-2">
-                        <input type="submit" name="submit" class="btn btn-lg btn-primary btn-block"
-                               value="<?= $this->title == 'Edit' ? 'Save' : 'Create'; ?>">
-                    </div>
-                </div>
-            <?php endif; ?>
-        </form>
+                <?php endif; ?>
+            </form>
+        </div>
     </div>
-</div>
-<script>
-    require([
-        'dashboard',
-        <?= implode(',', array_map(function($a) { return "'$a'"; }, $scripts));?>
-    ]);
-</script>
+<?php if (!$ajax): ?>
+    <script>
+        require([
+            'dashboard',
+            <?= implode(',', array_map(function($a) { return "'$a'"; }, $scripts));?>
+        ]);
+    </script>
+<?php endif; ?>

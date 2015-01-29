@@ -1,12 +1,14 @@
 <?php
 /**@var $form Zend/Form */
 $form = $this->form;
+$ajax = $this->viewModel()->getCurrent()->terminate();
 ?>
 <div class="container">
     <h1>Create user</h1>
 
     <div class="row">
-        <form action="" method="post" class="form-horizontal">
+        <form action="<?= $form->getAttribute('action') ?>" method="post"
+              class="form-horizontal <?= $ajax ? 'form-ajax' : '' ?>">
             <?php foreach ($this->form->getElements() as $element) : ?>
                 <?php
                 switch ($element) {
@@ -24,25 +26,45 @@ $form = $this->form;
                         break;
                 }
                 ?>
+                <?php $element->getAttributes()['type'] == 'submit' ? $submit = true : $submit = false; ?>
                 <div class="form-group">
-                    <label for="<?= $element->getName(); ?>"
-                           class="col-sm-2 control-label"><?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?></label>
-
-                    <div class="col-sm-4">
-                        <?= $formElement; ?>
-                    </div>
-                    <?= $this->formElementErrors($element); ?>
+                    <?php if (!$submit): ?>
+                        <?php if ($element->getAttributes()['type'] !== 'hidden'): ?>
+                            <label for="<?= $element->getName(); ?>" class="col-sm-2 control-label">
+                                <?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?>
+                            </label>
+                        <?php endif; ?>
+                        <div class="col-sm-4">
+                            <?= $formElement; ?>
+                            <div class="error-field error-form-message">
+                                <?= $this->formElementErrors($element); ?>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <?php if (!$ajax): ?>
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <?= $formElement; ?>
+                                <div class="error-field error-form-message">
+                                    <?= $this->formElementErrors($element); ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </div>
             <?php endforeach; ?>
-            <div class="form-group">
-                <div class="col-sm-2"></div>
-                <div class="col-sm-4">
-                    <input type="submit" name="submit" class="btn btn-lg btn-primary btn-block" value="Create">
+            <?php if (!$submit && !$ajax): ?>
+                <div class="form-group">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-4">
+                        <input type="submit" name="submit" class="btn btn-lg btn-primary btn-block" value="Create">
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
         </form>
     </div>
 </div>
-<script>
-    require(['dashboard']);
-</script>
+<?php if (!$ajax): ?>
+    <script>
+        require(['dashboard']);
+    </script>
+<?php endif; ?>

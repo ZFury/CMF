@@ -3,12 +3,15 @@
 namespace User\Form;
 
 use Zend\Form\Form;
+use Zend\Stdlib\Hydrator\ClassMethods;
 
 class EditForm extends Form
 {
     public function __construct($name = null, $options = [])
     {
         parent::__construct($name, $options);
+
+        $this->setHydrator(new ClassMethods());
         $this->setAttribute('method', 'post');
 
         $this->add(

@@ -1,9 +1,8 @@
-<?= $this->headLink()->appendStylesheet($this->basePath() . '/redactor/redactor.css'); ?>
 <?php
 /**@var $form Zend\Form\Form */
 $form = $this->form;
-$scripts = $this->scripts ? $this->scripts : [];
-$ajax = $this->ajax ? $this->ajax : false;
+$scripts = isset($this->scripts) ? $this->scripts : [];
+$ajax = $this->viewModel()->getCurrent()->terminate();
 ?>
     <div class="container form-container">
         <input type="hidden" id="entityId" value="<?= $this->fileUpload['id'] ? $this->fileUpload['id'] : ''; ?>">
@@ -13,7 +12,7 @@ $ajax = $this->ajax ? $this->ajax : false;
             <?php if (!$ajax): ?>
                 <h1 class="create-label"><?= !$this->title ? 'Create' : $this->escapeHtml($this->title); ?></h1>
             <?php endif; ?>
-            <form action="" method="post" class="form-horizontal" id="crudForm">
+            <form action="<?= $form->getAttribute('action') ?>" method="post" class="form-horizontal <?= $ajax ? 'form-ajax' : '' ?>">
                 <?php foreach ($form->getElements() as $element) : ?>
                     <?php
                     switch ($element) {
@@ -43,21 +42,28 @@ $ajax = $this->ajax ? $this->ajax : false;
                     ?>
                     <?php $element->getAttributes()['type'] == 'submit' ? $submit = true : $submit = false; ?>
                     <div class="form-group">
-                        <?php if ($element->getAttributes()['type'] !== 'submit'): ?>
+                        <?php if (!$submit): ?>
                             <?php if ($element->getAttributes()['type'] !== 'hidden'): ?>
                                 <label for="<?= $element->getName(); ?>" class="col-sm-2 control-label">
                                     <?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?>
                                 </label>
                             <?php endif; ?>
+                            <div class="col-sm-9">
+                                <?= $formElement; ?>
+                                <div class="error-field error-form-message">
+                                    <?= $this->formElementErrors($element); ?>
+                                </div>
+                            </div>
                         <?php else: ?>
-                            <div class="col-sm-2"></div>
+                            <?php if (!$ajax): ?>
+                                <div class="col-sm-9 col-sm-offset-2">
+                                    <?= $formElement; ?>
+                                    <div class="error-field error-form-message">
+                                        <?= $this->formElementErrors($element); ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         <?php endif; ?>
-                        <div class="col-sm-9">
-                            <?= $formElement; ?>
-                        </div>
-                        <div class="col-sm-9 col-sm-offset-2 error-field error-form-message">
-                            <?= $this->formElementErrors($element); ?>
-                        </div>
                     </div>
                 <?php endforeach; ?>
                 <?php if (!$submit && !$ajax): ?>

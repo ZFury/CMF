@@ -81,14 +81,18 @@ class ManagementController extends AbstractCrudController
 
         $form = $this->getCreateForm();
 
+        $parentId = !$this->params()->fromRoute('parentId')
+            ? null
+            : $this->params()->fromRoute('parentId');
+        $urlHelper = $this->getServiceLocator()
+            ->get('viewhelpermanager')
+            ->get('url');
+        $form->setAttribute('action', $urlHelper('categories/create', ['parentId' => $parentId]));
         if ($this->getRequest()->isPost()) {
             $form->setInputFilter(new Filter\CreateInputFilter($this->getServiceLocator()));
             $form->setData($this->getRequest()->getPost());
 
             if ($form->isValid()) {
-                $parentId = !$this->params()->fromRoute('parentId')
-                    ? null
-                    : $this->params()->fromRoute('parentId');
                 $aliasValid = new Validator\NoObjectExists([
                     'object_repository' => $repository,
                     'fields' => ['alias', 'parentId']
@@ -145,8 +149,6 @@ class ManagementController extends AbstractCrudController
         $viewModel = new ViewModel();
         $viewModel->setVariables([
             'form' => $form,
-            'ajax' => $this->getRequest()->isXmlHttpRequest(),
-            'scripts' => null,
             'fileUpload' =>
                 [
                     'imageService' => $imageService,
@@ -212,7 +214,6 @@ class ManagementController extends AbstractCrudController
         $viewModel = new ViewModel();
         $viewModel->setVariables([
             'form' => $form,
-            'ajax' => $this->getRequest()->isXmlHttpRequest(),
             'scripts' => ['image-categories'],
             'fileUpload' =>
                 [
@@ -318,6 +319,16 @@ class ManagementController extends AbstractCrudController
         $form = $builder->createForm($this->getEntity());
         $form->setHydrator(new DoctrineHydrator($entityManager));
         $form->bind($category);
+        $urlHelper = $this->getServiceLocator()
+            ->get('viewhelpermanager')
+            ->get('url');
+        $form->setAttribute(
+            'action',
+            $urlHelper(
+                'categories/default',
+                ['controller' => 'management', 'action' => 'edit', 'id' => $category->getId()]
+            )
+        );
 
         return $form;
     }

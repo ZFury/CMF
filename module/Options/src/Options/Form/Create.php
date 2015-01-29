@@ -3,8 +3,6 @@
 namespace Options\Form;
 
 use Zend\Form\Form;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
 use Zend\I18n\Validator;
 use Zend\Validator\Db;
 use Zend\Validator\Exception;

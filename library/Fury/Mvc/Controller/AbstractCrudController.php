@@ -88,10 +88,8 @@ abstract class AbstractCrudController extends AbstractActionController
     public function editAction()
     {
         $form = $this->getEditForm();
-        $entity = $this->loadEntity();
-        $form->bind($entity);
+        $entity = $form->getObject();
         if ($this->getRequest()->isPost()) {
-//            $form->setData($this->getRequest()->getPost());
             $data = $this->getRequest()->getPost()->toArray();
             $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
             $hydrator = new DoctrineHydrator($entityManager);
@@ -184,5 +182,15 @@ abstract class AbstractCrudController extends AbstractActionController
     protected function getViewModel()
     {
         return $this->viewModel;
+    }
+
+    /**
+     * Get UrlHelper.
+     *
+     * @return \Zend\View\Helper\Url
+     */
+    protected function getUrlHelper()
+    {
+        return $this->getServiceLocator()->get('viewhelpermanager')->get('url');
     }
 }

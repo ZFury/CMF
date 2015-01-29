@@ -16,9 +16,19 @@ define(['jquery', 'fury.notify', 'jquery-ui', 'jquery-nestedSortable'], function
         $('body')
             .on('change', '.category-page-wrapper .select-tree select', function () {
                 var $this = $(this);
-                $('#content').load('/categories/management/index/' + $this.val(), function () {
-                    $('body').trigger('form.success', []);
-                });
+                var $grid = $('[data-spy="grid"]');
+                    $.ajax({
+                        url: '/categories/management/index/' + $this.val(),
+                        type: 'get',
+                        dataType: 'html',
+                        beforeSend: function () {
+                            $grid.find('a, .btn').addClass('disabled');
+                        },
+                        success: function (html) {
+                            $grid.html($(html).children().unwrap());
+                            $('body').trigger('grid.loaded', []);
+                        }
+                    });
             })
             .on('click', '#save', function (e) {
                 $('.sortable li').each(function (key, value) {
@@ -40,17 +50,7 @@ define(['jquery', 'fury.notify', 'jquery-ui', 'jquery-nestedSortable'], function
                     }
                 });
             })
-            .on('click', '.tree-container .btn.delete-entity', function (e) {
-                if (confirm('Are you sure you want to delete?')) {
-                    $.get($(this).attr("href"), [], function () {
-                        $('#content').load(location.pathname, function () {
-                            $('body').trigger('form.success', []);
-                        });
-                    }, 'json');
-                }
-                return false;
-            })
-            .on('form.success', function () {
+            .on('grid.loaded', function () {
                 sortableInit();
             });
     });

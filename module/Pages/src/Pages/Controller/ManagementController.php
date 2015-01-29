@@ -48,7 +48,12 @@ class ManagementController extends AbstractCrudController
      */
     protected function getCreateForm()
     {
-        return new Create(null, ['serviceLocator' => $this->getServiceLocator()]);
+        $form = new Create(null, ['serviceLocator' => $this->getServiceLocator()]);
+        $urlHelper = $this->getUrlHelper();
+        $form
+            ->setAttribute('action', $urlHelper('pages/default', ['controller' => 'management', 'action' => 'create']));
+
+        return $form;
     }
 
     /**
@@ -58,6 +63,14 @@ class ManagementController extends AbstractCrudController
     {
         $form = new Create(null, ['serviceLocator' => $this->getServiceLocator()]);
         $form->get('submit')->setValue('Save');
+        $entity = $this->loadEntity();
+        $form->bind($entity);
+        $urlHelper = $this->getUrlHelper();
+        $form->setAttribute(
+            'action',
+            $urlHelper('pages/default', ['controller' => 'management', 'action' => 'edit', 'id' => $entity->getId()])
+        );
+
         return $form;
     }
 
