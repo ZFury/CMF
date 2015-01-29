@@ -26,17 +26,33 @@ $ajax = $this->viewModel()->getCurrent()->terminate();
                         break;
                 }
                 ?>
+                <?php $element->getAttributes()['type'] == 'submit' ? $submit = true : $submit = false; ?>
                 <div class="form-group">
-                    <label for="<?= $element->getName(); ?>"
-                           class="col-sm-2 control-label"><?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?></label>
-
-                    <div class="col-sm-4">
-                        <?= $formElement; ?>
-                    </div>
-                    <?= $this->formElementErrors($element); ?>
+                    <?php if (!$submit): ?>
+                        <?php if ($element->getAttributes()['type'] !== 'hidden'): ?>
+                            <label for="<?= $element->getName(); ?>" class="col-sm-2 control-label">
+                                <?= $element->getLabel() ? $element->getLabel() : ucfirst($element->getName()); ?>
+                            </label>
+                        <?php endif; ?>
+                        <div class="col-sm-4">
+                            <?= $formElement; ?>
+                            <div class="error-field error-form-message">
+                                <?= $this->formElementErrors($element); ?>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <?php if (!$ajax): ?>
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <?= $formElement; ?>
+                                <div class="error-field error-form-message">
+                                    <?= $this->formElementErrors($element); ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </div>
             <?php endforeach; ?>
-            <?php if (!$ajax): ?>
+            <?php if (!$submit && !$ajax): ?>
                 <div class="form-group">
                     <div class="col-sm-2"></div>
                     <div class="col-sm-4">

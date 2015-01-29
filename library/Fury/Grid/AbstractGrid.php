@@ -217,6 +217,12 @@ abstract class AbstractGrid
         $data = $source->getQuery();
 
         $this->data = $data->getArrayResult();
+
+        if (empty($this->data) && $this->page > 1) {
+            $this->page--;
+            $this->process();
+        }
+
         $this->total = $this->countTotalRows();
     }
 
