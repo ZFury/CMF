@@ -1,3 +1,6 @@
+<h3 class="page-header">
+    Try to comment this entity!
+</h3>
 <?php echo $this->headLink()->appendStylesheet($this->basePath() . '/module/comment/css/comment.css')?>
 <div class="row">
 <div>
@@ -17,11 +20,11 @@
 </div>
 
 <div data-spy="grid"  class="row" data-url="<?= $this->url('test/default', ['controller' => 'comment', 'action' => 'index'])?>">
-    <div class="grid col-md-6">
+    <ul class="grid col-md-6">
         <?php  if ($comments && is_array($comments) && count($comments)>0) {
             echo $this->comment('comment/index/partial/comment.phtml', $comments);
         }; ?>
-    </div>
+    </ul>
 </div>
 
 <script>

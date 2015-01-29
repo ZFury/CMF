@@ -10,3 +10,11 @@ a:hover {
 .comment-text {
     min-height: 70px;
 }
+
+ul {
+    list-style-type: none;
+}
+
+.media-body {
+    display: inherit;
+}
