@@ -34,8 +34,7 @@ define(['jquery', 'fury.notify'], function ($, notify) {
                             field.attr("rel", "tooltip");
                             field.tooltip({
                                 html: true,
-                                title: jsonData.errors[key],
-                                //title: jsonData.errors[key][0],
+                                title: jsonData.errors[key].join('<br/>'),
                                 trigger: 'manual',
                                 // change position for long messages, and for hidden fields
                                 placement: (field.width() < 220) || field.is('label') ? 'right' : 'top',
@@ -46,7 +45,6 @@ define(['jquery', 'fury.notify'], function ($, notify) {
                                 $(this).removeClass('error-form-field');
                                 $(this).tooltip('destroy');
                             });
-                            //field.next().html(jsonData.errors[key][0]);
                         }
                     } else {
                         $this.trigger('success.form.fury', []);
