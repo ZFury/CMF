@@ -149,7 +149,9 @@ class Comment
                 ]);
 
             $enabledCommentByComment = null;
-            if ($objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment')->isEnabled() !== 0) {
+            if ($objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment') &&
+                $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment')->isEnabled() !==
+                0) {
                 $enabledCommentByComment = true;
             }
 
