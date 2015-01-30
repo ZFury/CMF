@@ -68,7 +68,7 @@ class Comment
         if (!$entityType) {
             throw new \Exception('Unknown entity type');
         }
-        if ($entityType->getIsEnabled() === 0) {
+        if (!$entityType->getIsEnabled()) {
             throw new \Exception('You can not comment this entity');
         }
 

@@ -17,6 +17,9 @@ use Comment\Grid\EntityType\Grid;
 class ManagementController extends AbstractCrudController
 {
 
+    /**
+     * @return array|ViewModel
+     */
     public function indexAction()
     {
         $sm = $this->getServiceLocator();
