@@ -68,7 +68,7 @@ class Comment
         if (!$entityType) {
             throw new \Exception('Unknown entity type');
         }
-        if ($entityType->isEnabled() === 0) {
+        if ($entityType->getIsEnabled() === 0) {
             throw new \Exception('You can not comment this entity');
         }
 
@@ -141,7 +141,7 @@ class Comment
         }
 
         $identity = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity();
-        if ($entityType->isVisible() || $identity->getUser()->getRole() === User::ROLE_ADMIN) {
+        if ($entityType->getIsVisible() || $identity->getUser()->getRole() === User::ROLE_ADMIN) {
             $comments = $objectManager->getRepository('Comment\Entity\Comment')
                 ->findBy([
                     'entityType' => $entityType,
@@ -150,7 +150,7 @@ class Comment
 
             $enabledCommentByComment = null;
             if ($objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment') &&
-                $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment')->isEnabled() !==
+                $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment')->getIsEnabled() !==
                 0) {
                 $enabledCommentByComment = true;
             }

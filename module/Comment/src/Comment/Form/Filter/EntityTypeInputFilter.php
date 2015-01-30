@@ -24,6 +24,8 @@ class EntityTypeInputFilter extends InputFilter
         $this->alias();
         $this->entity();
         $this->description();
+        $this->isVisible();
+        $this->isEnabled();
     }
 
     /**
@@ -118,6 +120,32 @@ class EntityTypeInputFilter extends InputFilter
                 ),
             ),
 
+        ));
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function isVisible()
+    {
+        $this->add(array(
+            'name' => 'isVisible',
+            'required' => false,
+        ));
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function isEnabled()
+    {
+        $this->add(array(
+            'name' => 'isEnabled',
+            'required' => false,
         ));
 
         return $this;

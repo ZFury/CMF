@@ -22,7 +22,7 @@
             <?php foreach ($this->grid->getData() as $row) : ?>
                 <tr>
                     <?php foreach ($row as $key => $value) : ?>
-                        <?php if ('visibleComment' === $key || 'enabledComment' === $key) {
+                        <?php if ('isVisible' === $key || 'isEnabled' === $key) {
                                 if (true == $value) { ?>
                                     <td><i class="glyphicon glyphicon-ok"></i></td>
                                 <?php } else { ?>
@@ -51,5 +51,5 @@
     </div>
 </div>
 <script>
-    require(['fury.grid', 'commentManagement', 'dashboard']);
+    require(['fury.grid', 'dashboard']);
 </script>
