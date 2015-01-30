@@ -241,7 +241,7 @@ class Comment
         $builder = new AnnotationBuilder($entityManager);
         if ($comment) {
             $form = $builder->createForm($comment);
-            $form->setInputFilter(new Filter\CommentEditInputFilter($this->getServiceLocator()));
+            $form->setInputFilter(new Filter\EditCommentInputFilter($this->getServiceLocator()));
             $form->setHydrator(new DoctrineHydrator($entityManager));
             $form->bind($comment);
         } else {

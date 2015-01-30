@@ -14,7 +14,7 @@ use Zend\Form;
 use Comment\Entity\EntityType;
 use Comment\Grid\EntityType\Grid;
 
-class ManagementController extends AbstractCrudController
+class EntityTypeController extends AbstractCrudController
 {
 
     /**
@@ -46,7 +46,7 @@ class ManagementController extends AbstractCrudController
         $urlHelper = $this->getUrlHelper();
         $form->setAttribute(
             'action',
-            $urlHelper('comment/default', ['controller' => 'management', 'action' => 'create'])
+            $urlHelper('comment/default', ['controller' => 'entity-type', 'action' => 'create'])
         );
 
         return $form;
@@ -60,13 +60,12 @@ class ManagementController extends AbstractCrudController
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $form = $this->getCreateForm();
         $form->setHydrator(new DoctrineHydrator($entityManager));
-//        $form->setHydrator(new ClassMethods(false));
         $entity = $this->loadEntity();
         $form->bind($entity);
         $urlHelper = $this->getUrlHelper();
         $form->setAttribute(
             'action',
-            $urlHelper('comment/default', ['controller' => 'management', 'action' => 'edit', 'id' => $entity->getId()])
+            $urlHelper('comment/default', ['controller' => 'entity-type', 'action' => 'edit', 'id' => $entity->getId()])
         );
 
         return $form;
