@@ -75,16 +75,16 @@ class Comment extends EntityBase
     /**
      * @var \Datetime
      * @Annotation\Exclude
-     * @ORM\Column(name="created_at", type="datetime")
+     * @ORM\Column(name="created", type="datetime")
      */
-    protected $createdAt;
+    protected $created;
 
     /**
      * @var \Datetime
      * @Annotation\Exclude
-     * @ORM\Column(name="updated_at", type="datetime")
+     * @ORM\Column(name="updated", type="datetime")
      */
-    protected $updatedAt;
+    protected $updated;
 
     /**
      * @ORM\PreRemove
@@ -110,10 +110,10 @@ class Comment extends EntityBase
      */
     public function updatedTimestamps()
     {
-        $this->setUpdatedAt(new \DateTime(date('Y-m-d H:i:s')));
+        $this->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
 
-        if ($this->getCreatedAt() == null) {
-            $this->setCreatedAt(new \DateTime(date('Y-m-d H:i:s')));
+        if ($this->getCreated() == null) {
+            $this->setCreated(new \DateTime(date('Y-m-d H:i:s')));
         }
     }
 
@@ -256,13 +256,13 @@ class Comment extends EntityBase
     /**
      * Set created.
      *
-     * @param string $createdAt
+     * @param string $created
      *
      * @return void
      */
-    public function setCreatedAt($createdAt)
+    public function setCreated($created)
     {
-        $this->createdAt = $createdAt;
+        $this->created = $created;
     }
 
     /**
@@ -270,9 +270,9 @@ class Comment extends EntityBase
      *
      * @return string
      */
-    public function getCreatedAt()
+    public function getCreated()
     {
-        return $this->createdAt;
+        return $this->created;
     }
 
     /**
@@ -280,21 +280,21 @@ class Comment extends EntityBase
      *
      * @return string
      */
-    public function getUpdatedAt()
+    public function getUpdated()
     {
-        return $this->updatedAt;
+        return $this->updated;
     }
 
     /**
      * Set updated.
      *
-     * @param string $updatedAt
+     * @param string $updated
      *
      * @return void
      */
-    public function setUpdatedAt($updatedAt)
+    public function setUpdated($updated)
     {
-        $this->updatedAt = $updatedAt;
+        $this->updated = $updated;
     }
 
     /**
@@ -310,8 +310,8 @@ class Comment extends EntityBase
                 "entityTypeId" => $this->getEntityTypeId(),
                 "entityId" => $this->getEntityId(),
                 "user" => $this->getUser(),
-                "createdAt" => $this->getCreatedAt(),
-                "updatedAt" => $this->getUpdatedAt(),
+                "created" => $this->getCreated(),
+                "updated" => $this->getUpdated(),
             );
             return $result;
         }

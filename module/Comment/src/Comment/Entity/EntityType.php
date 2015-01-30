@@ -76,16 +76,16 @@ class EntityType extends EntityBase
     /**
      * @var \Datetime
      * @Annotation\Exclude
-     * @ORM\Column(name="created_at", type="datetime")
+     * @ORM\Column(name="created", type="datetime")
      */
-    protected $createdAt;
+    protected $created;
 
     /**
      * @var \Datetime
      * @Annotation\Exclude
-     * @ORM\Column(name="updated_at", type="datetime")
+     * @ORM\Column(name="updated", type="datetime")
      */
-    protected $updatedAt;
+    protected $updated;
 
     /**
      * @Annotation\Exclude
@@ -117,10 +117,10 @@ class EntityType extends EntityBase
      */
     public function updatedTimestamps()
     {
-        $this->setUpdatedAt(new \DateTime(date('Y-m-d H:i:s')));
+        $this->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
 
-        if ($this->getCreatedAt() == null) {
-            $this->setCreatedAt(new \DateTime(date('Y-m-d H:i:s')));
+        if ($this->getCreated() == null) {
+            $this->setCreated(new \DateTime(date('Y-m-d H:i:s')));
         }
     }
 
@@ -221,7 +221,7 @@ class EntityType extends EntityBase
      */
     public function setVisible($visible)
     {
-        $this->visible = $visible;
+        $this->isVisible = $visible;
     }
 
     /**
@@ -259,13 +259,13 @@ class EntityType extends EntityBase
     /**
      * Set created.
      *
-     * @param string $createdAt
+     * @param string $created
      *
      * @return void
      */
-    public function setCreatedAt($createdAt)
+    public function setCreated($created)
     {
-        $this->createdAt = $createdAt;
+        $this->created = $created;
     }
 
     /**
@@ -273,9 +273,9 @@ class EntityType extends EntityBase
      *
      * @return string
      */
-    public function getCreatedAt()
+    public function getCreated()
     {
-        return $this->createdAt;
+        return $this->created;
     }
 
     /**
@@ -283,21 +283,21 @@ class EntityType extends EntityBase
      *
      * @return string
      */
-    public function getUpdatedAt()
+    public function getUpdated()
     {
-        return $this->updatedAt;
+        return $this->updated;
     }
 
     /**
-     * Set $updatedAt.
+     * Set $updated.
      *
-     * @param string $updatedAt
+     * @param string $updated
      *
      * @return void
      */
-    public function setUpdatedAt($updatedAt)
+    public function setUpdated($updated)
     {
-        $this->updatedAt = $updatedAt;
+        $this->updated = $updated;
     }
 
     /**
@@ -313,8 +313,8 @@ class EntityType extends EntityBase
                 "isVisible" => $this->isVisible(),
                 "isEnabled" =>$this->isEnabled(),
                 "description" => $this->getDescription(),
-                "createdAt" => $this->getCreatedAt(),
-                "updatedAt" => $this->getUpdatedAt(),
+                "created" => $this->getCreated(),
+                "updated" => $this->getUpdated(),
             );
 
             return $result;

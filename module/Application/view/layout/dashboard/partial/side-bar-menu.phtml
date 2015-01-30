@@ -1,5 +1,7 @@
 <ul id="side-nav" class="nav navbar-nav side-nav">
-    <?php foreach ($this->container as $pages) {
+    <?php
+    $counter = 0;
+    foreach ($this->container as $pages) {
         $liLinks = [];
         $count = 0;
         foreach ($pages as $page) {
@@ -11,16 +13,16 @@
                 array_push($liLinks, $liLink);
             }
         }
-
         if (0 !== $count) {
-            echo '<li><a href="javascript:;" data-toggle="collapse" data-target="#' . $pages->label . '">' . $pages->label . '<i class="fa fa-fw fa-caret-down"></i></a>';
-            echo '<ul id="' . $pages->label . '" class="collapse dashboard-menu">';
+            echo '<li><a href="javascript:;" data-toggle="collapse" data-target="#pages-' . $counter . '">' . $pages->label . '<i class="fa fa-fw fa-caret-down"></i></a>';
+            echo '<ul id="pages-' . $counter . '" class="collapse dashboard-menu">';
             for ($i = 0; $i < count($liLinks); $i++) {
                 echo $liLinks[$i];
             }
             echo '</ul>';
             echo '</li>';
         }
+        $counter++;
     }
     ?>
 </ul>
