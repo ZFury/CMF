@@ -3,6 +3,7 @@
 namespace Comment\Controller;
 
 use Fury\Mvc\Controller\AbstractCrudController;
+use Zend\Stdlib\Hydrator\ClassMethods;
 use Zend\View\Model\ViewModel;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Comment\Form\Filter;
@@ -56,6 +57,7 @@ class ManagementController extends AbstractCrudController
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         $form = $this->getCreateForm();
         $form->setHydrator(new DoctrineHydrator($entityManager));
+//        $form->setHydrator(new ClassMethods(false));
         $entity = $this->loadEntity();
         $form->bind($entity);
         $urlHelper = $this->getUrlHelper();

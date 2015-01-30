@@ -34,8 +34,8 @@ class ManagementControllerTest extends ControllerTestCase
     protected $entityData = array(
         'alias' => 'comment',
         'entity' => 'Comment\Entity\Comment',
-        'is_enabled' => 1,
-        'is_visible' => 1,
+        'isEnabled' => 1,
+        'isVisible' => 1,
         'description' => 'another',
     );
 
@@ -100,8 +100,8 @@ class ManagementControllerTest extends ControllerTestCase
         $postData = array(
             'aliasEntity' => 'user',
             'entity' => 'User\Entity\User',
-            'is_enabled' => 1,
-            'is_visible' => 1,
+            'isEnabled' => 1,
+            'isVisible' => 1,
             'description' => 'another',
         );
         $this->dispatch('/comment/management/create', 'POST', $postData);
@@ -126,12 +126,12 @@ class ManagementControllerTest extends ControllerTestCase
         $postData = array(
             'alias' => 'userEdited',
             'entity' => 'Test\Entity\Test',
-            'is_enabled' => 1,
-            'is_visible' => 1,
+            'isEnabled' => 1,
+            'isVisible' => 1,
             'description' => 'another',
         );
         $this->dispatch('/comment/management/edit/' . $entity->getId(), 'POST', $postData);
-        $this->assertResponseStatusCode(200);
+        $this->assertResponseStatusCode(302);
         $this->removeEntityType($entity);
     }
 
