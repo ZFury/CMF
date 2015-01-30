@@ -90,11 +90,11 @@ return [
     'navigation' => [
         'default' => [
             [
-                'label' => 'TestingFeatures',
+                'label' => 'Testing Features',
                 'controller' => 'test',
                 'pages' => [
                     [
-                        'label' => 'UploadImages',
+                        'label' => 'Upload Images',
                         'controller' => 'image',
                         'action' => 'upload-image',
                         'route' => 'test/default',
@@ -102,7 +102,7 @@ return [
                         'module' => 'Test'
                     ],
                     [
-                        'label' => 'UploadAudios',
+                        'label' => 'Upload Audios',
                         'controller' => 'audio',
                         'action' => 'upload-audio',
                         'route' => 'test/default',
@@ -110,7 +110,7 @@ return [
                         'module' => 'Test'
                     ],
                     [
-                        'label' => 'UploadVideos',
+                        'label' => 'Upload Videos',
                         'controller' => 'video',
                         'action' => 'upload-video',
                         'route' => 'test/default',
@@ -118,7 +118,7 @@ return [
                         'module' => 'Test'
                     ],
                     [
-                        'label' => 'TestUsers',
+                        'label' => 'Test Users',
                         'controller' => 'management',
                         'action' => 'index',
                         'route' => 'test/default',
@@ -126,7 +126,7 @@ return [
                         'module' => 'Test'
                     ],
                     [
-                        'label' => 'WriteComments',
+                        'label' => 'Write Comments',
                         'controller' => 'comment',
                         'action' => 'index',
                         'route' => 'test/default',
