@@ -5,31 +5,24 @@
 $form = $this->form;
 $form->prepare();
 ?>
-<div class="container">
-    <h1><?php echo $this->escapeHtml($this->title); ?></h1>
-
-    <div class="row">
-        <form id="crudForm" method="post" class="form-horizontal">
+<div class="row">
+    <div class="form-send well well-sm">
+        <form class="form-ajax form-horizontal" action="<?=$this->url('comment/default', ['controller' => 'index', 'action' => 'add'], ['query'=>['alias' => $alias, 'id' => $id]])?>"  method="post">
             <div class="form-group">
-                <label for="inputComment" class="col-sm-1 control-label"><?= $form->get('comment')->getLabel(); ?></label>
-                <div class="col-sm-4">
+                <div class="col-sm-12">
                     <?php echo $this->formTextarea($form->get('comment')); ?>
                 </div>
-                <div class="col-sm-9 col-md-offset-2 error-field error-form-message">
+                <div class="error-field error-form-message">
                     <?= $this->formElementErrors($form->get('comment')); ?>
                 </div>
             </div>
-            <?php if (!$this->ajax): ?>
-                <div class="form-group">
-                    <div class="col-sm-5 col-sm-offset-">
-                        <input type="submit" name="submit" class="form-control col-md-6 btn btn-success"
-                               value="<?= $this->title == 'Edit comment' ? 'Save' : 'Add'; ?>">
+            <div class="form-group">
+                <?php if (!$this->ajax): ?>
+                    <div class="add-comment-button col-sm-3">
+                        <input type="submit" name="submit" id="add-comment-button" class="form-control btn btn-xs btn-success" value="Send">
                     </div>
-                </div>
-            <?php endif; ?>
+                <?php endif; ?>
+            </div>
         </form>
     </div>
 </div>
-<script>
-    require(['fury']);
-</script>

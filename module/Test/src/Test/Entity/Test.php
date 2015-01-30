@@ -93,4 +93,13 @@ class Test
     {
         return $this->name;
     }
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->id,
+            'email' => $this->email,
+            'name' => $this->id
+        ];
+    }
 }

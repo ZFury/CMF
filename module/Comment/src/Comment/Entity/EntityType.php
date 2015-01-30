@@ -21,7 +21,7 @@ class EntityType extends EntityBase
      * @var int
      * @Annotation\Type("Zend\Form\Element\Hidden")
      * @ORM\Id
-     * @ORM\Column(type="integer", options={"unsigned"=true})
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true})
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
@@ -32,9 +32,9 @@ class EntityType extends EntityBase
      * @Annotation\Required(true)
      * @Annotation\Options({"label":"Alias entity:"})
      * @Annotation\Attributes({"class":"form-control"})
-     * @ORM\Column(type="string", unique=true,  nullable=false)
+     * @ORM\Column(name="alias", type="string", unique=true,  nullable=false)
      */
-    protected $aliasEntity;
+    protected $alias;
 
     /**
      * @var string
@@ -42,7 +42,7 @@ class EntityType extends EntityBase
      * @Annotation\Required(true)
      * @Annotation\Options({"label":"Entity:"})
      * @Annotation\Attributes({"class":"form-control"})
-     * @ORM\Column(type="string", unique=true, nullable=false)
+     * @ORM\Column(name="entity", type="string", unique=true, nullable=false)
      */
     protected $entity;
 
@@ -51,7 +51,7 @@ class EntityType extends EntityBase
      * @Annotation\Type("Zend\Form\Element\Textarea")
      * @Annotation\Required(true)
      * @Annotation\Options({"label":"Description:"})
-     * @ORM\Column(type="text", nullable=false)
+     * @ORM\Column(name="description", type="text", nullable=false)
      */
     protected $description;
 
@@ -60,32 +60,32 @@ class EntityType extends EntityBase
      * @Annotation\Type("Zend\Form\Element\Checkbox")
      * @Annotation\Required(false)
      * @Annotation\Options({"label":"Visibility of comments:"})
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(name="is_visible", type="boolean", nullable=true)
      */
-    protected $visibleComment;
+    protected $isVisible;
 
     /**
      * @var boolean
      * @Annotation\Type("Zend\Form\Element\Checkbox")
      * @Annotation\Required(false)
      * @Annotation\Options({"label":"Possible to comment:"})
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(name="is_enabled", type="boolean", nullable=true)
      */
-    protected $enabledComment;
+    protected $isEnabled;
 
     /**
-     * @var created
+     * @var \Datetime
      * @Annotation\Exclude
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(name="created_at", type="datetime")
      */
-    protected $created;
+    protected $createdAt;
 
     /**
-     * @var updated
+     * @var \Datetime
      * @Annotation\Exclude
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(name="updated_at", type="datetime")
      */
-    protected $updated;
+    protected $updatedAt;
 
     /**
      * @Annotation\Exclude
@@ -117,10 +117,10 @@ class EntityType extends EntityBase
      */
     public function updatedTimestamps()
     {
-        $this->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
+        $this->setUpdatedAt(new \DateTime(date('Y-m-d H:i:s')));
 
-        if ($this->getCreated() == null) {
-            $this->setCreated(new \DateTime(date('Y-m-d H:i:s')));
+        if ($this->getCreatedAt() == null) {
+            $this->setCreatedAt(new \DateTime(date('Y-m-d H:i:s')));
         }
     }
 
@@ -169,25 +169,25 @@ class EntityType extends EntityBase
     }
 
     /**
-     * Set aliasEntity.
+     * Set alias.
      *
-     * @param int $aliasEntity
+     * @param int $alias
      *
      * @return void
      */
-    public function setAliasEntity($aliasEntity)
+    public function setAlias($alias)
     {
-        $this->aliasEntity = $aliasEntity;
+        $this->alias = $alias;
     }
 
     /**
-     * Get aliasEntity.
+     * Get alias.
      *
      * @return string
      */
-    public function getAliasEntity()
+    public function getAlias()
     {
-        return $this->aliasEntity;
+        return $this->alias;
     }
 
     /**
@@ -215,13 +215,13 @@ class EntityType extends EntityBase
     /**
      * Set visibleComment.
      *
-     * @param int $visibleComment
+     * @param int $visible
      *
      * @return void
      */
-    public function setVisibleComment($visibleComment)
+    public function setVisible($visible)
     {
-        $this->visibleComment = $visibleComment;
+        $this->visible = $visible;
     }
 
     /**
@@ -229,21 +229,21 @@ class EntityType extends EntityBase
      *
      * @return int
      */
-    public function getVisibleComment()
+    public function isVisible()
     {
-        return $this->visibleComment;
+        return $this->isVisible;
     }
 
     /**
      * Set enabledComment.
      *
-     * @param int $enabledComment
+     * @param int $isEnabled
      *
      * @return void
      */
-    public function setEnabledComment($enabledComment)
+    public function setEnabled($isEnabled)
     {
-        $this->enabledComment = $enabledComment;
+        $this->isEnabled = $isEnabled;
     }
 
     /**
@@ -251,21 +251,21 @@ class EntityType extends EntityBase
      *
      * @return int
      */
-    public function getEnabledComment()
+    public function isEnabled()
     {
-        return $this->enabledComment;
+        return $this->isEnabled;
     }
 
     /**
      * Set created.
      *
-     * @param string $created
+     * @param string $createdAt
      *
      * @return void
      */
-    public function setCreated($created)
+    public function setCreatedAt($createdAt)
     {
-        $this->created = $created;
+        $this->createdAt = $createdAt;
     }
 
     /**
@@ -273,9 +273,9 @@ class EntityType extends EntityBase
      *
      * @return string
      */
-    public function getCreated()
+    public function getCreatedAt()
     {
-        return $this->created;
+        return $this->createdAt;
     }
 
     /**
@@ -283,21 +283,21 @@ class EntityType extends EntityBase
      *
      * @return string
      */
-    public function getUpdated()
+    public function getUpdatedAt()
     {
-        return $this->updated;
+        return $this->updatedAt;
     }
 
     /**
-     * Set updated.
+     * Set $updatedAt.
      *
-     * @param string $updated
+     * @param string $updatedAt
      *
      * @return void
      */
-    public function setUpdated($updated)
+    public function setUpdatedAt($updatedAt)
     {
-        $this->updated = $updated;
+        $this->updatedAt = $updatedAt;
     }
 
     /**
@@ -308,13 +308,13 @@ class EntityType extends EntityBase
         {
             $result = array(
                 "id" => $this->getId(),
-                "aliasEntity" => $this->getAliasEntity(),
+                "alias" => $this->getAlias(),
                 "entity" => $this->getEntity(),
-                "VisibleComment" => $this->getVisibleComment(),
-                "enabledComment" =>$this->getEnabledComment(),
+                "isVisible" => $this->isVisible(),
+                "isEnabled" =>$this->isEnabled(),
                 "description" => $this->getDescription(),
-                "created" => $this->getCreated(),
-                "updated" => $this->getUpdated(),
+                "createdAt" => $this->getCreatedAt(),
+                "updatedAt" => $this->getUpdatedAt(),
             );
 
             return $result;

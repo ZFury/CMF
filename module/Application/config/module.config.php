@@ -100,6 +100,7 @@ return array(
             'layout/layout' => __DIR__ . '/../view/layout/default/layout.phtml',
             'crud/create' => __DIR__ . '/../view/layout/crud/create.phtml',
             'crud/edit' => __DIR__ . '/../view/layout/crud/edit.phtml',
+            'grid/comment' => __DIR__ . '/../../Comment/view/comment/index/grid.phtml',
             'grid/filter' => __DIR__ . '/../view/layout/grid/filter.phtml',
             'grid/limit' => __DIR__ . '/../view/layout/grid/limit.phtml',
             'grid/pagination' => __DIR__ . '/../view/layout/grid/pagination.phtml',

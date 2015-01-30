@@ -21,7 +21,7 @@ class EntityTypeInputFilter extends InputFilter
     public function __construct(ServiceManager $sm)
     {
         $this->sm = $sm;
-        $this->aliasEntity();
+        $this->alias();
         $this->entity();
         $this->description();
     }
@@ -29,13 +29,13 @@ class EntityTypeInputFilter extends InputFilter
     /**
      * @return $this
      */
-    protected function aliasEntity()
+    protected function alias()
     {
         $recordUniqueValidator = new UniqueObject(
             array(
                 'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')
                     ->getRepository('Comment\Entity\EntityType'),
-                'fields' => array('aliasEntity'),
+                'fields' => array('alias'),
                 'object_manager' => $this->sm->get('Doctrine\ORM\EntityManager'),
             )
         );
@@ -44,7 +44,7 @@ class EntityTypeInputFilter extends InputFilter
         );
 
         $this->add(array(
-            'name' => 'aliasEntity',
+            'name' => 'alias',
             'required' => true,
             'filters' => array(
                 array('name' => 'StripTags'),

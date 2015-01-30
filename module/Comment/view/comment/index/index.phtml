@@ -1,10 +1,9 @@
-<?php
-$title = 'Comments';
-$this->headTitle($title);
-if (isset($comments)) {
-    echo $this->comment('comment/index/partial/comment.phtml', $comments);
-}
-?>
+<div class="grid">
+    <?php if ($comments && $isVisible !== 0) {
+        echo $this->comment('comment/index/partial/comment.phtml', $comments);
+    }; ?>
+</div>
 <script>
-    require(['comment', 'fury']);
+    require(['dashboard']);
 </script>
+

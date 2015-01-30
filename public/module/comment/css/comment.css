@@ -1,0 +1,32 @@
+a, a:hover {
+    text-decoration: none;
+    color: #666666;
+}
+
+a:hover {
+    color:black;
+}
+
+.comment-text {
+    min-height: 70px;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.media-body {
+    display: inherit;
+}
+
+.edit-delete {
+    width: 50px;
+}
+
+.data {
+    width: 200px;
+}
+
+.data-edit > div {
+    display: inline-block;
+}

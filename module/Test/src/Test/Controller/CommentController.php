@@ -7,6 +7,7 @@
 
 namespace Test\Controller;
 
+use Comment\Grid\Comment\Grid;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Comment\Form;
@@ -25,25 +26,34 @@ class CommentController extends AbstractActionController
     public function indexAction()
     {
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
-        $entities = $objectManager->getRepository('Test\Entity\Test')->findAll();
-        /**
-         * @var /Comment\Entity\EntityType $entityTest
-         */
-        if (!$entityTest = $objectManager->getRepository('Comment\Entity\EntityType')
-            ->getEntityTypeByEntity('Test\\Entity\\Test')
-        ) {
-            $flashMessenger = new FlashMessenger();
-            $flashMessenger->addSuccessMessage('There are no comments');
+
+        $entity = $objectManager->getRepository('Test\Entity\Test')->findAll()[0];
+        $entityType = $objectManager->getRepository('Comment\Entity\EntityType')
+            ->getEntityTypeByEntity('Test\\Entity\\Test');
+
+        $entityId = $entity->getId();
+        $entityAlias = $entityType->getAlias();
+
+        $comments = $this->getServiceLocator()
+            ->get('Comment\Service\Comment')
+            ->tree(['alias' => $entityAlias, 'id' => $entityId]);
+
+
+        $addCommentForm = null;
+        if ($entityType->isEnabled() !== 0) {
+            $addCommentForm = $this->getServiceLocator()->get('Comment\Service\Comment')->getAddCommentForm(
+                $this->getServiceLocator()->get('Comment\Service\Comment')->createForm(),
+                $entityId,
+                $entityAlias
+            );
         }
-        $ViewModel = new ViewModel(array(
-            'data' => $entities,
-        ));
-        if ($entityTest) {
-            $ViewModel->setVariables([
-                'aliasEntity' => $entityTest->getAliasEntity(),
-                'enabledComment' => $entityTest->getEnabledComment()
-            ]);
-        }
-        return $ViewModel;
+        $viewModel = new ViewModel([
+            'testEntity' => $entity,
+            'addCommentForm' => $addCommentForm,
+            'comments' => $comments
+        ]);
+        $viewModel->setTerminal($this->getRequest()->isXmlHttpRequest());
+
+        return $viewModel;
     }
 }

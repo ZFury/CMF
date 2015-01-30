@@ -12,12 +12,20 @@ class Version20141226114924 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $entity = addslashes('Comment\Entity\Comment');
+        $entity = addslashes('Test\Entity\Test');
         $date = date("Y-m-d H:i:s");
         $this->addSql(
-            "insert into entity_type (aliasEntity, entity, description, visibleComment, enabledComment,
- created, updated) VALUES('comment','" . $entity . "' , 'Comment to comment', 1, 1,'" . $date . "', '" .
-            $date . "')"
+            "INSERT INTO entity_type (
+            aliasEntity,
+            entity,
+            description,
+            visibleComment,
+            enabledComment,
+            created,
+            updated) VALUES ('test','" . $entity . "' , 'Comment to a test entity', 1, 1,'" . $date . "', '" . $date . "')"
+        );
+        $this->addSql(
+            "INSERT INTO test (email, name) VALUES('testemailfor@testuser.com','testuser')"
         );
     }
 
