@@ -30,7 +30,7 @@ return array(
                     'roles' => array('admin'),
                 ),
                 array(
-                    'controller' => 'Comment\Controller\Management',
+                    'controller' => 'Comment\Controller\EntityType',
                     'action' => ['create', 'index', 'edit', 'delete'],
                     'roles' => array('admin'),
                 ),
@@ -74,7 +74,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Comment\Controller\Index' => 'Comment\Controller\IndexController',
-            'Comment\Controller\Management' => 'Comment\Controller\ManagementController',
+            'Comment\Controller\EntityType' => 'Comment\Controller\EntityTypeController',
         ),
     ),
     'service_manager' => array(
@@ -100,18 +100,18 @@ return array(
                 'pages' => array(
                     array(
                         'label' => 'Create entity',
-                        'controller' => 'management',
+                        'controller' => 'entity-type',
                         'action' => 'create',
                         'route' => 'comment/default',
-                        'controller_namespace' => 'Comment\Controller\Management',
+                        'controller_namespace' => 'Comment\Controller\EntityType',
                         'module' => 'Comment'
                     ),
                     array(
                         'label' => 'All entities',
-                        'controller' => 'management',
+                        'controller' => 'entity-type',
                         'action' => 'index',
                         'route' => 'comment/default',
-                        'controller_namespace' => 'Comment\Controller\Management',
+                        'controller_namespace' => 'Comment\Controller\EntityType',
                         'module' => 'Comment'
                     ),
                     array(
