@@ -58,18 +58,20 @@ class EntityType extends EntityBase
     /**
      * @var boolean
      * @Annotation\Type("Zend\Form\Element\Checkbox")
+     * @Annotation\Name("isVisible")
      * @Annotation\Required(false)
      * @Annotation\Options({"label":"Visibility of comments:"})
-     * @ORM\Column(name="is_visible", type="boolean", nullable=true)
+     * @ORM\Column(name="is_visible", type="boolean", nullable=false)
      */
     protected $isVisible;
 
     /**
      * @var boolean
      * @Annotation\Type("Zend\Form\Element\Checkbox")
+     * @Annotation\Name("isEnabled")
      * @Annotation\Required(false)
      * @Annotation\Options({"label":"Possible to comment:"})
-     * @ORM\Column(name="is_enabled", type="boolean", nullable=true)
+     * @ORM\Column(name="is_enabled", type="boolean", nullable=false)
      */
     protected $isEnabled;
 
@@ -219,7 +221,7 @@ class EntityType extends EntityBase
      *
      * @return void
      */
-    public function setVisible($visible)
+    public function setIsVisible($visible)
     {
         $this->isVisible = $visible;
     }
@@ -229,7 +231,7 @@ class EntityType extends EntityBase
      *
      * @return int
      */
-    public function isVisible()
+    public function getIsVisible()
     {
         return $this->isVisible;
     }
@@ -241,7 +243,7 @@ class EntityType extends EntityBase
      *
      * @return void
      */
-    public function setEnabled($isEnabled)
+    public function setIsEnabled($isEnabled)
     {
         $this->isEnabled = $isEnabled;
     }
@@ -251,7 +253,7 @@ class EntityType extends EntityBase
      *
      * @return int
      */
-    public function isEnabled()
+    public function getIsEnabled()
     {
         return $this->isEnabled;
     }
@@ -310,8 +312,8 @@ class EntityType extends EntityBase
                 "id" => $this->getId(),
                 "alias" => $this->getAlias(),
                 "entity" => $this->getEntity(),
-                "isVisible" => $this->isVisible(),
-                "isEnabled" =>$this->isEnabled(),
+                "is_visible" => $this->getIsVisible(),
+                "is_enabled" =>$this->getIsEnabled(),
                 "description" => $this->getDescription(),
                 "created" => $this->getCreated(),
                 "updated" => $this->getUpdated(),

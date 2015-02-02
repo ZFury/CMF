@@ -3,6 +3,7 @@
 namespace Comment\Controller;
 
 use Fury\Mvc\Controller\AbstractCrudController;
+use Zend\Stdlib\Hydrator\ClassMethods;
 use Zend\View\Model\ViewModel;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Comment\Form\Filter;
@@ -13,9 +14,11 @@ use Zend\Form;
 use Comment\Entity\EntityType;
 use Comment\Grid\EntityType\Grid;
 
-class ManagementController extends AbstractCrudController
+class EntityTypeController extends AbstractCrudController
 {
-
+    /**
+     * @return array|ViewModel
+     */
     public function indexAction()
     {
         $sm = $this->getServiceLocator();
@@ -42,7 +45,7 @@ class ManagementController extends AbstractCrudController
         $urlHelper = $this->getUrlHelper();
         $form->setAttribute(
             'action',
-            $urlHelper('comment/default', ['controller' => 'management', 'action' => 'create'])
+            $urlHelper('comment/default', ['controller' => 'entity-type', 'action' => 'create'])
         );
 
         return $form;
@@ -61,7 +64,7 @@ class ManagementController extends AbstractCrudController
         $urlHelper = $this->getUrlHelper();
         $form->setAttribute(
             'action',
-            $urlHelper('comment/default', ['controller' => 'management', 'action' => 'edit', 'id' => $entity->getId()])
+            $urlHelper('comment/default', ['controller' => 'entity-type', 'action' => 'edit', 'id' => $entity->getId()])
         );
 
         return $form;

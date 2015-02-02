@@ -38,9 +38,9 @@ class CommentController extends AbstractActionController
             ->get('Comment\Service\Comment')
             ->tree(['alias' => $entityAlias, 'id' => $entityId]);
 
-
         $addCommentForm = null;
-        if ($entityType->isEnabled() !== 0) {
+
+        if ($entityType->getIsEnabled()) {
             $addCommentForm = $this->getServiceLocator()->get('Comment\Service\Comment')->getAddCommentForm(
                 $this->getServiceLocator()->get('Comment\Service\Comment')->createForm(),
                 $entityId,

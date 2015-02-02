@@ -56,8 +56,10 @@ abstract class AbstractCrudController extends AbstractActionController
          * @var $form \Zend\Form\Form
          */
         $form = $this->getCreateForm();
+
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
+
             if ($form->isValid()) {
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
                 $entity = $this->getEntity();
@@ -94,6 +96,7 @@ abstract class AbstractCrudController extends AbstractActionController
             $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
             $hydrator = new DoctrineHydrator($entityManager);
             $hydrator->hydrate($data, $entity);
+
             if ($form->isValid()) {
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
                 $objectManager->persist($entity);

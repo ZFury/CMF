@@ -69,8 +69,8 @@ class IndexControllerTest extends ControllerTestCase
         $entityType = array(
             'alias' =>'user',
             'entity' =>'User\Entity\User',
-            'enabledComment' => true,
-            'visibleComment' => true,
+            'isEnabled' => 1,
+            'isVisible' => 1,
             'description' =>'description',
         );
         $this->entityType = $this->createEntityType($entityType);
@@ -114,7 +114,7 @@ class IndexControllerTest extends ControllerTestCase
             'alias' => $this->entityType->getAlias(),
             'id' => $this->user->getId(),
         );
-        $this->entityType->setEnabled(0);
+        $this->entityType->setIsEnabled(0);
         $this->assertNull($this->commentService->add($form, $postData));
     }
 

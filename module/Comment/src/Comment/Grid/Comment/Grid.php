@@ -6,6 +6,9 @@ use Fury\Grid\AbstractGrid;
 
 class Grid extends AbstractGrid
 {
+    /**
+     * Grid
+     */
     public function init()
     {
         $em = $this->sm->get('Doctrine\ORM\EntityManager');

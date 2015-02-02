@@ -21,6 +21,11 @@ class ManagementControllerTest extends ControllerTestCase
     protected $traceError = true;
 
     /**
+     * @var \Comment\Service\Comment
+     */
+    private $commentService;
+
+    /**
      * @var array
      */
     protected $anotherUser = [
@@ -34,8 +39,8 @@ class ManagementControllerTest extends ControllerTestCase
     protected $entityData = array(
         'alias' => 'comment',
         'entity' => 'Comment\Entity\Comment',
-        'enabledComment' => 1,
-        'visibleComment' => 1,
+        'isEnabled' => 1,
+        'isVisible' => 1,
         'description' => 'another',
     );
 
@@ -70,6 +75,7 @@ class ManagementControllerTest extends ControllerTestCase
         $this->setupAdmin();
 
         $this->user = $this->createUser($this->anotherUser);
+        $this->commentService = $this->getApplicationServiceLocator()->get('Comment\Service\Comment');
     }
 
     public function tearDown()
@@ -79,19 +85,19 @@ class ManagementControllerTest extends ControllerTestCase
 
     public function testIndexActionCanBeAccessed()
     {
-        $this->dispatch('/comment/management');
+        $this->dispatch('/comment/entity-type');
         $this->assertResponseStatusCode(200);
 
         $this->assertModuleName('Comment');
-        $this->assertControllerName('Comment\Controller\Management');
-        $this->assertControllerClass('ManagementController');
+        $this->assertControllerName('Comment\Controller\EntityType');
+        $this->assertControllerClass('EntityTypeController');
         $this->assertMatchedRouteName('comment/default');
     }
 
     public function testIndexActionNoPermission()
     {
         $this->setupUser();
-        $this->dispatch('/comment/management');
+        $this->dispatch('/comment/entity-type');
         $this->assertResponseStatusCode(403);
     }
 
@@ -100,22 +106,22 @@ class ManagementControllerTest extends ControllerTestCase
         $postData = array(
             'aliasEntity' => 'user',
             'entity' => 'User\Entity\User',
-            'enabledComment' => 1,
-            'visibleComment' => 1,
+            'isEnabled' => 1,
+            'isVisible' => 1,
             'description' => 'another',
         );
-        $this->dispatch('/comment/management/create', 'POST', $postData);
+        $this->dispatch('/comment/entity-type/create', 'POST', $postData);
         $this->assertResponseStatusCode(200);
     }
 
     public function testEditActionCanBeAccessed()
     {
         $entity = $this->createEntityType($this->entityData);
-        $this->dispatch('/comment/management/edit/'.$entity->getId());
+        $this->dispatch('/comment/entity-type/edit/'.$entity->getId());
         $this->assertResponseStatusCode(200);
         $this->assertModuleName('Comment');
-        $this->assertControllerName('Comment\Controller\Management');
-        $this->assertControllerClass('ManagementController');
+        $this->assertControllerName('Comment\Controller\EntityType');
+        $this->assertControllerClass('EntityTypeController');
         $this->assertMatchedRouteName('comment/default');
         $this->removeEntityType($entity);
     }
@@ -126,24 +132,24 @@ class ManagementControllerTest extends ControllerTestCase
         $postData = array(
             'alias' => 'userEdited',
             'entity' => 'Test\Entity\Test',
-            'enabledComment' => true,
-            'visibleComment' => true,
+            'isEnabled' => 1,
+            'isVisible' => 1,
             'description' => 'another',
         );
-        $this->dispatch('/comment/management/edit/' . $entity->getId(), 'POST', $postData);
-        $this->assertResponseStatusCode(200);
+        $this->dispatch('/comment/entity-type/edit/' . $entity->getId(), 'POST', $postData);
+        $this->assertResponseStatusCode(302);
         $this->removeEntityType($entity);
     }
 
     public function testDeleteActionCanBeAccessed()
     {
         $entity = $this->createEntityType($this->entityData);
-        $this->dispatch("/comment/management/delete/".$entity->getId());
+        $this->dispatch("/comment/entity-type/delete/".$entity->getId());
         $this->assertResponseStatusCode(302);
 
         $this->assertModuleName('comment');
-        $this->assertControllerName('Comment\Controller\Management');
-        $this->assertControllerClass('ManagementController');
+        $this->assertControllerName('Comment\Controller\EntityType');
+        $this->assertControllerClass('EntityTypeController');
         $this->assertMatchedRouteName('comment/default');
     }
 
@@ -158,7 +164,7 @@ class ManagementControllerTest extends ControllerTestCase
 
     public function testDeleteActionNoExistEntity()
     {
-        $this->dispatch('/comment/management/delete/1');
+        $this->dispatch('/comment/entity-type/delete/1');
         $this->assertResponseStatusCode(500);
     }
 
