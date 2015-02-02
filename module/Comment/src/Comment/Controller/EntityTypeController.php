@@ -16,7 +16,6 @@ use Comment\Grid\EntityType\Grid;
 
 class EntityTypeController extends AbstractCrudController
 {
-
     /**
      * @return array|ViewModel
      */
