@@ -26,23 +26,23 @@ class CommentInputFilter extends InputFilter
      */
     protected function alias()
     {
-        $this->add(array(
+        $this->add([
             'name' => 'alias',
             'required' => true,
-            'filters' => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
-            ),
-            'validators' => array(
-                array(
+            'filters' => [
+                ['name' => 'StripTags'],
+                ['name' => 'StringTrim'],
+            ],
+            'validators' => [
+                [
                     'name' => 'Regex',
-                    'options' => array(
+                    'options' => [
                         'pattern' => '/^[a-zA-Z-_]*$/',
                         'message' => 'Entity type contains invalid characters'
-                    ),
-                ),
-            ),
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
         return $this;
     }
@@ -52,14 +52,14 @@ class CommentInputFilter extends InputFilter
      */
     protected function comment()
     {
-        $this->add(array(
+        $this->add([
             'name' => 'comment',
             'required' => true,
-            'filters' => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
-            ),
-        ));
+            'filters' => [
+                ['name' => 'StripTags'],
+                ['name' => 'StringTrim'],
+            ],
+        ]);
 
         return $this;
     }
@@ -69,13 +69,13 @@ class CommentInputFilter extends InputFilter
      */
     protected function entityId()
     {
-        $this->add(array(
+        $this->add([
             'name' => 'entityId',
             'required' => true,
-            'filters' => array(
-                array('name' => 'Int'),
-            ),
-        ));
+            'filters' => [
+                ['name' => 'Int'],
+            ],
+        ]);
 
         return $this;
     }

@@ -226,6 +226,7 @@ class IndexController extends AbstractActionController
     {
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
         $sessionProgress = new Container('progress_tracker');
+        $sessionProgress->offsetSet('modules', Install::DONE);
         $sessionProgress->offsetSet('current_step', 'modules-requirements');
         $previousStep = $installService->checkPreviousStep();
         if (null !== $previousStep) {

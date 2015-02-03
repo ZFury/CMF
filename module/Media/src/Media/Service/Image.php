@@ -24,6 +24,9 @@ class Image extends File
     const XS_THUMB_HEIGHT = 20;
 
     /**
+     * Returns a path to an image file from root directory of a project (perfect choice for processing file)
+     * or from public directory (perfect choice for displaying a link) using predefined constants in Media\Service\File
+     *
      * @param $type
      * @param $id
      * @param $ext
@@ -65,6 +68,8 @@ class Image extends File
     }
 
     /**
+     * Returns an array of size according to a predefined type of an image
+     *
      * @param $type
      * @return array
      */

@@ -14,9 +14,12 @@ class Audio extends File
     const MP3_EXT = 'mp3';
 
     /**
-     * @param $id
-     * @param $ext
-     * @param bool $from
+     * Returns a path to an audio file from root directory of a project (perfect choice for processing file)
+     * or from public directory (perfect choice for displaying a link) using predefined constants in Media\Service\File
+     *
+     * @param $id (Id of an audio file)
+     * @param $ext (Extension of a file)
+     * @param bool $from (Can be FROM_ROOT or FROM_PUBLIC)
      * @return string
      * @throws \Exception
      */
@@ -32,6 +35,8 @@ class Audio extends File
     }
 
     /**
+     * Prepares all necessary data for converting audio file and calls "executeConversion" method
+     *
      * @param File $audioEntity
      * @param string $newExtension
      * @return File
@@ -50,6 +55,8 @@ class Audio extends File
     }
 
     /**
+     * Executes a command for conversion of a file
+     *
      * @param $oldLocation
      * @param $newLocation
      * @return bool

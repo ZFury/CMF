@@ -14,6 +14,9 @@ class Video extends File
     const MP4_EXT = 'mp4';
 
     /**
+     * Returns a path to a video file from root directory of a project (perfect choice for processing file)
+     * or from public directory (perfect choice for displaying a link) using predefined constants in Media\Service\File
+     *
      * @param $id
      * @param $ext
      * @param bool $from
@@ -32,6 +35,8 @@ class Video extends File
     }
 
     /**
+     * Prepares all necessary data for converting video file and calls "executeConversion" method
+     *
      * @param File $videoEntity
      * @param string $newExtension
      * @param int $bitrate
@@ -51,6 +56,8 @@ class Video extends File
     }
 
     /**
+     * Executes a command for conversion of a file
+     *
      * @param $oldLocation
      * @param $newLocation
      * @param int $bitrate

@@ -4,7 +4,7 @@ namespace Comment\Form\Filter;
 
 use Zend\ServiceManager\ServiceManager;
 
-class CommentEditInputFilter extends CommentInputFilter
+class EditCommentInputFilter extends CommentInputFilter
 {
     /**
      * @param ServiceManager $sm

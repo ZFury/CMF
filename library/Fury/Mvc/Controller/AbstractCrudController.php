@@ -56,8 +56,10 @@ abstract class AbstractCrudController extends AbstractActionController
          * @var $form \Zend\Form\Form
          */
         $form = $this->getCreateForm();
+
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
+
             if ($form->isValid()) {
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
                 $entity = $this->getEntity();
@@ -65,12 +67,11 @@ abstract class AbstractCrudController extends AbstractActionController
                 $hydrator->hydrate($form->getData(), $entity);
                 $objectManager->persist($entity);
                 $objectManager->flush();
-                //TODO: redirect where?
+                $controller = explode('/', $this->getRequest()->getUri()->getPath())[2];
                 if (!$this->getRequest()->isXmlHttpRequest()) {
-                    return $this->redirect()->toRoute(null, ['controller' => 'management']);
-                } else {
-                    return;
+                    return $this->redirect()->toRoute(null, ['controller' => $controller]);
                 }
+                return;
             }
         }
         $viewModel = $this->getViewModel();
@@ -94,17 +95,19 @@ abstract class AbstractCrudController extends AbstractActionController
             $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
             $hydrator = new DoctrineHydrator($entityManager);
             $hydrator->hydrate($data, $entity);
+
             if ($form->isValid()) {
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
                 $objectManager->persist($entity);
                 $objectManager->flush();
-
-                //TODO: redirect where?
+                $controller = explode('/', $this->getRequest()->getUri()->getPath())[2];
                 if (!$this->getRequest()->isXmlHttpRequest()) {
-                    return $this->redirect()->toRoute(null, ['controller' => 'management']);
-                } else {
-                    return;
+                    return $this->redirect()->toRoute(null, ['controller' => $controller]);
                 }
+                return;
+            } else {
+                $this->getResponse()->setStatusCode(400);
+                return;
             }
         }
         $viewModel = $this->getViewModel();
@@ -127,12 +130,12 @@ abstract class AbstractCrudController extends AbstractActionController
         $objectManager->remove($entity);
         $objectManager->flush();
 
-        //TODO: redirect where?
+        $controller = explode('/', $this->getRequest()->getUri()->getPath())[2];
+
         if (!$this->getRequest()->isXmlHttpRequest()) {
-            return $this->redirect()->toRoute(null, ['controller' => 'management']);
-        } else {
-            return;
+            return $this->redirect()->toRoute(null, ['controller' => $controller]);
         }
+        return;
     }
 
     /**

@@ -10,19 +10,18 @@ $form->prepare();
 
 <div class="container">
     <h1><?php echo $this->escapeHtml($this->title); ?></h1>
-
     <div class="row">
         <form action="" method="post" class="form-horizontal" id="newCategory">
             <input type="hidden" value="" name="id"/>
             <div class="form-group">
                 <label for="aliasEntity" class="col-sm-2 control-label">
-                    <?= $form->get('aliasEntity')->getLabel(); ?>
+                    <?= $form->get('alias')->getLabel(); ?>
                 </label>
                 <div class="col-sm-4">
-                    <?php echo $this->formInput($form->get('aliasEntity')); ?>
+                    <?php echo $this->formInput($form->get('alias')); ?>
                 </div>
                 <div class="col-sm-9 col-md-offset-2 error-field error-form-message">
-                    <?= $this->formElementErrors($form->get('aliasEntity')); ?>
+                    <?= $this->formElementErrors($form->get('alias')); ?>
                 </div>
             </div>
             <div class="form-group">
@@ -38,26 +37,22 @@ $form->prepare();
             </div>
             <div class="form-group">
                 <label for="enabledComment" class="col-sm-2 control-label">
-                    <?= $form->get('enabledComment')->getLabel(); ?>
+                    <?= $form->get('isEnabled')->getLabel(); ?>
                 </label>
 
-                <div class="col-sm-2">
-                    <?php echo $this->formCheckbox($form->get('enabledComment')); ?>
-                </div>
+                <div class="col-sm-2"><?php echo $this->formCheckbox($form->get('isEnabled')); ?></div>
                 <div class="col-sm-9 col-md-offset-2 error-field error-form-message">
-                    <?= $this->formElementErrors($form->get('enabledComment')); ?>
+                    <?= $this->formElementErrors($form->get('isEnabled')); ?>
                 </div>
             </div>
             <div class="form-group">
                 <label for="visibleComment" class="col-sm-2 control-label">
-                    <?= $form->get('visibleComment')->getLabel(); ?>
+                    <?= $form->get('isVisible')->getLabel(); ?>
                 </label>
 
-                <div class="col-sm-2">
-                    <?php echo $this->formCheckbox($form->get('visibleComment')); ?>
-                </div>
+                <div class="col-sm-2"><?php echo $this->formCheckbox($form->get('isVisible')); ?></div>
                 <div class="col-sm-9 col-md-offset-2 error-field error-form-message">
-                    <?= $this->formElementErrors($form->get('visibleComment')); ?>
+                    <?= $this->formElementErrors($form->get('isVisible')); ?>
                 </div>
             </div>
             <div class="form-group">

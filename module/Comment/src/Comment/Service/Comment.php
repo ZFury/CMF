@@ -2,6 +2,7 @@
 
 namespace Comment\Service;
 
+use Doctrine\ORM\EntityNotFoundException;
 use Zend\ServiceManager\ServiceManager;
 use Comment\Form;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
@@ -36,43 +37,18 @@ class Comment
         $this->serviceManager = $sm;
     }
 
+    /**
+     * @param $comment
+     * @return bool
+     */
     public function commentOwner($comment)
     {
         $identity = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity();
         if ($comment->getUserId() === $identity->getUserId() || $identity->getUser()->getRole() === User::ROLE_ADMIN) {
             return true;
         }
+
         return false;
-    }
-
-
-    public static function cutName($username)
-    {
-        if (strlen($username)<=6) {
-            return $username;
-        } else {
-            return substr($username, 0, 6) . '...';
-        }
-    }
-
-    /**
-     * @param $aliasEntity
-     * @return bool
-     * @throws \Exception
-     */
-    public function enabledComment($aliasEntity)
-    {
-
-        $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
-        $entityType = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType($aliasEntity);
-        if (!$entityType) {
-            throw new \Exception('Unknown entity type');
-        }
-        if ($entityType->isEnabled() === 0) {
-            throw new \Exception('You can not comment this entity');
-        }
-
-        return true;
     }
 
     /**
@@ -85,16 +61,15 @@ class Comment
     {
         $serviceLocator = $this->getServiceLocator();
         $entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager');
+        $entityType = $entityManager->getRepository('\Comment\Entity\EntityType')->findOneByAlias($data['alias']);
+        if (!$entityType) {
+            throw new EntityNotFoundException();
+        }
         $form->setData($data);
 
         if ($form->isValid()) {
-            if ($this->enabledComment($data['alias'])) {
+            if ($entityType->getIsEnabled()) {
                 $data = $form->getData();
-                $serviceEntityType = $serviceLocator->get('Comment\Service\EntityType');
-                $entityType = $serviceEntityType->getEntity($data['alias'], $data['entityId']);
-                if (!$this->enabledComment($data['alias'])) {
-                    throw new \Exception('Prohibited add comments for this entity');
-                }
 
                 $comment = new Entity\Comment();
                 $comment->setEntityType($entityType);
@@ -119,6 +94,7 @@ class Comment
                 }
             }
         }
+
         return null;
     }
 
@@ -141,7 +117,7 @@ class Comment
         }
 
         $identity = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity();
-        if ($entityType->isVisible() || $identity->getUser()->getRole() === User::ROLE_ADMIN) {
+        if ($entityType->getIsVisible() || $identity->getUser()->getRole() === User::ROLE_ADMIN) {
             $comments = $objectManager->getRepository('Comment\Entity\Comment')
                 ->findBy([
                     'entityType' => $entityType,
@@ -149,8 +125,8 @@ class Comment
                 ]);
 
             $enabledCommentByComment = null;
-            if ($objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment') &&
-                $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment')->isEnabled() !==
+            if ($objectManager->getRepository('Comment\Entity\EntityType')->findOneByAlias('comment') &&
+                $objectManager->getRepository('Comment\Entity\EntityType')->findOneByAlias('comment')->getIsEnabled() !==
                 0) {
                 $enabledCommentByComment = true;
             }
@@ -158,7 +134,7 @@ class Comment
             foreach ($comments as $comment) {
                 $arrayComments[$comment->getId()]['comment'] = $comment;
 
-                $entity = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment');
+                $entity = $objectManager->getRepository('Comment\Entity\EntityType')->findOneByAlias('comment');
                 if ($entity) {
                     $data = ['alias' => 'comment', 'id' => $comment->getId()];
                     $arrayComments[$comment->getId()]['children'] = $this->tree($data);
@@ -189,7 +165,7 @@ class Comment
         if (!$this->commentOwner($comment)) {
             throw new \Exception('You do not have permission for this operation');
         }
-        if (!$this->enabledComment($comment->getEntityType()->getAlias())) {
+        if (!$comment->getEntityType()->getIsEnabled()) {
             throw new \Exception('Comment can not be deleted');
         }
 
@@ -218,7 +194,7 @@ class Comment
         if (!$this->commentOwner($comment)) {
             throw new \Exception('You do not have permission for this operation');
         }
-        if (!$this->enabledComment($comment->getEntityType()->getAlias())) {
+        if (!$comment->getEntityType()->getIsEnabled()) {
             throw new \Exception('Comment can not be edited');
         }
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -241,7 +217,7 @@ class Comment
         $builder = new AnnotationBuilder($entityManager);
         if ($comment) {
             $form = $builder->createForm($comment);
-            $form->setInputFilter(new Filter\CommentEditInputFilter($this->getServiceLocator()));
+            $form->setInputFilter(new Filter\EditCommentInputFilter($this->getServiceLocator()));
             $form->setHydrator(new DoctrineHydrator($entityManager));
             $form->bind($comment);
         } else {
@@ -265,5 +241,24 @@ class Comment
                 "comment/index/add.phtml",
                 ['form' => $form, 'commentService' => $this, 'id' => $entityId, 'alias' => $entity]
             );
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     * @throws EntityNotFoundException
+     */
+    public function getEntityByCommentId($id)
+    {
+        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $comment = $entityManager->getRepository('\Comment\Entity\Comment')->findOneById($id);
+        if (!$comment) {
+            throw new EntityNotFoundException();
+        }
+        /** @var \Comment\Entity\EntityType $entityType */
+        $entityType = $comment->getEntityType();
+        $entityNamespace = $entityType->getEntity();
+
+        return $entityManager->getRepository($entityNamespace)->findOneById($comment->getEntityId());
     }
 }

@@ -14,5 +14,10 @@ use Zend\Form\Element;
 
 abstract class FileUpload extends Form
 {
+    /**
+     * Returns the file type of a form input
+     *
+     * @return string
+     */
     abstract public function getFileType();
 }

@@ -14,12 +14,21 @@ use Zend\Form\Element;
 
 class ImageUpload extends FileUpload
 {
+    /**
+     * Construct
+     *
+     * @param null $name
+     * @param array $options
+     */
     public function __construct($name = null, $options = array())
     {
         parent::__construct($name, $options);
         $this->addElements();
     }
 
+    /**
+     * Audio input
+     */
     public function addElements()
     {
         $file = new Element\File('image');
@@ -28,6 +37,11 @@ class ImageUpload extends FileUpload
         $this->add($file);
     }
 
+    /**
+     * Returns the file type of a form input
+     *
+     * @return string
+     */
     public function getFileType()
     {
         return File::IMAGE_FILETYPE;

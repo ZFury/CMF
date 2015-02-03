@@ -94,7 +94,7 @@ class Comment extends EntityBase
     public function deleteChildren(LifecycleEventArgs $args)
     {
         $objectManager = $args->getObjectManager();
-        $entityType = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment');
+        $entityType = $objectManager->getRepository('Comment\Entity\EntityType')->findOneByAlias('comment');
         $commentRepository = $objectManager->getRepository('Comment\Entity\Comment');
         $comments = $commentRepository->findBy(array('entityType' => $entityType, 'entityId' => $this->getId()));
         foreach ($comments as $comment) {
@@ -302,18 +302,17 @@ class Comment extends EntityBase
      */
     public function toArray()
     {
-        {
-            $result = array(
-                "id" => $this->getId(),
-                "comment" => $this->getComment(),
-                "entityType" => $this->getEntityType(),
-                "entityTypeId" => $this->getEntityTypeId(),
-                "entityId" => $this->getEntityId(),
-                "user" => $this->getUser(),
-                "created" => $this->getCreated(),
-                "updated" => $this->getUpdated(),
-            );
-            return $result;
-        }
+        $result = [
+            "id" => $this->getId(),
+            "comment" => $this->getComment(),
+            "entityType" => $this->getEntityType(),
+            "entityTypeId" => $this->getEntityTypeId(),
+            "entityId" => $this->getEntityId(),
+            "user" => $this->getUser(),
+            "created" => $this->getCreated(),
+            "updated" => $this->getUpdated(),
+        ];
+
+        return $result;
     }
 }

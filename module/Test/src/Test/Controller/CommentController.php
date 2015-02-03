@@ -29,7 +29,7 @@ class CommentController extends AbstractActionController
 
         $entity = $objectManager->getRepository('Test\Entity\Test')->findAll()[0];
         $entityType = $objectManager->getRepository('Comment\Entity\EntityType')
-            ->getEntityTypeByEntity('Test\\Entity\\Test');
+            ->findOneByEntity('Test\\Entity\\Test');
 
         $entityId = $entity->getId();
         $entityAlias = $entityType->getAlias();
@@ -38,9 +38,9 @@ class CommentController extends AbstractActionController
             ->get('Comment\Service\Comment')
             ->tree(['alias' => $entityAlias, 'id' => $entityId]);
 
-
         $addCommentForm = null;
-        if ($entityType->isEnabled() !== 0) {
+
+        if ($entityType->getIsEnabled()) {
             $addCommentForm = $this->getServiceLocator()->get('Comment\Service\Comment')->getAddCommentForm(
                 $this->getServiceLocator()->get('Comment\Service\Comment')->createForm(),
                 $entityId,
