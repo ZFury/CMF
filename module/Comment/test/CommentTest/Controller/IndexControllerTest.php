@@ -26,10 +26,19 @@ class IndexControllerTest extends ControllerTestCase
      */
     protected $traceError = true;
 
+    /**
+     * @var \User\Entity\User
+     */
     protected $user;
 
+    /**
+     * @var \Comment\Entity\EntityType
+     */
     protected $entityType;
 
+    /**
+     * @var array
+     */
     protected $anotherUser = [
         'name' => 'Admin1',
         'email' => 'admin1@nix.com',
@@ -77,6 +86,11 @@ class IndexControllerTest extends ControllerTestCase
         $this->commentService = $this->getApplicationServiceLocator()->get('Comment\Service\Comment');
     }
 
+    /**
+     * Tear down
+     *
+     * @throws \Exception
+     */
     public function tearDown()
     {
         $this->removeUser($this->anotherUser);
@@ -84,6 +98,9 @@ class IndexControllerTest extends ControllerTestCase
         $this->removeEntityType($this->entityType);
     }
 
+    /**
+     * Add action bad request
+     */
     public function testAddActionBadRequest()
     {
         $this->dispatch('/comment/index/add', Request::METHOD_POST, ['aa'=>'bb']);
@@ -95,6 +112,9 @@ class IndexControllerTest extends ControllerTestCase
         $this->assertMatchedRouteName('comment/default');
     }
 
+    /**
+     * Add action redirection after valid post
+     */
     public function testAddActionRedirectsAfterValidPost()
     {
         $postData = array(
@@ -106,6 +126,11 @@ class IndexControllerTest extends ControllerTestCase
         $this->assertResponseStatusCode(302);
     }
 
+    /**
+     * Add action un-enabled entity
+     *
+     * @throws \Exception
+     */
     public function testAddActionNoEnabledEntity()
     {
         $form = $this->commentService->createForm();
@@ -118,6 +143,11 @@ class IndexControllerTest extends ControllerTestCase
         $this->assertNull($this->commentService->add($form, $postData));
     }
 
+    /**
+     * Comment service add invalid entity
+     *
+     * @throws \Exception
+     */
     public function testAddInvalidEntity()
     {
         $form = $this->commentService->createForm();
@@ -129,6 +159,11 @@ class IndexControllerTest extends ControllerTestCase
         $this->assertNull($this->commentService->add($form, $postData));
     }
 
+    /**
+     * Edit action can be accessed
+     *
+     * @throws \Exception
+     */
     public function testEditActionCanBeAccessed()
     {
         $comment = $this->createComment('testComment');
@@ -142,6 +177,11 @@ class IndexControllerTest extends ControllerTestCase
         $this->assertMatchedRouteName('comment/default');
     }
 
+    /**
+     * Edit action redirection after valid post
+     *
+     * @throws \Exception
+     */
     public function testEditActionRedirectsAfterValidPost()
     {
         $comment = $this->createComment('Comment for edited');
@@ -153,6 +193,9 @@ class IndexControllerTest extends ControllerTestCase
         $this->assertResponseStatusCode(302);
     }
 
+    /**
+     * Editing a non-existing comment
+     */
     public function testEditActionCommentDoesntExist()
     {
         $postData = array(
@@ -162,6 +205,11 @@ class IndexControllerTest extends ControllerTestCase
         $this->assertResponseStatusCode(404);
     }
 
+    /**
+     * Edit action can not be accessed (Permission denied)
+     *
+     * @throws \Exception
+     */
     public function testEditActionNoPermission()
     {
         $form = $this->commentService->createForm();
@@ -174,6 +222,11 @@ class IndexControllerTest extends ControllerTestCase
         $this->commentService->edit($form, $comment, $postData);
     }
 
+    /**
+     * Delete action can be accessed
+     *
+     * @throws \Exception
+     */
     public function testDeleteActionCanBeAccessed()
     {
         $comment = $this->createComment('Comment for deleting');
@@ -186,6 +239,11 @@ class IndexControllerTest extends ControllerTestCase
         $this->assertMatchedRouteName('comment/default');
     }
 
+    /**
+     * Delete action can not be accessed (Permission denied)
+     *
+     * @throws \Exception
+     */
     public function testDeleteActionNoPermission()
     {
         $comment = $this->createComment('Comment for deleting');
@@ -194,6 +252,9 @@ class IndexControllerTest extends ControllerTestCase
         $this->commentService->delete($comment->getId());
     }
 
+    /**
+     * Deleting of non-existing comment
+     */
     public function testDeleteActionCommentDoesntExist()
     {
         $this->dispatch('/comment/index/delete/777777777');

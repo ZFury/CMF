@@ -36,6 +36,10 @@ class Comment
         $this->serviceManager = $sm;
     }
 
+    /**
+     * @param $comment
+     * @return bool
+     */
     public function commentOwner($comment)
     {
         $identity = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity();
@@ -45,7 +49,10 @@ class Comment
         return false;
     }
 
-
+    /**
+     * @param $username
+     * @return string
+     */
     public static function cutName($username)
     {
         if (strlen($username)<=6) {

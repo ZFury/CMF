@@ -101,7 +101,7 @@ abstract class AbstractCrudController extends AbstractActionController
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
                 $objectManager->persist($entity);
                 $objectManager->flush();
-                
+
                 if (!$this->getRequest()->isXmlHttpRequest()) {
                     if ($this->getRequest()->getHeader('Referer')) {
                         return $this->redirect()->toUrl($this->getRequest()->getHeader('Referer')->getUri());

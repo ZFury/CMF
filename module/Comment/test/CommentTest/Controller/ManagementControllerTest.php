@@ -34,8 +34,14 @@ class ManagementControllerTest extends ControllerTestCase
         'password' => '123456',
     ];
 
+    /**
+     * @var \User\Entity\User
+     */
     protected $user;
 
+    /**
+     * @var array
+     */
     protected $entityData = array(
         'alias' => 'comment',
         'entity' => 'Comment\Entity\Comment',
@@ -78,11 +84,17 @@ class ManagementControllerTest extends ControllerTestCase
         $this->commentService = $this->getApplicationServiceLocator()->get('Comment\Service\Comment');
     }
 
+    /**
+     * Tear down
+     */
     public function tearDown()
     {
         $this->removeUser($this->anotherUser);
     }
 
+    /**
+     * Index action can be accessed
+     */
     public function testIndexActionCanBeAccessed()
     {
         $this->dispatch('/comment/entity-type');
@@ -94,6 +106,9 @@ class ManagementControllerTest extends ControllerTestCase
         $this->assertMatchedRouteName('comment/default');
     }
 
+    /**
+     * Index action can not be accessed (Permission denied)
+     */
     public function testIndexActionNoPermission()
     {
         $this->setupUser();
@@ -101,6 +116,10 @@ class ManagementControllerTest extends ControllerTestCase
         $this->assertResponseStatusCode(403);
     }
 
+    /**
+     *
+     * Create action valid post data
+     */
     public function testCreateActionValidPost()
     {
         $postData = array(
@@ -114,6 +133,11 @@ class ManagementControllerTest extends ControllerTestCase
         $this->assertResponseStatusCode(200);
     }
 
+    /**
+     * Edit action can be accessed
+     *
+     * @throws \Exception
+     */
     public function testEditActionCanBeAccessed()
     {
         $entity = $this->createEntityType($this->entityData);
@@ -126,6 +150,11 @@ class ManagementControllerTest extends ControllerTestCase
         $this->removeEntityType($entity);
     }
 
+    /**
+     * Edit action valid post data
+     *
+     * @throws \Exception
+     */
     public function testEditActionValidPost()
     {
         $entity = $this->createEntityType($this->entityData);
@@ -141,6 +170,11 @@ class ManagementControllerTest extends ControllerTestCase
         $this->removeEntityType($entity);
     }
 
+    /**
+     * Delete action can be accessed
+     *
+     * @throws \Exception
+     */
     public function testDeleteActionCanBeAccessed()
     {
         $entity = $this->createEntityType($this->entityData);
@@ -153,6 +187,11 @@ class ManagementControllerTest extends ControllerTestCase
         $this->assertMatchedRouteName('comment/default');
     }
 
+    /**
+     * Delete action can not be accessed  (Permission denied)
+     *
+     * @throws \Exception
+     */
     public function testDeleteActionNoPermission()
     {
         $entity = $this->createEntityType($this->entityData);
@@ -161,7 +200,9 @@ class ManagementControllerTest extends ControllerTestCase
         $this->commentService->delete($entity->getId());
     }
 
-
+    /**
+     * Delete non-existing entity
+     */
     public function testDeleteActionNoExistEntity()
     {
         $this->dispatch('/comment/entity-type/delete/1');
