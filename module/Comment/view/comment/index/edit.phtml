@@ -1,13 +1,10 @@
 <?php
-echo $this->partial('comment/index/add.phtml',
-    array(
-        'form' => $this->form,
-        'title' => 'Edit comment',
-        'ajax' => $this->ajax,
-        'id' => $id,
-        'alias' => $alias
-    )
-);
+echo $this->partial('comment/index/add.phtml',[
+    'form' => $this->form,
+    'title' => 'Edit comment',
+    'ajax' => $this->ajax,
+    'action' => $this->url('comment/default', ['controller' => 'index', 'action' => 'edit', 'id' => $id])
+]);
 ?>
 <script>
     require(['fury']);

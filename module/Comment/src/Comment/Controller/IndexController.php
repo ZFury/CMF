@@ -153,8 +153,7 @@ class IndexController extends AbstractActionController
             'form' => $form,
             'title' => 'Add comment',
             'ajax' => $this->getRequest()->isXmlHttpRequest(),
-            'alias' => $entityType->getAlias(),
-            'id' => $comment->getEntityId()
+            'id' => $id
         ]);
         if ($this->getRequest()->isXmlHttpRequest()) {
             $viewModel->setTerminal(true);
