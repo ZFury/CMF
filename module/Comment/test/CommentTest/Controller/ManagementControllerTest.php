@@ -3,6 +3,7 @@
 namespace CommenTest\Controller;
 
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
+use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\Stdlib;
 use Fury\Test\Controller\ControllerTestCase;
@@ -165,7 +166,7 @@ class ManagementControllerTest extends ControllerTestCase
             'isVisible' => 1,
             'description' => 'another',
         );
-        $this->dispatch('/comment/entity-type/edit/' . $entity->getId(), 'POST', $postData);
+        $this->dispatch('/comment/entity-type/edit/' . $entity->getId(), Request::METHOD_POST, $postData);
         $this->assertResponseStatusCode(302);
         $this->removeEntityType($entity);
     }

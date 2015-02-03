@@ -74,9 +74,8 @@ abstract class AbstractCrudController extends AbstractActionController
                     } else {
                         return $this->redirect()->toUrl('/');
                     }
-                } else {
-                    return;
                 }
+                return;
             }
         }
         $viewModel = $this->getViewModel();
@@ -105,16 +104,18 @@ abstract class AbstractCrudController extends AbstractActionController
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
                 $objectManager->persist($entity);
                 $objectManager->flush();
-
                 if (!$this->getRequest()->isXmlHttpRequest()) {
                     if ($this->getRequest()->getHeader('Referer')) {
                         return $this->redirect()->toUrl($this->getRequest()->getHeader('Referer')->getUri());
                     } else {
                         return $this->redirect()->toUrl('/');
                     }
-                } else {
-                    return;
                 }
+
+                return;
+            } else {
+                $this->getResponse()->setStatusCode(400);
+                return;
             }
         }
         $viewModel = $this->getViewModel();

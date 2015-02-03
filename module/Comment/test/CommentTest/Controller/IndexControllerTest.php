@@ -122,7 +122,15 @@ class IndexControllerTest extends ControllerTestCase
             'alias' => $this->entityType->getAlias(),
             'id' => $this->user->getId(),
         );
-        $this->dispatch('/comment/index/add?alias=' . $this->entityType->getAlias() . '&id=' . $this->user->getId(), 'POST', $postData);
+
+        $this->dispatch(
+            '/comment/index/add?alias=' .
+            $this->entityType->getAlias() .
+            '&id=' . $this->user->getId(),
+            'POST',
+            $postData
+        );
+
         $this->assertResponseStatusCode(302);
     }
 
@@ -156,7 +164,8 @@ class IndexControllerTest extends ControllerTestCase
             'alias' => "some",
             'id' => $this->user->getId(),
         );
-        $this->assertNull($this->commentService->add($form, $postData));
+        $this->setExpectedException('Doctrine\ORM\EntityNotFoundException');
+        $this->commentService->add($form, $postData);
     }
 
     /**
@@ -184,7 +193,7 @@ class IndexControllerTest extends ControllerTestCase
      */
     public function testEditActionRedirectsAfterValidPost()
     {
-        $comment = $this->createComment('Comment for edited');
+        $comment = $this->createComment('Comment for editing');
 
         $postData = array(
             'comment' => 'edited'
