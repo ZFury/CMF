@@ -67,13 +67,9 @@ abstract class AbstractCrudController extends AbstractActionController
                 $hydrator->hydrate($form->getData(), $entity);
                 $objectManager->persist($entity);
                 $objectManager->flush();
-
+                $controller = explode('/', $this->getRequest()->getUri()->getPath())[2];
                 if (!$this->getRequest()->isXmlHttpRequest()) {
-                    if ($this->getRequest()->getHeader('Referer')) {
-                        return $this->redirect()->toUrl($this->getRequest()->getHeader('Referer')->getUri());
-                    } else {
-                        return $this->redirect()->toUrl('/');
-                    }
+                    return $this->redirect()->toRoute(null, ['controller' => $controller]);
                 }
                 return;
             }
@@ -104,14 +100,10 @@ abstract class AbstractCrudController extends AbstractActionController
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
                 $objectManager->persist($entity);
                 $objectManager->flush();
+                $controller = explode('/', $this->getRequest()->getUri()->getPath())[2];
                 if (!$this->getRequest()->isXmlHttpRequest()) {
-                    if ($this->getRequest()->getHeader('Referer')) {
-                        return $this->redirect()->toUrl($this->getRequest()->getHeader('Referer')->getUri());
-                    } else {
-                        return $this->redirect()->toUrl('/');
-                    }
+                    return $this->redirect()->toRoute(null, ['controller' => $controller]);
                 }
-
                 return;
             } else {
                 $this->getResponse()->setStatusCode(400);
@@ -138,12 +130,12 @@ abstract class AbstractCrudController extends AbstractActionController
         $objectManager->remove($entity);
         $objectManager->flush();
 
-        //TODO: redirect where?
+        $controller = explode('/', $this->getRequest()->getUri()->getPath())[2];
+
         if (!$this->getRequest()->isXmlHttpRequest()) {
-            return $this->redirect()->toRoute(null, ['controller' => 'management']);
-        } else {
-            return;
+            return $this->redirect()->toRoute(null, ['controller' => $controller]);
         }
+        return;
     }
 
     /**
