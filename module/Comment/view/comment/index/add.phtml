@@ -7,7 +7,12 @@ $form->prepare();
 ?>
 <div class="row">
     <div class="form-send well well-sm">
-        <form class="form-ajax form-horizontal" action="<?=$this->url('comment/default', ['controller' => 'index', 'action' => 'add'], ['query'=>['alias' => $alias, 'id' => $id]])?>"  method="post">
+        <form class="form-ajax form-horizontal" action="<?php
+        if (isset($action)) {
+            echo $action;
+        } else {
+            echo $this->url('comment/default', ['controller' => 'index', 'action' => 'add'], ['query'=>['alias' => $alias, 'id' => $id]]);
+        }?>"  method="post">
             <div class="form-group">
                 <div class="col-sm-12">
                     <?php echo $this->formTextarea($form->get('comment')); ?>

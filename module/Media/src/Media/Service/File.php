@@ -22,14 +22,24 @@ class File
     const FROM_ROOT = false;
     const DEFAULT_FILTER = false;
 
+    /**
+     * @var \Zend\ServiceManager\ServiceLocatorInterface
+     */
     protected $sm;
 
+    /**
+     * Construct
+     *
+     * @param \Zend\ServiceManager\ServiceLocatorInterface $sm
+     */
     public function __construct($sm)
     {
         $this->sm = $sm;
     }
 
     /**
+     * Creates all directories that don't exist in a given path
+     *
      * @param $path
      * @param int $mode
      * @return bool
@@ -53,6 +63,8 @@ class File
     }
 
     /**
+     * Returns the destination directory from a given path (given path usually has file in the end)
+     *
      * @param $path
      * @return string
      */
@@ -62,6 +74,9 @@ class File
     }
 
     /**
+     * Generates full url from an url part e.g. You give "/module/controller/action/id", it returns
+     * "www.test.com/module/controller/action/id"
+     *
      * @param $urlPart
      * @return string
      */
@@ -71,15 +86,19 @@ class File
     }
 
     /**
-     * @param $imageName
-     * @return mixed
+     * Returns an extension of a file
+     *
+     * @param $fileName
+     * @return string
      */
-    protected static function getExt($imageName)
+    protected static function getExt($fileName)
     {
-        return preg_replace('(.*\.)', '', $imageName);
+        return preg_replace('(.*\.)', '', $fileName);
     }
 
     /**
+     * Returns a path to a file
+     *
      * @param $id
      * @param $path
      * @param $ext
@@ -91,6 +110,8 @@ class File
     }
 
     /**
+     * Returns an end part of a file path (used in buildFilePath method)
+     *
      * @param $id
      * @param $ext
      * @return string
@@ -106,6 +127,8 @@ class File
     }
 
     /**
+     * Deletes a file using sub-methods for deleting File entity and ObjectFile entity
+     *
      * @param $fileId
      */
     public function deleteFile($fileId)
@@ -116,6 +139,8 @@ class File
     }
 
     /**
+     * Deletes File entity
+     *
      * @param FileEntity $file
      */
     public function deleteFileEntity(FileEntity $file)
@@ -125,6 +150,8 @@ class File
     }
 
     /**
+     * Deletes ObjectFile entity
+     *
      * @param FileEntity $file
      */
     public function deleteObjectFileEntity(FileEntity $file)
@@ -136,6 +163,8 @@ class File
     }
 
     /**
+     * Creates file using sub-methods to write file and to associate it with an object
+     *
      * @param FileUpload $form
      * @param $object
      * @return FileEntity
@@ -149,6 +178,9 @@ class File
     }
 
     /**
+     * Makes an association between a created file and an entity. It means, that the object file be the owner
+     * of the file
+     *
      * @param FileEntity $file
      * @param $object
      */
@@ -163,6 +195,8 @@ class File
     }
 
     /**
+     * Writes file to a DB and moves it to an appropriate path
+     *
      * @param FileUpload $form
      * @return FileEntity
      * @throws \Exception
@@ -198,6 +232,8 @@ class File
     }
 
     /**
+     * Moves a file to a directory (this method is used in writeFile method
+     *
      * @param $destination
      * @param $file
      * @return array|string
@@ -213,6 +249,8 @@ class File
     }
 
     /**
+     * Converts file according to its type
+     *
      * @param FileEntity $file
      * @return FileEntity
      */
@@ -232,6 +270,8 @@ class File
     }
 
     /**
+     * Generates upload form according to a file type
+     *
      * @param string $filetype
      */
     public function generateFileUploadForm($filetype)

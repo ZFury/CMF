@@ -56,8 +56,10 @@ abstract class AbstractCrudController extends AbstractActionController
          * @var $form \Zend\Form\Form
          */
         $form = $this->getCreateForm();
+
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
+
             if ($form->isValid()) {
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
                 $entity = $this->getEntity();
@@ -65,12 +67,15 @@ abstract class AbstractCrudController extends AbstractActionController
                 $hydrator->hydrate($form->getData(), $entity);
                 $objectManager->persist($entity);
                 $objectManager->flush();
-                //TODO: redirect where?
+
                 if (!$this->getRequest()->isXmlHttpRequest()) {
-                    return $this->redirect()->toRoute(null, ['controller' => 'management']);
-                } else {
-                    return;
+                    if ($this->getRequest()->getHeader('Referer')) {
+                        return $this->redirect()->toUrl($this->getRequest()->getHeader('Referer')->getUri());
+                    } else {
+                        return $this->redirect()->toUrl('/');
+                    }
                 }
+                return;
             }
         }
         $viewModel = $this->getViewModel();
@@ -94,17 +99,23 @@ abstract class AbstractCrudController extends AbstractActionController
             $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
             $hydrator = new DoctrineHydrator($entityManager);
             $hydrator->hydrate($data, $entity);
+
             if ($form->isValid()) {
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
                 $objectManager->persist($entity);
                 $objectManager->flush();
-
-                //TODO: redirect where?
                 if (!$this->getRequest()->isXmlHttpRequest()) {
-                    return $this->redirect()->toRoute(null, ['controller' => 'management']);
-                } else {
-                    return;
+                    if ($this->getRequest()->getHeader('Referer')) {
+                        return $this->redirect()->toUrl($this->getRequest()->getHeader('Referer')->getUri());
+                    } else {
+                        return $this->redirect()->toUrl('/');
+                    }
                 }
+
+                return;
+            } else {
+                $this->getResponse()->setStatusCode(400);
+                return;
             }
         }
         $viewModel = $this->getViewModel();

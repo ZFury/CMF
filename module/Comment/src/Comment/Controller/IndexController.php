@@ -99,7 +99,6 @@ class IndexController extends AbstractActionController
      */
     public function editAction()
     {
-
         if (!$id = $this->params()->fromRoute('id')) {
             throw new \Exception('Bad request');
         }
@@ -115,7 +114,6 @@ class IndexController extends AbstractActionController
         /** @var \Comment\Entity\EntityType $entityType */
         $entityType = $objectManager->getRepository('\Comment\Entity\EntityType')
             ->findOneById($comment->getEntityTypeId());
-
 
         $form = $this->getServiceLocator()->get('Comment\Service\Comment')->createForm($comment);
 
@@ -153,8 +151,7 @@ class IndexController extends AbstractActionController
             'form' => $form,
             'title' => 'Add comment',
             'ajax' => $this->getRequest()->isXmlHttpRequest(),
-            'alias' => $entityType->getAlias(),
-            'id' => $comment->getEntityId()
+            'id' => $id
         ]);
         if ($this->getRequest()->isXmlHttpRequest()) {
             $viewModel->setTerminal(true);
