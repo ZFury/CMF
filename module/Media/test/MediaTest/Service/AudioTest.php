@@ -23,6 +23,9 @@ class AudioTest extends AbstractHttpControllerTestCase
      */
     protected $traceError = true;
 
+    /**
+     * @var array
+     */
     protected $audioEntityData = [
         'extension' => 'mp3',
         'type' => 'audio',

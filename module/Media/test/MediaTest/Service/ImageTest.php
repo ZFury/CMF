@@ -26,6 +26,9 @@ class ImageTest extends ControllerTestCase
      */
     protected $traceError;
 
+    /**
+     * @var array
+     */
     protected $imageEntityData = [
         'extension' => 'jpg',
         'type' => 'image',
