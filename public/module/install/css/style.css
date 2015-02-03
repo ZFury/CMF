@@ -137,6 +137,12 @@ a:hover, a:link, a:active {
 
 .btn-circle > i {
     vertical-align: middle;
+    margin-top: -0.150em;
+}
+
+button.btn-circle > i {
+    vertical-align: middle;
+    margin-top: -0.250em;
 }
 
 button[disabled]{
@@ -150,3 +156,4 @@ button[disabled]{
     margin-top: 7px;
     margin-bottom: 7px;
 }
+
