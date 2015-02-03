@@ -67,9 +67,13 @@ abstract class AbstractCrudController extends AbstractActionController
                 $hydrator->hydrate($form->getData(), $entity);
                 $objectManager->persist($entity);
                 $objectManager->flush();
-                //TODO: redirect where?
+
                 if (!$this->getRequest()->isXmlHttpRequest()) {
-                    return $this->redirect()->toRoute(null, ['controller' => 'management']);
+                    if ($this->getRequest()->getHeader('Referer')) {
+                        return $this->redirect()->toUrl($this->getRequest()->getHeader('Referer')->getUri());
+                    } else {
+                        return $this->redirect()->toUrl('/');
+                    }
                 } else {
                     return;
                 }
