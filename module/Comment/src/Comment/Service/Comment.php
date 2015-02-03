@@ -2,6 +2,7 @@
 
 namespace Comment\Service;
 
+use Doctrine\ORM\EntityNotFoundException;
 use Zend\ServiceManager\ServiceManager;
 use Comment\Form;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
@@ -260,5 +261,24 @@ class Comment
                 "comment/index/add.phtml",
                 ['form' => $form, 'commentService' => $this, 'id' => $entityId, 'alias' => $entity]
             );
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     * @throws EntityNotFoundException
+     */
+    public function getEntityByCommentId($id)
+    {
+        $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        $comment = $entityManager->getRepository('\Comment\Entity\Comment')->findOneById($id);
+        if (!$comment) {
+            throw new EntityNotFoundException();
+        }
+        /** @var \Comment\Entity\EntityType $entityType */
+        $entityType = $comment->getEntityType();
+        $entityNamespace = $entityType->getEntity();
+
+        return $entityManager->getRepository($entityNamespace)->findOneById($comment->getEntityId());
     }
 }
