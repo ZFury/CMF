@@ -89,7 +89,8 @@ return array(
     ),
     'view_helpers' => array(
         'invokables' => array(
-            'comment' => 'Comment\View\Helper\Comment'
+            'comment' => 'Comment\View\Helper\Comment',
+            'cutString' => 'Comment\View\Helper\CutString'
         ),
     ),
     'navigation' => array(

@@ -50,19 +50,6 @@ class Comment
     }
 
     /**
-     * @param $username
-     * @return string
-     */
-    public static function cutName($username)
-    {
-        if (strlen($username)<=6) {
-            return $username;
-        } else {
-            return substr($username, 0, 6) . '...';
-        }
-    }
-
-    /**
      * @param $aliasEntity
      * @return bool
      * @throws \Exception
