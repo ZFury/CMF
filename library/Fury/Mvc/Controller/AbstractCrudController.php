@@ -67,9 +67,7 @@ abstract class AbstractCrudController extends AbstractActionController
                 $hydrator->hydrate($form->getData(), $entity);
                 $objectManager->persist($entity);
                 $objectManager->flush();
-                $controller = explode('/', $this->getRequest()->getUri()->getPath());
-                $controller = $controller[2];
-
+                $controller = explode('/', $this->getRequest()->getUri()->getPath())[2];
                 if (!$this->getRequest()->isXmlHttpRequest()) {
                     return $this->redirect()->toRoute(null, ['controller' => $controller]);
                 }
@@ -102,9 +100,7 @@ abstract class AbstractCrudController extends AbstractActionController
                 $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
                 $objectManager->persist($entity);
                 $objectManager->flush();
-                $controller = explode('/', $this->getRequest()->getUri()->getPath());
-                $controller = $controller[2];
-
+                $controller = explode('/', $this->getRequest()->getUri()->getPath())[2];
                 if (!$this->getRequest()->isXmlHttpRequest()) {
                     return $this->redirect()->toRoute(null, ['controller' => $controller]);
                 }
@@ -134,8 +130,7 @@ abstract class AbstractCrudController extends AbstractActionController
         $objectManager->remove($entity);
         $objectManager->flush();
 
-        $controller = explode('/', $this->getRequest()->getUri()->getPath());
-        $controller = $controller[2];
+        $controller = explode('/', $this->getRequest()->getUri()->getPath())[2];
 
         if (!$this->getRequest()->isXmlHttpRequest()) {
             return $this->redirect()->toRoute(null, ['controller' => $controller]);
