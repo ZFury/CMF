@@ -29,7 +29,7 @@ class CommentController extends AbstractActionController
 
         $entity = $objectManager->getRepository('Test\Entity\Test')->findAll()[0];
         $entityType = $objectManager->getRepository('Comment\Entity\EntityType')
-            ->getEntityTypeByEntity('Test\\Entity\\Test');
+            ->findOneByEntity('Test\\Entity\\Test');
 
         $entityId = $entity->getId();
         $entityAlias = $entityType->getAlias();

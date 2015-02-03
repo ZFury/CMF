@@ -40,9 +40,7 @@ $form->prepare();
                     <?= $form->get('isEnabled')->getLabel(); ?>
                 </label>
 
-                <div class="col-sm-2">
-                    <?php echo $this->formCheckbox($form->get('isEnabled')); ?>
-                </div>
+                <div class="col-sm-2"><?php echo $this->formCheckbox($form->get('isEnabled')); ?></div>
                 <div class="col-sm-9 col-md-offset-2 error-field error-form-message">
                     <?= $this->formElementErrors($form->get('isEnabled')); ?>
                 </div>
@@ -52,9 +50,7 @@ $form->prepare();
                     <?= $form->get('isVisible')->getLabel(); ?>
                 </label>
 
-                <div class="col-sm-2">
-                    <?php echo $this->formCheckbox($form->get('isVisible')); ?>
-                </div>
+                <div class="col-sm-2"><?php echo $this->formCheckbox($form->get('isVisible')); ?></div>
                 <div class="col-sm-9 col-md-offset-2 error-field error-form-message">
                     <?= $this->formElementErrors($form->get('isVisible')); ?>
                 </div>

@@ -23,23 +23,4 @@ class EntityType extends EntityRepository
 
         return $entities;
     }
-
-    /**
-     * @param $aliasEntity
-     * @return null|object
-     */
-    public function getEntityType($aliasEntity)
-    {
-        $entity = $this->findOneBy(['alias' => $aliasEntity]);
-        return $entity;
-    }
-
-    /**
-     * @param $entity
-     * @return null|object
-     */
-    public function getEntityTypeByEntity($entity)
-    {
-        return $this->findOneBy(['entity' => $entity]);
-    }
 }

@@ -1,7 +1,7 @@
 <li class="media comment-body" data-id="<?= $this->comment->getId() ?>">
     <div class="media-body">
     <h5 class="media-heading row">
-        <div class="col-sm-3" data-toggle="tooltip" data-placement="top" title="<?= $this->comment->getUser()->getDisplayName()?>"><?php echo $this->escapeHtml(\Comment\Service\Comment::cutName($this->comment->getUser()->getDisplayName()))?></div>
+        <div class="col-sm-3" data-toggle="tooltip" data-placement="top" title="<?= $this->comment->getUser()->getDisplayName()?>"><?php echo $this->escapeHtml($this->cutString($this->comment->getUser()->getDisplayName(), 8, '...'))?></div>
         <div class="data-edit col-sm-9 text-right">
             <div class="data text-right">
                 <small><?= $this->comment->getCreated()->format('d-m-Y  H:m:s') ?></small>

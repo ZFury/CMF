@@ -307,19 +307,17 @@ class EntityType extends EntityBase
      */
     public function toArray()
     {
-        {
-            $result = array(
-                "id" => $this->getId(),
-                "alias" => $this->getAlias(),
-                "entity" => $this->getEntity(),
-                "is_visible" => $this->getIsVisible(),
-                "is_enabled" =>$this->getIsEnabled(),
-                "description" => $this->getDescription(),
-                "created" => $this->getCreated(),
-                "updated" => $this->getUpdated(),
-            );
+        $result = [
+            "id" => $this->getId(),
+            "alias" => $this->getAlias(),
+            "entity" => $this->getEntity(),
+            "is_visible" => $this->getIsVisible(),
+            "is_enabled" =>$this->getIsEnabled(),
+            "description" => $this->getDescription(),
+            "created" => $this->getCreated(),
+            "updated" => $this->getUpdated(),
+        ];
 
-            return $result;
-        }
+        return $result;
     }
 }

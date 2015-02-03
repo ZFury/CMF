@@ -47,6 +47,7 @@ class EntityTypeController extends AbstractCrudController
             'action',
             $urlHelper('comment/default', ['controller' => 'entity-type', 'action' => 'create'])
         );
+//        $form->setData(['isVisible' => true, 'isEnabled' => true]);
 
         return $form;
     }

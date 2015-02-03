@@ -37,7 +37,7 @@ class EntityType
     {
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
 
-        if (!$entityType = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType($aliasEntity)) {
+        if (!$entityType = $objectManager->getRepository('Comment\Entity\EntityType')->findOneByAlias($aliasEntity)) {
             throw new \Exception('Unknown entity type');
         }
 
