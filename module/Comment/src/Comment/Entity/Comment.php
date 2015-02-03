@@ -94,7 +94,7 @@ class Comment extends EntityBase
     public function deleteChildren(LifecycleEventArgs $args)
     {
         $objectManager = $args->getObjectManager();
-        $entityType = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType('comment');
+        $entityType = $objectManager->getRepository('Comment\Entity\EntityType')->findOneByAlias('comment');
         $commentRepository = $objectManager->getRepository('Comment\Entity\Comment');
         $comments = $commentRepository->findBy(array('entityType' => $entityType, 'entityId' => $this->getId()));
         foreach ($comments as $comment) {
