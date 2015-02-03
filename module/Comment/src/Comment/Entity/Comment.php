@@ -302,18 +302,17 @@ class Comment extends EntityBase
      */
     public function toArray()
     {
-        {
-            $result = array(
-                "id" => $this->getId(),
-                "comment" => $this->getComment(),
-                "entityType" => $this->getEntityType(),
-                "entityTypeId" => $this->getEntityTypeId(),
-                "entityId" => $this->getEntityId(),
-                "user" => $this->getUser(),
-                "created" => $this->getCreated(),
-                "updated" => $this->getUpdated(),
-            );
-            return $result;
-        }
+        $result = [
+            "id" => $this->getId(),
+            "comment" => $this->getComment(),
+            "entityType" => $this->getEntityType(),
+            "entityTypeId" => $this->getEntityTypeId(),
+            "entityId" => $this->getEntityId(),
+            "user" => $this->getUser(),
+            "created" => $this->getCreated(),
+            "updated" => $this->getUpdated(),
+        ];
+
+        return $result;
     }
 }

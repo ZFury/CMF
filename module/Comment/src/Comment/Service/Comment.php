@@ -46,6 +46,7 @@ class Comment
         if ($comment->getUserId() === $identity->getUserId() || $identity->getUser()->getRole() === User::ROLE_ADMIN) {
             return true;
         }
+
         return false;
     }
 
@@ -56,7 +57,6 @@ class Comment
      */
     public function enabledComment($aliasEntity)
     {
-
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
         $entityType = $objectManager->getRepository('Comment\Entity\EntityType')->getEntityType($aliasEntity);
         if (!$entityType) {
@@ -113,6 +113,7 @@ class Comment
                 }
             }
         }
+
         return null;
     }
 

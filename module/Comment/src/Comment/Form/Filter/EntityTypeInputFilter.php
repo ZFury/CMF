@@ -33,36 +33,34 @@ class EntityTypeInputFilter extends InputFilter
      */
     protected function alias()
     {
-        $recordUniqueValidator = new UniqueObject(
-            array(
+        $recordUniqueValidator = new UniqueObject([
                 'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')
                     ->getRepository('Comment\Entity\EntityType'),
-                'fields' => array('alias'),
+                'fields' => ['alias'],
                 'object_manager' => $this->sm->get('Doctrine\ORM\EntityManager'),
-            )
-        );
+        ]);
         $recordUniqueValidator->setMessage(
             'Entity type with this alias already exists'
         );
 
-        $this->add(array(
+        $this->add([
             'name' => 'alias',
             'required' => true,
-            'filters' => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
-            ),
-            'validators' => array(
-                array(
+            'filters' => [
+                ['name' => 'StripTags'],
+                ['name' => 'StringTrim'],
+            ],
+            'validators' => [
+                [
                     'name' => 'Regex',
-                    'options' => array(
+                    'options' => [
                         'pattern' => '/^[a-zA-Z-_]*$/',
                         'message' => 'Entity type contains invalid characters'
-                    ),
-                ),
+                    ],
+                ],
                 $recordUniqueValidator
-            ),
-        ));
+            ],
+        ]);
 
         return $this;
     }
@@ -72,29 +70,25 @@ class EntityTypeInputFilter extends InputFilter
      */
     protected function entity()
     {
-        $recordUniqueValidator = new UniqueObject(
-            array(
+        $recordUniqueValidator = new UniqueObject([
                 'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')
                     ->getRepository('Comment\Entity\EntityType'),
-                'fields' => array('entity'),
+                'fields' => ['entity'],
                 'object_manager' => $this->sm->get('Doctrine\ORM\EntityManager'),
-            )
-        );
+        ]);
         $recordUniqueValidator->setMessage(
             'Entity type with this entity already exists'
         );
 
-        $this->add(array(
+        $this->add([
             'name' => 'entity',
             'required' => true,
-            'filters' => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
-            ),
-            'validators' => array(
-                $recordUniqueValidator
-            ),
-        ));
+            'filters' => [
+                ['name' => 'StripTags'],
+                ['name' => 'StringTrim'],
+            ],
+            'validators' => [$recordUniqueValidator],
+        ]);
 
         return $this;
     }
@@ -104,23 +98,22 @@ class EntityTypeInputFilter extends InputFilter
      */
     protected function description()
     {
-        $this->add(array(
+        $this->add([
             'name' => 'description',
             'required' => true,
-            'filters' => array(
-                array('name' => 'StripTags'),
-                array('name' => 'StringTrim'),
-            ),
-            'validators' => array(
-                array(
+            'filters' => [
+                ['name' => 'StripTags'],
+                ['name' => 'StringTrim'],
+            ],
+            'validators' => [
+                [
                     'name' => 'StringLength',
-                    'options' => array(
+                    'options' => [
                         'min' => 5,
-                    ),
-                ),
-            ),
-
-        ));
+                    ],
+                ],
+            ],
+        ]);
 
         return $this;
     }
@@ -130,10 +123,10 @@ class EntityTypeInputFilter extends InputFilter
      */
     protected function isVisible()
     {
-        $this->add(array(
+        $this->add([
             'name' => 'isVisible',
             'required' => false,
-        ));
+        ]);
 
         return $this;
     }
@@ -143,10 +136,10 @@ class EntityTypeInputFilter extends InputFilter
      */
     protected function isEnabled()
     {
-        $this->add(array(
+        $this->add([
             'name' => 'isEnabled',
             'required' => false,
-        ));
+        ]);
 
         return $this;
     }
