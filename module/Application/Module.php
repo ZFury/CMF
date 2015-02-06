@@ -34,65 +34,38 @@ class Module
 
         /** @var \Zend\Mvc\MvcEvent $events */
         $events = $event->getTarget()->getEventManager();
-        $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'onDispatch'), '-1000');
-        $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onDispatchError'), '99999');
+        $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'getJsonModelError'), -5100);
+        $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'getJsonModelError'), -5100);
 
         set_error_handler(['Application\Module', 'errorHandler']);
     }
 
     /**
      * @param MvcEvent $event
+     * @return MvcEvent
      */
-    public function onDispatchError(MvcEvent $event)
+    public function getJsonModelError(MvcEvent $event)
     {
-        if (!$this->isJson($event)) {
+        $error = $event->getError();
+//        $listeners = $event->getApplication()->getEventManager()->getListeners('dispatch');
+        if (!$this->isJson($event) || (!$error && !$event->getResponse()->isNotFound())) {
             return;
         }
-
-        $message = '';
-        $code = '';
-
-        if ($eventException = $event->getParam('exception')) {
-            $message = $eventException->getMessage();
-            $code = $eventException->getCode();
-        } elseif ($error = $event->getParam('error')) {
-            $message = $error;
-        }
-
-        $result = array(
-            'errors' => array(
-                'exception' => array(
-                    'message' => $message,
-                    'code' => $code,
-                ),
-            'data' => array(),
-            'options' => array()
-            )
-        );
-
-        $model = new JsonModel($result);
-        $event->setViewModel($model);
-        $event->stopPropagation(true);
-    }
-
-    /**
-     * @param $event
-     */
-    public function onDispatch(MvcEvent $event)
-    {
-        if (!$this->isJson($event)) {
-            return;
-        }
-        /** @var \Zend\Http\Request $response */
         $response = $event->getResponse();
-        $response->getHeaders()->addHeaders(
-            array(
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json'
-            )
-        );
+        $exception = $event->getParam('exception');
+        $exceptionJson = array();
+        if ($exception) {
+            $exceptionJson[] = $exception->getMessage();
+        } elseif ($response->isNotFound()) {
+            $exceptionJson[] = 'Not Found';
+        }
+        $event->getResponse()->getHeaders()->addHeaderLine('Fury-Notify', \Zend\Json\Json::encode(['error' => $exceptionJson]));
+        $model = new JsonModel(array('data' => ['error' => $exceptionJson], 'options' => ['controller' => $event->getParam('controller')]));
+        $model->setTerminal(true);
+        $event->setResult($model);
+        $event->setViewModel($model);
 
-        $this->jsonHandler($event);
+        return $event;
     }
 
     /**
@@ -152,7 +125,7 @@ class Module
      * @param $event
      * @return bool
      */
-    public function isJson(MvcEvent $event)
+    protected function isJson(MvcEvent $event)
     {
         $request = $event->getRequest();
 
@@ -183,9 +156,9 @@ class Module
     public function jsonHandler(MvcEvent $event)
     {
         /** @var \Zend\Mvc\Controller\Plugin\FlashMessenger $flashmessenger */
-        $flashmessenger = $event->getApplication()
+        $flashMessenger = $event->getApplication()
             ->getServiceManager()
-            ->get('viewhelpermanager')
+            ->get('viewHelperManager')
             ->get('flashMessenger');
 
         $view = $event->getViewModel();
@@ -231,8 +204,8 @@ class Module
                 $result['data'][] = $param;
             }
         }
-        $result['success'] = $flashmessenger->getCurrentSuccessMessages();
-        $flashmessenger->clearCurrentMessagesFromContainer();
+        $result['success'] = $flashMessenger->getCurrentSuccessMessages();
+        $flashMessenger->clearCurrentMessagesFromContainer();
 
         $model = new JsonModel($result);
         $event->setViewModel($model);

@@ -19,10 +19,36 @@
  * @author   Anton Shevchuk
  */
 /*global define,require*/
-define(['jquery'], function ($) {
+define(['jquery', 'fury.notify'], function ($, notify) {
     "use strict";
     // on DOM ready state
     $(function () {
+
+        // Ajax global events
+        $(document)
+            .ajaxStart(function () {
+                $('#loading').show();
+            })
+            .ajaxError(function (event, jqXHR, options, thrownError) {
+                console.log(event);
+                console.log(jqXHR);
+                console.log(jqXHR.getResponseHeader('Fury-Notify'));
+                // show error messages
+                if (options.dataType === 'json' || jqXHR.getResponseHeader('Content-Type') === 'application/json') {
+                    var notifications = $.parseJSON(jqXHR.getResponseHeader('Fury-Notify'));
+                    notify.set(notifications);
+                }
+
+                // try to get error message from JSON response
+                if (!(options.dataType === 'json' ||
+                    jqXHR.getResponseHeader('Content-Type') === 'application/json')) {
+                    var $div = createModal(jqXHR.responseText, 'width:800px');
+                    $div.modal('show');
+                }
+            })
+            .ajaxComplete(function () {
+                $('#loading').hide();
+            });
 
         var modals = [];
         var createModal = function (content, title) {
