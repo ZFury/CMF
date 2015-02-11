@@ -14,6 +14,8 @@ use Zend\Mvc\MvcEvent;
 use Zend\Http\Request as HttpRequest;
 use Zend\Http\Response;
 use Zend\View\Model\JsonModel;
+use Zend\Json\Json;
+use Zend\Form\Form;
 
 class Module
 {
@@ -34,6 +36,8 @@ class Module
 
         /** @var \Zend\Mvc\MvcEvent $events */
         $events = $event->getTarget()->getEventManager();
+        //Bjy UnauthorizedStrategy has -5000 priority
+        //we should attach our methods to be executed after all
         $events->attach(MvcEvent::EVENT_DISPATCH, array($this, 'getJsonModelError'), -5100);
         $events->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'getJsonModelError'), -5100);
 
@@ -46,24 +50,65 @@ class Module
      */
     public function getJsonModelError(MvcEvent $event)
     {
-        $error = $event->getError();
-//        $listeners = $event->getApplication()->getEventManager()->getListeners('dispatch');
-        if (!$this->isJson($event) || (!$error && !$event->getResponse()->isNotFound())) {
+        $view = $event->getViewModel();
+        if ($view instanceof JsonModel) {
             return;
         }
-        $response = $event->getResponse();
-        $exception = $event->getParam('exception');
-        $exceptionJson = array();
-        if ($exception) {
-            $exceptionJson[] = $exception->getMessage();
-        } elseif ($response->isNotFound()) {
-            $exceptionJson[] = 'Not Found';
+        if (!$this->isJson($event)) {
+            return;
         }
-        $event->getResponse()->getHeaders()->addHeaderLine('Fury-Notify', \Zend\Json\Json::encode(['error' => $exceptionJson]));
-        $model = new JsonModel(array('data' => ['error' => $exceptionJson], 'options' => ['controller' => $event->getParam('controller')]));
+        // || (!$event->getError() && !$event->getResponse()->isNotFound()
+        if ($event->getViewModel()->getChildren()) {
+            foreach ($event->getViewModel()->getChildren() as $child) {
+                $params = $child->getVariables();
+            }
+        } else {
+            $params = $event->getViewModel()->getVariables();
+        }
+
+        $result = array(
+            'data' => array(),
+            'errors' => array(),
+            'options' => array(),
+            'success' => array()
+        );
+        foreach ($params as $key => $param) {
+            if (method_exists($param, 'toArray')) {
+                $result['data'][] = $param->toArray();
+            } elseif ($param instanceof Form) {
+                foreach ($param->getElements() as $formElement) {
+                    $messages = array();
+                    if ($formElement->getMessages()) {
+                        foreach ($formElement->getMessages() as $type => $message) {
+                            $messages[] = $message;
+                        }
+                        $result['errors'][$formElement->getName()] = $messages;
+                    }
+                }
+                $result['data'][$key] = $param->getData();
+                $result['options'] = ['method' => $param->getAttribute('method')];
+            } else {
+                $result['data'][$key] = $param;
+            }
+        }
+        /** @var \Zend\Mvc\Controller\Plugin\FlashMessenger $flashMessenger */
+        $flashMessenger = $event->getApplication()
+            ->getServiceManager()
+            ->get('viewHelperManager')
+            ->get('flashMessenger');
+        $result['success'] = $flashMessenger->getCurrentSuccessMessages();
+        $flashMessenger->clearCurrentMessagesFromContainer();
+
+        $notifyErrors = array();
+        if ($event->getParam('exception')) {
+            $notifyErrors[] = $event->getParam('exception')->getMessage();
+        } elseif ($event->getResponse()->isNotFound()) {
+            $notifyErrors[] = isset($result['data']['message']) ? $result['data']['message'] : 'Not Found';
+        }
+        $event->getResponse()->getHeaders()->addHeaderLine('Fury-Notify', Json::encode(['error' => $notifyErrors]));
+        $model = new JsonModel($result);
         $model->setTerminal(true);
-        $event->setResult($model);
-        $event->setViewModel($model);
+        $event->setResult($model)->setViewModel($model);
 
         return $event;
     }
@@ -148,66 +193,5 @@ class Module
         }
 
         return true;
-    }
-
-    /**
-     * @param $event
-     */
-    public function jsonHandler(MvcEvent $event)
-    {
-        /** @var \Zend\Mvc\Controller\Plugin\FlashMessenger $flashmessenger */
-        $flashMessenger = $event->getApplication()
-            ->getServiceManager()
-            ->get('viewHelperManager')
-            ->get('flashMessenger');
-
-        $view = $event->getViewModel();
-        if ($view instanceof JsonModel) {
-            return;
-        }
-
-        $children = $event->getViewModel()->getChildren();
-        if ($children) {
-            foreach ($children as $child) {
-                $params = $child->getVariables();
-            }
-        } else {
-            $params = $event->getViewModel()->getVariables();
-        }
-
-        $result = array(
-            'data' => array(),
-            'errors' => array(),
-            'options' => array()
-        );
-        foreach ($params as $param) {
-            if (method_exists($param, 'toArray')) {
-                $result['data'][] = $param->toArray();
-            } elseif ($param instanceof \Zend\Form\Form) {
-                foreach ($param->getElements() as $formElement) {
-                    $messages = array();
-                    if ($formElement->getMessages()) {
-                        foreach ($formElement->getMessages() as $type => $message) {
-                            $messages[] = $message;
-                        }
-                        $key = $formElement->getName();
-                        $errors[$key] = $messages;
-                        //$formElement->getName() => array($formElement->getMessages())
-                    }
-                }
-                $result['errors'] = $errors;
-                $result['data'][] = $param->getData();
-                $result['options'] = array(
-                    'method' => $param->getAttribute('method')
-                );
-            } else {
-                $result['data'][] = $param;
-            }
-        }
-        $result['success'] = $flashMessenger->getCurrentSuccessMessages();
-        $flashMessenger->clearCurrentMessagesFromContainer();
-
-        $model = new JsonModel($result);
-        $event->setViewModel($model);
     }
 }

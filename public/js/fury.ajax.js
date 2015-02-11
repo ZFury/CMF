@@ -29,10 +29,31 @@ define(['jquery', 'fury.notify'], function ($, notify) {
             .ajaxStart(function () {
                 $('#loading').show();
             })
+            .ajaxSuccess(function (event, jqXHR) {
+                // redirect and reload page
+                var callback = null;
+                if (jqXHR.getResponseHeader('Fury-Reload')) {
+                    callback = function () {
+                        // reload current page
+                        window.location.reload();
+                    };
+                } else if (jqXHR.getResponseHeader('Fury-Redirect')) {
+                    callback = function () {
+                        // redirect to another page
+                        window.location = jqXHR.getResponseHeader('Fury-Redirect');
+                    };
+                }
+
+                // show messages and run callback after
+                if (jqXHR.getResponseHeader('Fury-Notify')) {
+                    var notifications = $.parseJSON(jqXHR.getResponseHeader('Fury-Notify'));
+                    notify.addCallback(callback);
+                    notify.set(notifications);
+                } else if (callback) {
+                    callback();
+                }
+            })
             .ajaxError(function (event, jqXHR, options, thrownError) {
-                console.log(event);
-                console.log(jqXHR);
-                console.log(jqXHR.getResponseHeader('Fury-Notify'));
                 // show error messages
                 if (options.dataType === 'json' || jqXHR.getResponseHeader('Content-Type') === 'application/json') {
                     var notifications = $.parseJSON(jqXHR.getResponseHeader('Fury-Notify'));
