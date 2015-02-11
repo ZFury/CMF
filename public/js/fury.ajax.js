@@ -19,10 +19,57 @@
  * @author   Anton Shevchuk
  */
 /*global define,require*/
-define(['jquery'], function ($) {
+define(['jquery', 'fury.notify'], function ($, notify) {
     "use strict";
     // on DOM ready state
     $(function () {
+
+        // Ajax global events
+        $(document)
+            .ajaxStart(function () {
+                $('#loading').show();
+            })
+            .ajaxSuccess(function (event, jqXHR) {
+                // redirect and reload page
+                var callback = null;
+                if (jqXHR.getResponseHeader('Fury-Reload')) {
+                    callback = function () {
+                        // reload current page
+                        window.location.reload();
+                    };
+                } else if (jqXHR.getResponseHeader('Fury-Redirect')) {
+                    callback = function () {
+                        // redirect to another page
+                        window.location = jqXHR.getResponseHeader('Fury-Redirect');
+                    };
+                }
+
+                // show messages and run callback after
+                if (jqXHR.getResponseHeader('Fury-Notify')) {
+                    var notifications = $.parseJSON(jqXHR.getResponseHeader('Fury-Notify'));
+                    notify.addCallback(callback);
+                    notify.set(notifications);
+                } else if (callback) {
+                    callback();
+                }
+            })
+            .ajaxError(function (event, jqXHR, options, thrownError) {
+                // show error messages
+                if (options.dataType === 'json' || jqXHR.getResponseHeader('Content-Type') === 'application/json') {
+                    var notifications = $.parseJSON(jqXHR.getResponseHeader('Fury-Notify'));
+                    notify.set(notifications);
+                }
+
+                // try to get error message from JSON response
+                if (!(options.dataType === 'json' ||
+                    jqXHR.getResponseHeader('Content-Type') === 'application/json')) {
+                    var $div = createModal(jqXHR.responseText, 'width:800px');
+                    $div.modal('show');
+                }
+            })
+            .ajaxComplete(function () {
+                $('#loading').hide();
+            });
 
         var modals = [];
         var createModal = function (content, title) {

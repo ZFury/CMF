@@ -52,8 +52,13 @@ class UnauthorizedStrategy extends \BjyAuthorize\View\UnauthorizedStrategy
                         $response = new HttpResponse();
                         $e->setResponse($response);
                     }
-                    $response->getHeaders()->addHeaderLine('Location', $url);
-                    $response->setStatusCode(302);
+                    if ($e->getRequest()->isXmlHttpRequest()) {
+                        $response->setStatusCode(204);
+                        $response->getHeaders()->addHeaderLine('Fury-Redirect', $url);
+                    } else {
+                        $response->setStatusCode(302);
+                        $response->getHeaders()->addHeaderLine('Location', $url);
+                    }
                     return;
                 }
                 break;
