@@ -27,7 +27,7 @@ class CommentController extends AbstractActionController
     {
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
-        $entity = $objectManager->getRepository('Test\Entity\Test')->findAll()[0];
+        $entity = $objectManager->getRepository('Test\Entity\Test')->findOneBy([]);
         $entityType = $objectManager->getRepository('Comment\Entity\EntityType')
             ->findOneByEntity('Test\\Entity\\Test');
 
@@ -36,7 +36,7 @@ class CommentController extends AbstractActionController
 
         $comments = $this->getServiceLocator()
             ->get('Comment\Service\Comment')
-            ->tree(['alias' => $entityAlias, 'id' => $entityId]);
+            ->treeByEntity($entity);
 
         $addCommentForm = null;
 

@@ -124,11 +124,16 @@ class Auth
          */
         $authRow = $authResult->getIdentity();
         $user = $authRow->getUser();
-        if (!$user->isActive()) {
-            if ($user->isUnconfirmed()) {
-                throw new AuthException("Please confirm your email first");
+        try {
+            if (!$user->isActive()) {
+                if ($user->isUnconfirmed()) {
+                    throw new AuthException("Please confirm your email first");
+                }
+                throw new AuthException("Your account is blocked");
             }
-            throw new AuthException("Your account is blocked");
+        } catch (AuthException $exception) {
+            $authService->clearIdentity();
+            throw $exception;
         }
 
         return $authRow;

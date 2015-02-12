@@ -29,7 +29,7 @@ define(['jquery', 'fury.notify', 'bootstrap'], function ($, notify) {
                 success: function (jsonData) {
                     $('.modal').find('a, .btn').removeClass('disabled');
                     $this.find('input[type=submit]').removeClass('disabled');
-                    if (jsonData !== undefined && jsonData.errors !== undefined) {
+                    if (jsonData !== undefined && jsonData.errors !== undefined && !!jsonData.errors.length) {
                         for (var key in jsonData.errors) {
                             var field = $this.find('.form-group .form-control[name="' + key + '"]');
                             field.addClass('form-control error-form-field');

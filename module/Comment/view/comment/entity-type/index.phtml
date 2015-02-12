@@ -1,6 +1,7 @@
 <div data-spy="grid" data-url="<?=$this->grid->getUrl();?>">
     <!--    FILTER-->
-    <a class="btn btn-primary pull-left "
+    <a class="btn btn-primary pull-left dialog"
+       data-ajax-method="get"
        href="<?= $this->url('comment/default', ['controller' => 'entity-type', 'action' => 'create']) ?>">Create</a>
     <?= $this->filter($this->grid) ?>
     <!--    GRID-->

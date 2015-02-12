@@ -99,54 +99,89 @@ class Comment
     }
 
     /**
-     * @param array $data
+     * @param $entity
      * @return array
-     * @throws \Exception
+     * @throws BadMethodCallException
+     * @throws EntityNotFoundException
      */
-    public function tree(array $data)
+    public function treeByEntity($entity)
     {
-        if (!isset($data['alias']) || !isset($data['id'])) {
-            throw new \Exception('Bad request');
+        if (is_object($entity) && method_exists($entity, 'getId')) {
+            $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
+
+            $class = get_class($entity);
+            $entityType = $objectManager->getRepository('Comment\Entity\EntityType')->findOneByEntity($class);
+            if (!$entityType) {
+                throw new EntityNotFoundException();
+            }
+
+            return $this->getComments($entityType, $entity->getId());
         }
+        throw new BadMethodCallException();
+    }
+
+    /**
+     * @param Entity\EntityType $entityType
+     * @param $entityId
+     * @return array
+     */
+    public function getComments(Entity\EntityType $entityType, $entityId)
+    {
         $objectManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
-        $entityType = $objectManager->getRepository('Comment\Entity\EntityType')->findOneByAlias($data['alias']);
-
         $arrayComments = [];
-        if (!$entityType) {
-            return $arrayComments;
-        }
-
         $identity = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService')->getIdentity();
         if ($entityType->getIsVisible() || $identity->getUser()->getRole() === User::ROLE_ADMIN) {
             $comments = $objectManager->getRepository('Comment\Entity\Comment')
                 ->findBy([
                     'entityType' => $entityType,
-                    'entityId' => $data['id']
+                    'entityId' => $entityId
                 ]);
 
             $enabledCommentByComment = null;
-            if ($objectManager->getRepository('Comment\Entity\EntityType')->findOneByAlias('comment') &&
-                $objectManager->getRepository('Comment\Entity\EntityType')->findOneByAlias('comment')->getIsEnabled() !==
-                0) {
+            $commentEntityType = $objectManager->getRepository('Comment\Entity\EntityType')->findOneByAlias('comment');
+            if ($commentEntityType && $commentEntityType->getIsEnabled()) {
                 $enabledCommentByComment = true;
             }
 
             foreach ($comments as $comment) {
                 $arrayComments[$comment->getId()]['comment'] = $comment;
-
-                $entity = $objectManager->getRepository('Comment\Entity\EntityType')->findOneByAlias('comment');
-                if ($entity) {
-                    $data = ['alias' => 'comment', 'id' => $comment->getId()];
-                    $arrayComments[$comment->getId()]['children'] = $this->tree($data);
+                if ($commentEntityType) {
+                    $arrayComments[$comment->getId()]['children'] = $this->getComments(
+                        $commentEntityType,
+                        $comment->getId()
+                    );
                 } else {
-                    $arrayComments[$comment->getId()]['children'] = array();
+                    $arrayComments[$comment->getId()]['children'] = [];
                 }
-
                 $arrayComments[$comment->getId()]['enabledCommentByComment'] = $enabledCommentByComment;
             }
         }
 
         return $arrayComments;
+    }
+
+    /**
+     * $alias is an alias that is used in EntityType to recognize the entity
+     *
+     * @param $alias
+     * @param $entityId
+     * @return array
+     * @throws EntityNotFoundException
+     * @throws \Exception
+     */
+    public function tree($alias, $entityId)
+    {
+        if (!$alias || !$entityId) {
+            throw new \Exception('Bad request');
+        }
+        $entityType = $this->serviceManager->get('Doctrine\ORM\EntityManager')
+            ->getRepository('Comment\Entity\EntityType')->findOneByAlias($alias);
+
+        if (!$entityType) {
+            throw new EntityNotFoundException();
+        }
+
+        return $this->getComments($entityType, $entityId);
     }
 
     /**

@@ -22,7 +22,7 @@
 <div data-spy="grid"  class="row" data-url="<?= $this->url('test/default', ['controller' => 'comment', 'action' => 'index'])?>">
     <ul class="grid col-md-6">
         <?php  if ($comments && is_array($comments) && count($comments)>0) {
-            echo $this->comment('comment/index/partial/comment.phtml', $comments);
+            echo $this->comment($comments);
         }; ?>
     </ul>
 </div>
