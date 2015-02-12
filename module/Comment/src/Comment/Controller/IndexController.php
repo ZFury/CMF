@@ -39,7 +39,7 @@ class IndexController extends AbstractActionController
 
         $comments = $this->getServiceLocator()
             ->get('Comment\Service\Comment')
-            ->tree($data);
+            ->tree($data['alias'], $data['id']);
 
         $viewModel = new ViewModel(array('comments' => $comments));
 
