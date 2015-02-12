@@ -50,7 +50,7 @@ return array(
             [
                 'libav (do not forget sudo apt-get install libavcodec-extra-53)' => 'avconv -version',
                 'version' => '0.10.12',
-                'install' => 'sudo apt-get install libav-tools, sudo apt-get install libavcodec-extra-53']
+            ]
         ]
     ]
 );

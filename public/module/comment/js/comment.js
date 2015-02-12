@@ -19,7 +19,6 @@ define(['jquery','bootstrap'], function ($) {
         var mediaBody = $(this).closest($('div.media-body'));
         var mediaHeading = mediaBody.find('h5.media-heading').first();
         if (mediaHeading.find('div.form-send').length == 0) {
-            console.log(mediaHeading.find('div > .form-ajax').length == 0);
             var text = mediaBody.find('.comment-text').first().text();
             mediaBody.find('.comment-text').first().remove();
             mediaBody.find('.answer-block').first().remove();

@@ -23,7 +23,7 @@ class Install
     const UNCHECKED = 'bad';
     const GOOD = true;
     const BAD = false;
-    const PHP_VERSION = '5.4.35-1+deb.sury.org~precise+1';
+    const PHP_VERSION = '5.4.0';
     const GLOBAL_REQUIREMENTS = true;
     const LOCAL_REQUIREMENTS = false;
 
@@ -120,6 +120,8 @@ class Install
      */
     public function createDbConfig(DbConnection $dbForm)
     {
+        copy('config/autoload/doctrine.local.php.dist', 'config/autoload/doctrine.local.php');
+
         $user = $dbForm->getData()['user'];
         $password = $dbForm->getData()['password'];
         $dbname=$dbForm->getData()['dbname'];
@@ -128,11 +130,11 @@ class Install
         $content = "<?php return ['doctrine' =>['connection' => ['orm_default' => [
                     'driverClass' => 'Doctrine\\DBAL\\Driver\\PDOMySql\\Driver',
                     'params' => [
-                        'host'     => '$host',
-                        'port'     => '$port',
-                        'user'     => '$user',
-                        'password' => '$password',
-                        'dbname'   => '$dbname',
+                        'host'     => " . '"' . $host       . '"' . ",
+                        'port'     => " . '"' . $port       . '"' . ",
+                        'user'     => " . '"' . $user       . '"' . ",
+                        'password' => " . '"' . $password   . '"' . ",
+                        'dbname'   => " . '"' . $dbname     . '"' . ",
                     ],
                     'doctrine_type_mappings' => ['enum' => 'string'],
                     ]]]];";
@@ -205,8 +207,9 @@ class Install
                         $message .= "'$fileName' which path is '$filePath' exists and is writable!";
                         $status = Install::GOOD;
                     } else {
-                        $message .= "'$fileName' which path is '$filePath' is not writable."
-                            . "Please, make it writable!";
+                        $message .= "'$fileName' which path is '$filePath' does not exist or is not writable. "
+                            . "Please, copy its dist version renaming it to '$filePath' or (if you have already done this)"
+                            . " make it writable!";
                         $status = Install::BAD;
                     }
                 } else {
@@ -264,6 +267,13 @@ class Install
     {
         copy('config/autoload/mail.local.php.dist', 'config/autoload/mail.local.php');
 
+        $from = ['admin@zfury.com'];
+        $host = '';
+        $port = '';
+        $emails = '';
+        $additionalHeaders = '';
+        $project = '';
+
         for ($i=0; $i<count($mailForm->getData()); $i++) {
             $paramName = array_keys($mailForm->getData())[$i];
             $paramValue = array_values($mailForm->getData())[$i];
@@ -273,69 +283,91 @@ class Install
                     for ($j = 0; $j < count($paramValue); $j++) {
                         $value = array_values($paramValue[$j]);
                         $currentEmail = array_shift($value);
+                        if (!$currentEmail) {
+                            break;
+                        }
                         if ('emails' == $paramName) {
                             $paramName = strtoupper($paramName);
                         }
                         array_push($emailsArray, "'$currentEmail'");
                     }
-                    $emails = implode(',', $emailsArray);
-                    $this->replaceRowInFile(
-                        'config/autoload/mail.local.php',
-                        "'$paramName'",
-                        "'$paramName'=>[$emails],"
-                    );
+                    $from = implode(',', $emailsArray);
                     break;
                 case 'header':
                     for ($j = 0; $j < count($paramValue); $j++) {
                         $headerName = strtoupper($paramValue[$j]['header-name']);
                         $headerValue = $paramValue[$j]['header-value'];
+                        if (!$headerName && !$headerValue) {
+                            break;
+                        }
                         $newRow = "'$headerName'=>'$headerValue',";
-                        if ('PROJECT' === $headerName) {
-                            $this->replaceRowInFile(
-                                'config/autoload/mail.local.php',
-                                "'$headerName'",
-                                $newRow
-                            );
+                        if ('PROJECT' === $headerName && $headerValue) {
+                            $project = "'PROJECT'=>'$headerValue',";
                         } else {
-                            $this->replaceRowInFile(
-                                'config/autoload/mail.local.php',
-                                "'EMAILS'", //this means, that a new row will be inserted after matched one
-                                $newRow,
-                                ['afterLine' => true]
-                            );
+                            $additionalHeaders .= $newRow;
                         }
                     }
                     break;
                 case 'emails':
-                    $emails = "'";
+                    $emails = "";
                     for ($j = 0; $j < count($paramValue); $j++) {
                         $value = array_values($paramValue[$j]);
                         $currentEmail = array_shift($value);
+                        if (!$currentEmail) {
+                            break;
+                        }
                         if ('emails' == $paramName) {
                             $paramName = strtoupper($paramName);
                         }
                         if (count($paramValue)>1) {
-                            $emails .= "$currentEmail,";
+                            $emails .= "'$currentEmail',";
                         } else {
-                            $emails .= "$currentEmail";
+                            $emails .= "'$currentEmail'";
                         }
                     }
-                    $this->replaceRowInFile(
-                        'config/autoload/mail.local.php',
-                        "'$paramName'",
-                        "'$paramName'=>$emails',"
-                    );
+                    if (!$emails) {
+                        break;
+                    }
+                    $emails = "'EMAILS' => [$emails],";
+                    break;
+                case 'host':
+                    $host = $paramValue;
+                    break;
+                case 'port':
+                    $port = $paramValue;
                     break;
                 default:
-                    $newRow = "'$paramName'=>'$paramValue',";
-                    $this->replaceRowInFile(
-                        'config/autoload/mail.local.php',
-                        "'$paramName'",
-                        "$newRow"
-                    );
                     break;
             }
         }
+
+        $content = "<?php
+        return array(
+                'mail' => array(
+                    'transport' => array(
+                        'options' => array(
+                            'host'              => '$host',
+                            'port'              => '$port',
+                        ),
+                    ),
+                    'message' => array(
+                        'headers' => array(
+                            $project
+                            $emails
+                            $additionalHeaders
+                        ),
+                        'from' => [$from]
+                    )
+                ),
+                // set true if module mail exists
+                'mailOptions' => array(
+                    'useModuleMail' => false
+                ),
+        );";
+
+        $config = fopen("config/autoload/mail.local.php", "w");
+        fwrite($config, $content);
+        fclose($config);
     }
 
     /**
