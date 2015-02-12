@@ -126,8 +126,8 @@ class Comment
 
             $enabledCommentByComment = null;
             if ($objectManager->getRepository('Comment\Entity\EntityType')->findOneByAlias('comment') &&
-                $objectManager->getRepository('Comment\Entity\EntityType')->findOneByAlias('comment')->getIsEnabled() !==
-                0) {
+                $objectManager->getRepository('Comment\Entity\EntityType')->findOneByAlias('comment')->getIsEnabled()
+            ) {
                 $enabledCommentByComment = true;
             }
 

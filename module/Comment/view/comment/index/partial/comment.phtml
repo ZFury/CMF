@@ -20,7 +20,7 @@
     </h5>
     <div class="comment-text form-control"><?php echo $this->escapeHtml($this->comment->getComment()); ?></div>
     <?php if ($this->enabledCommentByComment) : ?>
-    <div class="answer-block"><small><a class="answer-button" href="javascript:;">Answer</a></small></div>
+        <div class="answer-block"><small><a class="answer-button" href="javascript:;">Answer</a></small></div>
     <?php endif; ?>
     <?php if (count($this->children) > 0) : ?>
         <ul><?= $this->comment('comment/index/partial/comment.phtml', $this->children); ?></ul>
