@@ -17,30 +17,18 @@ class HeaderInputFilter extends InputFilter
         $this->add([
             'name' => 'header-name',
             'required' => false,
-            'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'encoding' => 'UTF-8',
-                            'min'      => 2,
-                            'max'      => 40,
-                        ],
-                    ]
-                ]
+            'filters' => [
+                ['name' => 'StripTags'],
+                ['name' => 'StringTrim'],
+            ],
         ]);
         $this->add([
             'name' => 'header-value',
             'required' => false,
-            'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'encoding' => 'UTF-8',
-                            'min'      => 2,
-                            'max'      => 40,
-                        ],
-                    ]
-                ]
+            'filters' => [
+                ['name' => 'StripTags'],
+                ['name' => 'StringTrim'],
+            ],
         ]);
     }
 }
