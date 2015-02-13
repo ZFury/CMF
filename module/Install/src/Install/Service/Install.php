@@ -103,14 +103,8 @@ class Install
             $module = array_keys($modules)[$i];
             if (Install::UNCHECKED == array_values($modules)[$i]) {
                 $this->replaceRowInFile('config/application.config.php', "'$module'", "//'$module'");
-                if (file_exists(Install::MODULES . $module)) {
-                    rename(Install::MODULES . $module, Install::MODULES . ".$module");
-                }
             } else {
                 $this->replaceRowInFile('config/application.config.php', "//'$module'", "'$module',");
-                if (file_exists(Install::MODULES . ".$module")) {
-                    rename(Install::MODULES . ".$module", Install::MODULES . $module);
-                }
             }
         }
     }
