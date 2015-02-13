@@ -13,7 +13,7 @@ $dbForm->prepare();
     <div class="form-group">
         <label for="inputHost" class="col-md-2 control-label"><?= $dbForm->get('host')->getLabel(); ?></label>
         <div class="col-md-4">
-            <input type="text" class="form-control" id="inputHost" name="<?= $dbForm->get('host')->getName(); ?>" value="<?= $dbForm->get('host')->getValue(); ?>" placeholder="<?= $dbForm->get('host')->getLabel(); ?>">
+            <input type="text" class="form-control" id="inputHost" name="<?= $dbForm->get('host')->getName(); ?>" value="<?php if ($dbForm->get('host')->getValue()) { echo $dbForm->get('host')->getValue(); } else { echo "localhost"; } ?>" placeholder="<?= $dbForm->get('host')->getLabel(); ?>">
             <?= $this->formElementErrors($dbForm->get('host')); ?>
         </div>
     </div>
@@ -21,7 +21,7 @@ $dbForm->prepare();
     <div class="form-group">
         <label for="inputPort" class="col-md-2 control-label"><?= $dbForm->get('port')->getLabel(); ?></label>
         <div class="col-md-4">
-            <input type="text" class="form-control" id="inputPort" name="<?= $dbForm->get('port')->getName(); ?>" value="<?= $dbForm->get('port')->getValue(); ?>" placeholder="<?= $dbForm->get('port')->getLabel(); ?>">
+            <input type="text" class="form-control" id="inputPort" name="<?= $dbForm->get('port')->getName(); ?>" value="<?php if ($dbForm->get('port')->getValue()) { echo $dbForm->get('port')->getValue(); } else { echo "3306"; } ?>" placeholder="<?= $dbForm->get('port')->getLabel(); ?>">
             <?= $this->formElementErrors($dbForm->get('port')); ?>
         </div>
     </div>
@@ -45,7 +45,7 @@ $dbForm->prepare();
     <div class="form-group">
         <label for="inputDbName" class="col-md-2 control-label"><?= $dbForm->get('dbname')->getLabel(); ?></label>
         <div class="col-md-4">
-            <input type="text" class="form-control" id="inputDbName" name="<?= $dbForm->get('dbname')->getName(); ?>" value="<?= $dbForm->get('dbname')->getValue(); ?>" placeholder="<?= $dbForm->get('dbname')->getLabel(); ?>">
+            <input type="text" class="form-control" id="inputDbName" name="<?= $dbForm->get('dbname')->getName(); ?>" value="<?php if ($dbForm->get('dbname')->getValue()) { echo $dbForm->get('dbname')->getValue(); } else { echo "p_zfury"; } ?>" placeholder="<?= $dbForm->get('dbname')->getLabel(); ?>">
             <?= $this->formElementErrors($dbForm->get('dbname')); ?>
         </div>
     </div>
