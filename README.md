@@ -10,4 +10,4 @@ In our [wiki](https://github.com/ZFury/ZFury/wiki) you can find descriptions of 
 Also you can check our [auto-generating documentation](http://zfury.github.io/)  
 
 ##License  
-The project is developed by [NIX Solutions](http://www.nixsolutions.com/) PHP team and distributed under MIT LICENSE  
+The project is developed by [NIX Solutions](http://www.nixsolutions.com/) PHP team and distributed under [MIT LICENSE](LICENSE.txt)  
