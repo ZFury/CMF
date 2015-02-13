@@ -43,9 +43,7 @@ return array(
         ],
     ],
     'installation' => [
-        'files-to-check' => [
-            ['uploads' => 'public/uploads'],
-        ],
+        'files-to-check' => [],
         'tools-to-check' => [
             [
                 'libav (do not forget sudo apt-get install libavcodec-extra-53)' => 'avconv -version',
