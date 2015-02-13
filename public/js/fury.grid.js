@@ -45,8 +45,7 @@ define(['jquery'], function ($) {
             $grid.on('click', '.pagination li a, thead a', function () {
                 var $link = $(this),
                     href = $link.attr('href');
-
-                if (href === '#') {
+                if (href === '#' || href === 'javascript:;') {
                     return false;
                 }
 

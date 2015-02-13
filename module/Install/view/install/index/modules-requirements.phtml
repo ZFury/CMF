@@ -16,12 +16,8 @@ $this->headTitle($title);
                     <div class="panel-heading">
                         <?php echo array_values($tools[$i])[0]['message'] ?>
                     </div>
-                <?php } else { ?>
-                    <div class="panel panel-danger">
-                    <div class="panel-heading">
-                        <?php echo array_values($tools[$i])[0]['install'] ?>
-                    </div>
-                <?php }?>
+                <?php } ?>
+
                 </div>
             <?php
                 }
