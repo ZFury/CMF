@@ -93,6 +93,7 @@ class SignupController extends AbstractActionController
             $user->activate();
             $objectManager->persist($user);
             $objectManager->flush();
+            $user->getAuth()->login($this->getServiceLocator());
             $this->flashMessenger()->addSuccessMessage("You've successfully activated your account");
         } catch (\Exception $exception) {
             $this->flashMessenger()->addErrorMessage($exception->getMessage());
