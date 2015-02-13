@@ -15,6 +15,11 @@ class FromFieldset extends Fieldset
     public function __construct()
     {
         parent::__construct('from');
-        $this->add(['name' => 'from']);
+        $this->add([
+            'name' => 'from',
+            'attributes' => [
+                'placeholder' => 'Email'
+            ]
+        ]);
     }
 }

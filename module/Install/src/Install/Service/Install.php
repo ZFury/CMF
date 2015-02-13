@@ -103,14 +103,8 @@ class Install
             $module = array_keys($modules)[$i];
             if (Install::UNCHECKED == array_values($modules)[$i]) {
                 $this->replaceRowInFile('config/application.config.php', "'$module'", "//'$module'");
-                if (file_exists(Install::MODULES . $module)) {
-                    rename(Install::MODULES . $module, Install::MODULES . ".$module");
-                }
             } else {
                 $this->replaceRowInFile('config/application.config.php', "//'$module'", "'$module',");
-                if (file_exists(Install::MODULES . ".$module")) {
-                    rename(Install::MODULES . ".$module", Install::MODULES . $module);
-                }
             }
         }
     }
@@ -270,9 +264,7 @@ class Install
         $from = ['admin@zfury.com'];
         $host = '';
         $port = '';
-        $emails = '';
-        $additionalHeaders = '';
-        $project = '';
+        $headers = '';
 
         for ($i=0; $i<count($mailForm->getData()); $i++) {
             $paramName = array_keys($mailForm->getData())[$i];
@@ -301,34 +293,8 @@ class Install
                             break;
                         }
                         $newRow = "'$headerName'=>'$headerValue',";
-                        if ('PROJECT' === $headerName && $headerValue) {
-                            $project = "'PROJECT'=>'$headerValue',";
-                        } else {
-                            $additionalHeaders .= $newRow;
-                        }
+                        $headers .= $newRow;
                     }
-                    break;
-                case 'emails':
-                    $emails = "";
-                    for ($j = 0; $j < count($paramValue); $j++) {
-                        $value = array_values($paramValue[$j]);
-                        $currentEmail = array_shift($value);
-                        if (!$currentEmail) {
-                            break;
-                        }
-                        if ('emails' == $paramName) {
-                            $paramName = strtoupper($paramName);
-                        }
-                        if (count($paramValue)>1) {
-                            $emails .= "'$currentEmail',";
-                        } else {
-                            $emails .= "'$currentEmail'";
-                        }
-                    }
-                    if (!$emails) {
-                        break;
-                    }
-                    $emails = "'EMAILS' => [$emails],";
                     break;
                 case 'host':
                     $host = $paramValue;
@@ -352,9 +318,7 @@ class Install
                     ),
                     'message' => array(
                         'headers' => array(
-                            $project
-                            $emails
-                            $additionalHeaders
+                            $headers
                         ),
                         'from' => [$from]
                     )

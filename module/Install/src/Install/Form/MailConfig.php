@@ -50,19 +50,6 @@ class MailConfig extends Form
 
         $this->add([
             'type' => 'Zend\Form\Element\Collection',
-            'name' => 'emails',
-            'options' => [
-                'count' => 1,
-                'should_create_template' => true,
-                'allow_add' => true,
-                'target_element' => [
-                    'type' => 'Install\Form\Fieldset\EmailsFieldset'
-                ]
-            ]
-        ]);
-
-        $this->add([
-            'type' => 'Zend\Form\Element\Collection',
             'name' => 'from',
             'options' => [
                 'count' => 1,

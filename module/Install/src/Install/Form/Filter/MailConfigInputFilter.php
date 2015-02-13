@@ -52,8 +52,6 @@ class MailConfigInputFilter extends InputFilter
 
         $this->add(new HeaderCollectionInputFilter(), 'header');
 
-        $this->add(new EmailsCollectionInputFilter(), 'emails');
-
         $this->add(new FromCollectionInputFilter(), 'from');
     }
 }
