@@ -95,36 +95,44 @@ return array(
     ),
     'navigation' => array(
         'default' => array(
-            array(
+            [
                 'label' => 'Comment',
                 'controller' => 'comment',
-                'pages' => array(
-                    array(
+                'pages' => [
+                    [
                         'label' => 'Create entity',
                         'controller' => 'entity-type',
                         'action' => 'create',
                         'route' => 'comment/default',
                         'controller_namespace' => 'Comment\Controller\EntityType',
                         'module' => 'Comment'
-                    ),
-                    array(
+                    ],
+                    [
                         'label' => 'All entities',
                         'controller' => 'entity-type',
                         'action' => 'index',
                         'route' => 'comment/default',
                         'controller_namespace' => 'Comment\Controller\EntityType',
                         'module' => 'Comment'
-                    ),
-                    array(
+                    ],
+                    [
                         'label' => 'All comments',
                         'controller' => 'index',
                         'action' => 'grid',
                         'route' => 'comment/default',
                         'controller_namespace' => 'Comment\Controller\Index',
                         'module' => 'Comment'
-                    )
-                )
-            )
+                    ],
+                    [
+                        'label' => 'Write Comments',
+                        'controller' => 'comment',
+                        'action' => 'index',
+                        'route' => 'test/default',
+                        'controller_namespace' => 'Test\Controller\Comment',
+                        'module' => 'Test'
+                    ]
+                ]
+            ]
         )
     )
 );

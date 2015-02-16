@@ -124,14 +124,6 @@ return [
                         'route' => 'test/default',
                         'controller_namespace' => 'Test\Controller\Management',
                         'module' => 'Test'
-                    ],
-                    [
-                        'label' => 'Write Comments',
-                        'controller' => 'comment',
-                        'action' => 'index',
-                        'route' => 'test/default',
-                        'controller_namespace' => 'Test\Controller\Comment',
-                        'module' => 'Test'
                     ]
                 ]
             ]
