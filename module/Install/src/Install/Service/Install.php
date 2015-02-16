@@ -191,24 +191,19 @@ class Install
 
                 if (file_exists($filePath)) {
                     if (is_dir($filePath)) {
-                        $message = 'Directory ';
                         $whereToPush = &$checkedDirectories;
                     } else {
-                        $message = 'File ';
                         $whereToPush = &$checkedFiles;
                     }
                     if (is_writable($filePath)) {
-                        $message .= "'$fileName' which path is '$filePath' exists and is writable!";
+                        $message = "'$filePath' exists and is writable!";
                         $status = Install::GOOD;
                     } else {
-                        $message .= "'$fileName' which path is '$filePath' does not exist or is not writable. "
-                            . "Please, copy its dist version renaming it to '$filePath' or (if you have already done this)"
-                            . " make it writable!";
+                        $message = "'$filePath' is not writable.";
                         $status = Install::BAD;
                     }
                 } else {
-                    $message = "'$fileName' which path is '$filePath' does not exist."
-                        . "Please, create it!";
+                    $message = "'$filePath' does not exist.";
                     $status = Install::BAD;
                 }
                 array_push($whereToPush, [$fileName => [
@@ -239,7 +234,7 @@ class Install
                 $toolName = array_shift($toolName);
                 $versionCommand = array_values($uncheckedTools[$i]);
                 $versionCommand = array_shift($versionCommand);
-                $message = "Tool '$toolName' which version command is '$versionCommand' ";
+                $message = "'$toolName' ";
                 $output = [];
                 exec($versionCommand, $output, $return);
                 if (isset($return) && 0 === $return) {

@@ -2,6 +2,7 @@
 
 namespace User\Controller;
 
+use Doctrine\Common\Collections\Criteria;
 use Facebook\FacebookRedirectLoginHelper;
 use Facebook\FacebookRequest;
 use Facebook\FacebookSession;
@@ -340,6 +341,15 @@ class AuthController extends AbstractActionController
                     $objectManager->flush();
 
                     $this->flashMessenger()->addSuccessMessage('You have successfully changed your password!');
+                    $criteria = Criteria::create()->where(Criteria::expr()->eq('provider', 'equals'));
+                    $user->getAuths()->matching($criteria)->first()->login($this->getServiceLocator());
+                    $session = new Container('location');
+                    $location = $session->location;
+
+                    if ($location) {
+                        $session->getManager()->getStorage()->clear('location');
+                        return $this->redirect()->toUrl($location);
+                    }
 
                     return $this->redirect()->toRoute('home');
                 } catch (\Exception $exception) {
