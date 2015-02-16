@@ -78,16 +78,10 @@ class Version20150213162817 extends AbstractMigration
 
     public function down(Schema $schema)
     {
-//        // this down() migration is auto-generated, please modify it to your needs
-//        $this->connection->createQueryBuilder()
-//            ->delete('auth', 'a')
-//            ->where("a.foreignKey = :email")
-//            ->setParameter(':email', 'admin@zfury.com')
-//            ->execute();
         $this->connection->createQueryBuilder()
-            ->delete('users', 'u')
-            ->where($this->connection->createQueryBuilder()->expr()->eq('u.email', ':email'))
-            ->setParameter(':email', 'admin@zfury.com')
+            ->delete('users')
+            ->where("email = :email")
+            ->setParameter('email', 'admin@zfury.com')
             ->execute();
     }
 }

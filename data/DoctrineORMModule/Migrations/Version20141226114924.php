@@ -69,8 +69,8 @@ class Version20141226114924 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->connection->createQueryBuilder()
-            ->delete('entity_type', 'et')
-            ->where("et.alias = :alias")
+            ->delete('entity_type')
+            ->where("alias = :alias")
             ->setParameter('alias', 'test')
             ->execute();
     }
