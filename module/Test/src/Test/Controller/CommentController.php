@@ -25,6 +25,13 @@ class CommentController extends AbstractActionController
      */
     public function indexAction()
     {
+        $manager = $this->getServiceLocator()->get('ModuleManager');
+        $modules = $manager->getLoadedModules();
+        if (!in_array('Comment', array_keys($modules))) {
+            $this->flashMessenger()->addErrorMessage('Comment module is not loaded');
+            $this->redirect()->toRoute('home');
+        }
+
         $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
 
         $entity = $objectManager->getRepository('Test\Entity\Test')->findOneBy([]);
