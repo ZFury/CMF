@@ -17,14 +17,16 @@ class HeaderFieldset extends Fieldset
 
         $this->add(array(
             'name' => 'header-name',
-            'options' => array(
-            )
+            'attributes' => [
+                'placeholder' => 'Header Name',
+            ],
         ));
 
         $this->add(array(
             'name' => 'header-value',
-            'options' => array(
-            )
+            'attributes' => [
+                'placeholder' => 'Header Value',
+            ],
         ));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace User\Controller;
 
+use Doctrine\Common\Collections\Criteria;
 use Facebook\FacebookRedirectLoginHelper;
 use Facebook\FacebookRequest;
 use Facebook\FacebookSession;
@@ -39,14 +40,16 @@ class AuthController extends AbstractActionController
                 try {
                     $userAuth->authenticateEquals($data['email'], $data['password']);
 
+                    $flashMessenger->addSuccessMessage('You\'re successfully logged in');
+
                     $session = new Container('location');
                     $location = $session->location;
+
                     if ($location) {
                         $session->getManager()->getStorage()->clear('location');
                         return $this->redirect()->toUrl($location);
                     }
 
-                    $flashMessenger->addSuccessMessage('You\'re successfully logged in');
                     return $this->redirect()->toRoute('home');
                 } catch (AuthException $exception) {
                     $flashMessenger->addErrorMessage($exception->getMessage());
@@ -131,6 +134,7 @@ class AuthController extends AbstractActionController
                 $auth->setToken($token->oauth_token);
                 $auth->setTokenSecret($token->oauth_token_secret);
                 $auth->setTokenType(Auth::TYPE_ACCESS);
+                $message = "You have successfully logged in via twitter";
             } else {
                 //if there is no user with provided twitter id and user is not logged in
                 if (!$this->identity()) {
@@ -145,6 +149,7 @@ class AuthController extends AbstractActionController
                     $user->activate();
                     $objectManager->persist($user);
                     $objectManager->flush();
+
                 } else {
                     //get current authorized user
                     $user = $this->identity()->getUser();
@@ -158,6 +163,8 @@ class AuthController extends AbstractActionController
                 $auth->setUserId($user->getId());
                 $user->getAuths()->add($auth);
                 $auth->setUser($user);
+
+                $message = "You've successfully registered via twitter";
             }
 
             $objectManager->persist($user);
@@ -165,10 +172,19 @@ class AuthController extends AbstractActionController
             $objectManager->flush();
             $auth->login($this->getServiceLocator());
             // Now that we have an Access Token, we can discard the Request Token
-            $container->requestToken = null;
 
-            $this->flashMessenger()->addSuccessMessage("You've successfully registered via twitter");
-            return $this->redirect()->toRoute('user/default', ['controller' => 'profile']);
+            $container->requestToken = null;
+            $this->flashMessenger()->addSuccessMessage($message);
+
+            $session = new Container('location');
+            $location = $session->location;
+
+            if ($location) {
+                $session->getManager()->getStorage()->clear('location');
+                return $this->redirect()->toUrl($location);
+            }
+
+            return $this->redirect()->toRoute('home');
         } else {
             $this->flashMessenger()->addErrorMessage("Invalid callback request. Oops. Sorry.");
             return $this->redirect()->toRoute('home');
@@ -241,6 +257,7 @@ class AuthController extends AbstractActionController
                 $auth->setToken($session->getAccessToken());
                 $auth->setTokenSecret(0);
                 $auth->setTokenType(Auth::TYPE_ACCESS);
+                $message = "You've successfully logged in via facebook";
             } else {
                 if (!$this->identity()) {
                     //create new user
@@ -268,14 +285,25 @@ class AuthController extends AbstractActionController
                 $user->getAuths()->add($auth);
 
                 $auth->setUser($user);
+
+                $message = "You've successfully registered via facebook";
             }
             $objectManager->persist($user);
             $objectManager->persist($auth);
             $objectManager->flush();
             $auth->login($this->getServiceLocator());
 
-            $this->flashMessenger()->addSuccessMessage("You've successfully registered via facebook");
-            return $this->redirect()->toRoute('user/default', ['controller' => 'profile']);
+            $this->flashMessenger()->addSuccessMessage($message);
+
+            $session = new Container('location');
+            $location = $session->location;
+
+            if ($location) {
+                $session->getManager()->getStorage()->clear('location');
+                return $this->redirect()->toUrl($location);
+            }
+
+            return $this->redirect()->toRoute('home');
         }
 
     }
@@ -313,6 +341,15 @@ class AuthController extends AbstractActionController
                     $objectManager->flush();
 
                     $this->flashMessenger()->addSuccessMessage('You have successfully changed your password!');
+                    $criteria = Criteria::create()->where(Criteria::expr()->eq('provider', 'equals'));
+                    $user->getAuths()->matching($criteria)->first()->login($this->getServiceLocator());
+                    $session = new Container('location');
+                    $location = $session->location;
+
+                    if ($location) {
+                        $session->getManager()->getStorage()->clear('location');
+                        return $this->redirect()->toUrl($location);
+                    }
 
                     return $this->redirect()->toRoute('home');
                 } catch (\Exception $exception) {

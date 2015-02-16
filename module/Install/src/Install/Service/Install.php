@@ -103,14 +103,8 @@ class Install
             $module = array_keys($modules)[$i];
             if (Install::UNCHECKED == array_values($modules)[$i]) {
                 $this->replaceRowInFile('config/application.config.php', "'$module'", "//'$module'");
-                if (file_exists(Install::MODULES . $module)) {
-                    rename(Install::MODULES . $module, Install::MODULES . ".$module");
-                }
             } else {
                 $this->replaceRowInFile('config/application.config.php', "//'$module'", "'$module',");
-                if (file_exists(Install::MODULES . ".$module")) {
-                    rename(Install::MODULES . ".$module", Install::MODULES . $module);
-                }
             }
         }
     }
@@ -197,24 +191,19 @@ class Install
 
                 if (file_exists($filePath)) {
                     if (is_dir($filePath)) {
-                        $message = 'Directory ';
                         $whereToPush = &$checkedDirectories;
                     } else {
-                        $message = 'File ';
                         $whereToPush = &$checkedFiles;
                     }
                     if (is_writable($filePath)) {
-                        $message .= "'$fileName' which path is '$filePath' exists and is writable!";
+                        $message = "'$filePath' exists and is writable!";
                         $status = Install::GOOD;
                     } else {
-                        $message .= "'$fileName' which path is '$filePath' does not exist or is not writable. "
-                            . "Please, copy its dist version renaming it to '$filePath' or (if you have already done this)"
-                            . " make it writable!";
+                        $message = "'$filePath' is not writable.";
                         $status = Install::BAD;
                     }
                 } else {
-                    $message = "'$fileName' which path is '$filePath' does not exist."
-                        . "Please, create it!";
+                    $message = "'$filePath' does not exist.";
                     $status = Install::BAD;
                 }
                 array_push($whereToPush, [$fileName => [
@@ -245,7 +234,7 @@ class Install
                 $toolName = array_shift($toolName);
                 $versionCommand = array_values($uncheckedTools[$i]);
                 $versionCommand = array_shift($versionCommand);
-                $message = "Tool '$toolName' which version command is '$versionCommand' ";
+                $message = "'$toolName' ";
                 $output = [];
                 exec($versionCommand, $output, $return);
                 if (isset($return) && 0 === $return) {
@@ -270,9 +259,7 @@ class Install
         $from = ['admin@zfury.com'];
         $host = '';
         $port = '';
-        $emails = '';
-        $additionalHeaders = '';
-        $project = '';
+        $headers = '';
 
         for ($i=0; $i<count($mailForm->getData()); $i++) {
             $paramName = array_keys($mailForm->getData())[$i];
@@ -301,34 +288,8 @@ class Install
                             break;
                         }
                         $newRow = "'$headerName'=>'$headerValue',";
-                        if ('PROJECT' === $headerName && $headerValue) {
-                            $project = "'PROJECT'=>'$headerValue',";
-                        } else {
-                            $additionalHeaders .= $newRow;
-                        }
+                        $headers .= $newRow;
                     }
-                    break;
-                case 'emails':
-                    $emails = "";
-                    for ($j = 0; $j < count($paramValue); $j++) {
-                        $value = array_values($paramValue[$j]);
-                        $currentEmail = array_shift($value);
-                        if (!$currentEmail) {
-                            break;
-                        }
-                        if ('emails' == $paramName) {
-                            $paramName = strtoupper($paramName);
-                        }
-                        if (count($paramValue)>1) {
-                            $emails .= "'$currentEmail',";
-                        } else {
-                            $emails .= "'$currentEmail'";
-                        }
-                    }
-                    if (!$emails) {
-                        break;
-                    }
-                    $emails = "'EMAILS' => [$emails],";
                     break;
                 case 'host':
                     $host = $paramValue;
@@ -352,9 +313,7 @@ class Install
                     ),
                     'message' => array(
                         'headers' => array(
-                            $project
-                            $emails
-                            $additionalHeaders
+                            $headers
                         ),
                         'from' => [$from]
                     )

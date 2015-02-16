@@ -6,6 +6,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use User\Form;
 use User\Service;
+use Doctrine\Common\Collections\Criteria;
 
 class SignupController extends AbstractActionController
 {
@@ -18,16 +19,14 @@ class SignupController extends AbstractActionController
     public function indexAction()
     {
         $form = new Form\SignupForm('create-user', ['serviceLocator' => $this->getServiceLocator()]);
-
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
             if ($form->isValid()) {
                 $userService = new Service\User($this->getServiceLocator());
                 try {
                     $user = $userService->create($form);
-                    $this->flashMessenger()->addSuccessMessage(
-                        'You must confirm your email address to complete registration'
-                    );
+                    $this->flashMessenger()
+                        ->addSuccessMessage('You must confirm your email address to complete registration');
 
                     return $this->redirect()->toRoute('home');
                 } catch (\Exception $exception) {
@@ -84,6 +83,7 @@ class SignupController extends AbstractActionController
              * @var \Doctrine\ORM\EntityManager $objectManager
              */
             $objectManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+            /** @var \User\Entity\User $user */
             $user = $objectManager
                 ->getRepository('User\Entity\User')
                 ->findOneBy(array('confirm' => $confirm));
@@ -93,6 +93,9 @@ class SignupController extends AbstractActionController
             $user->activate();
             $objectManager->persist($user);
             $objectManager->flush();
+
+            $criteria = Criteria::create()->where(Criteria::expr()->eq('provider', 'equals'));
+            $user->getAuths()->matching($criteria)->first()->login($this->getServiceLocator());
             $this->flashMessenger()->addSuccessMessage("You've successfully activated your account");
         } catch (\Exception $exception) {
             $this->flashMessenger()->addErrorMessage($exception->getMessage());
