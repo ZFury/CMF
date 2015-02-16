@@ -84,11 +84,10 @@ class Version20150213162817 extends AbstractMigration
 //            ->where("a.foreignKey = :email")
 //            ->setParameter(':email', 'admin@zfury.com')
 //            ->execute();
-
         $this->connection->createQueryBuilder()
             ->delete('users', 'u')
-            ->where("u.email = :email")
-            ->setParameter('email', 'admin@zfury.com')
+            ->where($this->connection->createQueryBuilder()->expr()->eq('u.email', ':email'))
+            ->setParameter(':email', 'admin@zfury.com')
             ->execute();
     }
 }
