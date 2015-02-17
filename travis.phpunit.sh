@@ -1,4 +1,4 @@
-php -r 'putenv('APP_ENV=testing');'
+php -r "putenv('APP_ENV=testing');"
 ./vendor/bin/phpunit -c module/Options/test/phpunit.xml --log-junit 'logs/tests-report.options.xml' --coverage-clover 'logs/phpunit.clover.options.xml' --coverage-html 'logs/coverage/options' > logs/phpunit.options.log
 ./vendor/bin/phpunit -c module/Pages/test/phpunit.xml --log-junit 'logs/tests-report.pages.xml' --coverage-clover 'logs/phpunit.clover.pages.xml' --coverage-html 'logs/coverage/pages' > logs/phpunit.pages.log
 ./vendor/bin/phpunit -c module/Categories/test/phpunit.xml --log-junit 'logs/tests-report.categories.xml' --coverage-clover 'logs/phpunit.clover.categories.xml' --coverage-html 'logs/coverage/categories' > logs/phpunit.categories.log
