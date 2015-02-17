@@ -21,6 +21,7 @@ install:
 script:
   # Unit tests
   #- ./travis.phpunit.sh
+  - ./vendor/bin/phpunit -c module/Media/test/phpunit.xml #--log-junit 'logs/tests-report.media.xml' --coverage-clover 'logs/phpunit.clover.media.xml' --coverage-html 'logs/coverage/media' > logs/phpunit.media.log
   # Code style
   #- ./vendor/bin/phpcs module/ --tab-width=4 --report=checkstyle --standard=PSR2 --extensions=php --ignore=js --report-file=logs/phpcs.xml --encoding=utf-8 > logs/phpcs.log
   # Code Browser
@@ -29,5 +30,6 @@ script:
 #after_script:
   # Zipping coverage
   #- ./travis.coverage.sh
+  #- zip -r logs/coverage_media.zip logs/coverage/media
 notifications:
   email: false

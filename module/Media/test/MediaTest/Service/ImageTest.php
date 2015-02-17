@@ -108,53 +108,53 @@ class ImageTest extends ControllerTestCase
         $this->assertTrue($this->imageService->prepareDir($imgPath));
     }
 
-    /**
-     * Tests image upload
-     */
-    public function testUploadImage()
-    {
-        $formMock = $this->getMockBuilder('Media\Form\ImageUpload')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $formMock->expects($this->atLeastOnce())
-            ->method('getData')
-            ->will($this->returnValue($this->getImageData()));
-
-        $formMock->expects($this->atLeastOnce())
-            ->method('getFileType')
-            ->will($this->returnValue('image'));
-
-        $filterMock = $this->getMockBuilder('Zend\Filter\File\RenameUpload')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $filterMock->expects($this->atLeastOnce())
-            ->method('filter')
-            ->will($this->returnValue(true));
-
-        $filterMock->expects($this->atLeastOnce())
-            ->method('setTarget')
-            ->will($this->returnSelf());
-
-        $doctrineMock = $this->getDoctrineMock();
-
-        $doctrineMock->expects($this->atLeastOnce())
-            ->method('persist')
-            ->will($this->returnValue(true));
-
-        $doctrineMock->expects($this->atLeastOnce())
-            ->method('flush')
-            ->will($this->returnValue(true));
-
-        $this->getApplicationServiceLocator()->setAllowOverride(true);
-        $this->getApplicationServiceLocator()->setService('Zend\Filter\File\RenameUpload', $filterMock);
-        $this->getApplicationServiceLocator()->setService('doctrine.entitymanager.orm_default', $doctrineMock);
-
-        $file = $this->getApplicationServiceLocator()->get('Media\Service\Image')->writeFile($formMock);
-
-        $this->assertNotEmpty($file);
-    }
+//    /**
+//     * Tests image upload
+//     */
+//    public function testUploadImage()
+//    {
+//        $formMock = $this->getMockBuilder('Media\Form\ImageUpload')
+//            ->disableOriginalConstructor()
+//            ->getMock();
+//
+//        $formMock->expects($this->atLeastOnce())
+//            ->method('getData')
+//            ->will($this->returnValue($this->getImageData()));
+//
+//        $formMock->expects($this->atLeastOnce())
+//            ->method('getFileType')
+//            ->will($this->returnValue('image'));
+//
+//        $filterMock = $this->getMockBuilder('Zend\Filter\File\RenameUpload')
+//            ->disableOriginalConstructor()
+//            ->getMock();
+//
+//        $filterMock->expects($this->atLeastOnce())
+//            ->method('filter')
+//            ->will($this->returnValue(true));
+//
+//        $filterMock->expects($this->atLeastOnce())
+//            ->method('setTarget')
+//            ->will($this->returnSelf());
+//
+//        $doctrineMock = $this->getDoctrineMock();
+//
+//        $doctrineMock->expects($this->atLeastOnce())
+//            ->method('persist')
+//            ->will($this->returnValue(true));
+//
+//        $doctrineMock->expects($this->atLeastOnce())
+//            ->method('flush')
+//            ->will($this->returnValue(true));
+//
+//        $this->getApplicationServiceLocator()->setAllowOverride(true);
+//        $this->getApplicationServiceLocator()->setService('Zend\Filter\File\RenameUpload', $filterMock);
+//        $this->getApplicationServiceLocator()->setService('doctrine.entitymanager.orm_default', $doctrineMock);
+//
+//        $file = $this->getApplicationServiceLocator()->get('Media\Service\Image')->writeFile($formMock);
+//
+//        $this->assertNotEmpty($file);
+//    }
 
     /**
      * @return array
