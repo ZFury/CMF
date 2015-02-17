@@ -5,6 +5,11 @@ php:
 matrix:
   allow_failures:
     - php: hhvm
+before_install:
+  - chmod +x travis.config.sh
+  - chmod +x install.sh
+  - chmod +x travis.phpunit.sh
+  - chmod +x travis.coverage.sh
 install:
   # Database
   - mysql -e 'CREATE DATABASE p_zfury;'
