@@ -1,0 +1,27 @@
+language: php
+php:
+  - 5.4
+  - hhvm
+matrix:
+  allow_failures:
+    - php: hhvm
+install:
+  # Database
+  - mysql -e 'CREATE DATABASE p_zfury;'
+  # Composer install, .htaccsess, directories, rights
+  - ./install.sh
+  # Configs
+  - ./travis.config.sh
+script:
+  # Unit tests
+  - ./travis.phpunit.sh
+  # Code style
+  - ./vendor/bin/phpcs module/ --tab-width=4" --report=checkstyle --standard=PSR2 --extensions=php --ignore=js --report-file=logs/phpcs.xml --encoding=utf-8 > logs/phpcs.log
+  # Code Browser
+  - ./vendor/bin/phpcb --log logs/ --source module/ --output logs/phpcb
+  - zip -r logs/phpcb.zip logs/phpcb
+after_script:
+  # Zipping coverage
+  - ./travis.coverage.sh
+notifications:
+  email: false
