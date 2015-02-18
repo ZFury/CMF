@@ -4,6 +4,7 @@ ZFury, CMF based on ZF2
 [![Build Status](https://travis-ci.org/ZFury/ZFury.svg?branch=travis)](https://travis-ci.org/ZFury/ZFury)  
 [![Dependency Status](https://www.versioneye.com/user/projects/54e453f4d1ec5734f40002b7/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54e453f4d1ec5734f40002b7)  
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ZFury/ZFury/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ZFury/ZFury/?branch=master)  
+[![Coverage Status](https://coveralls.io/repos/ZFury/ZFury/badge.svg?branch=travis)](https://coveralls.io/r/ZFury/ZFury?branch=travis)  
 
 ##Installation  
 1. Clone project and launch [install.sh](install.sh)    
