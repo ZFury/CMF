@@ -8,11 +8,11 @@ ZFury, CMF based on ZF2
 
 ##Installation  
 1. Get it  
-###Via composer
+###Via composer  
 ```php composer.phar create-project zfury/cmf %path% --stability=dev```  
-###From repository
+###From repository  
 ```git clone git://github.com/ZFury/CMF.git %path% ```  
-2. Launch [install.sh](install.sh)    
+2. Launch [install.sh](install.sh)  
 3. Create symlink to the [public](public) directory ```sh ln -s /path/to/public /path/to/www```    
 4. Open application in browser and follow installation steps!  
 
@@ -24,11 +24,11 @@ Also you can check our [auto-generating documentation](http://zfury.github.io/)
 The project is developed by [NIX Solutions](http://www.nixsolutions.com/) PHP team and distributed under [MIT LICENSE](LICENSE.txt)  
 
 ##Vendors
-    - [Zend Framework 2](http://framework.zend.com/)  
-    - [Doctrine 2](http://www.doctrine-project.org/)  
-    - [BjyAuthorize](https://github.com/bjyoungblood/BjyAuthorize/)  
-    - [JQuery](http://jquery.com/)  
-    - [RequireJS](http://requirejs.org/)  
-    - [Twitter Bootstrap](http://getbootstrap.com/)  
-    - [Font Awesome](http://fortawesome.github.io/Font-Awesome/)  
-    - [JQuery File Upload](https://github.com/blueimp/jQuery-File-Upload)  
+[Zend Framework 2](http://framework.zend.com/)  
+[Doctrine 2](http://www.doctrine-project.org/)  
+[BjyAuthorize](https://github.com/bjyoungblood/BjyAuthorize/)  
+[JQuery](http://jquery.com/)  
+[RequireJS](http://requirejs.org/)  
+[Twitter Bootstrap](http://getbootstrap.com/)  
+[Font Awesome](http://fortawesome.github.io/Font-Awesome/)  
+[JQuery File Upload](https://github.com/blueimp/jQuery-File-Upload)  
