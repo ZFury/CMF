@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7ba1615860e8bdc09d54a1395b6c5170",
+    "hash": "03a65c2aaba657b77f2ed26a41167eea",
     "packages": [
         {
             "name": "bjyoungblood/bjy-authorize",
@@ -1212,6 +1212,45 @@
                 "zf2"
             ],
             "time": "2014-03-05 22:25:44"
+        },
+        {
+            "name": "zfury/framework",
+            "version": "0.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ZFury/framework.git",
+                "reference": "535a9b25d0d7a8e0b697b8867dcac0b840f644ae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ZFury/framework/zipball/535a9b25d0d7a8e0b697b8867dcac0b840f644ae",
+                "reference": "535a9b25d0d7a8e0b697b8867dcac0b840f644ae",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/common": "2.4.*",
+                "doctrine/doctrine-orm-module": "0.8.*",
+                "php": ">=5.4",
+                "zendframework/zendframework": "2.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Fury\\": "library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Basic classes used in Zfury (CMF based on Zend Framework 2)",
+            "homepage": "http://framework.zend.com/",
+            "keywords": [
+                "ZFury",
+                "framework",
+                "zf2"
+            ],
+            "time": "2015-02-19 12:01:45"
         }
     ],
     "packages-dev": [
