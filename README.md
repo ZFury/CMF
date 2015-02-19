@@ -7,14 +7,16 @@ ZFury, CMF based on ZF2
 [![Coverage Status](https://coveralls.io/repos/ZFury/ZFury/badge.svg?branch=travis)](https://coveralls.io/r/ZFury/ZFury?branch=travis)  
 
 ## Installation
-At first, get it
-### Via composer  
+#### At first, get it  
+- Via composer  
 ```php composer.phar create-project zfury/cmf %path% --stability=dev```  
-### From repository  
-```git clone git://github.com/ZFury/CMF.git %path% ```  
-2. Launch [install.sh](install.sh)  
-3. Create symlink to the [public](public) directory ```sh ln -s /path/to/public /path/to/www```    
-4. Open application in browser and follow installation steps!  
+- From repository  
+```git clone git://github.com/ZFury/CMF.git %path% ```
+#### Then  
+- Launch [install.sh](install.sh)  
+- Create symlink to the [public](public) directory ```sh ln -s /path/to/public /path/to/www```  
+#### Finally  
+- Open application in browser and follow installation steps!  
 
 ## Usage  
 In our [wiki](https://github.com/ZFury/ZFury/wiki) you can find descriptions of every module.  
