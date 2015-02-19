@@ -50,7 +50,7 @@ class Bootstrap
         $serviceManager = new ServiceManager(new ServiceManagerConfig());
         $serviceManager->setService('ApplicationConfig', $config);
         $serviceManager->get('ModuleManager')->loadModules();
-        exec('vendor/bin/doctrine-module orm:schema-tool:update --force');
+//        exec('vendor/bin/doctrine-module orm:schema-tool:update --force');
         static::$serviceManager = $serviceManager;
     }
 
