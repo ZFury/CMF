@@ -5,7 +5,8 @@
     "keywords": [
         "framework",
         "zf2",
-        "ZFury"
+        "zfury",
+        "cmf"
     ],
     "homepage": "http://framework.zend.com/",
     "require": {
