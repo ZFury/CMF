@@ -1,0 +1,4 @@
+service_name: travis-ci
+src_dir: module
+coverage_clover: logs/phpunit.clover.media.xml
+json_path: logs/coveralls-upload.json

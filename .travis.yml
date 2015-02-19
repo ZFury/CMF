@@ -1,0 +1,37 @@
+language: php
+php:
+  - 5.4
+  - hhvm
+matrix:
+  allow_failures:
+    - php: hhvm
+before_install:
+  - chmod +x travis.config.sh
+  - chmod +x install.sh
+  - chmod +x travis.phpunit.sh
+  - chmod +x travis.coverage.sh
+install:
+  # Database
+  - mysql -e 'CREATE DATABASE p_zfury_test;'
+  # Composer install, .htaccsess, directories, rights
+  - ./install.sh
+  # Configs
+  - ./travis.config.sh
+script:
+  # Unit tests
+  - ./travis.phpunit.sh
+  # - ./vendor/bin/phpunit -c module/Media/test/phpunit.xml --log-junit 'logs/tests-report.media.xml' --coverage-clover 'logs/phpunit.clover.media.xml' --coverage-html 'logs/coverage/media' > logs/phpunit.media.log
+  # Code style
+  #- ./vendor/bin/phpcs module/ --tab-width=4 --report=checkstyle --standard=PSR2 --extensions=php --ignore=js --report-file=logs/phpcs.xml --encoding=utf-8 > logs/phpcs.log
+  # Code Browser
+  #- ./vendor/bin/phpcb --log logs/ --source module/ --output logs/phpcb
+  #- zip -r logs/phpcb.zip logs/phpcb
+after_script:
+  # Zipping coverage
+  - ./travis.coverage.sh
+  - php vendor/bin/coveralls -v
+  - zip -r logs/coverage_media.zip logs/coverage/media
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - sh -c 'if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then php ocular.phar code-coverage:upload --format=php-clover logs/phpunit.clover.media.xml; fi;'
+notifications:
+  email: false
