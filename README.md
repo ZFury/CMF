@@ -8,9 +8,9 @@ ZFury, CMF based on ZF2
 
 ## Installation
 #### At first, get it  
-- **Via composer**:  
+- Via composer:  
 ```php composer.phar create-project zfury/cmf %path% --stability=dev```  
-- **From repository**:  
+- From repository:  
 ```git clone git://github.com/ZFury/CMF.git %path% ```  
 
 #### Then  
