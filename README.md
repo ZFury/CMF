@@ -12,9 +12,11 @@ ZFury, CMF based on ZF2
 ```php composer.phar create-project zfury/cmf %path% --stability=dev```  
 - **From repository**:  
 ```git clone git://github.com/ZFury/CMF.git %path% ```  
+
 #### Then  
 - Launch [install.sh](install.sh)  
 - Create symlink to the [public](public) directory ```sh ln -s /path/to/public /path/to/www```  
+
 #### Finally  
 - Open application in browser and follow installation steps!  
 
