@@ -1,10 +1,10 @@
 ZFury, CMF based on ZF2
 =======================
 ## Achievements  
-[![Build Status](https://travis-ci.org/ZFury/ZFury.svg?branch=travis)](https://travis-ci.org/ZFury/ZFury)  
+[![Build Status](https://travis-ci.org/ZFury/CMF.svg?branch=travis)](https://travis-ci.org/ZFury/ZFury)  
 [![Dependency Status](https://www.versioneye.com/user/projects/54e453f4d1ec5734f40002b7/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54e453f4d1ec5734f40002b7)  
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ZFury/ZFury/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ZFury/ZFury/?branch=master)  
-[![Coverage Status](https://coveralls.io/repos/ZFury/ZFury/badge.svg?branch=travis)](https://coveralls.io/r/ZFury/ZFury?branch=travis)  
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ZFury/CMF/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ZFury/CMF/?branch=master)  
+[![Coverage Status](https://coveralls.io/repos/ZFury/CMF/badge.svg?branch=travis)](https://coveralls.io/r/ZFury/CMF?branch=travis)  
 
 ## Installation
 #### At first, get it  
