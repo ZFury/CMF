@@ -6,8 +6,8 @@ ZFury, CMF based on ZF2
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ZFury/ZFury/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ZFury/ZFury/?branch=master)  
 [![Coverage Status](https://coveralls.io/repos/ZFury/ZFury/badge.svg?branch=travis)](https://coveralls.io/r/ZFury/ZFury?branch=travis)  
 
-## Installation  
-1. Get it  
+## Installation
+At first, get it
 ### Via composer  
 ```php composer.phar create-project zfury/cmf %path% --stability=dev```  
 ### From repository  
