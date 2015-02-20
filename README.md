@@ -1,11 +1,15 @@
 ZFury, CMF based on ZF2
 =======================
 ## Achievements  
-[![Build Status](https://travis-ci.org/ZFury/CMF.svg?branch=travis)](https://travis-ci.org/ZFury/ZFury)  
+[![Build Status](https://travis-ci.org/ZFury/CMF.svg?branch=master)](https://travis-ci.org/ZFury/CMF)  
 [![Dependency Status](https://www.versioneye.com/user/projects/54e453f4d1ec5734f40002b7/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54e453f4d1ec5734f40002b7)  
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ZFury/CMF/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ZFury/CMF/?branch=master)  
-[![Coverage Status](https://coveralls.io/repos/ZFury/CMF/badge.svg?branch=travis)](https://coveralls.io/r/ZFury/CMF?branch=travis)  
-
+[![Coverage Status](https://coveralls.io/repos/ZFury/CMF/badge.svg?branch=master)](https://coveralls.io/r/ZFury/CMF?branch=master)  
+[![Latest Stable Version](https://poser.pugx.org/zfury/cmf/version.svg)](https://packagist.org/packages/zfury/cmf)  
+[![Total Downloads](https://poser.pugx.org/zfury/cmf/downloads.svg)](https://packagist.org/packages/zfury/cmf)  
+[![Monthly Downloads](https://poser.pugx.org/zfury/cmf/d/monthly.svg)](https://packagist.org/packages/zfury/cmf)  
+[![Daily Downloads](https://poser.pugx.org/zfury/cmf/d/daily.svg)](https://packagist.org/packages/zfury/cmf)  
+[![License](https://poser.pugx.org/cmf/cmf/license.svg)](https://packagist.org/packages/zfury/cmf)  
 ## Installation
 #### At first, get it  
 - Via composer:  

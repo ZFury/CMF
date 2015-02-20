@@ -1,13 +1,7 @@
 # Creating directories
 mkdir logs
 mkdir logs/phpcb
-mkdir coverage/options
-mkdir coverage/pages
-mkdir coverage/categories
-mkdir coverage/comment
-mkdir coverage/media
-mkdir coverage/user
-mkdir coverage/install
+mkdir coverage
 
 # Copying dist files
 copy config/autoload/doctrine.testing.php.dist config/autoload/doctrine.testing.php
