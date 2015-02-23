@@ -16,6 +16,7 @@ sed -i "s/{PASSWORD}//g" config/autoload/doctrine.testing.php
 sed -i "s/{PORT}/3306/g" config/autoload/doctrine.testing.php
 
 sed -i "s/\/\/'BjyAuthorize'/'BjyAuthorize'/g" config/application.config.php
+sed -i "s/'Install'/\/\/'Install'/g" config/application.config.php
 
 
 

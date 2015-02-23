@@ -17,7 +17,6 @@ install:
   - ./travis.config.sh
 script:
   # Unit tests
-  - php -r "putenv('APP_ENV=testing');"
   - ./vendor/bin/phpunit -c tests/phpunit.xml --log-junit 'logs/tests-report.xml' --coverage-clover 'logs/phpunit.clover.xml'
   # Code style
   #- ./vendor/bin/phpcs module/ --tab-width=4 --report=checkstyle --standard=PSR2 --extensions=php --ignore=js --report-file=logs/phpcs.xml --encoding=utf-8 > logs/phpcs.log
