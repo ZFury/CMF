@@ -10,7 +10,7 @@ before_install:
   - chmod +x install.sh
 install:
   # Database
-  - mysql -e 'CREATE DATABASE p_zfury_test;'
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS p_zfury_test;' -uroot
   # Composer install, .htaccsess, directories, rights
   - ./install.sh
   # Configs
