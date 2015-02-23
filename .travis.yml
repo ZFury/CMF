@@ -24,6 +24,6 @@ after_script:
   - zip -r logs/coverage.zip logs/coverage
   - php vendor/bin/coveralls -v
   - wget https://scrutinizer-ci.com/ocular.phar
-  - sh -c 'if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then php ocular.phar code-coverage:upload --format=php-clover logs/phpunit.clover.media.xml; fi;'
+  - sh -c 'if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then php ocular.phar code-coverage:upload --format=php-clover logs/phpunit.clover.xml; fi;'
 notifications:
   email: false
