@@ -9,7 +9,7 @@ ZFury, CMF based on ZF2
 [![Total Downloads](https://poser.pugx.org/zfury/cmf/downloads.svg)](https://packagist.org/packages/zfury/cmf)  
 [![Monthly Downloads](https://poser.pugx.org/zfury/cmf/d/monthly.svg)](https://packagist.org/packages/zfury/cmf)  
 [![Daily Downloads](https://poser.pugx.org/zfury/cmf/d/daily.svg)](https://packagist.org/packages/zfury/cmf)  
-[![License](https://poser.pugx.org/cmf/cmf/license.svg)](https://packagist.org/packages/zfury/cmf)  
+[![License](https://poser.pugx.org/zfury/cmf/license.svg)](https://packagist.org/packages/zfury/cmf)  
 ## Installation
 #### At first, get it  
 - Via composer:  
