@@ -4,9 +4,9 @@ mkdir logs/phpcb
 mkdir coverage
 
 # Copying dist files
-copy config/autoload/doctrine.testing.php.dist config/autoload/doctrine.testing.php
-copy config/autoload/testing.php.dist config/autoload/testing.php
-# copy public/.htaccess.sample public/.htaccess
+cp config/autoload/doctrine.testing.php.dist config/autoload/doctrine.testing.php
+cp config/autoload/testing.php.dist config/autoload/testing.php
+# cp public/.htaccess.sample public/.htaccess
 
 # Configuring
 sed -i "s/{HOSTNAME}/localhost/g" config/autoload/doctrine.testing.php
