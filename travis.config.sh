@@ -1,7 +1,6 @@
 # Creating directories
 mkdir logs
 mkdir logs/phpcb
-mkdir coverage
 
 # Copying dist files
 cp config/autoload/doctrine.testing.php.dist config/autoload/doctrine.testing.php
