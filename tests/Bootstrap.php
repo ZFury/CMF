@@ -7,6 +7,7 @@
  */
 use ModulesTests\ServiceManagerGrabber;
 
+putenv('APP_ENV=testing');
 error_reporting(E_ALL | E_STRICT);
 $cwd = __DIR__;
 chdir(dirname(__DIR__));

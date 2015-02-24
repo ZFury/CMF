@@ -24,7 +24,7 @@
     },
     "require-dev": {
         "mayflower/php-codebrowser": "1.1.1",
-        "phpunit/phpunit": "4.3.*",
+        "phpunit/phpunit": "4.5.*",
         "squizlabs/php_codesniffer": "2.2.0",
         "zendframework/zend-developer-tools": "dev-master",
         "satooshi/php-coveralls": "~0.6"

@@ -2,14 +2,14 @@ ZFury, CMF based on ZF2
 =======================
 ## Achievements  
 [![Build Status](https://travis-ci.org/ZFury/CMF.svg?branch=master)](https://travis-ci.org/ZFury/CMF)  
-[![Dependency Status](https://www.versioneye.com/user/projects/54e453f4d1ec5734f40002b7/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54e453f4d1ec5734f40002b7)  
+[![Dependency Status](https://www.versioneye.com/user/projects/54eb2991d1ec577c97000ce2/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54eb2991d1ec577c97000ce2)  
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ZFury/CMF/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ZFury/CMF/?branch=master)  
 [![Coverage Status](https://coveralls.io/repos/ZFury/CMF/badge.svg?branch=master)](https://coveralls.io/r/ZFury/CMF?branch=master)  
 [![Latest Stable Version](https://poser.pugx.org/zfury/cmf/version.svg)](https://packagist.org/packages/zfury/cmf)  
 [![Total Downloads](https://poser.pugx.org/zfury/cmf/downloads.svg)](https://packagist.org/packages/zfury/cmf)  
 [![Monthly Downloads](https://poser.pugx.org/zfury/cmf/d/monthly.svg)](https://packagist.org/packages/zfury/cmf)  
 [![Daily Downloads](https://poser.pugx.org/zfury/cmf/d/daily.svg)](https://packagist.org/packages/zfury/cmf)  
-[![License](https://poser.pugx.org/cmf/cmf/license.svg)](https://packagist.org/packages/zfury/cmf)  
+[![License](https://poser.pugx.org/zfury/cmf/license.svg)](https://packagist.org/packages/zfury/cmf)  
 ## Installation
 #### At first, get it  
 - Via composer:  
@@ -19,7 +19,7 @@ ZFury, CMF based on ZF2
 
 #### Then  
 - Launch [install.sh](install.sh)  
-- Create symlink to the [public](public) directory ```sh ln -s /path/to/public /path/to/www```  
+- Create symlink to the [public](public) directory ```ln -s /path/to/public /path/to/www```  
 
 #### Finally  
 - Open application in browser and follow installation steps!  
