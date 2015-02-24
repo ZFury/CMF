@@ -19,7 +19,8 @@
         "doctrine/migrations": "dev-master",
         "sundrique/doctrine-tools": ">=0.2",
         "zendframework/zendoauth": "2.0.*",
-        "zfury/framework": "0.1.0"
+        "zfury/framework": "0.1.0",
+        "beberlei/DoctrineExtensions": "v0.2-alpha"
     },
     "require-dev": {
         "mayflower/php-codebrowser": "1.1.1",

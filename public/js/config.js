@@ -47,7 +47,12 @@ require.config({
         'fury.form': './fury.form',
         'fury.notify': './fury.notify',
         'fury.ajax': './fury.ajax',
-        'mail-inputs': '../module/install/js/mail-inputs'
+        'mail-inputs': '../module/install/js/mail-inputs',
+        goog: './libs/requirejs-plugins/src/goog',
+        async: './libs/requirejs-plugins/src/async',
+        propertyParser: './libs/requirejs-plugins/src/propertyParser',
+        chart: '../module/dashboard/js/chart',
+        "statistic-table": '../module/dashboard/js/statistic-table'
     },
     shim: {
         angular: {
