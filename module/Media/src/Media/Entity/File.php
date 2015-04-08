@@ -21,6 +21,7 @@ use Zend\Form\Annotation;
  *
  * @ORM\Entity(repositoryClass="Media\Repository\File")
  * @ORM\Table(name="files")
+ * @ORM\HasLifecycleCallbacks
  * @Annotation\Name("file")
  */
 class File
