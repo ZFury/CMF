@@ -60,6 +60,20 @@ class File
     private $id;
 
     /**
+     * @var $created
+     * @Annotation\Exclude
+     * @ORM\Column(type="datetime")
+     */
+    protected $created;
+
+    /**
+     * @var $updated
+     * @Annotation\Exclude
+     * @ORM\Column(type="datetime")
+     */
+    protected $updated;
+
+    /**
      * @var ArrayCollection()
      *
      * @ORM\OneToMany(targetEntity="ObjectFile", mappedBy="file")
@@ -69,6 +83,21 @@ class File
     public function __construct()
     {
         $this->objectsFiles = new ArrayCollection();
+    }
+
+    /**
+     * Now we tell doctrine that before we persist or update we call the updatedTimestamps() function.
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
+
+        if ($this->getCreated() == null) {
+            $this->setCreated(new \DateTime(date('Y-m-d H:i:s')));
+        }
     }
 
     /**
@@ -169,6 +198,50 @@ class File
         $this->type = $type;
 
         return $this;
+    }
+
+    /**
+     * Get created.
+     *
+     * @return string
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set created.
+     *
+     * @param string $created
+     *
+     * @return void
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * Get updated.
+     *
+     * @return string
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Set updated.
+     *
+     * @param string $updated
+     *
+     * @return void
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
     }
 
     /**
