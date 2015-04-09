@@ -11,7 +11,8 @@ use Zend\Form\Annotation;
  *
  * @ORM\Entity(repositoryClass="Test\Repository\Test")
  * @ORM\Table(name="test")
- * @package                                            Test\Entity
+ * @ORM\HasLifecycleCallbacks
+ * @package Test\Entity
  */
 class Test
 {
@@ -39,6 +40,20 @@ class Test
      * @ORM\Column(type="string", nullable=false, length=255)
      */
     protected $name;
+
+    /**
+     * @var $created
+     * @Annotation\Exclude
+     * @ORM\Column(type="datetime")
+     */
+    protected $created;
+
+    /**
+     * @var $updated
+     * @Annotation\Exclude
+     * @ORM\Column(type="datetime")
+     */
+    protected $updated;
 
     /**
      * @param $id int
@@ -92,6 +107,65 @@ class Test
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Get created.
+     *
+     * @return string
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set created.
+     *
+     * @param string $created
+     *
+     * @return void
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * Get updated.
+     *
+     * @return string
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Set updated.
+     *
+     * @param string $updated
+     *
+     * @return void
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+    }
+
+    /**
+     * Now we tell doctrine that before we persist or update we call the updatedTimestamps() function.
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->setUpdated(new \DateTime(date('Y-m-d H:i:s')));
+
+        if ($this->getCreated() == null) {
+            $this->setCreated(new \DateTime(date('Y-m-d H:i:s')));
+        }
     }
 
     public function toArray()
