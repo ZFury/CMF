@@ -2,6 +2,8 @@
 SetEnv APP_ENV dev
 
 php_value xdebug.max_nesting_level 500
+php_value upload_max_filesize 80M
+php_value post_max_size 80M
 
 <IfModule mod_rewrite.c>
 	RewriteEngine On
