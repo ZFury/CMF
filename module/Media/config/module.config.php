@@ -46,7 +46,7 @@ return array(
         'files-to-check' => [],
         'tools-to-check' => [
             [
-                'libav (do not forget sudo apt-get install libavcodec-extra-53)' => 'avconv -version',
+                'libav-tools (do not forget sudo apt-get install libavcodec-extra-53)' => 'avconv -version',
                 'version' => '0.10.12',
             ]
         ]
