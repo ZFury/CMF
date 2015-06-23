@@ -265,8 +265,7 @@ class IndexController extends AbstractActionController
             if (!$installService->inArrayRecursive(Install::BAD, $checkedDirectories) &&
                 !$installService->inArrayRecursive(Install::BAD, $checkedFiles) &&
                 !$installService->inArrayRecursive(Install::BAD, $checkedExtensions) &&
-                !$installService->inArrayRecursive(Install::BAD, $checkedTools) &&
-                Install::GOOD === $continue) {
+                !$installService->inArrayRecursive(Install::BAD, $checkedTools)) {
                 $continue = Install::GOOD;
             } else {
                 $continue = Install::BAD;
