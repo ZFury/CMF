@@ -20,7 +20,7 @@ class VideoController extends AbstractActionController
     /**
      * @return ViewModel
      */
-    public function uploadVideoAction()
+    public function uploadFormAction()
     {
         $fileService = new File($this->getServiceLocator());
         $this->layout('layout/dashboard/dashboard');
@@ -30,7 +30,7 @@ class VideoController extends AbstractActionController
     /**
      * Advanced avatar uploader Blueimp UI
      */
-    public function startVideoUploadAction()
+    public function uploadAction()
     {
         $user = $this->identity()->getUser();
         $fileService = $this->getServiceLocator()->get('Media\Service\File');
