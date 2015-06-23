@@ -76,8 +76,7 @@ return array(
             ['config-autoload' => 'config/autoload'],
             ['application-config' => 'config/application.config.php']
         ],
-        'tools-to-check-global' => [
-
-        ]
+        'tools-to-check-global' => [],
+        'extensions-to-check-global' => [],
     ],
 );
