@@ -20,7 +20,7 @@ class AudioController extends AbstractActionController
     /**
      * @return ViewModel
      */
-    public function uploadAudioAction()
+    public function uploadFormAction()
     {
         $fileService = new File($this->getServiceLocator());
         $this->layout('layout/dashboard/dashboard');
@@ -30,7 +30,7 @@ class AudioController extends AbstractActionController
     /**
      * Advanced avatar uploader Blueimp UI
      */
-    public function startAudioUploadAction()
+    public function uploadAction()
     {
         $user = $this->identity()->getUser();
         $fileService = $this->getServiceLocator()->get('Media\Service\File');

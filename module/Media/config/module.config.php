@@ -43,12 +43,21 @@ return array(
         ],
     ],
     'installation' => [
-        'files-to-check' => [],
+        'files-to-check' => [
+            ['public/uploads' => 'public/uploads']
+        ],
         'tools-to-check' => [
             [
-                'libav-tools (do not forget sudo apt-get install libavcodec-extra-53)' => 'avconv -version',
+                'libav-tools (sudo apt-get install libav-tools libavcodec-extra-53)' => 'avconv -version',
                 'version' => '0.10.12',
+            ],
+            [
+                'ImageMagick (sudo apt-get install imagemagick)' => 'identify -version',
+                'version' => true,
             ]
+        ],
+        'extensions-to-check' => [
+            ['Imagick (sudo apt-get install php5-imagick)' => 'imagick']
         ]
     ]
 );

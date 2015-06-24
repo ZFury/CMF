@@ -23,7 +23,7 @@ $(function () {
     $('#fileupload').fileupload({
         // Uncomment the following to send cross-domain cookies:
         //xhrFields: {withCredentials: true},
-        url: 'test/audio/start-audio-upload'
+        url: 'test/audio/upload'
     });
 
     // Enable iframe cross-domain access via redirect option:

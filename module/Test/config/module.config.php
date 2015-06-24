@@ -96,7 +96,7 @@ return [
                     [
                         'label' => 'Upload Images',
                         'controller' => 'image',
-                        'action' => 'upload-image',
+                        'action' => 'upload-form',
                         'route' => 'test/default',
                         'controller_namespace' => 'Test\Controller\Image',
                         'module' => 'Test'
@@ -104,7 +104,7 @@ return [
                     [
                         'label' => 'Upload Audios',
                         'controller' => 'audio',
-                        'action' => 'upload-audio',
+                        'action' => 'upload-form',
                         'route' => 'test/default',
                         'controller_namespace' => 'Test\Controller\Audio',
                         'module' => 'Test'
@@ -112,7 +112,7 @@ return [
                     [
                         'label' => 'Upload Videos',
                         'controller' => 'video',
-                        'action' => 'upload-video',
+                        'action' => 'upload-form',
                         'route' => 'test/default',
                         'controller_namespace' => 'Test\Controller\Video',
                         'module' => 'Test'
