@@ -65,7 +65,6 @@ class IndexController extends AbstractActionController
                 !$installService->inArrayRecursive(Install::BAD, $checkedExtensions) &&
                 !$installService->inArrayRecursive(Install::BAD, $checkedTools) &&
                 true === $phpVersion['status']) {
-
                 $continue = Install::GOOD;
             }
 
