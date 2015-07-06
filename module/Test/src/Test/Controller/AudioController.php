@@ -35,6 +35,8 @@ class AudioController extends AbstractActionController
         $user = $this->identity()->getUser();
         $fileService = $this->getServiceLocator()->get('Media\Service\File');
         $blueimpService = $this->getServiceLocator()->get('Media\Service\Blueimp');
+        $actionName = $this->getRequest()->getUri()->getPath();
+
         if ($this->getRequest()->isPost()) {
             $form = new AudioUpload();
             $inputFilter = new AudioUploadInputFilter();
@@ -51,38 +53,35 @@ class AudioController extends AbstractActionController
             if ($form->isValid()) {
                 $audio = $fileService->createFile($form, $this->identity()->getUser());
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
-                $dataForJson = $blueimpService->displayUploadedFile($audio, '/test/audio/delete-audio/');
+                $audios = $blueimpService->displayUploadedFile(
+                    $audio,
+                    $actionName
+                );
             } else {
                 $messages = $form->getMessages();
                 $messages = array_shift($messages);
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->rollBack();
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->close();
 
-                $dataForJson = [ 'files' => [
+                $audios = [ 'files' => [
                         [
                             'name' => $form->get('audio')->getValue()['name'],
                             'error' => array_shift($messages)
                         ]
                 ]];
             }
+        } elseif ($this->getRequest()->isDelete()) {
+            $fileService
+                ->deleteFile($this->getRequest()->getQuery("fileId"));
+            return $blueimpService
+                ->deleteFileJson($this->getRequest()->getQuery("fileId"));
         } else {
-            $dataForJson = $blueimpService->displayUploadedFiles(
+            $audios = $blueimpService->displayUploadedFiles(
                 $user->getAudios(),
-                '/test/audio/delete-audio/'
+                $actionName
             );
         }
 
-        return new JsonModel($dataForJson);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function deleteAudioAction()
-    {
-        $this->getServiceLocator()->get('Media\Service\File')
-            ->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
-        return $this->getServiceLocator()->get('Media\Service\Blueimp')
-            ->deleteFileJson($this->getEvent()->getRouteMatch()->getParam('id'));
+        return new JsonModel($audios);
     }
 }
