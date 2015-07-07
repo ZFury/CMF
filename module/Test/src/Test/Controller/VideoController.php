@@ -20,7 +20,7 @@ class VideoController extends AbstractActionController
     /**
      * @return ViewModel
      */
-    public function uploadVideoAction()
+    public function uploadFormAction()
     {
         $fileService = new File($this->getServiceLocator());
         $this->layout('layout/dashboard/dashboard');
@@ -30,11 +30,13 @@ class VideoController extends AbstractActionController
     /**
      * Advanced avatar uploader Blueimp UI
      */
-    public function startVideoUploadAction()
+    public function uploadAction()
     {
         $user = $this->identity()->getUser();
         $fileService = $this->getServiceLocator()->get('Media\Service\File');
         $blueimpService = $this->getServiceLocator()->get('Media\Service\Blueimp');
+        $actionName = $this->getRequest()->getUri()->getPath();
+
         if ($this->getRequest()->isPost()) {
             $form = new VideoUpload();
             $inputFilter = new VideoUploadInputFilter();
@@ -50,7 +52,10 @@ class VideoController extends AbstractActionController
             if ($form->isValid()) {
                 $video = $fileService->createFile($form, $this->identity()->getUser());
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
-                $dataForJson = $blueimpService->displayUploadedFile($video, '/test/video/delete-video/');
+                $videos = $blueimpService->displayUploadedFile(
+                    $video,
+                    $actionName
+                );
             } else {
                 if (null == $post) {
                     $messages = 'Server has not found file in Post request';
@@ -61,31 +66,25 @@ class VideoController extends AbstractActionController
 
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->rollBack();
                 $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->close();
-                $dataForJson = [ 'files' => [
+                $videos = [ 'files' => [
                         [
                             'name' => $form->get('video')->getValue()['name'],
                             'error' => $messages
                         ]
                 ]];
             }
+        } elseif($this->getRequest()->isDelete()) {
+            $fileService
+                ->deleteFile($this->getRequest()->getQuery("fileId"));
+            return $blueimpService
+                ->deleteFileJson($this->getRequest()->getQuery("fileId"));
         } else {
-            $dataForJson = $blueimpService->displayUploadedFiles(
+            $videos = $blueimpService->displayUploadedFiles(
                 $user->getVideos(),
-                '/test/video/delete-video/'
+                $actionName
             );
         }
 
-        return new JsonModel($dataForJson);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function deleteVideoAction()
-    {
-        $this->getServiceLocator()->get('Media\Service\File')
-            ->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
-        return $this->getServiceLocator()->get('Media\Service\Blueimp')
-            ->deleteFileJson($this->getEvent()->getRouteMatch()->getParam('id'));
+        return new JsonModel($videos);
     }
 }

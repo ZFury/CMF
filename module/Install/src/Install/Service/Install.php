@@ -169,11 +169,48 @@ class Install
      * @param bool $global
      * @return array
      */
+    public function checkExtensions($global = self::LOCAL_REQUIREMENTS)
+    {
+        $checkedExtenstions = [];
+        $uncheckedExtensions = null;
+
+        if (self::GLOBAL_REQUIREMENTS === $global) {
+            $uncheckedExtensions = $this->sm->get('Config')['installation']['extensions-to-check-global'];
+        } else {
+            if (array_key_exists('extensions-to-check', $this->sm->get('Config')['installation'])) {
+                $uncheckedExtensions = $this->sm->get('Config')['installation']['extensions-to-check'];
+            }
+        }
+
+        if (null !== $uncheckedExtensions) {
+            for ($i=0; $i<count($uncheckedExtensions); $i++) {
+                $name = array_keys($uncheckedExtensions[$i]);
+                $name = array_shift($name);
+                $extension = array_values($uncheckedExtensions[$i]);
+                $extension = array_shift($extension);
+                $message = "'$name' ";
+
+                if (extension_loaded($extension)) {
+                    $message .= "exists!";
+                    array_push($checkedExtenstions, [$name => ['message' => $message, 'status' => Install::GOOD]]);
+                } else {
+                    $message .= "doesn't exist!";
+                    array_push($checkedExtenstions, [$name => ['message' => $message, 'status' => Install::BAD]]);
+                }
+            }
+        }
+        return $checkedExtenstions;
+    }
+
+    /**
+     * @param bool $global
+     * @return array
+     */
     public function checkFiles($global = self::LOCAL_REQUIREMENTS)
     {
         $checkedDirectories = [];
         $checkedFiles = [];
-        if (true === $global) {
+        if (self::GLOBAL_REQUIREMENTS === $global) {
             $uncheckedFiles = $this->sm->get('Config')['installation']['files-to-check-global'];
         } else {
             $uncheckedFiles = null;
@@ -220,12 +257,17 @@ class Install
     /**
      * @return array
      */
-    public function checkTools()
+    public function checkTools($global = self::LOCAL_REQUIREMENTS)
     {
         $checkedTools = [];
         $uncheckedTools = null;
-        if (array_key_exists('tools-to-check', $this->sm->get('Config')['installation'])) {
-            $uncheckedTools = $this->sm->get('Config')['installation']['tools-to-check'];
+
+        if (self::GLOBAL_REQUIREMENTS === $global) {
+            $uncheckedTools = $this->sm->get('Config')['installation']['tools-to-check-global'];
+        } else {
+            if (array_key_exists('tools-to-check', $this->sm->get('Config')['installation'])) {
+                $uncheckedTools = $this->sm->get('Config')['installation']['tools-to-check'];
+            }
         }
 
         if (null !== $uncheckedTools) {

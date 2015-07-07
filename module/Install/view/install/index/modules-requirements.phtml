@@ -1,32 +1,76 @@
 <?php
-$title = 'Modules requirements';
-$this->headTitle($title);
+  $title = 'Modules requirements';
+  $this->headTitle($title);
 ?>
-<h1 class="page-header"><?php echo $this->escapeHtml($title); ?></h1>
+<h1 class="page-header">
+  <?= $this->escapeHtml($title); ?>
+</h1>
 
-<form role="form" action="<?=$this->url('install/default', ['controller' => 'index', 'action' => 'modules-requirements'])?>" class="form-horizontal" method="post">
-    <ul class="col-md-11">
-        <li>
-            <h4>Tools</h4>
-            <?php
-            if (count($tools)>0) {
-            for ($i=0; $i<count($tools); $i++) { ?>
-                <?php if (\Install\Service\Install::GOOD == array_values($tools[$i])[0]['status']) { ?>
-                    <div class="panel panel-success">
-                    <div class="panel-heading">
-                        <?php echo array_values($tools[$i])[0]['message'] ?>
-                    </div>
-                <?php } ?>
+<form
+  role="form"
+  action="<?=$this->url('install/default', [
+    'controller' => 'index',
+    'action' => 'modules-requirements'
+  ])?>"
+  class="form-horizontal"
+  method="post"
+>
+  <ul class="col-md-11">
+    <li>
+      <h4>Extensions</h4>
+      <?php
+        if (count($extensions)>0) {
+          for ($i=0; $i<count($extensions); $i++) {
+      ?>
+            <div <?php
+              if (\Install\Service\Install::GOOD == array_values($extensions[$i])[0]['status']) {
+                echo 'class="panel panel-success"';
+              } else {
+                echo 'class="panel panel-danger"';
+              }?>>
+                <div class="panel-heading">
+                  <?= array_values($extensions[$i])[0]['message'] ?>
+                </div>
+              </div>
+      <?php
+            }
+        } else {
+      ?>
+          <div class="panel panel-success">
+            <div class="panel-heading">There are no any needed extensions for checked modules</div>
+          </div>
+      <?php
+        }
+      ?>
+    </li>
+    <li>
+      <h4>Tools</h4>
+      <?php
+        if (count($tools)>0) {
+          for ($i=0; $i<count($tools); $i++) {
+      ?>
+            <div <?php
+              if (\Install\Service\Install::GOOD == array_values($tools[$i])[0]['status']) {
+                echo 'class="panel panel-success"';
+              } else {
+                echo 'class="panel panel-danger"';
+              }?>>
+                <div class="panel-heading">
+                  <?= array_values($tools[$i])[0]['message'] ?>
+                </div>
+              </div>
+      <?php
+            }
 
-                </div>
-            <?php
-                }
-            } else { ?>
-                <div class="panel panel-success">
-                    <div class="panel-heading">There are no any needed tools for checked modules</div>
-                </div>
-            <?php } ?>
-        </li>
+        } else {
+      ?>
+          <div class="panel panel-success">
+            <div class="panel-heading">There are no any needed tools for checked modules</div>
+          </div>
+      <?php
+        }
+      ?>
+    </li>
         <li>
             <h4>Directories</h4>
             <?php

@@ -20,22 +20,29 @@ class ImageController extends AbstractActionController
     /**
      * @return ViewModel
      */
-    public function uploadImageAction()
+    public function uploadFormAction()
     {
-        $imageService = $this->getServiceLocator()->get('Media\Service\File');
+        $fileService = $this->getServiceLocator()->get('Media\Service\File');
         $this->layout('layout/dashboard/dashboard');
-        return new ViewModel(['imageService' => $imageService, 'type' => File::IMAGE_FILETYPE]);
+
+        return new ViewModel([
+            'fileService' => $fileService,
+            'type' => File::IMAGE_FILETYPE
+        ]);
     }
 
     /**
      * Advanced avatar uploader Blueimp UI
      */
-    public function startImageUploadAction()
+    public function uploadAction()
     {
-
         $user = $this->identity()->getUser();
-        $imageService = $this->getServiceLocator()->get('Media\Service\File');
-        $blueimpService = $this->getServiceLocator()->get('Media\Service\Blueimp');
+        $fileService = $this->getServiceLocator()
+            ->get('Media\Service\File');
+        $blueimpService = $this->getServiceLocator()
+            ->get('Media\Service\Blueimp');
+        $actionName = $this->getRequest()->getUri()->getPath();
+
         if ($this->getRequest()->isPost()) {
             $form = new ImageUpload();
             $inputFilter = new ImageUploadInputFilter();
@@ -46,44 +53,51 @@ class ImageController extends AbstractActionController
                 $request->getPost()->toArray(),
                 $request->getFiles()->toArray()
             );
-            $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->beginTransaction();
+            $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')
+                ->getConnection()
+                ->beginTransaction();
+
             $form->setData($post);
 
             if ($form->isValid()) {
-                $image = $imageService->createFile($form, $this->identity()->getUser());
-                $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->commit();
-                $dataForJson = $blueimpService->displayUploadedFile($image, '/test/image/delete-image/');
+                $image = $fileService->createFile(
+                    $form,
+                    $user
+                );
+                $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')
+                    ->getConnection()
+                    ->commit();
+                $images = $blueimpService->displayUploadedFile(
+                    $image,
+                    $actionName
+                );
             } else {
                 $messages = $form->getMessages();
                 $messages = array_shift($messages);
-                $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->getConnection()->rollBack();
-                $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')->close();
-
-                $dataForJson = [ 'files' => [
-                        [
-                            'name' => $form->get('image')->getValue()['name'],
-                            'error' => array_shift($messages)
-                        ]
+                $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')
+                    ->getConnection()
+                    ->rollBack();
+                $this->getServiceLocator()->get('Doctrine\ORM\EntityManager')
+                    ->close();
+                $images = [ 'files' => [
+                    [
+                        'name' => $form->get('image')->getValue()['name'],
+                        'error' => array_shift($messages)
+                    ]
                 ]];
             }
+        } elseif ($this->getRequest()->isDelete()) {
+            $fileService
+                ->deleteFile($this->getRequest()->getQuery("fileId"));
+            return $blueimpService
+                ->deleteFileJson($this->getRequest()->getQuery("fileId"));
         } else {
-            $dataForJson = $blueimpService->displayUploadedFiles(
+            $images = $blueimpService->displayUploadedFiles(
                 $user->getImages(),
-                '/test/image/delete-image/'
+                $actionName
             );
         }
 
-        return new JsonModel($dataForJson);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function deleteImageAction()
-    {
-        $this->getServiceLocator()->get('Media\Service\File')
-            ->deleteFile($this->getEvent()->getRouteMatch()->getParam('id'));
-        return $this->getServiceLocator()->get('Media\Service\Blueimp')
-            ->deleteFileJson($this->getEvent()->getRouteMatch()->getParam('id'));
+        return new JsonModel($images);
     }
 }

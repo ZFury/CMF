@@ -51,14 +51,19 @@ class IndexController extends AbstractActionController
                     Install::PHP_VERSION . " or higher";
             }
 
-            //FILES&DIRECTORIES
+            //FILES&DIRECTORIES&TOOLS
             $checked = $installService->checkFiles(Install::GLOBAL_REQUIREMENTS);
             $checkedDirectories = $checked['checkedDirectories'];
             $checkedFiles = $checked['checkedFiles'];
+            $checkedExtensions = $installService->checkExtensions(Install::GLOBAL_REQUIREMENTS);
+            $checkedTools = $installService->checkTools(Install::GLOBAL_REQUIREMENTS);
 
             $continue = Install::BAD;
+
             if (!$installService->inArrayRecursive(Install::BAD, $checkedDirectories) &&
                 !$installService->inArrayRecursive(Install::BAD, $checkedFiles) &&
+                !$installService->inArrayRecursive(Install::BAD, $checkedExtensions) &&
+                !$installService->inArrayRecursive(Install::BAD, $checkedTools) &&
                 true === $phpVersion['status']) {
                 $continue = Install::GOOD;
             }
@@ -67,6 +72,8 @@ class IndexController extends AbstractActionController
                 'directories' => $checkedDirectories,
                 'phpVersion' => $phpVersion,
                 'files' => $checkedFiles,
+                'extensions' => $checkedExtensions,
+                'tools' => $checkedTools,
                 'continue' => $continue
             ]);
         }
@@ -246,22 +253,18 @@ class IndexController extends AbstractActionController
             ]);
         } else {
             $continue = Install::BAD;
-            //TOOLS
-            $checkedTools = $installService->checkTools();
-            foreach ($checkedTools as $tool) {
-                if (true === array_values($tool)[0]['status']) {
-                    $continue = Install::GOOD;
-                }
-            }
 
-            //FILES&DIRECTORIES
+            //FILES&DIRECTORIES&TOOLS
             $checked = $installService->checkFiles();
             $checkedDirectories = $checked['checkedDirectories'];
             $checkedFiles = $checked['checkedFiles'];
+            $checkedTools = $installService->checkTools();
+            $checkedExtensions = $installService->checkExtensions();
 
             if (!$installService->inArrayRecursive(Install::BAD, $checkedDirectories) &&
                 !$installService->inArrayRecursive(Install::BAD, $checkedFiles) &&
-                Install::GOOD === $continue) {
+                !$installService->inArrayRecursive(Install::BAD, $checkedExtensions) &&
+                !$installService->inArrayRecursive(Install::BAD, $checkedTools)) {
                 $continue = Install::GOOD;
             } else {
                 $continue = Install::BAD;
@@ -271,6 +274,7 @@ class IndexController extends AbstractActionController
                 'directories' => $checkedDirectories,
                 'files' => $checkedFiles,
                 'tools' => $checkedTools,
+                'extensions' => $checkedExtensions,
                 'continue' => $continue
             ]);
         }

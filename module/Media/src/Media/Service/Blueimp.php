@@ -52,7 +52,7 @@ class Blueimp
             'type' => $type,
             'size' => '',
             'deleteUrl' => $deleteUrl,
-            'deleteType' => 'POST',
+            'deleteType' => 'DELETE',
         ];
     }
 
@@ -67,7 +67,7 @@ class Blueimp
             $this->getFileJson(
                 $file,
                 $this->sm->get('ViewHelperManager')->get('ServerUrl')->setPort(80)
-                ->__invoke() . $mask . $file->getId()
+                ->__invoke() . $mask . '?fileId=' . $file->getId()
             )
         ]];
     }
@@ -86,7 +86,7 @@ class Blueimp
                 $this->getFileJson(
                     $file,
                     $this->sm->get('ViewHelperManager')->get('ServerUrl')->setPort(80)
-                        ->__invoke() . $mask . $file->getId()
+                        ->__invoke() . $mask . '?fileId=' . $file->getId()
                 )
             );
 
