@@ -94,15 +94,17 @@
     <tr class="template-download fade">
         <td>
             <span class="preview">
-                <?php if (\Media\Entity\File::AUDIO_FILETYPE == $filetype) { ?>
-                    <audio src="{%=file.url%}" controls></audio>
-                <?php } elseif (\Media\Entity\File::IMAGE_FILETYPE == $filetype) { ?>
-                {% if (file.thumbnailUrl) { %}
-                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                {% if (!file.error) { %}
+                    <?php if (\Media\Entity\File::AUDIO_FILETYPE == $filetype) { ?>
+                        <audio src="{%=file.url%}" controls></audio>
+                    <?php } elseif (\Media\Entity\File::IMAGE_FILETYPE == $filetype) { ?>
+                    {% if (file.thumbnailUrl) { %}
+                        <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                    {% } %}
+                    <?php } elseif (\Media\Entity\File::VIDEO_FILETYPE == $filetype) { ?>
+                        <video src="{%=file.url%}" controls></video>
+                    <?php } ?>
                 {% } %}
-                <?php } elseif (\Media\Entity\File::VIDEO_FILETYPE == $filetype) { ?>
-                    <video src="{%=file.url%}" controls></video>
-                <?php } ?>
             </span>
         </td>
         <td>

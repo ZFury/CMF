@@ -58,7 +58,7 @@ class VideoController extends AbstractActionController
                 );
             } else {
                 if (null == $post) {
-                    $messages = 'Server has not found file in Post request';
+                    $messages = ['Server has not found file in Post request'];
                 } else {
                     $messages = $form->getMessages();
                     $messages = array_shift($messages);
@@ -69,11 +69,11 @@ class VideoController extends AbstractActionController
                 $videos = [ 'files' => [
                         [
                             'name' => $form->get('video')->getValue()['name'],
-                            'error' => $messages
+                            'error' => array_shift($messages)
                         ]
                 ]];
             }
-        } elseif($this->getRequest()->isDelete()) {
+        } elseif ($this->getRequest()->isDelete()) {
             $fileService
                 ->deleteFile($this->getRequest()->getQuery("fileId"));
             return $blueimpService
