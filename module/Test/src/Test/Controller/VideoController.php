@@ -73,7 +73,7 @@ class VideoController extends AbstractActionController
                         ]
                 ]];
             }
-        } elseif($this->getRequest()->isDelete()) {
+        } elseif ($this->getRequest()->isDelete()) {
             $fileService
                 ->deleteFile($this->getRequest()->getQuery("fileId"));
             return $blueimpService
