@@ -10,7 +10,7 @@
     ],
     "homepage": "http://framework.zend.com/",
     "require": {
-        "php": ">=5.4",
+        "php": ">=5.5",
         "doctrine/common": "2.4.*",
         "doctrine/doctrine-orm-module": "0.8.*",
         "bjyoungblood/bjy-authorize": "1.4.*",
@@ -18,7 +18,7 @@
         "doctrine/migrations": "dev-master",
         "sundrique/doctrine-tools": ">=0.2",
         "zendframework/zendoauth": "2.0.*",
-        "zfury/framework": "0.2.0",
+        "zfury/framework": "0.2.*",
         "beberlei/DoctrineExtensions": "v0.2-alpha"
     },
     "require-dev": {
