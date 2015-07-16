@@ -95,6 +95,7 @@ class EditInputFilter extends \Zend\InputFilter\InputFilter
                 'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')->getRepository('User\Entity\User'),
                 'fields' => ['email'],
                 'object_manager' => $this->sm->get('Doctrine\ORM\EntityManager'),
+                'use_context' => true
             ]
         );
         $uniqueObjectValidator->setMessage('Email is already taken', UniqueObject::ERROR_OBJECT_NOT_UNIQUE);
