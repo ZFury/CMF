@@ -42,7 +42,7 @@ class DbConnectionInputFilter extends InputFilter
             'validators' => [
                 [
                     'name' => 'Between',
-                    'otions' => [
+                    'options' => [
                         'min' => 1,
                         'max'=> 65535
                     ]
