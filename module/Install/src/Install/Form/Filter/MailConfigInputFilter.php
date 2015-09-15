@@ -12,7 +12,7 @@ use Zend\InputFilter\InputFilter;
 
 class MailConfigInputFilter extends InputFilter
 {
-    public function __construct($sm, $userId = null)
+    public function __construct()
     {
         $this->add([
             'name'     => 'host',
@@ -42,7 +42,7 @@ class MailConfigInputFilter extends InputFilter
             'validators' => [
                 [
                     'name' => 'Between',
-                    'otions' => [
+                    'options' => [
                         'min' => 1,
                         'max'=> 65535
                     ]

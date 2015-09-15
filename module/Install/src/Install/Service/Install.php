@@ -121,17 +121,18 @@ class Install
         $dbname=$dbForm->getData()['dbname'];
         $host=$dbForm->getData()['host'];
         $port=$dbForm->getData()['port'];
-        $content = "<?php return ['doctrine' =>['connection' => ['orm_default' => [
-                    'driverClass' => 'Doctrine\\DBAL\\Driver\\PDOMySql\\Driver',
-                    'params' => [
-                        'host'     => " . '"' . $host       . '"' . ",
-                        'port'     => " . '"' . $port       . '"' . ",
-                        'user'     => " . '"' . $user       . '"' . ",
-                        'password' => " . '"' . $password   . '"' . ",
-                        'dbname'   => " . '"' . $dbname     . '"' . ",
-                    ],
-                    'doctrine_type_mappings' => ['enum' => 'string'],
-                    ]]]];";
+        $content = "<?php
+            return ['doctrine' =>['connection' => ['orm_default' => [
+                'driverClass' => 'Doctrine\\DBAL\\Driver\\PDOMySql\\Driver',
+                'params' => [
+                    'host'     => " . '"' . $host       . '"' . ",
+                    'port'     => " . '"' . $port       . '"' . ",
+                    'user'     => " . '"' . $user       . '"' . ",
+                    'password' => " . '"' . $password   . '"' . ",
+                    'dbname'   => " . '"' . $dbname     . '"' . ",
+                ],
+                'doctrine_type_mappings' => ['enum' => 'string'],
+            ]]]];";
         $config = fopen("config/autoload/doctrine.local.php", "w");
         fwrite($config, $content);
         fclose($config);

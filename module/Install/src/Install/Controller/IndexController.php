@@ -84,6 +84,7 @@ class IndexController extends AbstractActionController
      */
     public function databaseAction()
     {
+        /** @var \Install\Service\Install $installService */
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
         $sessionProgress = new Container('progress_tracker');
         $sessionProgress->offsetSet('current_step', 'database');
@@ -100,7 +101,7 @@ class IndexController extends AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             $dbForm = new DbConnection();
-            $dbForm->setInputFilter(new DbConnectionInputFilter($this->getServiceLocator()));
+            $dbForm->setInputFilter(new DbConnectionInputFilter());
             $dbForm->setData($this->getRequest()->getPost());
             if ($dbForm->isValid()) {
                 $sessionForms->offsetSet('dbForm', $dbForm->getData());
@@ -134,6 +135,7 @@ class IndexController extends AbstractActionController
      */
     public function mailAction()
     {
+        /** @var \Install\Service\Install $installService */
         $installService = $this->getServiceLocator()->get('Install\Service\Install');
         $sessionProgress = new Container('progress_tracker');
         $sessionProgress->offsetSet('current_step', 'mail');
@@ -151,8 +153,7 @@ class IndexController extends AbstractActionController
 
         if ($this->getRequest()->isPost()) {
             $mailForm = new MailConfig();
-            $mainInputFilter = new MailConfigInputFilter($this->getServiceLocator());
-            $mailForm->setInputFilter($mainInputFilter);
+            $mailForm->setInputFilter(new MailConfigInputFilter());
             $mailForm->setData($this->getRequest()->getPost());
             if ($mailForm->isValid()) {
                 try {
