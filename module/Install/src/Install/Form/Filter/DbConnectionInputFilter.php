@@ -12,7 +12,7 @@ use Zend\InputFilter\InputFilter;
 
 class DbConnectionInputFilter extends InputFilter
 {
-    public function __construct($sm, $userId = null)
+    public function __construct()
     {
         $this->add([
             'name'     => 'host',
