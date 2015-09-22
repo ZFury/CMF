@@ -124,14 +124,14 @@ class ManagementControllerTest extends ControllerTestCase
     public function testCreateActionValidPost()
     {
         $postData = array(
-            'aliasEntity' => 'user',
+            'alias' => 'user',
             'entity' => 'User\Entity\User',
             'isEnabled' => 1,
             'isVisible' => 1,
             'description' => 'another',
         );
         $this->dispatch('/comment/entity-type/create', 'POST', $postData);
-        $this->assertResponseStatusCode(200);
+        $this->assertResponseStatusCode(302);
     }
 
     /**
@@ -199,6 +199,7 @@ class ManagementControllerTest extends ControllerTestCase
         $this->setupUser();
         $this->setExpectedException('Exception');
         $this->commentService->delete($entity->getId());
+        $this->assertResponseStatusCode(403);
     }
 
     /**
@@ -206,7 +207,8 @@ class ManagementControllerTest extends ControllerTestCase
      */
     public function testDeleteActionNoExistEntity()
     {
-        $this->dispatch('/comment/entity-type/delete/1');
+        $this->dispatch('/comment/entity-type/delete/100');
+        $this->assertApplicationException('\Doctrine\ORM\EntityNotFoundException');
         $this->assertResponseStatusCode(500);
     }
 
