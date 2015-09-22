@@ -4906,11 +4906,17 @@
         },
         {
             "name": "zfury/framework",
-            "version": "0.2.2",
+            "version": "0.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ZFury/framework.git",
-                "reference": "708ddceb5baca878da66bc2a4964d105c79950c2"
+                "reference": "eee4ca2a64d2d65490777b08be56c4c9b67bc892"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ZFury/framework/zipball/eee4ca2a64d2d65490777b08be56c4c9b67bc892",
+                "reference": "eee4ca2a64d2d65490777b08be56c4c9b67bc892",
+                "shasum": ""
             },
             "require": {
                 "doctrine/common": "2.5.*",
@@ -4924,17 +4930,18 @@
                     "Fury\\": "library/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "description": "Basic classes used in Zfury (CMF based on Zend Framework 2)",
-            "homepage": "http://framework.zend.com/",
+            "homepage": "https://github.com/ZFury/framework",
             "keywords": [
                 "ZFury",
                 "framework",
                 "zf2"
             ],
-            "time": "2015-09-22 09:11:45"
+            "time": "2015-09-22 10:54:53"
         }
     ],
     "packages-dev": [
