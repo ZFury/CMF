@@ -32,7 +32,8 @@ class Create extends InputFilter
             array(
                 'object_repository' => $this->sm->get('Doctrine\ORM\EntityManager')->getRepository('Test\Entity\Test'),
                 'object_manager' => $this->sm->get('Doctrine\ORM\EntityManager'),
-                'fields' => 'email'
+                'fields' => 'email',
+                'use_context' => true
             )
         );
         $recordExistsValidator->setMessage(
